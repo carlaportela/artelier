@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 inputDocuments: ['_bmad-output/planning-artifacts/prd.md']
 ---
 
@@ -624,3 +624,314 @@ flowchart LR
 **Progresión:** los flujos de artesana son secuenciales (crear → gestionar → cobrar); los del comprador son exploratorios con múltiples puntos de entrada al mismo destino.
 
 **Error handling:** siempre indica el campo o problema específico, nunca mensaje genérico; en pagos, preserva todos los datos introducidos en caso de error.
+
+---
+
+## Component Strategy
+
+### Design System Components
+
+Artelier utiliza **Tailwind CSS + shadcn/ui** como base. shadcn/ui cubre todos los primitivos UI estándar que se usan directamente sin modificación:
+
+**Componentes de foundation (uso directo):**
+Button, Input, Textarea, Select, Dialog/Modal, Sheet (drawer mobile), Toast/Sonner, Tabs, Avatar, Skeleton, Progress, Checkbox, Switch, Label, Form, Separator
+
+**Componentes extendidos (shadcn como base estructural, tokens visuales propios):**
+- `Card` → base para ProductCard y ArtisanHeader
+- `Badge` → referencia conceptual para SealBadge (estilo visual completamente diferente)
+
+### Custom Components
+
+Los siguientes componentes son exclusivos de Artelier y no tienen equivalente en shadcn/ui.
+
+#### ProductCard
+
+**Propósito:** Mostrar un producto en el feed o catálogo con información suficiente para tomar una decisión de interés.
+
+**Variantes por tipo de producto:**
+- `única` — pieza irrepetible, 1 unidad exacta
+- `serie` — lote de piezas parecidas (no idénticas), cantidad indicada; aviso de diferencias sensoriales en forma/tamaño/color
+- `stock` — producto replenishable (miel, conservas, etc.), cantidad disponible actualizable por la artesana desde el mismo anuncio
+
+**Estados:** disponible · últimas unidades · agotado · reservado
+
+**Anatomía:** imagen con sello-corner opcional (posición absoluta) + bloque de información (nombre, precio, fila artesana)
+
+**Accesibilidad:** `role="article"`, alt descriptivo en imagen, precio con `aria-label`, contraste mínimo AA.
+
+#### SealBadge
+
+**Propósito:** Comunicar atributos verificados de un producto o señales de confianza de un perfil artesano.
+
+**Dos sistemas visuales diferenciados:**
+
+| Sistema | Estilo | Fuente | Fondo |
+|---|---|---|---|
+| Sello de producto | Filled (fondo color, borde crema + outline interior crema) | The Girl Next Door | Color sólido |
+| Insignia de perfil | Outlined (borde color + outline interior color, transparente) | DM Sans | Transparente |
+
+**Subvariantes de producto:** km0, ecológico, reciclado, ed-limitada (con número de serie bajo el sello), hecho-a-mano
+
+**Subvariantes de perfil:** confiable, popular, envía-hoy, siempre-disponible, top-ventas, mejor-valorado
+
+**Flujo de verificación:** artesana solicita sello → Artelier lo aprueba → visible al público. Nunca autoasignado.
+
+**Localización:** el texto del sello sigue el idioma elegido por el usuario en sus preferencias.
+
+**Accesibilidad:** `role="img"`, `aria-label` descriptivo ("Verificado: Km 0 — producción local").
+
+#### ArtisanHeader
+
+**Propósito:** Cabecera completa del perfil artesano con toda la información de identidad y confianza.
+
+**Anatomía:** banner (100px, editable) → avatar superpuesto + acciones → nombre + ubicación → bio → insignias de perfil → tabs (Tienda / Proceso)
+
+**Estados:** perfil propio (editable, sin botones de follow/mensaje) / perfil ajeno (seguir + mensaje)
+
+**Accesibilidad:** jerarquía heading correcta (h1 nombre artesana), landmarks region, imágenes con alt.
+
+#### BottomNav
+
+**Propósito:** Navegación principal en mobile con acceso rápido y prominente a la publicación de producto.
+
+**Ítems:** Inicio · Buscar · [Publicar] · Mensajes · Mi cuenta
+
+**Botón publicar:** central, elevado (margin-top negativo), fondo primario, 44×44px mínimo, sombra suave.
+
+**Indicador activo:** dot de 4px bajo el icono, color primario.
+
+**Accesibilidad:** `<nav>` landmark, `aria-current="page"` en ítem activo, `aria-label="Publicar producto"` en botón central.
+
+#### OrderStatusTimeline
+
+**Propósito:** Mostrar el estado del pedido con lenguaje artesanal, como una narrativa de fabricación.
+
+**Pasos:** Confirmado → En fabricación → Listo → Enviado → Entregado
+
+**Estados del punto:** done (✓ verde primario) · active (✦ ámbar con halo glow) · pending (○ gris superficie)
+
+**Accesibilidad:** lista `<ol>` con `<li>` por paso, `aria-label` de estado en cada punto, `aria-current="step"` en el paso activo.
+
+#### ProcessUpdate
+
+**Propósito:** Tarjeta de actualización del proceso enviada por la artesana al comprador.
+
+**Anatomía:** nombre artesana (The Girl Next Door bold) + timestamp + texto entre comillas (The Girl Next Door, estilo manuscrito, fondo tintado) + imagen adjunta opcional.
+
+**Accesibilidad:** `<time>` para timestamp, `<blockquote>` para el texto de actualización.
+
+### Component Implementation Strategy
+
+**Principios de construcción:**
+- Todos los componentes custom usan CSS custom properties del sistema de tokens (`--primary`, `--accent`, `--bg`, `--surface`, etc.)
+- La fuente The Girl Next Door se usa exclusivamente en: sello-corner de ProductCard, texto de SealBadge-producto, labels de BottomNav, texto de ProcessUpdate
+- Tamaño mínimo de área táctil: 44×44px en todos los elementos interactivos mobile
+- Variantes de color de SealBadge centralizadas en variables CSS (`--seal-color`, `--badge-*`) para localización y mantenimiento sencillo
+
+**Separación de responsabilidades:**
+- shadcn/ui gestiona primitivos (formularios, diálogos, toasts)
+- Componentes custom gestionan la identidad visual y la lógica de negocio de Artelier
+- Tokens Tailwind aseguran consistencia entre ambas capas
+
+### Implementation Roadmap
+
+**Fase 1 — Flujos críticos MVP:**
+- `ProductCard` — necesario para feed y catálogo
+- `BottomNav` — navegación base de la app
+- `SealBadge` — ambos sistemas (producto y perfil)
+- `ArtisanHeader` — perfil artesana
+
+**Fase 2 — Experiencia de compra:**
+- `OrderStatusTimeline` — seguimiento de pedido
+- `ProcessUpdate` — actualización narrativa de fabricación
+
+**Fase 3 — V2:**
+- Variante `ed-limitada` con número de serie dinámico
+- Sistema de verificación progresivo para insignias de perfil
+- Componente de reseña con puntuación
+
+---
+
+## UX Consistency Patterns
+
+### Jerarquía de Botones
+
+Artelier define 4 niveles de acción con visibilidad e importancia diferenciada:
+
+| Nivel | Estilo | Uso | Ejemplo |
+|---|---|---|---|
+| **Primario** | Fondo primario, texto blanco, 100px border-radius | Acción principal única por pantalla | Comprar, Pagar, Guardar |
+| **Secundario** | Borde primario, transparente, 100px border-radius | Acción secundaria importante | Seguir, Enviar mensaje |
+| **Ghost** | Fondo surface, borde border, 100px border-radius | Acción neutra o de escape | Cancelar, Volver |
+| **Acento** | Fondo acento (ámbar), texto blanco, 100px border-radius | Publicación artesana | Publicar producto |
+
+**Reglas:**
+- Máximo 1 botón primario por pantalla
+- El botón de publicar usa color acento — es el momento emocional central del flujo artesano
+- En móvil todos los botones de acción principal son full-width en su contenedor
+- Tamaño mínimo táctil: 44px alto en todos los botones
+
+### Feedback Patterns
+
+**Toasts (no bloqueantes):**
+- Éxito: fondo primario, icono check, 3 segundos, esquina inferior
+- Error: fondo rojo suave, icono X, 5 segundos, acción de reintento si aplica
+- Info: fondo surface-2, texto muted, 3 segundos
+- Nunca interrumpir el flujo con modales para feedback simple
+
+**Hitos de primera vez:**
+- Primer producto publicado → toast especial: *"¡Tu primera pieza ya está en Artelier!"* (The Girl Next Door)
+- Primera venta → notificación push + estado especial en pantalla de pedidos
+- Primer seguidor → notificación push discreta
+- Sin animaciones agresivas — sobriedad editorial coherente con la marca
+
+**Actualizaciones de proceso artesano (ProcessUpdate):**
+- Notificación push cuando la artesana publica una actualización
+- El texto aparece entre comillas en The Girl Next Door — voz directa de la artesana
+- Es el momento de mayor carga emocional positiva del flujo comprador
+
+### Form Patterns
+
+**Principio general:** formularios cortos, progresivos, guardado automático de borradores.
+
+**Creación de producto (flujo artesana):**
+1. Foto(s) primero — lo visual motiva, no bloquea
+2. Nombre y precio — mínimo viable para publicar
+3. Descripción, tipo de producto, sellos — opcionales en el momento, editables después
+- Guardado automático de borrador en cada cambio
+- Validación inline al salir del campo (no al enviar)
+- Errores: texto específico junto al campo afectado, nunca mensaje genérico arriba
+
+**Checkout (flujo comprador):**
+- Dirección de envío antes del pago
+- Desglose de precios visible siempre — sin sorpresas en el último paso
+- Botón con total incluido en el label: "Pagar 42,06 €"
+- En error de pago: preservar todos los datos introducidos
+
+### Navigation Patterns
+
+**Registro diferido:**
+- Exploración libre sin cuenta en toda la app
+- Registro solo al primer momento de acción real: seguir, mensajear, comprar
+- Al completar registro: la acción interrumpida se retoma automáticamente
+- Nunca mostrar muros de registro en exploración pasiva
+
+**BottomNav:**
+- Siempre visible en pantallas principales
+- Indicador de estado activo: dot de 4px bajo el icono (no cambio de color agresivo)
+- Botón central (Publicar) rompe el plano intencionalmente — comunica prioridad para artesanas
+
+**Escape y retroceso:**
+- Siempre hay vía de escape clara en flujos modales y sheets
+- Swipe-down cierra sheets; swipe-back navega atrás (gestos nativos)
+- Máximo 1 nivel de modal encadenado
+
+### Estado Vacío y Carga
+
+**Skeleton loading (siempre localizado, nunca spinner global):**
+- ProductCard: skeleton imagen 1:1 + líneas de texto
+- Feed inicial: 6 skeletons en grid
+- Perfil: skeleton banner + avatar + líneas
+
+**Empty states:**
+- Feed vacío: "Descubre artesanas cerca de ti" + CTA explorar
+- Sin productos en perfil propio: "Publica tu primera pieza"
+- Sin mensajes: "Tus conversaciones con artesanas aparecerán aquí"
+- Sin pedidos: "Aquí verás tus pedidos cuando hagas tu primera compra"
+- Todos con CTA claro y texto ligero — sin ilustraciones pesadas
+
+### Patrones Específicos de Slow Commerce
+
+**Sin urgencia artificial:**
+- Prohibido "solo quedan X unidades" con presión temporal
+- El stock limitado se comunica como unicidad positiva, no escasez manipulada
+- Sin temporizadores de cuenta atrás ni "X usuarios están viendo esto"
+
+**Transparencia de precios:**
+- Desglose de comisiones siempre visible en checkout
+- El artesano ve exactamente cuánto recibe de cada venta
+- Nunca ocultar fees hasta el último paso
+
+**Comunicación asíncrona:**
+- Sin indicadores de "visto" en tiempo real en mensajes — la artesana trabaja en su taller
+- Estados de pedido narrativos, con voz humana, no solo labels de estado técnico
+
+---
+
+## Responsive Design & Accessibility
+
+### Responsive Strategy
+
+Artelier es mobile-first por naturaleza. Las artesanas gestionan su negocio desde el móvil entre momentos de trabajo. Los compradores también usan mayoritariamente móvil, aunque pueden llegar al catálogo desde desktop.
+
+| Dispositivo | Rol | Prioridad |
+|---|---|---|
+| **Móvil (320–767px)** | Plataforma principal — artesanas y compradores | Crítica |
+| **Tablet (768–1023px)** | Navegación de catálogo, gestión de tienda | Media |
+| **Desktop (1024px+)** | Exploración y descubrimiento, compradores | Complementaria |
+
+### Breakpoint Strategy
+
+Tailwind CSS mobile-first como base. Se usan 3 breakpoints activos:
+
+| Breakpoint | Tailwind | Desde | Cambios principales |
+|---|---|---|---|
+| **Base** | (default) | 320px | Layouts 1-2 columnas, BottomNav visible |
+| **md** | `md:` | 768px | Grid 3→4 columnas, más densidad de información |
+| **lg** | `lg:` | 1024px | BottomNav → sidebar nav, grid 4-5 columnas, feed con sidebar |
+
+**Móvil (base):** ProductCard grid 2 columnas · BottomNav fija · perfil single column · checkout full-width secuencial
+
+**Tablet (md):** ProductCard grid 3 columnas · BottomNav se mantiene · banner más alto (120px) · modales max-width 560px
+
+**Desktop (lg):** ProductCard grid 4-5 columnas · BottomNav desaparece → nav lateral o top nav · feed con sidebar de filtros · perfil 2 columnas · max-width contenido 1200px
+
+### Accessibility Strategy
+
+**Objetivo: WCAG 2.1 nivel AA** — cumple EN 301 549 europeo y garantiza inclusividad real.
+
+**Contraste de color verificado:**
+
+| Par | Ratio | Requerido | Estado |
+|---|---|---|---|
+| Texto (#1A1A18) / fondo (#F4F0E8) | ~14:1 | 4.5:1 | ✓ |
+| Primario (#3D5A4F) / fondo (#F4F0E8) | ~7.2:1 | 4.5:1 | ✓ |
+| Texto muted (#5A5648) / fondo (#F4F0E8) | ~5.8:1 | 4.5:1 | ✓ |
+| Texto light (#8A8478) / fondo (#F4F0E8) | ~3.1:1 | 3:1 solo texto grande | Solo 18px+ |
+| Blanco / primario (#3D5A4F) | ~7.2:1 | 4.5:1 | ✓ |
+
+**Nota:** `--text-light` no cumple AA para texto pequeño. Reservar para captions y elementos decorativos exclusivamente.
+
+**Tamaños táctiles:** mínimo 44×44px en todos los elementos interactivos. BottomNav ítems: mínimo 48px alto.
+
+**Tipografía:** The Girl Next Door solo para elementos decorativos, sellos y labels de nav — nunca para texto de cuerpo de más de 2 líneas. DM Sans para todo texto funcional.
+
+**Estructura semántica:** un `<h1>` por pantalla · `<nav aria-label="Navegación principal">` para BottomNav · `<main>` wrapping contenido · `<article>` por ProductCard · `<time>` para timestamps
+
+**ARIA crítico:**
+- Imágenes de producto: alt descriptivo obligatorio
+- SealBadge: `role="img"` + `aria-label` ("Sello verificado: Km 0 — producción local")
+- OrderStatusTimeline: `aria-current="step"` en paso activo
+- Precios: `aria-label="Precio: 38 euros"` (evitar ambigüedad con símbolo €)
+
+**Foco:** `focus-visible` activado, outline 2px primario en todos los elementos interactivos. Skip link en desktop. Foco atrapado en modales, restaurado al cerrar.
+
+### Testing Strategy
+
+**Responsivo:** dispositivos físicos iPhone SE (375px), iPhone 14 (390px), Android gama media (360px), iPad (768px) · browsers: Chrome iOS, Safari iOS, Chrome Android, Chrome/Firefox/Safari desktop · red 3G simulada para validar rendimiento percibido
+
+**Accesibilidad:** axe DevTools + Lighthouse audit (automático) · VoiceOver iOS/macOS (manual) · navegación solo teclado en desktop · simulación daltonismo en Chrome DevTools (relevante para colores de SealBadges)
+
+### Implementation Guidelines
+
+**Responsivo:**
+- Unidades relativas: `rem` para fuentes y espaciados, `%` o `fr` para layouts
+- `aspect-ratio` fijo en ProductCard para evitar layout shifts durante carga
+- `loading="lazy"` en imágenes fuera del viewport
+- Breakpoints Tailwind estándar; sin breakpoints custom salvo caso excepcional
+
+**Accesibilidad:**
+- `focus-visible:ring-2 focus-visible:ring-primary` como clase utilitaria global
+- Preferir HTML semántico (`<button>`) sobre ARIA en `<div>` cuando sea posible
+- Mensajes de error: `aria-describedby` vinculando campo con mensaje
+- Animaciones: respetar `prefers-reduced-motion` — desactivar transiciones en timeline y toasts si el usuario lo solicita
