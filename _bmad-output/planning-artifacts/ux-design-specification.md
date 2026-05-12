@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6, 7]
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 inputDocuments: ['_bmad-output/planning-artifacts/prd.md']
 ---
 
@@ -380,3 +380,247 @@ Para la artesana, el reflejo de ese mismo momento es la primera notificación: a
 | 4. Relación | Se registra y sigue a la artesana | Notificación inmediata a la artesana: el primer pulso de vida |
 
 **El momento del registro** ocurre cuando el comprador ya ha visto valor y quiere interactuar — nunca antes. El formulario pide email + contraseña + localidad (o geolocalización). Tres campos. Sin fricción innecesaria.
+
+---
+
+## Visual Design Foundation
+
+### Sistema de Color
+
+**Paleta: Tinta y Lino**
+
+Inspirada en los paisajes editoriales del slow living gallego: el verde pizarra de los bosques de eucalipto, el ámbar de la miel, el lino natural cálido. Es la paleta más editorial y contemporánea — evoca una revista de slow living, sostenibilidad consciente y diseño considerado. Se posiciona como plataforma premium con raíces.
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--primary` | `#3D5A4F` | Acciones principales, nav activo, botones CTA |
+| `--accent` | `#C4956A` | Sellos Galicia, detalles cálidos, énfasis secundario |
+| `--bg` | `#F4F0E8` | Fondo general de la app |
+| `--surface` | `#EAE5DA` | Tarjetas, superficies elevadas |
+| `--surface-2` | `#DDD7C8` | Avatares, fondos de entrada, placeholders |
+| `--text` | `#1A1A18` | Texto principal |
+| `--text-muted` | `#5A5648` | Texto secundario, labels |
+| `--text-light` | `#8A8478` | Texto terciario, hints, metadatos |
+| `--border` | `#CCC8BC` | Separadores, bordes de tarjeta |
+
+**Tokens de sellos verificados:**
+
+| Sello | Color texto | Color fondo |
+|---|---|---|
+| Km 0 | `#3D5A4F` | `#C8DDD8` |
+| Hecho en Galicia | `#C4956A` | `#F5E8D8` |
+| Ecológico | `#2E6B48` | `#C4E0D4` |
+
+### Sistema Tipográfico
+
+**Display / Titulares: The Girl Next Door** — caligrafía artesanal legible. Transmite la identidad handmade de la plataforma sin sacrificar claridad. Se usa en: logotipo, encabezados de sección, sellos de verificación, CTAs, nav links, nombre del artesano en actualizaciones de estado, texto citado del artesano entre comillas.
+
+**Body / UI: DM Sans** — sans-serif humanista, cálida y legible a tamaños pequeños. Se usa en: todo el texto de interfaz, precios, etiquetas, descripciones, metadatos.
+
+| Nivel | Fuente | Tamaño | Peso |
+|---|---|---|---|
+| Logotipo / Brand | The Girl Next Door | 22px | 700 |
+| Encabezado sección | The Girl Next Door | 18–20px | 600 |
+| Sello verificado | The Girl Next Door | 12–14px | 400 |
+| Nav links | The Girl Next Door | 14px | 700 |
+| Nombre artesano (actualización) | The Girl Next Door | 15px | 700 |
+| Texto citado artesano | The Girl Next Door | 13px | 400 |
+| Body principal | DM Sans | 13–14px | 400–500 |
+| Metadatos / labels | DM Sans | 10–11px | 500–700 |
+
+### Espaciado y Layout
+
+- **Unidad base**: 4px; escala práctica en múltiplos de 4 y 8
+- **Radios de borde**: 4px (sellos), 8px (notices y avisos), 12px (tarjetas, navs, perfiles), 100px (botones pill)
+- **Layout**: columna única centrada, max-width 900px, padding lateral 20–24px
+- **Tarjetas de producto**: grid de 2 columnas en móvil
+- **Filosofía de espacio**: generoso dentro de las tarjetas y perfiles, denso en metadatos y listas — el espacio blanco refuerza el valor artesanal y el slow commerce
+
+### Consideraciones de Accesibilidad
+
+- Contraste `--primary` (#3D5A4F) sobre `--bg` (#F4F0E8): ≥ 4.5:1 ✓
+- Contraste `--text` (#1A1A18) sobre `--bg` (#F4F0E8): ≥ 15:1 ✓
+- Tamaño mínimo de fuente en UI: 10px (labels); 13px para contenido legible
+- Touch targets mínimos: 44×44px en todos los elementos interactivos (nav items, botones)
+- Iconos de navegación: stroke sólido sin filtros de distorsión, `stroke-width: 2.2`, tamaño 22×22px
+
+---
+
+## Design Direction Decision
+
+### Dirección Elegida
+
+La dirección de diseño quedó establecida durante la exploración visual del Paso 8. No se generaron variantes adicionales de layout porque las decisiones de composición emergieron de forma orgánica e iterativa durante el proceso de construcción del explorador visual.
+
+### Patrones de Layout Confirmados
+
+- **Feed**: grid de 2 columnas con tarjetas de producto — foto, precio, nombre del artesano y sellos siempre visibles sin entrar al detalle
+- **Perfil artesano**: banner + avatar superpuesto + nombre + bio breve + sellos de verificación + grid 3 columnas para el catálogo
+- **Navegación inferior (móvil)**: 5 elementos — Inicio · Buscar · [+Publicar destacado] · Mensajes · Mi cuenta
+- **Navegación superior (web)**: logotipo + links Descubrir / Entrar / Registrarme en The Girl Next Door
+- **Checkout**: desglose de costes completo y visible antes del CTA de pago, con aviso legal de desistimiento
+- **Estado de pedido**: línea de tiempo horizontal (En fabricación → Listo → Enviado) + actualización de estado personalizada del artesano con texto citado en caligrafía
+
+### Artefacto Visual de Referencia
+
+El archivo `_bmad-output/planning-artifacts/ux-color-themes.html` documenta la dirección de diseño completa con todos los patrones de pantalla implementados e interactivos.
+
+---
+
+## User Journey Flows
+
+### Flujo 1 — Onboarding de artesana (primer producto publicado)
+
+El journey más crítico de toda la plataforma. Sin artesanas con productos, no hay comprador, no hay marketplace.
+
+```mermaid
+flowchart TD
+    A([Artesana descubre Artelier]) --> B[Toca Registrarme]
+    B --> C[Formulario: email + contraseña + localidad]
+    C --> D{¿Tipo de usuario?}
+    D -->|Artesana / Productora| E[Pregunta: ¿qué haces?\ncategoría + descripción breve]
+    D -->|Comprador| F[→ Flujo Comprador]
+    E --> G[Foto de perfil + nombre de taller]
+    G --> H[Pantalla: Tu perfil está listo]
+    H --> I{¿Publica primer producto ahora?}
+    I -->|Sí — toca +| J[→ Flujo Publicar producto]
+    I -->|Más tarde| K[Feed vacío con prompt destacado\n'Publica tu primer producto']
+    K --> J
+    J --> L([Primer producto publicado ✓])
+    L --> M[Notificación interna: 'Tu tienda ya está en línea']
+```
+
+**Optimizaciones clave:** el tipo de cuenta se elige una vez, con iconos grandes y sin jerga técnica. El onboarding no pide más datos hasta que el primer producto está publicado — todo lo demás (bio larga, redes sociales) es editable después.
+
+---
+
+### Flujo 2 — Publicar un producto (artesana)
+
+```mermaid
+flowchart LR
+    A([Toca + en bottom nav]) --> B[Selector: Cámara / Galería]
+    B --> C[Selecciona 1–3 fotos\nVista previa reordenable]
+    C --> D[Precio €]
+    D --> E[Descripción breve\nmáx. 280 caracteres]
+    E --> F{Tipo de producto}
+    F -->|Pieza única| G[Stock: 1 unidad\nse agota al comprar]
+    F -->|Perecedero| H[Fecha límite de disponibilidad]
+    F -->|Otros| I[Cantidad disponible]
+    G & H & I --> J[Categoría]
+    J --> K{¿Sellos aplicables?}
+    K -->|Sí| L[Seleccionar: Km 0 / Galicia / Eco…]
+    K -->|No| M[Publicar]
+    L --> M
+    M --> N([Producto publicado ✓])
+    N --> O[Toast: 'Tu producto ya está en línea']
+    N --> P{¿Primer producto?}
+    P -->|Sí| Q[Momento especial:\n'Tu tienda acaba de abrir']
+    P -->|No| R[Vuelve a la pestaña Tienda]
+```
+
+**Optimizaciones clave:** máximo 4 pasos obligatorios. Los sellos son opcionales y se pueden añadir/quitar después. El sistema retira automáticamente los perecederos en la fecha límite.
+
+---
+
+### Flujo 3 — Comprador: descubrimiento y primer contacto
+
+```mermaid
+flowchart TD
+    A([Llega a Artelier sin registro]) --> B[Feed de productos\nartesana visible en cada tarjeta]
+    B --> C{¿Interacción?}
+    C -->|Toca una tarjeta| D[Detalle de producto\nfoto grande + artesana + sellos + precio]
+    C -->|Toca avatar artesana| E[Perfil artesana\nbanner + bio + grid de tienda]
+    D --> F{¿Acción deseada?}
+    E --> F
+    F -->|Ver más productos| E
+    F -->|Seguir / Mensajear / Comprar| G[Prompt de registro\n'Para esto necesitas una cuenta']
+    G --> H[Formulario: email + contraseña + localidad]
+    H --> I[Tipo: Comprador]
+    I --> J[Feed personalizado por localidad]
+    J --> K{¿Retoma acción anterior?}
+    K -->|Seguir| L[Sigue a la artesana ✓]
+    K -->|Mensajear| M[→ Flujo mensajería]
+    K -->|Comprar| N[→ Flujo checkout]
+    L --> O([Notificación a artesana:\n'Alguien te sigue — primer pulso de vida'])
+```
+
+**Optimizaciones clave:** el registro se solicita solo cuando el comprador quiere interactuar, con contexto explícito de por qué. Tras el registro, el sistema retoma la acción interrumpida.
+
+---
+
+### Flujo 4 — Comprador: checkout
+
+```mermaid
+flowchart TD
+    A([Toca Comprar en detalle de producto]) --> B{¿Tiene cuenta?}
+    B -->|No| C[→ Registro mínimo → vuelve aquí]
+    B -->|Sí| D[Resumen de pedido\nproducto + foto artesana + precio]
+    D --> E[Desglose de costes\nPrecio + Comisión plataforma + Seguro + Fee Stripe]
+    E --> F[Aviso de desistimiento\ntexto legal visible antes de pagar]
+    F --> G[Dirección de entrega]
+    G --> H[Pago vía Stripe\ntarjeta / Bizum / Apple Pay]
+    H --> I{¿Pago OK?}
+    I -->|Sí| J([Confirmación de pedido ✓])
+    I -->|Error| K[Error específico del pago\nreintento sin perder datos]
+    J --> L[Email de confirmación]
+    J --> M[Notificación a artesana: nuevo pedido]
+    J --> N[Estado inicial: En fabricación\nvisible en Mi cuenta → Pedidos]
+```
+
+**Optimizaciones clave:** desglose de costes visible completo antes del CTA de pago. El aviso de desistimiento es un notice visible, no letra pequeña. Si el pago falla, se preservan todos los datos introducidos.
+
+---
+
+### Flujo 5 — Artesana: gestionar un encargo personalizado
+
+```mermaid
+flowchart TD
+    A([Notificación: nuevo mensaje de comprador]) --> B[Abre conversación\nchat estilo WhatsApp]
+    B --> C{¿Tipo de encargo?}
+    C -->|Producto disponible en tienda| D[Comprador compra directamente\n→ Flujo checkout]
+    C -->|Encargo personalizado| E[Artesana responde con detalles\nprecio estimado + plazo]
+    E --> F{¿Acuerdo?}
+    F -->|Sí| G[Artesana crea producto personalizado\ndesde el chat o desde +]
+    F -->|Negociación| E
+    G --> H[Comprador recibe enlace al producto]
+    H --> D
+    D --> I[Artesana recibe notificación de pago]
+    I --> J[Actualiza estado: En fabricación]
+    J --> K[Puede enviar actualización de proceso\ntexto + foto con tipografía caligráfica]
+    K --> L[Actualiza estado: Listo / Enviado]
+    L --> M{¿Enviado?}
+    M -->|Sí| N[Introduce número de seguimiento opcional]
+    N --> O([Pedido completado — cobro liberado de Stripe])
+```
+
+---
+
+### Flujo 6 — Comprador: seguimiento del pedido
+
+```mermaid
+flowchart LR
+    A([Confirmación de pedido]) --> B[Mi cuenta → Pedidos]
+    B --> C[Línea de tiempo:\nEn fabricación → Listo → Enviado]
+    C --> D{¿Hay actualización de artesana?}
+    D -->|Sí| E[Notificación push / email\nTexto en caligrafía + foto opcional]
+    D -->|No| F[Estado estático con fecha estimada]
+    E --> G[Comprador ve la actualización\nen detalle de pedido]
+    G --> H{¿Quiere responder?}
+    H -->|Sí| I[→ Chat con artesana]
+    H -->|No| J[Continúa viendo estados]
+    F & J --> K{¿Estado = Enviado?}
+    K -->|Sí| L[Notificación: 'Tu pedido está en camino']
+    L --> M([Recepción + opción de reseña])
+```
+
+---
+
+### Patrones de Journey
+
+**Navegación:** registro siempre diferido al momento de interacción real; acción interrumpida se retoma automáticamente tras el registro.
+
+**Feedback:** toast no bloqueante para acciones exitosas; notificación especial para hitos de primera vez (primer producto, primer seguidor, primera venta).
+
+**Progresión:** los flujos de artesana son secuenciales (crear → gestionar → cobrar); los del comprador son exploratorios con múltiples puntos de entrada al mismo destino.
+
+**Error handling:** siempre indica el campo o problema específico, nunca mensaje genérico; en pagos, preserva todos los datos introducidos en caso de error.
