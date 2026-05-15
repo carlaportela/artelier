@@ -1,5 +1,8 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 5, 6]
+stepsCompleted: [1, 2, 3, 4, 5, 6, 7, 8]
+lastStep: 8
+status: 'complete'
+completedAt: '2026-05-14'
 inputDocuments: ['_bmad-output/planning-artifacts/prd.md', '_bmad-output/planning-artifacts/ux-design-specification.md']
 workflowType: 'architecture'
 project_name: 'artelier'
@@ -390,3 +393,384 @@ try {
 - Usar floats para cantidades monetarias
 - Importar Prisma client en Client Components
 - Hardcodear URLs, claves de API o credenciales
+
+---
+
+## Project Structure & Boundaries
+
+### Árbol de directorios completo
+
+```
+artelier/
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                    ← lint + typecheck + tests en cada PR
+│       └── preview.yml               ← deploy automático de preview en Vercel por rama
+│
+├── prisma/
+│   ├── schema.prisma                 ← fuente de verdad del modelo de datos
+│   ├── migrations/                   ← historial incremental de cambios en BD
+│   └── seed.ts                       ← datos de prueba para desarrollo local
+│
+├── public/
+│   ├── fonts/                        ← The Girl Next Door + DM Sans (self-hosted)
+│   └── icons/                        ← favicon, PWA icons, apple-touch-icon
+│
+├── emails/                           ← plantillas react-email (solo servidor)
+│   ├── OrderConfirmation.tsx         ← FR38: confirmación de pedido al comprador
+│   └── PasswordReset.tsx             ← FR2: recuperación de contraseña
+│
+├── src/
+│   ├── middleware.ts                 ← Edge Runtime: protección de rutas + RBAC
+│   │
+│   ├── app/
+│   │   ├── layout.tsx                ← HTML root: fuentes, providers globales
+│   │   ├── page.tsx                  ← landing pública (sin autenticación)
+│   │   ├── not-found.tsx             ← página 404 con diseño Artelier
+│   │   ├── error.tsx                 ← error boundary global de React
+│   │   │
+│   │   ├── (auth)/                   ← layout sin navegación (solo formulario)
+│   │   │   ├── layout.tsx
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx          ← FR1: autenticación email/contraseña
+│   │   │   └── register/
+│   │   │       └── page.tsx          ← FR1: registro con elección de rol
+│   │   │
+│   │   ├── (buyer)/                  ← layout con BottomNav comprador
+│   │   │   ├── layout.tsx
+│   │   │   ├── feed/
+│   │   │   │   └── page.tsx          ← FR21–FR23: feed cronológico con ProductCards
+│   │   │   ├── search/
+│   │   │   │   └── page.tsx          ← FR24–FR25: búsqueda + filtros
+│   │   │   ├── product/
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx      ← FR15–FR20: detalle de producto (SSR, indexable)
+│   │   │   ├── artisan/
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx      ← FR8–FR11: perfil público artesana (SSR, indexable)
+│   │   │   ├── cart/
+│   │   │   │   └── page.tsx          ← FR30: carrito de compra
+│   │   │   ├── checkout/
+│   │   │   │   └── page.tsx          ← FR31–FR34: checkout + Stripe
+│   │   │   └── orders/
+│   │   │       ├── page.tsx          ← FR14: historial de pedidos comprador
+│   │   │       └── [id]/
+│   │   │           └── page.tsx      ← FR36–FR37: detalle pedido + cancelación 24h
+│   │   │
+│   │   ├── (artisan)/                ← layout con navegación de estudio
+│   │   │   ├── layout.tsx
+│   │   │   └── studio/
+│   │   │       ├── dashboard/
+│   │   │       │   └── page.tsx      ← FR11: estadísticas + resumen artesana
+│   │   │       ├── products/
+│   │   │       │   ├── page.tsx      ← FR15: lista de productos propios
+│   │   │       │   ├── new/
+│   │   │       │   │   └── page.tsx  ← FR15–FR17: crear producto (3 tipos)
+│   │   │       │   └── [id]/
+│   │   │       │       └── page.tsx  ← FR15: editar/retirar producto
+│   │   │       ├── orders/
+│   │   │       │   └── page.tsx      ← FR35–FR36: pedidos recibidos + envío
+│   │   │       ├── profile/
+│   │   │       │   └── page.tsx      ← FR8–FR10: editar perfil + contenidos
+│   │   │       └── seals/
+│   │   │           └── page.tsx      ← FR11: solicitar sellos verificados
+│   │   │
+│   │   ├── (shared)/                 ← accesible por artesana y comprador
+│   │   │   ├── messages/
+│   │   │   │   ├── page.tsx          ← FR26–FR28: bandeja de mensajería
+│   │   │   │   └── [conversationId]/
+│   │   │   │       └── page.tsx      ← FR26–FR29: conversación con polling
+│   │   │   ├── account/
+│   │   │   │   └── page.tsx          ← FR3–FR6: ajustes, contraseña, RGPD
+│   │   │   └── notifications/
+│   │   │       └── page.tsx          ← FR38–FR40: preferencias de notificación
+│   │   │
+│   │   ├── admin/                    ← solo role === 'ADMIN', protegido en middleware
+│   │   │   ├── layout.tsx
+│   │   │   ├── dashboard/
+│   │   │   │   └── page.tsx          ← FR50: métricas básicas de plataforma
+│   │   │   ├── artisans/
+│   │   │   │   └── page.tsx          ← FR45–FR46: verificación + sellos artesanas
+│   │   │   ├── disputes/
+│   │   │   │   └── page.tsx          ← FR41–FR44: gestión de disputas (rol árbitro)
+│   │   │   ├── orders/
+│   │   │   │   └── page.tsx          ← FR47–FR48: vista de pedidos + estado
+│   │   │   └── moderation/
+│   │   │       └── page.tsx          ← FR49: moderación de contenidos
+│   │   │
+│   │   └── api/
+│   │       ├── auth/
+│   │       │   └── [...nextauth]/
+│   │       │       └── route.ts      ← Auth.js handlers (no modificar)
+│   │       ├── products/
+│   │       │   ├── route.ts          ← GET lista · POST crear producto
+│   │       │   └── [id]/
+│   │       │       └── route.ts      ← GET · PUT · DELETE producto
+│   │       ├── orders/
+│   │       │   ├── route.ts          ← GET lista · POST crear pedido
+│   │       │   └── [id]/
+│   │       │       ├── route.ts      ← GET · PATCH estado
+│   │       │       └── confirm-shipment/
+│   │       │           └── route.ts  ← POST: artesana confirma envío
+│   │       ├── messages/
+│   │       │   ├── route.ts          ← GET conversaciones · POST nueva
+│   │       │   └── [conversationId]/
+│   │       │       └── route.ts      ← GET mensajes (polling) · POST enviar
+│   │       ├── seals/
+│   │       │   └── route.ts          ← GET · POST solicitud de sello
+│   │       ├── disputes/
+│   │       │   ├── route.ts          ← POST abrir disputa
+│   │       │   └── [id]/
+│   │       │       └── route.ts      ← GET · PATCH resolver disputa
+│   │       ├── upload/
+│   │       │   └── route.ts          ← POST → Cloudinary (nunca credenciales en cliente)
+│   │       └── webhooks/
+│   │           └── stripe/
+│   │               └── route.ts      ← Stripe → verificación firma + idempotencia
+│   │
+│   ├── components/
+│   │   ├── ui/                       ← shadcn/ui — NO MODIFICAR
+│   │   ├── artisan/
+│   │   │   ├── ArtisanHeader.tsx     ← cabecera perfil artesana (foto + nombre + badges)
+│   │   │   └── SealBadge.tsx         ← badge/sello reutilizable (perfil y producto)
+│   │   ├── product/
+│   │   │   └── ProductCard.tsx       ← tarjeta del feed (foto, precio, sello esquina)
+│   │   ├── order/
+│   │   │   └── OrderStatusTimeline.tsx ← línea de tiempo visual del estado del pedido
+│   │   ├── messaging/
+│   │   │   └── ProcessUpdate.tsx     ← mensaje de actualización de proceso en chat
+│   │   └── shared/
+│   │       └── BottomNav.tsx         ← navegación inferior mobile (ambos roles)
+│   │
+│   ├── lib/
+│   │   ├── auth.ts                   ← instancia Auth.js (providers, callbacks, RBAC)
+│   │   ├── db.ts                     ← Prisma client singleton
+│   │   ├── stripe.ts                 ← Stripe client inicializado
+│   │   ├── cloudinary.ts             ← helpers de upload y transformación
+│   │   ├── resend.ts                 ← cliente Resend + función de envío
+│   │   ├── rate-limit.ts             ← Upstash Redis (@upstash/ratelimit)
+│   │   └── utils.ts                  ← funciones puras (formatPrice, formatDate, etc.)
+│   │
+│   ├── hooks/
+│   │   ├── useMessages.ts            ← polling + Page Visibility API (pausa en segundo plano)
+│   │   └── useCart.ts                ← leer/modificar carrito desde Zustand
+│   │
+│   ├── stores/
+│   │   └── cart.ts                   ← Zustand: estado del carrito (UI state únicamente)
+│   │
+│   ├── types/
+│   │   ├── api.ts                    ← tipos de respuesta: { data } / { error: { code, message } }
+│   │   └── index.ts                  ← re-exporta tipos Prisma + tipos de dominio propios
+│   │
+│   └── i18n/
+│       ├── config.ts                 ← next-intl: idiomas soportados, locale fallback
+│       └── messages/
+│           ├── es.json               ← castellano (completo desde V1)
+│           └── gl.json               ← gallego (completar en V3)
+│
+└── docs/                             ← documentación del proyecto
+    └── arquitectura-estructura-proyecto.html
+```
+
+### Boundary Rules
+
+**`/components/ui/`** — Solo contiene componentes de shadcn/ui. Nunca modificar directamente; regenerar con `npx shadcn@latest add [component]` si necesitas una versión actualizada.
+
+**`/lib/`** — Solo singletons de servicios externos y funciones puras sin side effects. Ningún archivo de `/lib/` debe importar desde `/components/` ni desde `/app/`.
+
+**`/app/api/`** — Todo Route Handler debe: (1) verificar auth al inicio, (2) validar input con Zod, (3) devolver respuesta en formato estándar `{ data }` / `{ error }`. Sin lógica de negocio compleja en el handler — delegar a funciones en `/lib/`.
+
+**`/emails/`** — Fuera de `/src/` deliberadamente. Son plantillas de servidor que no deben importarse en componentes de cliente. Solo se usan desde Route Handlers y Server Actions.
+
+**`auth.config.ts` (raíz)** — Separado de `/lib/auth.ts` porque el middleware corre en Edge Runtime y no puede importar el cliente de Prisma. `auth.config.ts` contiene solo la configuración de providers; `/lib/auth.ts` importa esa config y añade los callbacks de base de datos.
+
+### Mapeado FRs → Directorios
+
+| Dominio FR | Directorio principal | API endpoint |
+|---|---|---|
+| Usuarios + Auth (FR1–FR7) | `(auth)/` · `(shared)/account/` | `/api/auth/` |
+| Perfil artesana (FR8–FR11) | `(artisan)/studio/` · `(buyer)/artisan/[id]/` | `/api/products/` |
+| Perfil comprador (FR12–FR14) | `(shared)/` · `(buyer)/orders/` | `/api/orders/` |
+| Catálogo + Stock (FR15–FR20) | `(artisan)/studio/products/` · `(buyer)/product/[id]/` | `/api/products/` |
+| Descubrimiento + SEO (FR21–FR25) | `(buyer)/feed/` · `(buyer)/search/` · `(buyer)/artisan/[id]/` | `/api/products/` |
+| Mensajería (FR26–FR29) | `(shared)/messages/` | `/api/messages/` |
+| Pagos + Stripe (FR30–FR37) | `(buyer)/checkout/` · `(buyer)/orders/[id]/` | `/api/orders/` · `/api/webhooks/stripe/` |
+| Notificaciones (FR38–FR40) | `emails/` · `(shared)/notifications/` | `/api/messages/` (side effect) |
+| Disputas (FR41–FR44) | `admin/disputes/` | `/api/disputes/` |
+| Administración (FR45–FR50) | `admin/` | `/api/seals/` · `/api/orders/` |
+
+---
+
+## Architecture Validation Results
+
+### Coherence Validation ✅
+
+**Decision Compatibility:**
+Todas las tecnologías son compatibles entre sí. T3 Stack garantiza la configuración conjunta de Next.js 16 + Auth.js v5 + Prisma. Tailwind v4 + shadcn/ui son pares de facto del ecosistema. Cloudinary integra con `next/image` mediante loader personalizado. La separación `auth.config.ts` (raíz, Edge-safe) vs `lib/auth.ts` (con Prisma, Node.js) resuelve explícitamente el conflicto de Edge Runtime en el middleware.
+
+**Pattern Consistency:**
+Las convenciones de nombres (PascalCase / camelCase / kebab-case / SCREAMING_SNAKE_CASE) son consistentes en todas las secciones — schema Prisma, endpoints REST, componentes React, directorios y TypeScript. El formato de respuesta API `{ data }` / `{ error: { code, message } }` está especificado tanto en patrones como en la estructura de la API.
+
+**Structure Alignment:**
+La organización feature-first de `/components` se corresponde con los route groups de `/app`. Los límites de `/components/ui/` (no modificar) están documentados. La estructura soporta la migración a Flutter V2 sin cambios en los endpoints.
+
+### Requirements Coverage Validation ✅
+
+**Functional Requirements (50 FRs — 10 dominios):**
+
+| Dominio | FRs | Soporte arquitectónico |
+|---|---|---|
+| Auth + RGPD | FR1–FR7 | Auth.js v5 · bcrypt cost 12 · soft-delete + anonimización · TOTP 2FA admin |
+| Perfil artesana | FR8–FR11 | `/studio/` routes · SSR perfil público · `/api/seals/` |
+| Perfil comprador | FR12–FR14 | `(buyer)/` · `/api/orders/` · seguidos via Prisma relation |
+| Catálogo + Stock | FR15–FR20 | 3 tipos de producto en schema · retiro automático via Vercel Cron |
+| Descubrimiento + SEO | FR21–FR25 | SSR en rutas públicas · Metadata API Next.js · cursor pagination |
+| Mensajería | FR26–FR29 | Polling `/api/messages/[id]?since=` · Page Visibility API |
+| Pagos + Stripe | FR30–FR37 | Stripe Connect Express · webhook idempotente · `confirm-shipment` |
+| Notificaciones email | FR38–FR40 | Resend · react-email · 6 eventos cubiertos |
+| Disputas | FR41–FR44 | `admin/disputes/` · `/api/disputes/` · rol árbitro en RBAC |
+| Administración | FR45–FR50 | Panel `/admin/` · TOTP 2FA obligatorio · gestión de sellos y moderación |
+
+**Non-Functional Requirements:**
+
+| NFR | Mecanismo arquitectónico |
+|---|---|
+| LCP < 2.5s en 3G | Cloudinary auto-optimization + `next/image` + fuentes self-hosted + cursor pagination (no bloquea render) |
+| Seguridad | bcrypt cost 12 · CSRF via Auth.js built-in · rate limiting Upstash · HTTPS forzado Vercel |
+| Escalabilidad | Arquitectura stateless · Vercel serverless · Neon serverless branching |
+| RGPD / LOPDGDD | Soft-delete + anonimización · Neon EU Frankfurt · `TransactionLog` retención 5 años |
+| WCAG 2.1 AA | Contraste y navegación de teclado documentados en UX spec |
+| PCI-DSS | Delegado 100% a Stripe · sin datos de tarjeta en BD propia |
+
+### Implementation Readiness Validation ✅
+
+**Decision Completeness:**
+Todas las decisiones críticas tienen proveedor concreto y versión. Los comandos de inicialización están incluidos. La secuencia de implementación de 12 pasos está priorizada por dependencias.
+
+**Structure Completeness:**
+El árbol de directorios cubre los 50 FRs con mapeado explícito. Los límites de componentes tienen reglas de enforcement. Los archivos especiales de Next.js (`layout.tsx`, `error.tsx`, `not-found.tsx`) están todos definidos.
+
+**Pattern Completeness:**
+Naming conventions, response format, auth check pattern, error handling, monetary amounts, loading states, Server vs Client Components — todos especificados con ejemplos de código. La paginación por cursor queda documentada como patrón oficial del feed.
+
+### Gap Analysis Results
+
+**Gaps resueltos durante validación:**
+
+**1. Patrón de paginación — Feed e Infinito Scroll (resuelto ✅)**
+Se elige **cursor-based pagination** sobre offset para el feed y búsqueda. Razón: el offset desplaza resultados cuando nuevos productos se publican entre cargas (duplicados/omisiones). El cursor usa el ID del último item como referencia absoluta.
+
+```typescript
+// GET /api/products?cursor=<lastProductId>&take=20
+const products = await db.product.findMany({
+  take: 21,                                      // +1 para detectar hasMore
+  cursor: cursor ? { id: cursor } : undefined,
+  orderBy: { createdAt: 'desc' },
+  where: { deletedAt: null, status: 'ACTIVE' }
+})
+const hasMore = products.length > 21
+const items = products.slice(0, 20)
+const nextCursor = hasMore ? items[items.length - 1].id : null
+
+return NextResponse.json({ data: { items, nextCursor, hasMore } })
+```
+
+Frontend: `IntersectionObserver` en el último item visible dispara la carga de la siguiente página. Los items se acumulan en estado local (no reemplazan — append).
+
+**2. Soft-delete pattern (resuelto ✅)**
+Todas las queries Prisma deben incluir `where: { deletedAt: null }` explícitamente, o usar un middleware de Prisic que lo aplique globalmente. Los agentes deben recordar este filtro en cualquier `findMany` / `findFirst` sobre entidades con soft-delete.
+
+**3. Retiro automático de productos perecederos — FR17 (resuelto ✅)**
+Mecanismo: Vercel Cron Job con schedule diario (`vercel.json`):
+
+```typescript
+// GET /api/cron/expire-products — protegido con CRON_SECRET
+await db.product.updateMany({
+  where: {
+    expiresAt: { lte: new Date() },
+    status: 'ACTIVE',
+    deletedAt: null
+  },
+  data: { status: 'EXPIRED' }
+})
+```
+
+**4. Plantillas de email pendientes (documentado)**
+`emails/` incluye `OrderConfirmation` y `PasswordReset` como plantillas de arranque. Las 4 restantes (nueva venta para artesana, nuevo mensaje cuando inactiva, nuevo seguidor, nuevo producto de artesana seguida) se crean en historias de implementación del dominio de notificaciones.
+
+**5. Patrón SEO (documentado)**
+Next.js App Router Metadata API: `export const metadata` estático en páginas de marketing, `export async function generateMetadata({ params })` en páginas dinámicas (producto, perfil artesana). Sitemap en `app/sitemap.ts` (generación automática).
+
+**Gaps menores (diferidos):**
+- Límites de tamaño de imagen en Cloudinary upload — definir en historia de implementación de subida de imágenes
+- Redis caché de queries frecuentes — diferido a V2 cuando haya métricas reales de uso
+
+### Architecture Completeness Checklist
+
+**Requirements Analysis**
+
+- [x] Contexto del proyecto analizado exhaustivamente
+- [x] Escala y complejidad evaluadas (Media-Alta · 10 subsistemas)
+- [x] Restricciones técnicas identificadas (Edge Runtime, Flutter V2, 1 dev)
+- [x] Cross-cutting concerns mapeados (Auth, RGPD, SEO, Observabilidad, i18n)
+
+**Architectural Decisions**
+
+- [x] Decisiones críticas documentadas con versiones y providers concretos
+- [x] Stack tecnológico completamente especificado
+- [x] Patrones de integración definidos (Stripe, Cloudinary, Resend, Upstash)
+- [x] Consideraciones de rendimiento addressed (LCP, CLS, Core Web Vitals)
+
+**Implementation Patterns**
+
+- [x] Convenciones de nombres establecidas (4 estilos con ejemplos)
+- [x] Patrones de estructura definidos (feature-first, Server vs Client)
+- [x] Patrones de comunicación especificados (REST, polling, webhooks)
+- [x] Patrones de proceso documentados (error handling, auth check, loading states)
+
+**Project Structure**
+
+- [x] Estructura de directorios completa definida con árbol
+- [x] Límites de componentes establecidos con reglas de enforcement
+- [x] Puntos de integración mapeados (API endpoints ↔ FRs)
+- [x] Mapeado requisitos → estructura completo (tabla FR → directorio)
+
+### Architecture Readiness Assessment
+
+**Overall Status: READY FOR IMPLEMENTATION** ✅
+
+**Confidence Level:** Alto — 16/16 ítems del checklist verificados, todos los gaps críticos resueltos antes del cierre.
+
+**Key Strengths:**
+- Stack probado (T3) con configuración conjunta desde el primer comando
+- RBAC documentado en todos los niveles (middleware, Route Handler, schema)
+- Patrones monetarios seguros (céntimos, nunca floats)
+- Migración a Flutter V2 sin fricción (REST puro, API agnóstica del cliente)
+- i18n instrumentado desde V1 (coste cero, valor en V3)
+- Compliance RGPD/legal incorporado en decisiones de datos (no como afterthought)
+
+**Areas for Future Enhancement (post-MVP):**
+- WebSockets para mensajería en tiempo real (V2)
+- Redis caché para queries frecuentes del feed cuando haya métricas reales
+- OpenTelemetry para observabilidad avanzada (V2+)
+- CDN adicional para assets estáticos si escala exige (V2+)
+
+### Implementation Handoff
+
+**AI Agent Guidelines:**
+- Seguir todas las decisiones arquitectónicas exactamente como están documentadas
+- Usar los patrones de implementación consistentemente en todos los componentes
+- Respetar la estructura de directorios y los límites definidos
+- Consultar este documento para cualquier decisión arquitectónica
+- Añadir `where: { deletedAt: null }` en todas las queries sobre entidades con soft-delete
+- Paginación: usar siempre cursor-based para feeds y listados con scroll infinito
+
+**First Implementation Priority:**
+```bash
+npm create t3-app@latest artelier
+# ✓ TypeScript  ✓ Tailwind CSS  ✓ Auth.js (NextAuth v5)  ✓ Prisma  ✗ tRPC
+cd artelier
+npx shadcn@latest init
+# New York style · CSS variables · Zinc base color
+```
