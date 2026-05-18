@@ -58,7 +58,7 @@ La plataforma conecta dos mundos con necesidades radicalmente distintas: artesan
 
 3. **Los sellos verificados como identidad visual** — Km 0, Hecho en Galicia, Ecológico no son solo filtros — son distintivos de identidad que pueden convertirse en los elementos visuales más reconocibles de Artelier en tarjetas y perfiles.
 
-4. **El proceso como narrativa visual** — Los estados de fabricación (En fabricación → Listo → Enviado) y la pestaña de contenidos pueden convertir la espera del pedido en una experiencia editorial: el comprador sigue el viaje de su pieza como un mini-documental.
+4. **El proceso como narrativa visual** — Los estados de fabricación (En preparación → Listo → Enviado) y la pestaña de contenidos pueden convertir la espera del pedido en una experiencia editorial: el comprador sigue el viaje de su pieza como un mini-documental.
 
 ---
 
@@ -180,7 +180,7 @@ Cuando espera un encargo personalizado, no está esperando un paquete — está 
 
 1. **Celebrar el primer pulso** — El primer seguidor, el primer mensaje y la primera venta merecen un momento de diseño especial. No un número incrementado — una notificación que se siente como reconocimiento.
 
-2. **La espera tiene nombre y tiene historia** — Ningún estado de pedido dice "procesando". Cada estado (En fabricación → Listo → Enviado) es un capítulo en la historia del objeto que el comprador está esperando.
+2. **La espera tiene nombre y tiene historia** — Ningún estado de pedido dice "procesando". Cada estado (En preparación → Listo → Enviado) es un capítulo en la historia del objeto que el comprador está esperando.
 
 3. **Respetar el flujo de la artesana** — La plataforma es un asistente silencioso que trabaja cuando ella no está mirando. Las notificaciones no interrumpen, los formularios no distraen.
 
@@ -307,7 +307,7 @@ Lo que hace bien:
 - `ArtisanHeader` — banner + avatar + nombre + descripción breve + localidad + sellos + botón seguir
 - `SealBadge` — variantes visuales para cada sello (Km 0, Hecho en Galicia, Ecológico, Reciclado, Artesanal)
 - `BottomNav` — barra de navegación inferior persistente en móvil
-- `OrderStatusTimeline` — estados de fabricación (En fabricación → Listo → Enviado) como línea de tiempo visual
+- `OrderStatusTimeline` — estados de fabricación (En preparación → Listo → Enviado) como línea de tiempo visual
 
 ---
 
@@ -354,7 +354,7 @@ Para la artesana, el reflejo de ese mismo momento es la primera notificación: a
 **Patrones novedosos (requieren diseño cuidadoso):**
 - **Artesana siempre presente en el producto** — en Etsy o Vinted la persona desaparece en el grid de búsqueda; en Artelier nunca. Requiere diseño de tarjeta de producto específico.
 - **Proceso de fabricación como capa de contenido** — la pestaña de contenidos y los estados de pedido como narrativa editorial no tienen equivalente en ningún marketplace conocido. Publicar una actualización de proceso debe ser tan simple como una historia de Instagram.
-- **La espera con nombre y significado** — los estados En fabricación → Listo → Enviado como línea de tiempo visible en el historial del comprador. Convierte la espera pasiva en seguimiento activo.
+- **La espera con nombre y significado** — los estados En preparación → Listo → Enviado como línea de tiempo visible en el historial del comprador. Convierte la espera pasiva en seguimiento activo.
 
 ### Mecánicas de la Experiencia Core
 
@@ -459,7 +459,7 @@ La dirección de diseño quedó establecida durante la exploración visual del P
 - **Navegación inferior (móvil)**: 5 elementos — Inicio · Buscar · [+Publicar destacado] · Mensajes · Mi cuenta
 - **Navegación superior (web)**: logotipo + links Descubrir / Entrar / Registrarme en The Girl Next Door
 - **Checkout**: desglose de costes completo y visible antes del CTA de pago, con aviso legal de desistimiento
-- **Estado de pedido**: línea de tiempo horizontal (En fabricación → Listo → Enviado) + actualización de estado personalizada del artesano con texto citado en caligrafía
+- **Estado de pedido**: línea de tiempo horizontal (En preparación → Listo → Enviado) + actualización de estado personalizada del artesano con texto citado en caligrafía
 
 ### Artefacto Visual de Referencia
 
@@ -564,7 +564,7 @@ flowchart TD
     I -->|Error| K[Error específico del pago\nreintento sin perder datos]
     J --> L[Email de confirmación]
     J --> M[Notificación a artesana: nuevo pedido]
-    J --> N[Estado inicial: En fabricación\nvisible en Mi cuenta → Pedidos]
+    J --> N[Estado inicial: En preparación\nvisible en Mi cuenta → Pedidos]
 ```
 
 **Optimizaciones clave:** desglose de costes visible completo antes del CTA de pago. El aviso de desistimiento es un notice visible, no letra pequeña. Si el pago falla, se preservan todos los datos introducidos.
@@ -585,7 +585,7 @@ flowchart TD
     G --> H[Comprador recibe enlace al producto]
     H --> D
     D --> I[Artesana recibe notificación de pago]
-    I --> J[Actualiza estado: En fabricación]
+    I --> J[Actualiza estado: En preparación]
     J --> K[Puede enviar actualización de proceso\ntexto + foto con tipografía caligráfica]
     K --> L[Actualiza estado: Listo / Enviado]
     L --> M{¿Enviado?}
@@ -600,7 +600,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     A([Confirmación de pedido]) --> B[Mi cuenta → Pedidos]
-    B --> C[Línea de tiempo:\nEn fabricación → Listo → Enviado]
+    B --> C[Línea de tiempo:\nEn preparación → Listo → Enviado]
     C --> D{¿Hay actualización de artesana?}
     D -->|Sí| E[Notificación push / email\nTexto en caligrafía + foto opcional]
     D -->|No| F[Estado estático con fecha estimada]
@@ -706,7 +706,7 @@ Los siguientes componentes son exclusivos de Artelier y no tienen equivalente en
 
 **Propósito:** Mostrar el estado del pedido con lenguaje artesanal, como una narrativa de fabricación.
 
-**Pasos:** Confirmado → En fabricación → Listo → Enviado → Entregado
+**Pasos:** Confirmado → En preparación → Listo → Enviado → Entregado
 
 **Estados del punto:** done (✓ verde primario) · active (✦ ámbar con halo glow) · pending (○ gris superficie)
 

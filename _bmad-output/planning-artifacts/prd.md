@@ -491,7 +491,7 @@ Las funcionalidades de V2 (Mobile + Crecimiento) y V3 (Visión) están definidas
 
 ### Estados de Pedido y Proceso
 
-- **FR50:** Un artesano puede actualizar el estado de fabricación de un pedido activo (En fabricación → Listo → Enviado / Listo para recogida), visible para el comprador en su historial de pedidos
+- **FR50:** Un artesano puede actualizar el estado de fabricación de un pedido activo (En preparación → Listo → Enviado / Listo para recogida), visible para el comprador en su historial de pedidos
 
 ---
 

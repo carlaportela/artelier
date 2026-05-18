@@ -67,7 +67,7 @@ FR46: El administrador puede suspender o eliminar perfiles que incumplan las con
 FR47: El administrador puede acceder a un panel con métricas básicas de actividad
 FR48: La plataforma muestra aviso legal, política de privacidad, política de cookies y condiciones generales accesibles desde todas las páginas
 FR49: La plataforma exime de la primera comisión de venta al artesano en su primera transacción completada
-FR50: Un artesano puede actualizar el estado de fabricación de un pedido activo (En fabricación → Listo → Enviado / Listo para recogida), visible para el comprador
+FR50: Un artesano puede actualizar el estado de fabricación de un pedido activo (En preparación → Listo → Enviado / Listo para recogida), visible para el comprador
 
 ### NonFunctional Requirements
 
@@ -119,7 +119,7 @@ UX-DR3: Componente `ProductCard` — foto aspect-ratio 1:1, precio, nombre produ
 UX-DR4: Componente `ArtisanHeader` — banner 80px móvil / 120px tablet, avatar superpuesto, nombre (The Girl Next Door 20px), localidad, bio breve, badges de perfil, botón Seguir (secondary). Skeleton loading.
 UX-DR5: Componente `SealBadge` — dos sistemas visuales distintos: (1) sellos de producto: fondo sólido + borde crema, The Girl Next Door, para ProductCard; (2) badges de perfil: outlined, DM Sans, para ArtisanHeader. 5 sellos producto + 6 badges perfil con colores individuales.
 UX-DR6: Componente `BottomNav` — 5 elementos: Inicio · Buscar · [+ Publicar] · Mensajes · Mi cuenta. Botón central en color acento, 44×44px mínimo. Visible en móvil/tablet, reemplazado por top nav en desktop. Indicador activo: dot bajo icono.
-UX-DR7: Componente `OrderStatusTimeline` — 5 pasos: Confirmado → En fabricación → Listo → Enviado → Entregado. Estados: done (✓ verde), active (✦ ámbar con halo), pending (○ gris). Lista `<ol>` con ARIA.
+UX-DR7: Componente `OrderStatusTimeline` — 5 pasos: Confirmado → En preparación → Listo → Enviado → Entregado. Estados: done (✓ verde), active (✦ ámbar con halo), pending (○ gris). Lista `<ol>` con ARIA.
 UX-DR8: Componente `ProcessUpdate` — tarjeta de actualización artesana. Nombre (The Girl Next Door bold) + timestamp (`<time>`) + texto entre comillas (`<blockquote>`, The Girl Next Door italic) + imagen opcional. Fondo tintado.
 UX-DR9: Estrategia responsive mobile-first 3 breakpoints: base (320px) grid 2 col + BottomNav · md (768px) grid 3 col · lg (1024px) grid 4-5 col + nav lateral/top. max-width 900px en contenido, 1200px en catálogo desktop.
 UX-DR10: Accesibilidad WCAG 2.1 AA: contrastes verificados (tabla en spec), touch targets 44×44px mínimo, navegación completa por teclado en flujo de compra, ARIA landmarks en nav y formularios, alt text en todas las imágenes.
@@ -704,3 +704,467 @@ para conocer mis derechos y las condiciones de uso antes de comprar.
 **Dado** que un motor de búsqueda indexa las páginas legales
 **Cuando** las rastrea
 **Entonces** tienen meta tags correctos y no están bloqueadas con `noindex`
+
+---
+
+## Épico 4: Mensajería
+
+Compradoras y artesanas pueden conversar directamente con actualización por polling, adjuntar imágenes y acceder a su historial completo de conversaciones.
+
+### Historia 4.1: Iniciar y gestionar conversaciones
+
+Como compradora,
+quiero iniciar una conversación privada con una artesana desde su perfil o desde un producto,
+para coordinar un encargo personalizado o hacer preguntas antes de comprar.
+
+**Acceptance Criteria:**
+
+**Dado** que soy compradora autenticada y pulso "Enviar mensaje" en el perfil o producto de una artesana
+**Cuando** se abre la pantalla de conversación
+**Entonces** si ya existe una conversación previa entre nosotras, se abre la existente (no se crea duplicada)
+**Y** si es nueva, la `Conversation` se crea en la base de datos al enviar el primer mensaje
+
+**Dado** que accedo a `/messages`
+**Cuando** la página carga
+**Entonces** veo la lista de todas mis conversaciones ordenadas por último mensaje (más reciente primero)
+**Y** cada conversación muestra: avatar + nombre de la otra parte, último mensaje truncado y timestamp
+**Y** si no tengo conversaciones, el empty state muestra: "Tus conversaciones con artesanas aparecerán aquí"
+
+**Dado** que tengo mensajes no leídos en una conversación
+**Cuando** veo la lista de conversaciones
+**Entonces** esa conversación aparece con un indicador de no leído (dot de color primario)
+**Y** el indicador desaparece al abrir la conversación
+
+### Historia 4.2: Enviar y recibir mensajes con polling
+
+Como artesana o compradora,
+quiero enviar mensajes y ver los mensajes nuevos en tiempo casi real,
+para mantener una conversación fluida sin recargar la página manualmente.
+
+**Acceptance Criteria:**
+
+**Dado** que estoy en una conversación activa con la pestaña en primer plano
+**Cuando** han pasado 5 segundos desde la última actualización
+**Entonces** se hace automáticamente `GET /api/messages/[conversationId]?since=<timestamp>`
+**Y** los mensajes nuevos aparecen al final sin recargar la página
+
+**Dado** que cambio de pestaña o minimizo el navegador
+**Cuando** la Page Visibility API detecta que la pestaña está en segundo plano
+**Entonces** el polling se pausa automáticamente y se reanuda al volver
+
+**Dado** que escribo un mensaje y pulso "Enviar"
+**Cuando** el mensaje se procesa
+**Entonces** aparece en la conversación de forma inmediata (optimistic update)
+**Y** se guarda en la base de datos vía `POST /api/messages/[conversationId]`
+**Y** si el envío falla, el mensaje se marca con error y hay opción de reintentar
+
+**Dado** que el endpoint de mensajes recibe más de 30 requests por minuto desde la misma IP
+**Cuando** el rate limiter de Upstash Redis evalúa la request
+**Entonces** devuelve `429 Too Many Requests` con el header `Retry-After`
+
+### Historia 4.3: Adjuntar imágenes y ver historial completo
+
+Como artesana o compradora,
+quiero adjuntar imágenes en mis mensajes y ver el historial completo de una conversación,
+para compartir fotos de referencias o del proceso de fabricación directamente en el chat.
+
+**Acceptance Criteria:**
+
+**Dado** que pulso el icono de adjuntar imagen en el chat
+**Cuando** selecciono una imagen de la galería
+**Entonces** la imagen se sube a `POST /api/upload` → Cloudinary
+**Y** aparece en la conversación como imagen inline clicable (abre en tamaño completo)
+**Y** el `publicId` de Cloudinary se guarda junto al mensaje en la base de datos
+
+**Dado** que accedo a una conversación con muchos mensajes
+**Cuando** la página carga
+**Entonces** veo los mensajes más recientes (últimos 30) con scroll hacia arriba para cargar anteriores
+**Y** el scroll se posiciona en el último mensaje al abrir la conversación
+
+**Dado** que la conversación incluye mensajes de texto e imágenes
+**Cuando** un lector de pantalla navega por ella
+**Entonces** cada imagen tiene `alt` descriptivo, el `<time>` de cada mensaje es legible
+**Y** la lista de mensajes usa el landmark semántico correcto
+
+---
+
+## Épico 5: Pagos y Checkout
+
+Una compradora completa una compra con desglose completo de costes y elección de método de envío antes de pagar. La artesana cobra automáticamente vía Stripe Connect. El sistema gestiona cancelaciones en 24h, confirmación de envío y penalizaciones por incumplimiento. Primera venta sin comisión.
+
+### Historia 5.1: Onboarding de artesana en Stripe Connect
+
+Como artesana,
+quiero conectar mi cuenta bancaria con Stripe Connect,
+para poder recibir los pagos de mis ventas directamente en mi cuenta.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana autenticada sin cuenta Stripe conectada
+**Cuando** intento publicar mi primer producto
+**Entonces** veo un aviso: "Conecta tu cuenta bancaria para poder vender" con CTA
+
+**Dado** que inicio el proceso de onboarding de Stripe
+**Cuando** pulso "Conectar cuenta bancaria"
+**Entonces** se crea una Stripe Connect Express account vía API
+**Y** soy redirigida al flujo de onboarding de Stripe (KYC delegado a Stripe)
+**Y** Stripe tiene configuradas las URLs `return_url` y `refresh_url` correctas apuntando a Artelier
+
+**Dado** que completo el onboarding en Stripe y regreso a Artelier
+**Cuando** llego a la `return_url`
+**Entonces** mi `stripeAccountId` queda guardado en la base de datos
+**Y** veo confirmación: "Tu cuenta bancaria está conectada. Ya puedes vender."
+
+**Dado** que el onboarding de Stripe queda incompleto o expira
+**Cuando** regreso a Artelier vía `refresh_url`
+**Entonces** se genera un nuevo enlace de onboarding y se me redirige automáticamente
+
+### Historia 5.2: Checkout con método de envío y desglose completo de costes
+
+Como compradora,
+quiero elegir el método de envío durante el checkout y ver el desglose completo del coste total antes de confirmar el pago,
+para tomar una decisión informada y saber exactamente qué protección tengo según el envío que elija.
+
+**Acceptance Criteria:**
+
+**Dado** que accedo al checkout en `/checkout`
+**Cuando** veo la pantalla de pago
+**Entonces** hay un selector de método de envío con las opciones disponibles: envío con la plataforma (precio incluido) / envío propio de la artesana / recogida en persona
+**Y** al seleccionar cada opción, el desglose de costes se actualiza en tiempo real con el precio final
+
+**Dado** que selecciono "envío con la plataforma"
+**Cuando** el desglose se actualiza
+**Entonces** el desglose muestra en líneas separadas: precio del producto + coste de envío + comisión de plataforma (%) + comisión de seguro (%) + fee Stripe = **Total**
+**Y** el botón de pago muestra el total en su label: "Pagar XX,XX€"
+
+**Dado** que selecciono "envío propio de la artesana" o "recogida en persona"
+**Cuando** el desglose se actualiza
+**Entonces** aparece un aviso destacado: "Sin envío de la plataforma, el seguimiento y la protección ante incidencias son limitados"
+**Y** debo marcar un checkbox confirmando que entiendo las implicaciones antes de poder pagar
+
+**Dado** que el producto es perecedero o personalizado
+**Cuando** veo el checkout
+**Entonces** hay un aviso explícito antes del botón de pago sobre la excepción al derecho de desistimiento (Art. 103 Directiva 2011/83/UE)
+**Y** debo marcar un checkbox de aceptación separado antes de poder confirmar
+
+**Dado** que confirmo el pago y Stripe procesa la transacción correctamente
+**Cuando** el pago se completa
+**Entonces** el `status` del producto cambia a `SOLD`
+**Y** se crea el registro `Order` con `stripePaymentIntentId` y el método de envío elegido
+**Y** soy redirigida a la confirmación de pedido
+
+**Dado** que el pago falla
+**Cuando** Stripe devuelve el error
+**Entonces** veo el mensaje de error específico traducido al español
+**Y** todos los datos del formulario se conservan (no se pierde lo introducido)
+
+**Dado** que el endpoint `/api/checkout` recibe más de 10 requests por minuto desde la misma IP
+**Cuando** el rate limiter evalúa la request
+**Entonces** devuelve `429 Too Many Requests`
+
+### Historia 5.3: Webhooks de Stripe e idempotencia de pagos
+
+Como sistema,
+quiero procesar los eventos de Stripe de forma segura e idempotente,
+para garantizar que ningún pago se procese dos veces aunque Stripe reenvíe el mismo evento.
+
+**Acceptance Criteria:**
+
+**Dado** que Stripe envía un evento `payment_intent.succeeded` al webhook `POST /api/webhooks/stripe`
+**Cuando** el endpoint recibe la request
+**Entonces** verifica la firma con `stripe.webhooks.constructEvent` usando `STRIPE_WEBHOOK_SECRET`
+**Y** si la firma es inválida, devuelve `400 Bad Request` sin procesar nada
+
+**Dado** que el evento tiene firma válida
+**Cuando** se procesa
+**Entonces** busca en la base de datos si ya existe un `Order` con ese `stripeEventId`
+**Y** si ya existe (evento duplicado), devuelve `200 OK` sin volver a crear el pedido
+
+**Dado** que es la primera vez que llega ese evento
+**Cuando** se procesa correctamente
+**Entonces** se crea el `Order`, se actualiza el `status` del producto a `SOLD`
+**Y** se guarda el `stripeEventId` en la base de datos para garantizar idempotencia
+**Y** se disparan las notificaciones de email (Épico 6)
+
+**Dado** que ocurre un error interno al procesar el evento
+**Cuando** el endpoint devuelve `500`
+**Entonces** Stripe reintenta el evento con exponential backoff
+**Y** el error queda registrado en Sentry
+
+### Historia 5.4: Confirmación de envío, cancelaciones y penalizaciones
+
+Como artesana y compradora,
+quiero que el sistema gestione las cancelaciones en 24h, la confirmación del envío por parte de la artesana y las penalizaciones automáticas por incumplimiento,
+para que el proceso postventa sea transparente y proteja a ambas partes.
+
+**Acceptance Criteria:**
+
+**Dado** que soy compradora y han pasado menos de 24h desde la confirmación del pedido
+**Cuando** accedo al detalle del pedido en `/orders/[id]` y solicito la cancelación
+**Entonces** puedo cancelarla con una justificación
+**Y** el importe íntegro se devuelve automáticamente a mi método de pago vía Stripe Refund
+
+**Dado** que soy artesana con un pedido confirmado en `/studio/orders/[id]`
+**Cuando** preparo el envío
+**Entonces** puedo confirmar el envío introduciendo el número de seguimiento (si aplica) o marcando "Listo para recogida"
+**Y** el estado del pedido avanza y la compradora ve la actualización en su historial
+
+**Dado** que la artesana no confirma el envío dentro del plazo establecido
+**Cuando** el Cron Job diario detecta el vencimiento
+**Entonces** el pedido se cancela automáticamente
+**Y** el importe íntegro se devuelve a la compradora
+**Y** se aplica una penalización económica a la artesana (descuento en su siguiente pago vía Stripe)
+
+**Dado** que es la primera venta completada de una artesana
+**Cuando** Stripe distribuye el pago
+**Entonces** la comisión de plataforma no se descuenta de esa transacción (FR49)
+**Y** el campo `firstSaleCompleted` de la artesana se marca como `true` en la base de datos
+
+---
+
+## Épico 6: Pedidos, Notificaciones y Proceso de En preparación
+
+El comprador recibe su confirmación de pedido por email y puede seguir el estado de En preparación en tiempo real con actualizaciones personales de la artesana. Todos los eventos importantes generan notificaciones por email.
+
+### Historia 6.1: Notificaciones por email transaccionales
+
+Como usuaria de Artelier,
+quiero recibir emails transaccionales bien diseñados en todos los eventos importantes,
+para estar informada sin tener que entrar en la aplicación.
+
+**Acceptance Criteria:**
+
+**Dado** que soy compradora y acabo de completar el pago
+**Cuando** el webhook de Stripe confirma el pago
+**Entonces** recibo un email `OrderConfirmation` con: nombre del producto, nombre de la artesana, precio pagado, número de pedido, y botón "Ver mi pedido" que enlaza a `/orders/[id]`
+
+**Dado** que soy artesana y alguien ha comprado uno de mis productos
+**Cuando** el webhook de Stripe confirma el pago
+**Entonces** recibo un email `NewSale` con: nombre del producto vendido, precio (comisión ya descontada si aplica), datos de envío del comprador, y botón "Ver pedido en mi estudio" que enlaza a `/studio/orders/[id]`
+
+**Dado** que soy artesana y alguien me empieza a seguir
+**Cuando** se crea un nuevo `Follow` en la base de datos
+**Entonces** recibo un email `NewFollower` con el nombre y foto del comprador y botón "Ver su perfil"
+
+**Dado** que soy compradora que sigo a una artesana
+**Cuando** la artesana publica un nuevo producto
+**Entonces** recibo un email `NewProduct` con foto, nombre y precio del producto, y botón "Ver producto" que enlaza al catálogo
+
+**Dado** que soy usuaria y recibo un mensaje privado mientras no estoy activa en la app
+**Cuando** han transcurrido 5 minutos desde el último mensaje no leído
+**Entonces** recibo un email `NewMessage` con el nombre del remitente, un preview del mensaje, y botón "Ver conversación" que enlaza a `/messages/[conversationId]`
+**Y** no se envía si el destinatario ha leído el mensaje antes de que expiren los 5 minutos
+
+**Dado** que cualquier email transaccional es enviado
+**Cuando** se renderiza
+**Entonces** usa los tokens de diseño Tinta y Lino (The Girl Next Door para el nombre de Artelier en cabecera, DM Sans para el cuerpo)
+**Y** incluye pie de página con enlace a preferencias de notificación y enlace de baja
+**Y** es enviado mediante Resend con `from: noreply@artelier.es`
+
+### Historia 6.2: Estados de En preparación, confirmación de recepción y OrderStatusTimeline
+
+Como artesana y compradora,
+quiero visualizar y actualizar el estado de un pedido a través de un timeline claro, y que el pago a la artesana se libere solo cuando la compradora confirme haber recibido y aceptado el producto,
+para que el proceso sea transparente y proteja a ambas partes hasta el último paso.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana con un pedido confirmado en `/studio/orders/[id]`
+**Cuando** visualizo el detalle del pedido
+**Entonces** veo el componente `OrderStatusTimeline` con los estados: Confirmado → **En preparación** → Listo → Enviado → Entregado
+**Y** el estado actual aparece marcado con `aria-current="step"` en el `<ol>` subyacente
+
+**Dado** que soy artesana y quiero avanzar el estado del pedido
+**Cuando** pulso "Avanzar estado" en el panel de estudio
+**Entonces** puedo seleccionar el siguiente estado en la secuencia (Confirmado → En preparación → Listo → Enviado) y añadir un mensaje personal opcional (máx. 280 caracteres)
+**Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline del comprador
+**Y** la artesana puede avanzar el estado hasta "Enviado" — el paso a "Entregado" es exclusivo de la compradora
+
+**Dado** que soy compradora viendo `/orders/[id]`
+**Cuando** la artesana actualiza el estado del pedido
+**Entonces** el timeline se actualiza automáticamente (polling cada 30s si la pestaña está visible, pausado si `document.hidden`)
+**Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
+**Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
+
+**Dado** que el pedido está en estado "Enviado"
+**Cuando** soy compradora y accedo a `/orders/[id]`
+**Entonces** veo un CTA principal "Confirmar recepción" y un enlace secundario "Tengo un problema con este pedido"
+**Y** el botón "Confirmar recepción" es el único que avanza el pedido al estado "Entregado"
+
+**Dado** que soy compradora y pulso "Confirmar recepción"
+**Cuando** confirmo la acción
+**Entonces** el `Order.status` pasa a `ENTREGADO`
+**Y** Stripe libera el pago retenido (transferencia a la cuenta Connect de la artesana)
+**Y** el campo `paidOut` se marca como `true` en la base de datos
+**Y** la opción de abrir una disputa desaparece permanentemente para este pedido
+**Y** la compradora puede dejar una valoración (habilitado solo tras estado Entregado)
+
+**Dado** que el pedido lleva 14 días en estado "Enviado" sin acción de la compradora
+**Cuando** el Cron Job diario detecta el vencimiento
+**Entonces** el día 12 se envía un email de aviso a la compradora recordándole que tiene 2 días para confirmar o disputar
+**Y** el día 14 el sistema confirma automáticamente la recepción: `Order.status` → `ENTREGADO`, pago liberado a la artesana
+**Y** la compradora recibe email informando de la confirmación automática
+
+---
+
+## Épico 7: Confianza, Sellos y Disputas
+
+Las artesanas pueden solicitar sellos verificados y los sellos automáticos se asignan al cumplir umbrales. Compradores y artesanas pueden abrir disputas formales con evidencias; la artesana decide si requiere devolución física en pedidos estándar y las disputas sin acuerdo escalan al admin.
+
+### Historia 7.1: Sistema de sellos de producto y badges de artesana
+
+Como artesana,
+quiero solicitar sellos verificados por el admin y que los sellos automáticos se asignen solos al cumplir umbrales,
+para transmitir confianza real tanto en mis productos como en mi perfil.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana en `/studio/settings/seals`
+**Cuando** accedo a la sección de sellos
+**Entonces** veo los sellos disponibles agrupados en cuatro categorías:
+
+- **Sellos de producto — verificados por admin:** Hecho a Mano · Ecológico · Sostenible
+- **Sellos de producto — automáticos:** Superventas · Muy Popular · Recomendado
+- **Badges de perfil — verificados por admin:** Artesana Verificada · Taller Propio · Artesanía de Galicia
+- **Badges de perfil — automáticos:** Destacada · Activa · Envío Prioritario
+
+**Y** cada sello verificado muestra su estado: Sin solicitar / Pendiente / Aprobado / Rechazado
+**Y** cada sello automático muestra su estado actual y el criterio necesario para obtenerlo
+
+**Dado** que quiero solicitar un sello de producto verificado (Hecho a Mano · Ecológico · Sostenible)
+**Cuando** pulso "Solicitar" en ese sello
+**Entonces** se despliega un selector con todos mis productos publicados para elegir a cuál aplicar el sello
+**Y** una vez seleccionado el producto, puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes de evidencia
+**Y** se crea un `SealRequest` en estado `PENDING` vinculado al `productId` seleccionado y a mi cuenta
+**Y** puedo solicitar el mismo sello para distintos productos enviando una solicitud separada por cada uno
+
+**Dado** que quiero solicitar un badge de perfil verificado (Artesana Verificada · Taller Propio · Artesanía de Galicia)
+**Cuando** pulso "Solicitar" en ese badge
+**Entonces** no hay selector de producto — el badge se aplica a mi perfil completo
+**Y** puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes
+**Y** para el badge **Artesanía de Galicia** el formulario requiere adicionalmente subir un certificado oficial (PDF/imagen) expedido por la Xunta de Galicia o entidad equivalente
+**Y** se crea un `SealRequest` en estado `PENDING` vinculado únicamente a mi cuenta
+
+**Dado** que el admin aprueba o rechaza una solicitud
+**Cuando** cambia el estado del `SealRequest`
+**Entonces** los sellos aprobados se muestran inmediatamente en mis productos (`ProductCard`) y perfil (`ArtisanHeader`)
+**Y** recibo un email con el resultado y, si hay rechazo, el motivo
+
+**Dado** que un producto existe en la base de datos
+**Cuando** el sistema evalúa umbrales automáticos (job diario)
+**Entonces** se asigna **Superventas** si el producto tiene ≥ 10 ventas completadas (solo para productos no únicos)
+**Y** se asigna **Muy Popular** si el producto tiene ≥ 30 guardados/favoritos
+**Y** se asigna **Recomendado** si el producto tiene media ≥ 4.5 con ≥ 5 valoraciones
+
+**Dado** que una artesana existe en la base de datos
+**Cuando** el sistema evalúa umbrales automáticos (job diario)
+**Entonces** se asigna **Destacada** si la artesana tiene ≥ 100 seguidores
+**Y** se asigna **Activa** si su tiempo medio de respuesta a mensajes es < 4h en los últimos 30 días
+**Y** se asigna **Envío Prioritario** si confirma el envío de los pedidos en < 48h de media en sus últimos 10 pedidos
+
+**Dado** que se muestran los sellos en el componente `SealBadge`
+**Cuando** un visitante ve un `ProductCard` o un `ArtisanHeader`
+**Entonces** los sellos de producto usan fondo sólido + borde crema + The Girl Next Door (esquina de la card)
+**Y** los badges de perfil usan estilo outlined + DM Sans (bajo el nombre de la artesana)
+**Y** cada sello tiene `aria-label` con descripción completa del criterio
+
+### Historia 7.2: Apertura de disputas y política de devoluciones por tipo de producto
+
+Como compradora o artesana,
+quiero poder abrir una disputa formal con evidencias cuando hay un problema con un pedido,
+para que el sistema aplique la política correcta según el tipo de producto.
+
+**Acceptance Criteria:**
+
+**Dado** que soy compradora y el pedido está en estado `ENTREGADO` (ya aceptado)
+**Cuando** intento acceder a la opción de disputa
+**Entonces** el botón "Abrir disputa" no aparece en la UI
+**Y** si se llama directamente a `POST /api/disputes` con ese `orderId`, el endpoint devuelve `403` con mensaje: "No puedes abrir una disputa sobre un pedido ya aceptado"
+
+**Dado** que soy compradora y el pedido está en estado `ENVIADO` (aún no confirmado)
+**Cuando** accedo a `/orders/[id]` y pulso "Tengo un problema con este pedido"
+**Entonces** puedo seleccionar el motivo (Producto no recibido · Producto dañado o no conforme · No corresponde a la descripción · Otro)
+**Y** puedo adjuntar descripción (máx. 1000 caracteres) y hasta 5 imágenes
+**Y** se crea un `Dispute` con estado `OPEN` vinculado al `orderId`
+**Y** el estado del pedido pasa a `EN_DISPUTA`
+**Y** el pago queda retenido (no transferido a la artesana si aún no lo estaba)
+
+**Dado** que soy artesana y recibo una notificación de disputa
+**Cuando** accedo al detalle en `/studio/orders/[id]`
+**Entonces** puedo añadir mi versión y hasta 5 imágenes de evidencia
+**Y** se registra mi respuesta en el `Dispute` con timestamp
+
+**Dado** que se abre una disputa sobre un producto `PERISHABLE`
+**Cuando** el sistema evalúa la política aplicable
+**Entonces** se muestra la nota: "Los productos perecederos no admiten devolución física — el deterioro durante el transporte de vuelta hace imposible una inspección válida"
+**Y** la resolución solo puede ser: reembolso directo o rechazo de la disputa
+
+**Dado** que se abre una disputa sobre un producto `UNIQUE` (pedido personalizado)
+**Cuando** el sistema evalúa la política aplicable
+**Entonces** se muestra la nota: "Los pedidos personalizados están excluidos del derecho de desistimiento (Art. 103 LGDCU)"
+**Y** la resolución solo puede ser: reembolso directo por defecto imputable a la artesana, o rechazo
+
+**Dado** que se abre una disputa sobre un producto `STANDARD`
+**Cuando** el sistema evalúa la política aplicable
+**Entonces** aplica el derecho de desistimiento de 14 días hábiles desde la entrega
+**Y** la artesana decide si requiere devolución física o acepta reembolso directo (ver Historia 7.3)
+
+**Dado** que se envía `POST /api/disputes`
+**Cuando** el endpoint recibe la petición
+**Entonces** Upstash Redis aplica rate limiting: máx. 5 disputas por usuario por hora
+
+### Historia 7.3: Resolución de disputas — decisión de la artesana, devolución física y escalado
+
+Como artesana y compradora,
+quiero que la artesana decida si requiere devolución física o acepta reembolso directo en pedidos estándar,
+para que el proceso sea ágil y solo escale al admin cuando haya desacuerdo.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana y hay una disputa abierta sobre un pedido estándar
+**Cuando** accedo a `/studio/orders/[id]` con disputa activa
+**Entonces** tengo dos opciones de resolución:
+- **Aceptar reembolso directo** (sin necesidad de que la compradora devuelva el producto)
+- **Requerir devolución física** antes de procesar el reembolso
+
+**Dado** que la artesana selecciona "Aceptar reembolso directo"
+**Cuando** confirma la acción
+**Entonces** se ejecuta un Stripe Refund al método de pago original por el importe total del pedido
+**Y** el estado del `Dispute` pasa a `RESOLVED` y el `Order` a `REEMBOLSADO`
+**Y** ambas partes reciben email de notificación con el resultado
+
+**Dado** que la artesana selecciona "Requerir devolución física"
+**Cuando** confirma la acción
+**Entonces** el estado del `Dispute` pasa a `RETURN_REQUESTED`
+**Y** la compradora recibe notificación con instrucciones de envío de vuelta y un plazo de 7 días naturales para enviarlo
+**Y** la compradora puede marcar "Solicitar que la artesana asuma el coste de envío de devolución"
+
+**Dado** que la compradora solicita que la artesana asuma el coste de envío de devolución
+**Cuando** la artesana recibe la solicitud
+**Entonces** puede aceptar (el coste se descuenta de su pago Stripe) o rechazar (la compradora asume el coste)
+**Y** independientemente de la decisión de coste, la compradora debe enviar el producto en el plazo indicado
+
+**Dado** que la compradora envía el producto de vuelta
+**Cuando** marca "Producto enviado" en `/orders/[id]` con número de seguimiento opcional
+**Entonces** el estado del `Dispute` pasa a `RETURN_IN_TRANSIT`
+**Y** la artesana recibe notificación para estar pendiente de la recepción
+
+**Dado** que la artesana confirma haber recibido el producto
+**Cuando** pulsa "Producto recibido y revisado" en `/studio/orders/[id]`
+**Entonces** puede seleccionar: "Aceptar devolución — iniciar reembolso" o "Rechazar devolución — producto no corresponde"
+**Y** si acepta: se ejecuta el Stripe Refund, `Order` pasa a `REEMBOLSADO`, ambas partes reciben email
+**Y** si rechaza: `Dispute` pasa a `ESCALATED` y el admin recibe alerta en el panel
+
+**Dado** que la artesana no responde a la disputa en 5 días hábiles
+**Cuando** el Cron Job diario detecta el vencimiento
+**Entonces** el `Dispute` se escala automáticamente a `ESCALATED` con alerta al admin
+
+**Dado** que la compradora no está de acuerdo con la decisión de la artesana
+**Cuando** pulsa "Escalar al administrador" en `/orders/[id]`
+**Entonces** el `Dispute` pasa a `ESCALATED`
+**Y** el admin puede revisar todas las evidencias de ambas partes y resolver con reembolso total, parcial o rechazo definitivo
+
+**Dado** que el admin resuelve una disputa escalada
+**Cuando** selecciona la resolución final en `/admin/disputes/[id]`
+**Entonces** puede ejecutar reembolso total, reembolso parcial (importe personalizado) o rechazo definitivo
+**Y** la decisión del admin es inapelable y genera email de notificación a ambas partes con el detalle de la resolución
