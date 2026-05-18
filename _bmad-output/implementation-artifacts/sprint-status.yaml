@@ -1,0 +1,114 @@
+# generated: 2026-05-18
+# last_updated: 2026-05-18
+# project: artelier
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-05-18
+last_updated: 2026-05-18
+project: artelier
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # ─── Épico 0: Fundación y Sistema de Diseño ───────────────────────────────
+  epic-0: in-progress
+  0-1-inicializacion-del-proyecto-t3: ready-for-dev
+  0-2-sistema-de-diseno-tinta-y-lino: backlog
+  0-3-ci-cd-middleware-e-i18n-base: backlog
+  0-4-configuracion-de-servicios-externos: backlog
+  epic-0-retrospective: optional
+
+  # ─── Épico 1: Autenticación y Perfiles de Usuario ─────────────────────────
+  epic-1: backlog
+  1-1-registro-con-eleccion-de-rol: backlog
+  1-2-login-logout-y-recuperacion-de-contrasena: backlog
+  1-3-perfil-publico-de-artesana: backlog
+  1-4-perfil-de-compradora-y-seguir-artesanas: backlog
+  1-5-derechos-rgpd-y-gestion-de-cuenta: backlog
+  epic-1-retrospective: optional
+
+  # ─── Épico 2: Catálogo y Publicación de Productos ─────────────────────────
+  epic-2: backlog
+  2-1-publicar-un-producto-flujo-foto-primero: backlog
+  2-2-editar-eliminar-productos-y-gestionar-sellos: backlog
+  2-3-gestion-de-stock-y-pedidos-personalizados: backlog
+  2-4-retiro-automatico-de-productos-perecederos: backlog
+  epic-2-retrospective: optional
+
+  # ─── Épico 3: Descubrimiento y Navegación Pública ─────────────────────────
+  epic-3: backlog
+  3-1-feed-publico-y-perfiles-indexables-por-seo: backlog
+  3-2-feed-personalizado-con-scroll-infinito: backlog
+  3-3-busqueda-y-filtros-por-localidad-categoria-y-sello: backlog
+  3-4-paginas-legales-estaticas-lssi: backlog
+  epic-3-retrospective: optional
+
+  # ─── Épico 4: Mensajería ──────────────────────────────────────────────────
+  epic-4: backlog
+  4-1-iniciar-y-gestionar-conversaciones: backlog
+  4-2-enviar-y-recibir-mensajes-con-polling: backlog
+  4-3-adjuntar-imagenes-y-ver-historial-completo: backlog
+  epic-4-retrospective: optional
+
+  # ─── Épico 5: Pagos y Checkout ────────────────────────────────────────────
+  epic-5: backlog
+  5-1-onboarding-de-artesana-en-stripe-connect: backlog
+  5-2-checkout-con-metodo-de-envio-y-desglose-completo: backlog
+  5-3-webhooks-de-stripe-e-idempotencia-de-pagos: backlog
+  5-4-confirmacion-de-envio-cancelaciones-y-penalizaciones: backlog
+  epic-5-retrospective: optional
+
+  # ─── Épico 6: Pedidos, Notificaciones y Proceso de En preparación ─────────
+  epic-6: backlog
+  6-1-notificaciones-por-email-transaccionales: backlog
+  6-2-timeline-de-estados-y-actualizaciones-de-proceso: backlog
+  6-3-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
+  epic-6-retrospective: optional
+
+  # ─── Épico 7: Confianza, Sellos y Disputas ────────────────────────────────
+  epic-7: backlog
+  7-1-sellos-de-producto-solicitud-aprobacion-y-automaticos: backlog
+  7-2-badges-de-perfil-solicitud-aprobacion-y-automaticos: backlog
+  7-3-apertura-de-disputas-y-politica-de-devoluciones: backlog
+  7-4-resolucion-de-disputas-decision-artesana-y-escalado: backlog
+  epic-7-retrospective: optional
+
+  # ─── Épico 8: Panel de Administración y Cumplimiento Legal ────────────────
+  epic-8: backlog
+  8-1-acceso-al-panel-de-administracion-con-totp-2fa: backlog
+  8-2-estadisticas-de-artesana-y-metricas-de-plataforma: backlog
+  8-3-moderacion-de-perfiles-y-gestion-de-solicitudes-de-sellos: backlog
+  8-4-paginas-legales-lssi-y-gestion-de-cookies: backlog
+  epic-8-retrospective: optional

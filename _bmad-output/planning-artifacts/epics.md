@@ -175,21 +175,20 @@ FR39: Épico 6 — Confirmación de pedido por email al comprador (LSSI)
 FR40: Épico 6 — Notificación email de nuevo pedido al artesana
 FR41: Épico 7 — Comprador abre solicitud de disputa con evidencias
 FR42: Épico 7 — Artesana abre solicitud de disputa con evidencias
-FR43: Épico 7 — Admin revisa, aprueba o rechaza disputas
-FR44: Épico 7 — Sistema aplica política de devoluciones según tipo de producto
-FR45: Épico 7 — Admin aprueba o rechaza solicitudes de sellos
+FR43: Épico 7 H7.4 (resolución artesana) + Épico 8 H8.3 (resolución admin escalada)
+FR44: Épico 7 H7.3 — Sistema aplica política de devoluciones según tipo de producto
+FR45: Épico 7 H7.1/H7.2 (solicitud artesana) + Épico 8 H8.3 (aprobación/rechazo admin)
 FR46: Épico 8 — Admin suspende o elimina perfiles por incumplimiento
 FR47: Épico 8 — Panel de métricas básicas de actividad
 FR48: Épico 8 — Páginas legales accesibles desde todas las páginas (LSSI)
 FR49: Épico 5 — Primera venta sin comisión para la artesana
-FR50: Épico 6 — Artesana actualiza estado de fabricación visible para el comprador
+FR50: Épico 6 H6.2/H6.3 — Artesana actualiza estados de pedido; comprador confirma entrega y acepta
 
 ## Epic List
 
 ### Épico 0: Fundación y Sistema de Diseño
-El proyecto queda inicializado con el stack completo, schema de base de datos, sistema de diseño Tinta y Lino, CI/CD y estructura de directorios lista para construir las funcionalidades de usuario.
-**ARs cubiertos:** AR1 · AR2 · AR3 · AR12 · AR13
-**UX-DRs cubiertos:** UX-DR1 · UX-DR2 · UX-DR17
+El proyecto queda inicializado con el stack completo, schema de base de datos, sistema de diseño Tinta y Lino, CI/CD, clientes de servicios externos (Resend, Cloudinary, Upstash) y estructura de directorios lista para construir las funcionalidades de usuario.
+**ARs cubiertos:** AR1 · AR2 · AR3 · AR7 · AR8 · AR9 · AR12 · AR13
 
 ### Épico 1: Autenticación y Perfiles de Usuario
 Artesanas y compradores pueden registrarse eligiendo su rol, iniciar sesión, crear y editar sus perfiles públicos o privados, seguir artesanas y gestionar sus derechos RGPD. Los perfiles de artesana son públicos e indexables.
@@ -220,20 +219,20 @@ Un comprador puede completar una compra con desglose completo de costes visible 
 **ARs cubiertos:** AR6 · AR9 (rate limiting checkout)
 **UX-DRs cubiertos:** UX-DR14
 
-### Épico 6: Pedidos, Notificaciones y Proceso de Fabricación
-El comprador recibe su confirmación de pedido por email y puede seguir el estado de fabricación en tiempo real con actualizaciones personales de la artesana. Todos los eventos importantes generan notificaciones por email.
+### Épico 6: Pedidos, Notificaciones y Proceso de En preparación
+El comprador recibe su confirmación de pedido por email y puede seguir el estado en tiempo real. La artesana avanza los estados hasta Entregado; la compradora acepta el pedido (o el sistema lo hace automáticamente tras 48h), momento en que Stripe libera el pago. Todos los eventos importantes generan notificaciones por email.
 **FRs cubiertos:** FR38 · FR39 · FR40 · FR50
 **ARs cubiertos:** AR8
 **UX-DRs cubiertos:** UX-DR7 · UX-DR8
 
 ### Épico 7: Confianza, Sellos y Disputas
-Las artesanas pueden solicitar sellos verificados y el admin los aprueba o rechaza. Compradores y artesanas pueden abrir disputas formales con evidencias, y el admin las resuelve aplicando la política de devoluciones según el tipo de producto.
-**FRs cubiertos:** FR10 (aprobación admin) · FR41 · FR42 · FR43 · FR44 · FR45
+Las artesanas pueden solicitar 5 sellos de producto y 3 badges de perfil verificados por admin, más 6 automáticos por umbrales. Compradores y artesanas pueden abrir disputas formales con evidencias; la artesana decide si requiere devolución física en pedidos estándar; las disputas sin acuerdo escalan al admin.
+**FRs cubiertos:** FR41 · FR42 · FR43 · FR44 · FR45 (solicitud artesana)
 **UX-DRs cubiertos:** UX-DR5 (sistema de sellos completo)
 
 ### Épico 8: Panel de Administración y Cumplimiento Legal
-El admin tiene un panel protegido con TOTP 2FA donde puede ver métricas de actividad, moderar perfiles, y ver las estadísticas de artesanas. Las páginas legales obligatorias (LSSI) están publicadas y accesibles.
-**FRs cubiertos:** FR11 · FR46 · FR47 · FR48
+El admin tiene un panel protegido con TOTP 2FA donde puede ver métricas de actividad, moderar perfiles, aprobar/rechazar solicitudes de sellos, resolver disputas escaladas y ver estadísticas de artesanas. Las páginas legales obligatorias (LSSI) están publicadas y accesibles.
+**FRs cubiertos:** FR11 · FR43 (escaladas) · FR45 (aprobación admin) · FR46 · FR47 · FR48
 **ARs cubiertos:** AR5
 
 ---
