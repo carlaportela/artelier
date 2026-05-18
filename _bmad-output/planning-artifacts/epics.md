@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3]
+stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - '_bmad-output/planning-artifacts/prd.md'
   - '_bmad-output/planning-artifacts/ux-design-specification.md'
@@ -961,24 +961,54 @@ para estar informada sin tener que entrar en la aplicación.
 **Y** incluye pie de página con enlace a preferencias de notificación y enlace de baja
 **Y** es enviado mediante Resend con `from: noreply@artelier.es`
 
-### Historia 6.2: Estados de En preparación, confirmación de recepción y OrderStatusTimeline
+### Historia 6.2: Estados de pedido, confirmación de entrega y aceptación
 
 Como artesana y compradora,
-quiero visualizar y actualizar el estado de un pedido a través de un timeline claro, y que el pago a la artesana se libere solo cuando la compradora confirme haber recibido y aceptado el producto,
-para que el proceso sea transparente y proteja a ambas partes hasta el último paso.
+quiero que el timeline distinga entre la entrega física del pedido y la aceptación formal por parte de la compradora, con un margen de 48 horas para aceptar o disputar antes de que el pago se libere automáticamente,
+para que el proceso sea transparente y ambas partes estén protegidas hasta el cierre definitivo.
 
 **Acceptance Criteria:**
 
 **Dado** que soy artesana con un pedido confirmado en `/studio/orders/[id]`
 **Cuando** visualizo el detalle del pedido
-**Entonces** veo el componente `OrderStatusTimeline` con los estados: Confirmado → **En preparación** → Listo → Enviado → Entregado
+**Entonces** veo el componente `OrderStatusTimeline` con los 6 estados: Confirmado → **En preparación** → Listo → Enviado → Entregado → Aceptado
 **Y** el estado actual aparece marcado con `aria-current="step"` en el `<ol>` subyacente
 
 **Dado** que soy artesana y quiero avanzar el estado del pedido
 **Cuando** pulso "Avanzar estado" en el panel de estudio
-**Entonces** puedo seleccionar el siguiente estado en la secuencia (Confirmado → En preparación → Listo → Enviado) y añadir un mensaje personal opcional (máx. 280 caracteres)
-**Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline del comprador
-**Y** la artesana puede avanzar el estado hasta "Enviado" — el paso a "Entregado" es exclusivo de la compradora
+**Entonces** puedo avanzar la secuencia Confirmado → En preparación → Listo → Enviado, añadiendo un mensaje personal opcional (máx. 280 caracteres) en cada paso
+**Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline de la compradora
+**Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente
+**Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento
+
+**Dado** que el pedido usa el método de envío integrado de la plataforma
+**Cuando** la empresa de mensajería confirma la entrega vía webhook
+**Entonces** el `Order.status` pasa automáticamente a `ENTREGADO` sin intervención de la artesana
+**Y** se registra el timestamp de entrega y el identificador del evento del courier en el pedido
+
+**Dado** que el pedido usa un método de envío independiente (courier externo no gestionado por la plataforma)
+**Cuando** la artesana recibe confirmación de entrega por parte del courier externo
+**Entonces** puede marcar manualmente el estado "Entregado" desde `/studio/orders/[id]`
+**Y** el `Order.status` pasa a `ENTREGADO`
+
+**Dado** que el pedido se entrega en persona (recogida en taller o entrega directa de la artesana)
+**Cuando** la artesana realiza la entrega en mano a la compradora
+**Entonces** puede marcar manualmente el estado "Entregado" desde `/studio/orders/[id]`
+**Y** el `Order.status` pasa a `ENTREGADO`
+
+**Dado** que el `Order.status` pasa a `ENTREGADO` (por cualquiera de las dos vías)
+**Cuando** se produce el cambio de estado
+**Entonces** la compradora recibe inmediatamente un email: "Tu pedido ha llegado — tienes 48 horas para aceptarlo o abrir una incidencia"
+**Y** en `/orders/[id]` aparece un CTA principal "Aceptar pedido" y un enlace secundario "Tengo un problema con este pedido"
+**Y** se muestra un contador visual con el tiempo restante hasta la aceptación automática
+
+**Dado** que soy compradora y pulso "Aceptar pedido"
+**Cuando** confirmo la acción
+**Entonces** el `Order.status` pasa a `ACEPTADO`
+**Y** Stripe libera el pago retenido (transferencia a la cuenta Connect de la artesana)
+**Y** el campo `paidOut` se marca como `true` en la base de datos
+**Y** la opción de abrir una disputa desaparece permanentemente para este pedido
+**Y** la compradora puede dejar una valoración (habilitado solo tras estado Aceptado)
 
 **Dado** que soy compradora viendo `/orders/[id]`
 **Cuando** la artesana actualiza el estado del pedido
@@ -986,24 +1016,11 @@ para que el proceso sea transparente y proteja a ambas partes hasta el último p
 **Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
 **Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
 
-**Dado** que el pedido está en estado "Enviado"
-**Cuando** soy compradora y accedo a `/orders/[id]`
-**Entonces** veo un CTA principal "Confirmar recepción" y un enlace secundario "Tengo un problema con este pedido"
-**Y** el botón "Confirmar recepción" es el único que avanza el pedido al estado "Entregado"
-
-**Dado** que soy compradora y pulso "Confirmar recepción"
-**Cuando** confirmo la acción
-**Entonces** el `Order.status` pasa a `ENTREGADO`
-**Y** Stripe libera el pago retenido (transferencia a la cuenta Connect de la artesana)
-**Y** el campo `paidOut` se marca como `true` en la base de datos
-**Y** la opción de abrir una disputa desaparece permanentemente para este pedido
-**Y** la compradora puede dejar una valoración (habilitado solo tras estado Entregado)
-
-**Dado** que el pedido lleva 14 días en estado "Enviado" sin acción de la compradora
-**Cuando** el Cron Job diario detecta el vencimiento
-**Entonces** el día 12 se envía un email de aviso a la compradora recordándole que tiene 2 días para confirmar o disputar
-**Y** el día 14 el sistema confirma automáticamente la recepción: `Order.status` → `ENTREGADO`, pago liberado a la artesana
-**Y** la compradora recibe email informando de la confirmación automática
+**Dado** que el pedido lleva 48 horas en estado "Entregado" sin acción de la compradora y sin disputa abierta
+**Cuando** el Cron Job detecta el vencimiento
+**Entonces** el `Order.status` pasa automáticamente a `ACEPTADO`
+**Y** Stripe libera el pago retenido a la artesana
+**Y** la compradora recibe email informando de la aceptación automática por vencimiento del plazo
 
 ---
 
@@ -1014,35 +1031,35 @@ Las artesanas pueden solicitar sellos verificados y los sellos automáticos se a
 ### Historia 7.1: Sistema de sellos de producto y badges de artesana
 
 Como artesana,
-quiero solicitar sellos verificados por el admin y que los sellos automáticos se asignen solos al cumplir umbrales,
+quiero solicitar sellos verificados por el admin desde el formulario de producto y gestionarlos desde un panel central, y que los sellos automáticos se asignen solos al cumplir umbrales,
 para transmitir confianza real tanto en mis productos como en mi perfil.
 
 **Acceptance Criteria:**
 
+**Dado** que estoy en el formulario de publicar o editar un producto (`/studio/products/new` o `/studio/products/[id]/edit`)
+**Cuando** llego al último paso del formulario
+**Entonces** veo una sección opcional "Sellos para este producto" con los tres sellos verificados disponibles: Hecho a Mano · Ecológico · Sostenible
+**Y** cada sello muestra su estado actual para ese producto: Sin solicitar / Pendiente / Aprobado / Rechazado
+**Y** puedo pulsar "Solicitar" en cualquier sello que no tenga aún aprobado o pendiente
+
+**Dado** que pulso "Solicitar" en un sello desde el formulario de producto
+**Cuando** se abre el panel de solicitud
+**Entonces** el producto ya está preseleccionado (no hay selector — el contexto es el producto actual)
+**Y** puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes de evidencia
+**Y** se crea un `SealRequest` en estado `PENDING` vinculado al `productId` y a mi cuenta
+
 **Dado** que soy artesana en `/studio/settings/seals`
-**Cuando** accedo a la sección de sellos
-**Entonces** veo los sellos disponibles agrupados en cuatro categorías:
-
-- **Sellos de producto — verificados por admin:** Hecho a Mano · Ecológico · Sostenible
-- **Sellos de producto — automáticos:** Superventas · Muy Popular · Recomendado
-- **Badges de perfil — verificados por admin:** Artesana Verificada · Taller Propio · Artesanía de Galicia
-- **Badges de perfil — automáticos:** Destacada · Activa · Envío Prioritario
-
-**Y** cada sello verificado muestra su estado: Sin solicitar / Pendiente / Aprobado / Rechazado
-**Y** cada sello automático muestra su estado actual y el criterio necesario para obtenerlo
-
-**Dado** que quiero solicitar un sello de producto verificado (Hecho a Mano · Ecológico · Sostenible)
-**Cuando** pulso "Solicitar" en ese sello
-**Entonces** se despliega un selector con todos mis productos publicados para elegir a cuál aplicar el sello
-**Y** una vez seleccionado el producto, puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes de evidencia
-**Y** se crea un `SealRequest` en estado `PENDING` vinculado al `productId` seleccionado y a mi cuenta
-**Y** puedo solicitar el mismo sello para distintos productos enviando una solicitud separada por cada uno
+**Cuando** accedo al panel de gestión de sellos
+**Entonces** veo una vista centralizada con todas mis solicitudes de sellos de producto (agrupadas por producto) y el estado de cada una: Pendiente / Aprobado / Rechazado
+**Y** veo los badges de perfil disponibles con su estado: Sin solicitar / Pendiente / Aprobado / Rechazado
+**Y** veo los sellos y badges automáticos con su estado actual y el umbral necesario para obtenerlos
+**Y** el panel NO contiene formulario de solicitud de sellos de producto — para eso debo ir a editar el producto
 
 **Dado** que quiero solicitar un badge de perfil verificado (Artesana Verificada · Taller Propio · Artesanía de Galicia)
-**Cuando** pulso "Solicitar" en ese badge
-**Entonces** no hay selector de producto — el badge se aplica a mi perfil completo
+**Cuando** pulso "Solicitar" en el panel `/studio/settings/seals`
+**Entonces** se abre el formulario de solicitud directamente (sin selector de producto — el badge es de perfil)
 **Y** puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes
-**Y** para el badge **Artesanía de Galicia** el formulario requiere adicionalmente subir un certificado oficial (PDF/imagen) expedido por la Xunta de Galicia o entidad equivalente
+**Y** para **Artesanía de Galicia** el formulario requiere adicionalmente un certificado oficial (PDF/imagen) expedido por la Xunta de Galicia o entidad equivalente
 **Y** se crea un `SealRequest` en estado `PENDING` vinculado únicamente a mi cuenta
 
 **Dado** que el admin aprueba o rechaza una solicitud
@@ -1076,14 +1093,18 @@ para que el sistema aplique la política correcta según el tipo de producto.
 
 **Acceptance Criteria:**
 
-**Dado** que soy compradora y el pedido está en estado `ENTREGADO` (ya aceptado)
+**Dado** que soy compradora y el pedido está en estado `ACEPTADO`
 **Cuando** intento acceder a la opción de disputa
-**Entonces** el botón "Abrir disputa" no aparece en la UI
+**Entonces** el botón "Tengo un problema" no aparece en la UI
 **Y** si se llama directamente a `POST /api/disputes` con ese `orderId`, el endpoint devuelve `403` con mensaje: "No puedes abrir una disputa sobre un pedido ya aceptado"
 
-**Dado** que soy compradora y el pedido está en estado `ENVIADO` (aún no confirmado)
+**Dado** que soy compradora y el pedido está en estado `ENTREGADO` (dentro del plazo de 48h)
 **Cuando** accedo a `/orders/[id]` y pulso "Tengo un problema con este pedido"
-**Entonces** puedo seleccionar el motivo (Producto no recibido · Producto dañado o no conforme · No corresponde a la descripción · Otro)
+**Entonces** puedo seleccionar el motivo:
+- **No he recibido mi pedido** — cubre tanto errores del sistema de mensajería interna de la plataforma (falso positivo del webhook del carrier) como marcados erróneos por parte de la artesana en entregas independientes o en persona
+- **Producto dañado o no conforme**
+- **No corresponde a la descripción**
+- **Otro**
 **Y** puedo adjuntar descripción (máx. 1000 caracteres) y hasta 5 imágenes
 **Y** se crea un `Dispute` con estado `OPEN` vinculado al `orderId`
 **Y** el estado del pedido pasa a `EN_DISPUTA`
@@ -1168,3 +1189,133 @@ para que el proceso sea ágil y solo escale al admin cuando haya desacuerdo.
 **Cuando** selecciona la resolución final en `/admin/disputes/[id]`
 **Entonces** puede ejecutar reembolso total, reembolso parcial (importe personalizado) o rechazo definitivo
 **Y** la decisión del admin es inapelable y genera email de notificación a ambas partes con el detalle de la resolución
+
+---
+
+## Épico 8: Panel de Administración y Cumplimiento Legal
+
+El admin tiene un panel protegido con TOTP 2FA desde donde modera perfiles, gestiona sellos y ve métricas de plataforma. Las artesanas pueden ver sus estadísticas propias en el estudio. Las páginas legales obligatorias están publicadas y accesibles desde todas las páginas.
+
+### Historia 8.1: Acceso al panel de administración con TOTP 2FA
+
+Como administradora,
+quiero acceder al panel de administración protegido con autenticación de doble factor TOTP,
+para que ningún acceso no autorizado pueda moderar perfiles ni gestionar disputas aunque conozca la contraseña.
+
+**Acceptance Criteria:**
+
+**Dado** que es la primera vez que activo el 2FA en mi cuenta admin
+**Cuando** accedo a `/admin/setup-2fa`
+**Entonces** el sistema genera un secreto TOTP con `otplib` y muestra un código QR con `qrcode` para escanear con una app autenticadora (Google Authenticator, Authy)
+**Y** debo introducir un código válido de 6 dígitos para confirmar que la configuración es correcta antes de activarla
+**Y** se guardan 8 códigos de recuperación de un solo uso que puedo descargar en ese momento
+
+**Dado** que el 2FA ya está configurado en mi cuenta admin e inicio sesión con email/contraseña
+**Cuando** las credenciales son correctas
+**Entonces** soy redirigida a `/admin/verify-2fa` en lugar de al panel directamente
+**Y** debo introducir el código TOTP de 6 dígitos actual (ventana de 30s, tolerancia ±1 ventana)
+**Y** si el código es correcto: el flag `twoFactorVerified: true` se establece en la sesión y soy redirigida a `/admin`
+**Y** si el código es incorrecto 5 veces consecutivas: la sesión se bloquea y se envía email de alerta a la dirección admin
+
+**Dado** que intento acceder a cualquier ruta `/admin/*` con sesión sin `twoFactorVerified`
+**Cuando** el middleware de Next.js evalúa la sesión
+**Entonces** soy redirigida a `/admin/verify-2fa` independientemente de si tengo sesión activa
+**Y** el middleware corre en Edge Runtime usando `auth.config.ts` (sin importar Prisma)
+
+**Dado** que uso un código de recuperación en lugar del TOTP
+**Cuando** lo introduzco en `/admin/verify-2fa`
+**Entonces** el código se invalida permanentemente (uso único)
+**Y** si solo quedan 2 códigos de recuperación, se envía email de aviso para regenerarlos
+
+### Historia 8.2: Estadísticas de artesana y métricas de plataforma
+
+Como artesana y como administradora,
+quiero poder ver estadísticas relevantes — la artesana las suyas propias, la admin las de toda la plataforma —
+para tomar decisiones informadas sobre mis productos y el estado del marketplace.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana en `/studio/stats`
+**Cuando** accedo a mis estadísticas
+**Entonces** veo las métricas básicas de mi perfil:
+- Visitas al perfil (últimos 30 días)
+- Número de seguidoras actuales
+- Ventas completadas (total histórico y últimos 30 días)
+- Ingresos netos del último mes (tras comisión de plataforma)
+- Producto más visto y producto más vendido
+
+**Y** los datos se actualizan una vez al día (no en tiempo real)
+**Y** no hay métricas de comparación con otras artesanas ni rankings públicos (filosofía slow commerce)
+
+**Dado** que soy admin en `/admin/metrics`
+**Cuando** accedo al panel de métricas
+**Entonces** veo las métricas de actividad de la plataforma:
+- Usuarias registradas totales (artesanas / compradoras)
+- Productos activos publicados
+- Pedidos completados (últimos 30 / 90 días)
+- Volumen total de ventas (últimos 30 / 90 días)
+- Disputas abiertas y tiempo medio de resolución
+- Solicitudes de sellos pendientes de revisión
+
+**Y** puedo filtrar métricas por rango de fechas (últimos 7 / 30 / 90 días)
+**Y** los datos se calculan con queries directas a Prisma, sin herramienta de analytics externa
+
+### Historia 8.3: Moderación de perfiles y gestión de solicitudes de sellos
+
+Como administradora,
+quiero poder suspender o eliminar perfiles que incumplan las condiciones de uso y gestionar las solicitudes de sellos verificados,
+para mantener la integridad del marketplace y la confianza de las usuarias.
+
+**Acceptance Criteria:**
+
+**Dado** que accedo a `/admin/users`
+**Cuando** busco una usuaria por nombre, email o ID
+**Entonces** veo su perfil con: fecha de registro, rol, estado de cuenta (activa / suspendida), número de productos y pedidos
+**Y** puedo pulsar "Suspender cuenta" con campo de motivo obligatorio (visible solo para la admin, no para la usuaria)
+**Y** puedo pulsar "Eliminar cuenta" con confirmación explícita (soft-delete: `deletedAt` en `User`)
+
+**Dado** que suspendo una cuenta de artesana
+**Cuando** la artesana intenta iniciar sesión
+**Entonces** ve el mensaje "Tu cuenta está temporalmente suspendida. Contacta con soporte para más información"
+**Y** sus productos dejan de aparecer en el catálogo público mientras dure la suspensión
+**Y** los pedidos en curso no se cancelan automáticamente (la admin gestiona caso a caso)
+
+**Dado** que accedo a `/admin/seals`
+**Cuando** veo la lista de solicitudes pendientes
+**Entonces** están ordenadas por fecha de solicitud (más antiguas primero)
+**Y** cada solicitud muestra: tipo de sello, nombre de la artesana, nombre del producto (si aplica), justificación, imágenes adjuntas y, para Artesanía de Galicia, el certificado subido
+
+**Dado** que reviso una solicitud de sello
+**Cuando** selecciono "Aprobar" o "Rechazar"
+**Entonces** si apruebo: el `SealRequest` pasa a `APPROVED`, se crea el registro `ProductSeal` o `ProfileBadge` y la artesana recibe email de confirmación
+**Y** si rechazo: debo introducir un motivo (visible para la artesana), el `SealRequest` pasa a `REJECTED` y la artesana recibe email con el motivo
+**Y** la artesana puede volver a solicitar ese sello con nueva documentación tras un rechazo
+
+### Historia 8.4: Páginas legales LSSI y gestión de cookies
+
+Como visitante o usuaria de Artelier,
+quiero poder acceder en todo momento a las páginas legales obligatorias y gestionar mis preferencias de cookies,
+para que la plataforma cumpla con la LSSI, el RGPD y la normativa de cookies.
+
+**Acceptance Criteria:**
+
+**Dado** que accedo a cualquier página de Artelier
+**Cuando** inspecciono el footer
+**Entonces** existen enlaces permanentes a: Aviso Legal · Política de Privacidad · Política de Cookies · Condiciones Generales de Uso y Venta
+**Y** los enlaces llevan a páginas estáticas generadas con SSG en `/legal/aviso-legal`, `/legal/privacidad`, `/legal/cookies`, `/legal/condiciones`
+
+**Dado** que es mi primera visita a Artelier (sin cookies previas)
+**Cuando** cargo cualquier página
+**Entonces** aparece el banner de consentimiento de cookies con: botón "Aceptar todas", botón "Solo esenciales" y enlace "Gestionar preferencias"
+**Y** hasta que no interactúo con el banner, solo se cargan cookies estrictamente necesarias
+
+**Dado** que pulso "Gestionar preferencias" en el banner
+**Cuando** se abre el panel de preferencias
+**Entonces** puedo activar o desactivar por categoría: cookies esenciales (siempre activas) · cookies de analítica · cookies de preferencias
+**Y** mi elección se guarda en `localStorage` y se respeta en todas las visitas posteriores
+
+**Dado** que las páginas legales son renderizadas
+**Cuando** se generan en build time
+**Entonces** son páginas SSG sin JavaScript de cliente innecesario
+**Y** incluyen fecha de última actualización visible en el documento
+**Y** cumplen con los requisitos de información obligatoria de la LSSI: datos del titular, domicilio, NIF, email de contacto
