@@ -56,7 +56,7 @@ La plataforma conecta dos mundos con necesidades radicalmente distintas: artesan
 
 2. **La primera notificación como momento emocional máximo** — El "primer pulso de vida" del artesano (primer seguidor, primer mensaje) debe sentirse especial, no genérico. Es el motor de retención más poderoso de la plataforma.
 
-3. **Los sellos verificados como identidad visual** — Km 0, Hecho en Galicia, Ecológico no son solo filtros — son distintivos de identidad que pueden convertirse en los elementos visuales más reconocibles de Artelier en tarjetas y perfiles.
+3. **Los sellos verificados como identidad visual** — Hecho a Mano, Ecológico, Sostenible, Artesanía de Galicia no son solo filtros — son distintivos de identidad que pueden convertirse en los elementos visuales más reconocibles de Artelier en tarjetas y perfiles.
 
 4. **El proceso como narrativa visual** — Los estados de fabricación (En preparación → Listo → Enviado) y la pestaña de contenidos pueden convertir la espera del pedido en una experiencia editorial: el comprador sigue el viaje de su pieza como un mini-documental.
 
@@ -234,7 +234,7 @@ Lo que hace bien:
 - **Estilo WhatsApp / Vinted** — familiar para el 100% de usuarias objetivo. Sin aprendizaje.
 
 **Confianza:**
-- **Señales de confianza visibles en producto y perfil** — los sellos verificados (Km 0, Hecho en Galicia, Ecológico) reemplazan las estrellas como indicadores de autenticidad.
+- **Señales de confianza visibles en producto y perfil** — los sellos verificados (Hecho a Mano, Ecológico, Sostenible) y los automáticos (Superventas, Muy Popular, Recomendado) reemplazan las estrellas como indicadores de autenticidad.
 
 ### Anti-Patrones a Evitar
 
@@ -305,9 +305,9 @@ Lo que hace bien:
 **Componentes clave a medida:**
 - `ProductCard` — foto + nombre del producto + precio + nombre de artesana + foto de artesana + sello(s)
 - `ArtisanHeader` — banner + avatar + nombre + descripción breve + localidad + sellos + botón seguir
-- `SealBadge` — variantes visuales para cada sello (Km 0, Hecho en Galicia, Ecológico, Reciclado, Artesanal)
+- `SealBadge` — variantes visuales para sellos de producto (Hecho a Mano, Ecológico, Sostenible + automáticos) y badges de perfil (Artesana Verificada, Taller Propio, Artesanía de Galicia + automáticos)
 - `BottomNav` — barra de navegación inferior persistente en móvil
-- `OrderStatusTimeline` — estados de fabricación (En preparación → Listo → Enviado) como línea de tiempo visual
+- `OrderStatusTimeline` — 6 estados de pedido (Confirmado → En preparación → Listo → Enviado → Entregado → Aceptado) como línea de tiempo visual
 
 ---
 
@@ -403,13 +403,15 @@ Inspirada en los paisajes editoriales del slow living gallego: el verde pizarra 
 | `--text-light` | `#8A8478` | Texto terciario, hints, metadatos |
 | `--border` | `#CCC8BC` | Separadores, bordes de tarjeta |
 
-**Tokens de sellos verificados:**
+**Tokens de sellos verificados (producto — admin):**
 
 | Sello | Color texto | Color fondo |
 |---|---|---|
-| Km 0 | `#3D5A4F` | `#C8DDD8` |
-| Hecho en Galicia | `#C4956A` | `#F5E8D8` |
+| Hecho a Mano | `#3D5A4F` | `#C8DDD8` |
 | Ecológico | `#2E6B48` | `#C4E0D4` |
+| Sostenible | `#6B5E2E` | `#E0D9C4` |
+| Reciclado | `#4A7C5E` | `#D4EAE0` |
+| Serie Limitada | `#7C4E2A` | `#F0DDD0` |
 
 ### Sistema Tipográfico
 
@@ -508,7 +510,7 @@ flowchart LR
     F -->|Otros| I[Cantidad disponible]
     G & H & I --> J[Categoría]
     J --> K{¿Sellos aplicables?}
-    K -->|Sí| L[Seleccionar: Km 0 / Galicia / Eco…]
+    K -->|Sí| L[Seleccionar: Hecho a Mano / Ecológico / Sostenible]
     K -->|No| M[Publicar]
     L --> M
     M --> N([Producto publicado ✓])
@@ -670,15 +672,21 @@ Los siguientes componentes son exclusivos de Artelier y no tienen equivalente en
 | Sello de producto | Filled (fondo color, borde crema + outline interior crema) | The Girl Next Door | Color sólido |
 | Insignia de perfil | Outlined (borde color + outline interior color, transparente) | DM Sans | Transparente |
 
-**Subvariantes de producto:** km0, ecológico, reciclado, ed-limitada (con número de serie bajo el sello), hecho-a-mano
+**Subvariantes de producto — admin verificados (5):** hecho-a-mano, ecológico, sostenible, reciclado, serie-limitada
 
-**Subvariantes de perfil:** confiable, popular, envía-hoy, siempre-disponible, top-ventas, mejor-valorado
+**Subvariantes de producto — automáticos (3):** superventas, muy-popular, recomendado
 
-**Flujo de verificación:** artesana solicita sello → Artelier lo aprueba → visible al público. Nunca autoasignado.
+**Subvariantes de perfil — admin verificados (3):** artesana-verificada, taller-propio, artesanía-galicia
+
+**Subvariantes de perfil — automáticos (3):** destacada, activa, envío-prioritario
+
+**Flujo de verificación (sellos admin):** artesana solicita sello desde el formulario de producto o desde `/studio/settings/seals` → Artelier lo aprueba → visible al público.
+
+**Sellos automáticos:** asignados por el sistema al cumplir umbrales (ventas, favoritos, valoraciones, seguidores, tiempos de respuesta/envío). Sin intervención de admin.
 
 **Localización:** el texto del sello sigue el idioma elegido por el usuario en sus preferencias.
 
-**Accesibilidad:** `role="img"`, `aria-label` descriptivo ("Verificado: Km 0 — producción local").
+**Accesibilidad:** `role="img"`, `aria-label` descriptivo ("Verificado: Hecho a Mano — elaborado manualmente por la artesana").
 
 #### ArtisanHeader
 
@@ -706,9 +714,16 @@ Los siguientes componentes son exclusivos de Artelier y no tienen equivalente en
 
 **Propósito:** Mostrar el estado del pedido con lenguaje artesanal, como una narrativa de fabricación.
 
-**Pasos:** Confirmado → En preparación → Listo → Enviado → Entregado
+**Pasos (6):** Confirmado → En preparación → Listo → Enviado → Entregado → Aceptado
+
+**Responsabilidad por paso:**
+- Artesana controla: Confirmado → En preparación → Listo → Enviado → Entregado (envío independiente o entrega en persona) 
+- Sistema (carrier webhook): Enviado → Entregado (cuando se usa envío de plataforma)
+- Compradora o sistema (auto 48h): Entregado → Aceptado
 
 **Estados del punto:** done (✓ verde primario) · active (✦ ámbar con halo glow) · pending (○ gris superficie)
+
+**Notas de implementación:** Cuando el pedido está en "Entregado", la compradora ve un CTA "Aceptar pedido" y un enlace "Tengo un problema". El paso "Aceptado" se activa al confirmar — en ese momento el pago se libera y la opción de disputa desaparece permanentemente.
 
 **Accesibilidad:** lista `<ol>` con `<li>` por paso, `aria-label` de estado en cada punto, `aria-current="step"` en el paso activo.
 
@@ -910,7 +925,7 @@ Tailwind CSS mobile-first como base. Se usan 3 breakpoints activos:
 
 **ARIA crítico:**
 - Imágenes de producto: alt descriptivo obligatorio
-- SealBadge: `role="img"` + `aria-label` ("Sello verificado: Km 0 — producción local")
+- SealBadge: `role="img"` + `aria-label` ("Sello verificado: Hecho a Mano — elaborado manualmente por la artesana")
 - OrderStatusTimeline: `aria-current="step"` en paso activo
 - Precios: `aria-label="Precio: 38 euros"` (evitar ambigüedad con símbolo €)
 

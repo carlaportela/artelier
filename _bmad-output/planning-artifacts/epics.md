@@ -142,7 +142,7 @@ FR6: Épico 1 — Exportación de datos personales (RGPD)
 FR7: Épico 1 — Gestión de preferencias de cookies
 FR8: Épico 1 — Crear y editar perfil público artesana
 FR9: Épico 1 — Publicar actualizaciones de proceso en pestaña de contenidos
-FR10: Épico 1 + Épico 7 — Solicitud de sellos (artesana) / Aprobación (admin)
+FR10: Épico 1 (solicitud artesana) + Épico 7 H7.1/H7.2 (sellos producto y badges perfil) + Épico 8 H8.3 (aprobación admin)
 FR11: Épico 8 — Estadísticas básicas del perfil artesana
 FR12: Épico 1 — Ver y editar perfil privado comprador
 FR13: Épico 1 — Seguir y dejar de seguir artesanas
@@ -320,6 +320,34 @@ para que cada PR valide el código automáticamente y la seguridad de rutas est�
 **Cuando** cualquier componente usa `useTranslations()`
 **Entonces** los textos se sirven desde el archivo JSON en castellano
 **Y** la estructura de `src/i18n/` está preparada para añadir `gl.json` en V3 sin modificar componentes
+
+### Historia 0.4: Configuración de servicios externos (Resend, Cloudinary, Upstash)
+
+Como desarrolladora,
+quiero tener los clientes de Resend, Cloudinary y Upstash Redis configurados e instanciados antes de que cualquier épico funcional los necesite,
+para que Historia 1.2 (recuperación de contraseña), Historia 2.3 (subida de imágenes) y las rutas con rate limiting puedan implementarse sin dependencias pendientes.
+
+**Acceptance Criteria:**
+
+**Dado** que las variables de entorno `RESEND_API_KEY` y `RESEND_FROM_EMAIL` están definidas en `.env.local`
+**Cuando** se importa `src/lib/resend.ts`
+**Entonces** exporta una instancia singleton del cliente Resend lista para usar en Route Handlers y Server Actions
+**Y** `.env.example` documenta ambas variables con valores de ejemplo
+
+**Dado** que las variables `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` y `CLOUDINARY_API_SECRET` están definidas
+**Cuando** `POST /api/upload` recibe un archivo
+**Entonces** el endpoint sube la imagen a Cloudinary y devuelve `{ url, publicId }`
+**Y** las credenciales de Cloudinary nunca se exponen al cliente (solo usadas en el servidor)
+**Y** `.env.example` documenta las tres variables
+
+**Dado** que las variables `UPSTASH_REDIS_REST_URL` y `UPSTASH_REDIS_REST_TOKEN` están definidas
+**Cuando** se importa `src/lib/ratelimit.ts`
+**Entonces** exporta limiters preconfigurados para los endpoints que los necesitan: `authLimiter` (10 req/min) · `messageLimiter` (30 req/min) · `checkoutLimiter` (5 req/min) · `disputeLimiter` (5 req/hora)
+**Y** `.env.example` documenta ambas variables
+
+**Dado** que cualquiera de las tres integraciones no está configurada (variable de entorno vacía)
+**Cuando** la aplicación arranca en desarrollo
+**Entonces** aparece un warning en consola indicando qué variable falta, sin romper el arranque
 
 ---
 
@@ -884,7 +912,7 @@ para garantizar que ningún pago se procese dos veces aunque Stripe reenvíe el 
 **Cuando** se procesa correctamente
 **Entonces** se crea el `Order`, se actualiza el `status` del producto a `SOLD`
 **Y** se guarda el `stripeEventId` en la base de datos para garantizar idempotencia
-**Y** se disparan las notificaciones de email (Épico 6)
+**Y** se llama a `sendOrderConfirmation(order)` y `sendNewSale(order)` desde `src/lib/resend.ts` — estas funciones deben existir aunque devuelvan `void` sin implementación real hasta Historia 6.1; el webhook no falla si el envío de email falla (fire-and-forget con try/catch silencioso)
 
 **Dado** que ocurre un error interno al procesar el evento
 **Cuando** el endpoint devuelve `500`
@@ -961,11 +989,11 @@ para estar informada sin tener que entrar en la aplicación.
 **Y** incluye pie de página con enlace a preferencias de notificación y enlace de baja
 **Y** es enviado mediante Resend con `from: noreply@artelier.es`
 
-### Historia 6.2: Estados de pedido, confirmación de entrega y aceptación
+### Historia 6.2: Timeline de estados y actualizaciones de proceso
 
 Como artesana y compradora,
-quiero que el timeline distinga entre la entrega física del pedido y la aceptación formal por parte de la compradora, con un margen de 48 horas para aceptar o disputar antes de que el pago se libere automáticamente,
-para que el proceso sea transparente y ambas partes estén protegidas hasta el cierre definitivo.
+quiero visualizar el progreso de un pedido en un timeline claro y que la artesana pueda añadir mensajes personales en cada avance de estado,
+para que el proceso sea transparente y humano desde la confirmación hasta el envío.
 
 **Acceptance Criteria:**
 
@@ -978,8 +1006,22 @@ para que el proceso sea transparente y ambas partes estén protegidas hasta el c
 **Cuando** pulso "Avanzar estado" en el panel de estudio
 **Entonces** puedo avanzar la secuencia Confirmado → En preparación → Listo → Enviado, añadiendo un mensaje personal opcional (máx. 280 caracteres) en cada paso
 **Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline de la compradora
-**Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente
-**Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento
+**Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente vía webhook del carrier (Historia 6.3)
+**Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento (Historia 6.3)
+
+**Dado** que soy compradora viendo `/orders/[id]`
+**Cuando** la artesana actualiza el estado del pedido
+**Entonces** el timeline se actualiza automáticamente (polling cada 30s si la pestaña está visible, pausado si `document.hidden`)
+**Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
+**Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
+
+### Historia 6.3: Confirmación de entrega, aceptación del comprador y liberación de pago
+
+Como artesana y compradora,
+quiero que el estado "Entregado" se marque automáticamente cuando la mensajería lo confirme o manualmente cuando la artesana lo entregue en persona, y que el pago se libere solo cuando la compradora acepte o transcurran 48 horas sin disputa,
+para que ambas partes estén protegidas hasta el cierre definitivo.
+
+**Acceptance Criteria:**
 
 **Dado** que el pedido usa el método de envío integrado de la plataforma
 **Cuando** la empresa de mensajería confirma la entrega vía webhook
@@ -996,7 +1038,7 @@ para que el proceso sea transparente y ambas partes estén protegidas hasta el c
 **Entonces** puede marcar manualmente el estado "Entregado" desde `/studio/orders/[id]`
 **Y** el `Order.status` pasa a `ENTREGADO`
 
-**Dado** que el `Order.status` pasa a `ENTREGADO` (por cualquiera de las dos vías)
+**Dado** que el `Order.status` pasa a `ENTREGADO` (por cualquiera de las tres vías anteriores)
 **Cuando** se produce el cambio de estado
 **Entonces** la compradora recibe inmediatamente un email: "Tu pedido ha llegado — tienes 48 horas para aceptarlo o abrir una incidencia"
 **Y** en `/orders/[id]` aparece un CTA principal "Aceptar pedido" y un enlace secundario "Tengo un problema con este pedido"
@@ -1010,13 +1052,7 @@ para que el proceso sea transparente y ambas partes estén protegidas hasta el c
 **Y** la opción de abrir una disputa desaparece permanentemente para este pedido
 **Y** la compradora puede dejar una valoración (habilitado solo tras estado Aceptado)
 
-**Dado** que soy compradora viendo `/orders/[id]`
-**Cuando** la artesana actualiza el estado del pedido
-**Entonces** el timeline se actualiza automáticamente (polling cada 30s si la pestaña está visible, pausado si `document.hidden`)
-**Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
-**Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
-
-**Dado** que el pedido lleva 48 horas en estado "Entregado" sin acción de la compradora y sin disputa abierta
+**Dado** que el pedido lleva 48 horas en estado `ENTREGADO` sin acción de la compradora y sin disputa abierta
 **Cuando** el Cron Job detecta el vencimiento
 **Entonces** el `Order.status` pasa automáticamente a `ACEPTADO`
 **Y** Stripe libera el pago retenido a la artesana
@@ -1028,17 +1064,37 @@ para que el proceso sea transparente y ambas partes estén protegidas hasta el c
 
 Las artesanas pueden solicitar sellos verificados y los sellos automáticos se asignan al cumplir umbrales. Compradores y artesanas pueden abrir disputas formales con evidencias; la artesana decide si requiere devolución física en pedidos estándar y las disputas sin acuerdo escalan al admin.
 
-### Historia 7.1: Sistema de sellos de producto y badges de artesana
+### Historia 7.1: Sellos de producto — solicitud, aprobación y automáticos
 
 Como artesana,
-quiero solicitar sellos verificados por el admin desde el formulario de producto y gestionarlos desde un panel central, y que los sellos automáticos se asignen solos al cumplir umbrales,
-para transmitir confianza real tanto en mis productos como en mi perfil.
+quiero solicitar sellos verificados para mis productos desde el formulario de publicación y que los sellos automáticos se asignen solos al cumplir umbrales,
+para que cada producto comunique claramente sus atributos de calidad a la compradora.
+
+**Glosario de sellos y badges — referencia compartida para tooltips, aria-labels y documentación de ayuda:**
+
+| Sello / Badge | Tipo | Qué significa para la compradora | Qué transmite la artesana |
+|---|---|---|---|
+| Hecho a Mano | Producto · admin | Este producto ha sido elaborado manualmente por la artesana, sin producción industrial | Mi proceso es artesanal y puedo documentarlo |
+| Ecológico | Producto · admin | Los materiales usados son naturales, sin componentes sintéticos ni químicos agresivos | Uso materias primas respetuosas con el entorno |
+| Sostenible | Producto · admin | El proceso de elaboración tiene bajo impacto ambiental | Mi forma de producir cuida el planeta |
+| Reciclado | Producto · admin | Este producto incorpora materiales reciclados o reutilizados en su elaboración | Doy segunda vida a materiales como parte de mi proceso creativo |
+| Serie Limitada | Producto · admin | Este producto pertenece a una tirada limitada; una vez agotada, no se repetirá exactamente igual | Produzco en lotes pequeños y cada serie tiene su propia identidad |
+| Superventas | Producto · auto | Más de 10 compradoras ya han elegido este producto | — |
+| Muy Popular | Producto · auto | Más de 30 personas han guardado este producto como favorito | — |
+| Recomendado | Producto · auto | Valorado con 4.5 o más por compradoras que lo han recibido | — |
+| Artesana Verificada | Perfil · admin | La identidad y la actividad artesanal de esta persona han sido confirmadas por Artelier | Me he sometido al proceso de verificación de la plataforma |
+| Taller Propio | Perfil · admin | Esta artesana trabaja en su propio espacio de producción | Tengo un taller propio documentado |
+| Artesanía de Galicia | Perfil · admin | Certificado oficial de artesanía gallega expedido por la Xunta de Galicia o entidad equivalente | Cuento con reconocimiento institucional de mi oficio |
+| Destacada | Perfil · auto | Más de 100 personas siguen a esta artesana | — |
+| Activa | Perfil · auto | Esta artesana responde a los mensajes en menos de 4 horas de media | — |
+| Envío Prioritario | Perfil · auto | Esta artesana confirma el envío de sus pedidos en menos de 48 horas de media | — |
 
 **Acceptance Criteria:**
 
 **Dado** que estoy en el formulario de publicar o editar un producto (`/studio/products/new` o `/studio/products/[id]/edit`)
 **Cuando** llego al último paso del formulario
-**Entonces** veo una sección opcional "Sellos para este producto" con los tres sellos verificados disponibles: Hecho a Mano · Ecológico · Sostenible
+**Entonces** veo una sección opcional "Sellos para este producto" con los cinco sellos verificados disponibles: Hecho a Mano · Ecológico · Sostenible · Reciclado · Serie Limitada
+**Y** cada sello muestra su descripción breve (extraída del glosario) para que la artesana sepa qué certifica
 **Y** cada sello muestra su estado actual para ese producto: Sin solicitar / Pendiente / Aprobado / Rechazado
 **Y** puedo pulsar "Solicitar" en cualquier sello que no tenga aún aprobado o pendiente
 
@@ -1048,30 +1104,50 @@ para transmitir confianza real tanto en mis productos como en mi perfil.
 **Y** puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes de evidencia
 **Y** se crea un `SealRequest` en estado `PENDING` vinculado al `productId` y a mi cuenta
 
-**Dado** que soy artesana en `/studio/settings/seals`
-**Cuando** accedo al panel de gestión de sellos
-**Entonces** veo una vista centralizada con todas mis solicitudes de sellos de producto (agrupadas por producto) y el estado de cada una: Pendiente / Aprobado / Rechazado
-**Y** veo los badges de perfil disponibles con su estado: Sin solicitar / Pendiente / Aprobado / Rechazado
-**Y** veo los sellos y badges automáticos con su estado actual y el umbral necesario para obtenerlos
-**Y** el panel NO contiene formulario de solicitud de sellos de producto — para eso debo ir a editar el producto
+**Dado** que el admin ha revisado mi solicitud de sello de producto (flujo admin en Historia 8.3)
+**Cuando** el `SealRequest` cambia a `APPROVED` o `REJECTED`
+**Entonces** si aprobado: el sello aparece inmediatamente en la `ProductCard` del producto correspondiente
+**Y** recibo un email con el resultado y, si hay rechazo, el motivo proporcionado por el admin
+**Y** puedo volver a solicitar un sello rechazado con nueva documentación
 
-**Dado** que quiero solicitar un badge de perfil verificado (Artesana Verificada · Taller Propio · Artesanía de Galicia)
-**Cuando** pulso "Solicitar" en el panel `/studio/settings/seals`
-**Entonces** se abre el formulario de solicitud directamente (sin selector de producto — el badge es de perfil)
+**Dado** que un producto existe en la base de datos
+**Cuando** el sistema evalúa umbrales automáticos (job diario)
+**Entonces** se asigna **Superventas** si el producto tiene ≥ 10 ventas completadas (solo productos no únicos)
+**Y** se asigna **Muy Popular** si el producto tiene ≥ 30 guardados/favoritos
+**Y** se asigna **Recomendado** si el producto tiene media ≥ 4.5 con ≥ 5 valoraciones
+
+**Dado** que se muestran los sellos en `ProductCard`
+**Cuando** un visitante ve el producto
+**Entonces** los sellos de producto usan fondo sólido + borde crema + The Girl Next Door (posición esquina de la card)
+**Y** cada sello tiene `aria-label` con la descripción completa del glosario ("Sello verificado: Hecho a Mano — elaborado manualmente por la artesana")
+
+### Historia 7.2: Badges de perfil de artesana — solicitud, aprobación y automáticos
+
+Como artesana,
+quiero solicitar badges de perfil verificados por el admin desde el panel central de sellos y que los badges automáticos se asignen solos al cumplir umbrales,
+para que mi perfil refleje mi trayectoria y compromisos de forma creíble para la compradora.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana en `/studio/settings/seals`
+**Cuando** accedo al panel de gestión
+**Entonces** veo dos secciones diferenciadas: "Sellos de producto" (vista de estado de mis solicitudes por producto) y "Badges de perfil" (solicitud y estado de badges)
+**Y** en "Sellos de producto" veo todas mis solicitudes agrupadas por producto con su estado: Pendiente / Aprobado / Rechazado, y un enlace a editar cada producto para solicitar nuevos sellos
+**Y** en "Badges de perfil" veo los tres badges verificados (Artesana Verificada · Taller Propio · Artesanía de Galicia) con su estado y botón "Solicitar" si no están aprobados o pendientes
+**Y** veo los tres badges automáticos (Destacada · Activa · Envío Prioritario) con su estado actual y el umbral necesario para obtenerlos
+
+**Dado** que pulso "Solicitar" en un badge de perfil verificado
+**Cuando** se abre el formulario de solicitud
+**Entonces** no hay selector de producto — el badge se aplica al perfil completo
 **Y** puedo adjuntar justificación (máx. 500 caracteres) y hasta 3 imágenes
 **Y** para **Artesanía de Galicia** el formulario requiere adicionalmente un certificado oficial (PDF/imagen) expedido por la Xunta de Galicia o entidad equivalente
 **Y** se crea un `SealRequest` en estado `PENDING` vinculado únicamente a mi cuenta
 
-**Dado** que el admin aprueba o rechaza una solicitud
-**Cuando** cambia el estado del `SealRequest`
-**Entonces** los sellos aprobados se muestran inmediatamente en mis productos (`ProductCard`) y perfil (`ArtisanHeader`)
-**Y** recibo un email con el resultado y, si hay rechazo, el motivo
-
-**Dado** que un producto existe en la base de datos
-**Cuando** el sistema evalúa umbrales automáticos (job diario)
-**Entonces** se asigna **Superventas** si el producto tiene ≥ 10 ventas completadas (solo para productos no únicos)
-**Y** se asigna **Muy Popular** si el producto tiene ≥ 30 guardados/favoritos
-**Y** se asigna **Recomendado** si el producto tiene media ≥ 4.5 con ≥ 5 valoraciones
+**Dado** que el admin ha revisado mi solicitud de badge de perfil (flujo admin en Historia 8.3)
+**Cuando** el `SealRequest` cambia a `APPROVED` o `REJECTED`
+**Entonces** si aprobado: el badge aparece inmediatamente en mi `ArtisanHeader`
+**Y** recibo un email con el resultado y, si hay rechazo, el motivo proporcionado por el admin
+**Y** puedo volver a solicitar un badge rechazado con nueva documentación
 
 **Dado** que una artesana existe en la base de datos
 **Cuando** el sistema evalúa umbrales automáticos (job diario)
@@ -1079,13 +1155,13 @@ para transmitir confianza real tanto en mis productos como en mi perfil.
 **Y** se asigna **Activa** si su tiempo medio de respuesta a mensajes es < 4h en los últimos 30 días
 **Y** se asigna **Envío Prioritario** si confirma el envío de los pedidos en < 48h de media en sus últimos 10 pedidos
 
-**Dado** que se muestran los sellos en el componente `SealBadge`
-**Cuando** un visitante ve un `ProductCard` o un `ArtisanHeader`
-**Entonces** los sellos de producto usan fondo sólido + borde crema + The Girl Next Door (esquina de la card)
-**Y** los badges de perfil usan estilo outlined + DM Sans (bajo el nombre de la artesana)
-**Y** cada sello tiene `aria-label` con descripción completa del criterio
+**Dado** que se muestran los badges en `ArtisanHeader`
+**Cuando** un visitante ve el perfil de la artesana
+**Entonces** los badges de perfil usan estilo outlined + DM Sans (bajo el nombre de la artesana)
+**Y** cada badge tiene `aria-label` con la descripción completa del glosario
 
-### Historia 7.2: Apertura de disputas y política de devoluciones por tipo de producto
+### Historia 7.3: Apertura de disputas y política de devoluciones por tipo de producto
+
 
 Como compradora o artesana,
 quiero poder abrir una disputa formal con evidencias cuando hay un problema con un pedido,
@@ -1134,7 +1210,7 @@ para que el sistema aplique la política correcta según el tipo de producto.
 **Cuando** el endpoint recibe la petición
 **Entonces** Upstash Redis aplica rate limiting: máx. 5 disputas por usuario por hora
 
-### Historia 7.3: Resolución de disputas — decisión de la artesana, devolución física y escalado
+### Historia 7.4: Resolución de disputas — decisión de la artesana, devolución física y escalado
 
 Como artesana y compradora,
 quiero que la artesana decida si requiere devolución física o acepta reembolso directo en pedidos estándar,

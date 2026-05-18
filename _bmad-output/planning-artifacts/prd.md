@@ -113,7 +113,7 @@ Funcionalidades esenciales para validar la hipótesis central: *¿compran usuari
 - **Catálogo de productos:** Producto único (1 unidad — compra agota stock automáticamente), producto perecedero (fecha de caducidad con auto-retiro), pedido personalizado directo al artesano
 - **Pasarela de pagos:** Stripe Connect con comisión de plataforma (% comprador) + comisión de seguro (% comprador) + fee Stripe (comprador). Primera venta sin comisión para el artesano
 - **Mensajería privada:** Canal directo artesano ↔ comprador para coordinación, encargos personalizados y gestión de disputas
-- **Sellos verificados:** Admin otorga Km 0 · Hecho en Galicia · Ecológico · Reciclado · Artesanal certificado. Actúan también como filtros de búsqueda
+- **Sellos verificados de producto (admin):** Hecho a Mano · Ecológico · Sostenible · Reciclado · Serie Limitada. **Automáticos de producto:** Superventas · Muy Popular · Recomendado. **Badges de perfil (admin):** Artesana Verificada · Taller Propio · Artesanía de Galicia (requiere certificado oficial). **Automáticos de perfil:** Destacada · Activa · Envío Prioritario. Actúan también como filtros de búsqueda
 - **Notificaciones:** Nueva venta · Mensaje recibido · Nuevo seguidor · Nuevo producto de artesano seguido
 - **Descubrimiento:** Filtro manual de localidad · Búsqueda por categoría · Feed cronológico de artesanos seguidos
 - **Sistema de disputas y devoluciones:** Ventana de cancelación de 24h · Solicitud formal con evidencia · Revisión por admin · Política anti-abuso para productos artesanales
@@ -144,7 +144,7 @@ Funcionalidades esenciales para validar la hipótesis central: *¿compran usuari
 
 **Situación:** María tiene 42 años, lleva 12 haciendo cerámica en su taller de Lugo. Vende en dos ferias al año y a través de Instagram por DMs. En su mejor feria ganó €150, pero después de gasolina, stand e inscripción se quedó en €40. Tiene seguidores en Instagram pero coordinar ventas por mensaje le agota.
 
-**Descubrimiento:** Una amiga artesana le habla de Artelier. Entra desde el móvil, ve que el perfil es gratuito y que solo paga cuando vende. En 20 minutos tiene su perfil publicado: foto, descripción, localidad Lugo, sello "Hecho en Galicia" solicitado al admin.
+**Descubrimiento:** Una amiga artesana le habla de Artelier. Entra desde el móvil, ve que el perfil es gratuito y que solo paga cuando vende. En 20 minutos tiene su perfil publicado: foto, descripción, localidad Lugo, sello "Hecho a Mano" solicitado al admin desde el formulario del producto.
 
 **Primera interacción:** Tres días después recibe una notificación — alguien de Santiago la ha seguido. Una semana después, otro usuario le escribe por mensajería privada preguntando si hace tazas personalizadas con nombres. María responde, acuerdan el encargo, el comprador paga a través de la plataforma. El producto queda reservado.
 
@@ -190,9 +190,9 @@ Funcionalidades esenciales para validar la hipótesis central: *¿compran usuari
 
 ### Journey 4 — Admin, el guardián de la confianza
 
-**Situación:** El equipo de Artelier recibe la solicitud de sello "Km 0" de María la ceramista y la de "Ecológico" de una productora de verduras de Ourense.
+**Situación:** El equipo de Artelier recibe la solicitud de sello "Hecho a Mano" de María la ceramista y la de "Ecológico" de una productora de verduras de Ourense.
 
-**Verificación de sellos:** El admin revisa la información del perfil, localidad declarada y descripción del proceso. Aprueba el "Km 0" de María (taller en Lugo, venta local). Para el "Ecológico" solicita certificación oficial a la productora antes de otorgarlo.
+**Verificación de sellos:** El admin revisa la información del perfil, localidad declarada y descripción del proceso. Aprueba el "Hecho a Mano" de María (elaboración manual documentada). Para el "Ecológico" solicita certificación oficial a la productora antes de otorgarlo.
 
 **Gestión de evento:** El admin crea el primer Mercado de Primavera de Artelier — evento de 48h. Notifica a todos los artesanos activos. Doce artesanos se apuntan con productos exclusivos. El admin activa el evento, monitoriza el tráfico y los pagos en tiempo real durante las 48h.
 
@@ -383,7 +383,7 @@ La app móvil se implementa en V2 con **Flutter** (una base de código para iOS 
 - **Catálogo de productos:** Publicación de producto con foto, nombre, descripción, precio, categoría y tipo (único / perecedero con fecha de caducidad). Compra agota stock automáticamente. Pedido personalizado directo al artesano.
 - **Pasarela de pagos (Stripe Connect):** Checkout con desglose completo visible antes de pagar (precio + comisión plataforma % + comisión seguro % + fee Stripe). Primera venta sin comisión para el artesano. Penalización automática por incumplimiento de envío.
 - **Mensajería privada:** Chat artesano ↔ comprador con polling cada 5-10 segundos. Notificación por email para mensajes nuevos cuando el usuario no está activo.
-- **Sellos verificados:** Flujo de solicitud por artesano + revisión y aprobación por admin. Sellos actúan como filtros de búsqueda (Km 0, Hecho en Galicia, Ecológico, Reciclado, Artesanal certificado).
+- **Sellos verificados:** Flujo de solicitud por artesano (desde formulario de producto o `/studio/settings/seals`) + revisión y aprobación por admin. Sellos automáticos asignados por el sistema al cumplir umbrales. Todos actúan como filtros de búsqueda (Hecho a Mano, Ecológico, Sostenible, Artesana Verificada, Artesanía de Galicia).
 - **Notificaciones por email:** Nueva venta, mensaje recibido, nuevo seguidor, nuevo producto de artesano seguido, confirmación de pedido (LSSI).
 - **Descubrimiento:** Filtro manual de localidad, búsqueda por categoría y sello, feed cronológico de artesanos seguidos.
 - **Sistema de disputas y devoluciones:** Solicitud formal con evidencias, revisión por admin, política de excepciones legales visible en checkout, ventana de cancelación de 24h.
