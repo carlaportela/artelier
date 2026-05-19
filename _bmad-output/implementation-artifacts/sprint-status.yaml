@@ -47,7 +47,7 @@ development_status:
   0-1-inicializacion-del-proyecto-t3: done
   0-2-sistema-de-diseno-tinta-y-lino: done
   0-3-ci-cd-middleware-e-i18n-base: done
-  0-4-configuracion-de-servicios-externos: backlog
+  0-4-configuracion-de-servicios-externos: review
   epic-0-retrospective: optional
 
   # ─── Épico 1: Autenticación y Perfiles de Usuario ─────────────────────────
