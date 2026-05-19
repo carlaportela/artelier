@@ -45,7 +45,7 @@ development_status:
   # ─── Épico 0: Fundación y Sistema de Diseño ───────────────────────────────
   epic-0: in-progress
   0-1-inicializacion-del-proyecto-t3: done
-  0-2-sistema-de-diseno-tinta-y-lino: backlog
+  0-2-sistema-de-diseno-tinta-y-lino: done
   0-3-ci-cd-middleware-e-i18n-base: backlog
   0-4-configuracion-de-servicios-externos: backlog
   epic-0-retrospective: optional

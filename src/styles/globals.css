@@ -4,13 +4,36 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Fuentes self-hosted — Tinta y Lino */
+@font-face {
+  font-family: "The Girl Next Door";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/TheGirlNextDoor-Regular.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/DMSans-Variable.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "The Girl Next Door", cursive;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -53,38 +76,60 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  /* ─── shadcn tokens — paleta Tinta y Lino ─── */
+  --background: #f4f0e8;
+  --foreground: #1a1a18;
+  --card: #eae5da;
+  --card-foreground: #1a1a18;
+  --popover: #eae5da;
+  --popover-foreground: #1a1a18;
+  --primary: #3d5a4f;
+  --primary-foreground: #f4f0e8;
+  --secondary: #ddd7c8;
+  --secondary-foreground: #1a1a18;
+  --muted: #ddd7c8;
+  --muted-foreground: #5a5648;
+  --accent: #ddd7c8;
+  --accent-foreground: #1a1a18;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: #ccc8bc;
+  --input: #ccc8bc;
+  --ring: #3d5a4f;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.75rem;
+  --sidebar: #eae5da;
+  --sidebar-foreground: #1a1a18;
+  --sidebar-primary: #3d5a4f;
+  --sidebar-primary-foreground: #f4f0e8;
+  --sidebar-accent: #ddd7c8;
+  --sidebar-accent-foreground: #1a1a18;
+  --sidebar-border: #ccc8bc;
+  --sidebar-ring: #3d5a4f;
+
+  /* ─── Tokens semánticos Artelier ─── */
+  --bg: #f4f0e8;
+  --surface: #eae5da;
+  --surface-2: #ddd7c8;
+  --text: #1a1a18;
+  --text-muted: #5a5648;
+  --text-light: #8a8478;
+  --brand-accent: #c4956a;
+
+  /* ─── Sellos verificados ─── */
+  --seal-mano-text: #3d5a4f;
+  --seal-mano-bg: #c8ddd8;
+  --seal-eco-text: #2e6b48;
+  --seal-eco-bg: #c4e0d4;
+  --seal-reciclado-text: #4a7c5e;
+  --seal-reciclado-bg: #d4eae0;
+  --seal-galicia-text: #6b5e2e;
+  --seal-galicia-bg: #e0d9c4;
+  --seal-km0-text: #7c4e2a;
+  --seal-km0-bg: #f0ddd0;
 }
 
 .dark {
