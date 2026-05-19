@@ -11,12 +11,10 @@ const noopLimiter: RateLimiter = {
 
 function makeRedis(): Redis | null {
   if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
-    if (process.env.NODE_ENV !== "production") {
-      console.warn(
-        "[Artelier] Upstash Redis no configurado: UPSTASH_REDIS_REST_URL y/o " +
-          "UPSTASH_REDIS_REST_TOKEN ausentes. Rate limiting desactivado.",
-      );
-    }
+    console.warn(
+      "[Artelier] Upstash Redis no configurado: UPSTASH_REDIS_REST_URL y/o " +
+        "UPSTASH_REDIS_REST_TOKEN ausentes. Rate limiting desactivado.",
+    );
     return null;
   }
   return new Redis({

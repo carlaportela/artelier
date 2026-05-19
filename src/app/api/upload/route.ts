@@ -21,14 +21,29 @@ export async function POST(req: Request) {
     );
   }
 
+  if (!file.type) {
+    return NextResponse.json(
+      { error: { code: "INVALID_FILE", message: "El archivo no tiene un tipo MIME válido" } },
+      { status: 400 },
+    );
+  }
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const base64 = buffer.toString("base64");
   const dataUri = `data:${file.type};base64,${base64}`;
 
-  const result = await cloudinary.uploader.upload(dataUri, {
-    folder: "artelier",
-  });
+  let result;
+  try {
+    result = await cloudinary.uploader.upload(dataUri, {
+      folder: "artelier",
+    });
+  } catch {
+    return NextResponse.json(
+      { error: { code: "UPLOAD_FAILED", message: "Error al subir la imagen" } },
+      { status: 502 },
+    );
+  }
 
   return NextResponse.json({
     data: { url: result.secure_url, publicId: result.public_id },
