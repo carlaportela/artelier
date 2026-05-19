@@ -1,4 +1,12 @@
 # Artelier
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-En%20desarrollo-orange" />
+  <img src="https://img.shields.io/badge/Next.js-15.x-black?logo=nextdotjs" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript" />
+  <img src="https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql" />
+  <img src="https://img.shields.io/badge/Stripe-Connect-635BFF?logo=stripe" />
+  <img src="https://img.shields.io/badge/Vercel-Deploy-000000?logo=vercel" />
+</p>
 
 **Marketplace de artesanía y producción local de Galicia.**
 
