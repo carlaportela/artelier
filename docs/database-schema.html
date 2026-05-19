@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artelier — Esquema de Base de Datos</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f6f0;
+      color: #1a1a18;
+      padding: 32px;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #3d5a4f;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #5a5648;
+      margin-bottom: 28px;
+    }
+    .legend {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      background: #fff;
+      border: 1px solid #ccc8bc;
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #5a5648;
+    }
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-auth    { background: #c4956a; }
+    .dot-user    { background: #3d5a4f; }
+    .dot-catalog { background: #7b9e87; }
+    .dot-order   { background: #e07b4a; }
+    .dot-msg     { background: #6b7fab; }
+    .dot-trust   { background: #9b6ba8; }
+    .dot-log     { background: #888; }
+    .diagram-wrap {
+      background: #fff;
+      border: 1px solid #ccc8bc;
+      border-radius: 12px;
+      padding: 24px;
+      overflow-x: auto;
+    }
+    @media print {
+      body { background: #fff; padding: 16px; }
+      .diagram-wrap { border: none; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Artelier — Esquema de Base de Datos</h1>
+<p class="subtitle">Generado el 2026-05-19 · Prisma PostgreSQL (Neon EU Frankfurt)</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-auth"></div> Auth.js (Account, Session, VerificationToken)</div>
+  <div class="legend-item"><div class="dot dot-user"></div> Usuario (User, Follow)</div>
+  <div class="legend-item"><div class="dot dot-catalog"></div> Catálogo (Product, ProcessUpdate)</div>
+  <div class="legend-item"><div class="dot dot-order"></div> Pedidos (Order)</div>
+  <div class="legend-item"><div class="dot dot-msg"></div> Mensajería (Conversation, Message)</div>
+  <div class="legend-item"><div class="dot dot-trust"></div> Confianza (Dispute, Seal, ProductSeal, SealRequest)</div>
+  <div class="legend-item"><div class="dot dot-log"></div> Auditoría (TransactionLog)</div>
+</div>
+
+<div class="diagram-wrap">
+  <pre class="mermaid">
+erDiagram
+
+  %% ── Auth.js ──────────────────────────────────────────
+  USER {
+    string  id                 PK
+    string  name
+    string  email              UK
+    string  password
+    enum    role               "ARTISAN | BUYER | ADMIN"
+    string  stripeAccountId
+    boolean firstSaleCompleted
+    string  twoFactorSecret
+    boolean twoFactorEnabled
+    boolean suspended
+    datetime deletedAt
+    datetime createdAt
+    datetime updatedAt
+  }
+
+  ACCOUNT {
+    string id        PK
+    string userId    FK
+    string provider
+    string providerAccountId
+  }
+
+  SESSION {
+    string   id           PK
+    string   sessionToken UK
+    string   userId       FK
+    datetime expires
+  }
+
+  VERIFICATION_TOKEN {
+    string   identifier
+    string   token        UK
+    datetime expires
+  }
+
+  %% ── Catálogo ──────────────────────────────────────────
+  PRODUCT {
+    string   id           PK
+    string   artisanId    FK
+    string   name
+    int      priceInCents
+    enum     type         "UNIQUE | PERISHABLE | STANDARD"
+    enum     status       "ACTIVE | SOLD | EXPIRED"
+    datetime expiresAt
+    string[] imageUrls
+    string   category
+    string   locality
+    datetime deletedAt
+  }
+
+  PROCESS_UPDATE {
+    string   id        PK
+    string   artisanId FK
+    string   content
+    string   imageUrl
+    datetime deletedAt
+    datetime createdAt
+  }
+
+  %% ── Pedidos ───────────────────────────────────────────
+  ORDER {
+    string   id                    PK
+    string   buyerId               FK
+    string   artisanId             FK
+    string   productId             FK
+    enum     status                "CONFIRMED | IN_PREPARATION | READY | SHIPPED | DELIVERED | ACCEPTED | CANCELLED | REFUNDED | IN_DISPUTE"
+    enum     shippingMethod        "PLATFORM | ARTISAN_OWN | PICKUP"
+    int      priceInCents
+    int      platformFeeInCents
+    int      stripeFeeInCents
+    int      totalInCents
+    string   stripePaymentIntentId UK
+    string   stripeEventId         UK
+    string   trackingNumber
+    boolean  paidOut
+    datetime deletedAt
+  }
+
+  %% ── Mensajería ────────────────────────────────────────
+  CONVERSATION {
+    string   id            PK
+    string   participantId FK
+    datetime deletedAt
+    datetime createdAt
+  }
+
+  MESSAGE {
+    string   id             PK
+    string   conversationId FK
+    string   senderId       FK
+    string   content
+    string   imageUrl
+    datetime readAt
+    datetime deletedAt
+    datetime createdAt
+  }
+
+  %% ── Confianza y Disputas ──────────────────────────────
+  DISPUTE {
+    string   id        PK
+    string   orderId   FK
+    string   openedBy  FK
+    string   reason
+    enum     status    "OPEN | RETURN_REQUESTED | RETURN_IN_TRANSIT | ESCALATED | RESOLVED | REJECTED"
+    datetime deletedAt
+    datetime createdAt
+  }
+
+  SEAL {
+    string  id          PK
+    string  name        UK
+    string  type        "PRODUCT | PROFILE"
+    boolean isAutomatic
+    datetime deletedAt
+  }
+
+  PRODUCT_SEAL {
+    string   id        PK
+    string   productId FK
+    string   sealId    FK
+    datetime createdAt
+  }
+
+  SEAL_REQUEST {
+    string   id            PK
+    string   artisanId     FK
+    string   productId     FK "nullable"
+    string   sealId        FK
+    enum     status        "PENDING | APPROVED | REJECTED"
+    string   justification
+    string   rejectReason
+    datetime deletedAt
+  }
+
+  %% ── Relaciones sociales ───────────────────────────────
+  FOLLOW {
+    string   id          PK
+    string   followerId  FK
+    string   followingId FK
+    datetime createdAt
+  }
+
+  %% ── Auditoría ─────────────────────────────────────────
+  TRANSACTION_LOG {
+    string   id        PK
+    string   orderId
+    string   eventType
+    json     payload
+    datetime createdAt
+    %% Sin deletedAt — retención 5 años obligatoria (NFR12)
+  }
+
+  %% ── Relaciones ────────────────────────────────────────
+  USER           ||--o{ ACCOUNT          : "tiene"
+  USER           ||--o{ SESSION          : "tiene"
+  USER           ||--o{ PRODUCT          : "publica (artesana)"
+  USER           ||--o{ ORDER            : "compra (compradora)"
+  USER           ||--o{ ORDER            : "vende (artesana)"
+  USER           ||--o{ CONVERSATION     : "participa"
+  USER           ||--o{ MESSAGE          : "envía"
+  USER           ||--o{ FOLLOW           : "sigue"
+  USER           ||--o{ FOLLOW           : "es seguida"
+  USER           ||--o{ DISPUTE          : "abre"
+  USER           ||--o{ PROCESS_UPDATE   : "publica"
+  USER           ||--o{ SEAL_REQUEST     : "solicita"
+  PRODUCT        ||--o{ ORDER            : "en pedido"
+  PRODUCT        ||--o{ PRODUCT_SEAL     : "tiene sellos"
+  PRODUCT        ||--o{ SEAL_REQUEST     : "solicita sello"
+  ORDER          ||--o{ DISPUTE          : "puede tener"
+  CONVERSATION   ||--o{ MESSAGE          : "contiene"
+  SEAL           ||--o{ PRODUCT_SEAL     : "aplicado en"
+  SEAL           ||--o{ SEAL_REQUEST     : "solicitado como"
+  </pre>
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    er: { diagramPadding: 20, layoutDirection: 'TB', minEntityWidth: 100, minEntityHeight: 75 }
+  });
+</script>
+
+</body>
+</html>
