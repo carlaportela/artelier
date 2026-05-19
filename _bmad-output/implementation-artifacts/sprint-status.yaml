@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-05-19
+# last_updated: 2026-05-20
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-05-19
+last_updated: 2026-05-20
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -46,7 +46,7 @@ development_status:
   epic-0: in-progress
   0-1-inicializacion-del-proyecto-t3: done
   0-2-sistema-de-diseno-tinta-y-lino: done
-  0-3-ci-cd-middleware-e-i18n-base: backlog
+  0-3-ci-cd-middleware-e-i18n-base: done
   0-4-configuracion-de-servicios-externos: backlog
   epic-0-retrospective: optional
 

@@ -1,0 +1,27 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Gardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Volver",
+    "next": "Seguinte",
+    "confirm": "Confirmar",
+    "search": "Buscar"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Pechar sesión",
+    "register": "Rexistrarse",
+    "email": "Correo electrónico",
+    "password": "Contrasinal",
+    "forgotPassword": "¿Esqueceu o seu contrasinal?"
+  },
+  "errors": {
+    "generic": "Algo foi mal. Téntao de novo.",
+    "notFound": "Páxina non atopada.",
+    "unauthorized": "Non tes permiso para acceder a esta páxina.",
+    "serverError": "Erro do servidor. Téntao máis tarde."
+  }
+}
