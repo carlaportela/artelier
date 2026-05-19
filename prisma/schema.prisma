@@ -122,7 +122,8 @@ model User {
     products        Product[]
     buyerOrders     Order[]          @relation("BuyerOrders")
     artisanOrders   Order[]          @relation("ArtisanOrders")
-    conversations   Conversation[]
+    buyerConversations    Conversation[] @relation("BuyerConversations")
+    artisanConversations  Conversation[] @relation("ArtisanConversations")
     sentMessages    Message[]
     follows         Follow[]         @relation("Follower")
     followers       Follow[]         @relation("Following")
@@ -179,14 +180,18 @@ model Order {
 }
 
 model Conversation {
-    id            String    @id @default(cuid())
-    participantId String
-    deletedAt     DateTime?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
+    id        String    @id @default(cuid())
+    buyerId   String
+    artisanId String
+    deletedAt DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 
-    participant User      @relation(fields: [participantId], references: [id])
-    messages    Message[]
+    buyer    User      @relation("BuyerConversations", fields: [buyerId], references: [id])
+    artisan  User      @relation("ArtisanConversations", fields: [artisanId], references: [id])
+    messages Message[]
+
+    @@unique([buyerId, artisanId])
 }
 
 model Message {

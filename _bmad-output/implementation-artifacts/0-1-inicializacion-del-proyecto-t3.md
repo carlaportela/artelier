@@ -1,6 +1,6 @@
 # Story 0.1: Inicialización del proyecto T3
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -22,54 +22,60 @@ para tener el stack base, estructura de directorios y modelo de datos listos par
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Inicializar T3 Stack (AC: 1)
-  - [ ] Ejecutar `npm create t3-app@latest artelier` — opciones: TypeScript ✓, Tailwind CSS ✓, Auth.js ✓, Prisma ✓, tRPC ✗
-  - [ ] Verificar `npm run build` pasa sin errores
-  - [ ] Ejecutar `npx shadcn@latest init` — New York style, CSS variables, Zinc base color
-  - [ ] Verificar `src/components/ui/` creado y `components.json` en raíz
+- [x] Task 1: Inicializar T3 Stack (AC: 1)
+  - [x] Ejecutar `npm create t3-app@latest artelier` — opciones: TypeScript ✓, Tailwind CSS ✓, Auth.js ✓, Prisma ✓, tRPC ✗
+  - [x] Verificar `npm run build` pasa sin errores
+  - [x] Ejecutar `npx shadcn@latest init` — New York style, CSS variables, Zinc base color
+  - [x] Verificar `src/components/ui/` creado y `components.json` en raíz
 
-- [ ] Task 2: Instalar componentes shadcn/ui base (AC: 2)
-  - [ ] `npx shadcn@latest add button input card dialog tabs badge avatar sheet separator sonner`
-  - [ ] Verificar que los 10 componentes están en `src/components/ui/`
+- [x] Task 2: Instalar componentes shadcn/ui base (AC: 2)
+  - [x] `npx shadcn@latest add button input card dialog tabs badge avatar sheet separator sonner`
+  - [x] Verificar que los 10 componentes están en `src/components/ui/`
 
-- [ ] Task 3: Crear estructura de directorios adicional (AC: 3)
-  - [ ] Crear `src/types/api.ts` — tipos `ApiResponse<T>`, `ApiError` con forma `{ error: { code: string; message: string; fields?: unknown } }`
-  - [ ] Crear `src/types/index.ts` — re-exporta tipos Prisma + tipos de dominio
-  - [ ] Crear `src/hooks/` con `.gitkeep`
-  - [ ] Crear `src/stores/cart.ts` — store Zustand vacío (stub) para el carrito
-  - [ ] Crear `src/i18n/config.ts` — next-intl: locales `['es']`, defaultLocale `'es'`
-  - [ ] Crear `src/i18n/messages/es.json` — objeto vacío `{}` (se rellena en historias posteriores)
+- [x] Task 3: Crear estructura de directorios adicional (AC: 3)
+  - [x] Crear `src/types/api.ts` — tipos `ApiResponse<T>`, `ApiError` con forma `{ error: { code: string; message: string; fields?: unknown } }`
+  - [x] Crear `src/types/index.ts` — re-exporta tipos Prisma + tipos de dominio
+  - [x] Crear `src/hooks/` con `.gitkeep`
+  - [x] Crear `src/stores/cart.ts` — store Zustand vacío (stub) para el carrito
+  - [x] Crear `src/i18n/config.ts` — next-intl: locales `['es']`, defaultLocale `'es'`
+  - [x] Crear `src/i18n/messages/es.json` — objeto vacío `{}` (se rellena en historias posteriores)
 
-- [ ] Task 4: Configurar auth.config.ts y src/lib/auth.ts (AC: 3)
-  - [ ] Crear `auth.config.ts` en raíz: solo `providers: [Credentials({ ... })]`, **sin importar Prisma** (Edge-safe)
-  - [ ] Crear/actualizar `src/lib/auth.ts`: importa `auth.config.ts` + callbacks de sesión en BD con Prisma + RBAC en token/session
-  - [ ] Crear `src/lib/db.ts`: singleton de Prisma client con patrón de prevención de hot-reload en dev
+- [x] Task 4: Configurar auth.config.ts y src/server/auth/config.ts (AC: 3)
+  - [x] Crear `auth.config.ts` en raíz: solo `providers: [Credentials({ ... })]`, sin importar Prisma (Edge-safe)
+  - [x] Actualizar `src/server/auth/config.ts`: Credentials provider + RBAC en sesión + PrismaAdapter
+  - [x] `src/server/db.ts` ya generado por T3 con patrón singleton correcto
 
-- [ ] Task 5: Definir schema Prisma completo (AC: 5)
-  - [ ] Definir enum `Role { ARTISAN BUYER ADMIN }`
-  - [ ] Definir enum `ProductType { UNIQUE PERISHABLE STANDARD }`
-  - [ ] Definir enum `ProductStatus { ACTIVE SOLD EXPIRED DELETED }`
-  - [ ] Definir enum `OrderStatus { CONFIRMED IN_PREPARATION READY SHIPPED DELIVERED ACCEPTED CANCELLED REFUNDED IN_DISPUTE }`
-  - [ ] Definir enum `DisputeStatus { OPEN RETURN_REQUESTED RETURN_IN_TRANSIT ESCALATED RESOLVED REJECTED }`
-  - [ ] Definir enum `SealRequestStatus { PENDING APPROVED REJECTED }`
-  - [ ] Definir modelo `User` (ver Dev Notes para campos completos)
-  - [ ] Definir modelo `Product` con `type`, `status`, `expiresAt?`, `deletedAt?`
-  - [ ] Definir modelo `Order` con `stripePaymentIntentId`, `stripeEventId`, `status`, `shippingMethod`
-  - [ ] Definir modelo `Message` y `Conversation`
-  - [ ] Definir modelo `Dispute` con `status`
-  - [ ] Definir modelo `Seal` y `ProductSeal`
-  - [ ] Definir modelo `Follow`
-  - [ ] Definir modelo `ProcessUpdate`
-  - [ ] Definir modelo `TransactionLog` **sin** `deletedAt` (retención forzada 5 años)
-  - [ ] Ejecutar `npx prisma migrate dev --name init`
-  - [ ] Verificar `npm run build` pasa sin errores tras migración
+- [x] Task 5: Definir schema Prisma completo (AC: 5)
+  - [x] Definir enums: Role, ProductType, ProductStatus, OrderStatus, DisputeStatus, SealRequestStatus, ShippingMethod
+  - [x] Definir todos los modelos con relaciones y soft-delete
+  - [x] TransactionLog sin deletedAt (retención 5 años)
+  - [x] Ejecutar `npx prisma migrate dev --name init` — migración exitosa en Neon
+  - [x] Verificar `npm run build` pasa sin errores
 
-- [ ] Task 6: Crear .env.example (AC: 4)
-  - [ ] Documentar las 13 variables requeridas con valores de ejemplo descriptivos
+- [x] Task 6: Crear .env.example (AC: 4)
+  - [x] Documentar las 13 variables con valores de ejemplo
 
-- [ ] Task 7: Instalar dependencias adicionales de historias cercanas
-  - [ ] `npm install next-intl zustand react-hook-form @hookform/resolvers zod`
-  - [ ] Verificar `npm run build` sigue pasando
+- [x] Task 7: Instalar dependencias adicionales
+  - [x] `npm install next-intl zustand react-hook-form @hookform/resolvers zod`
+  - [x] Verificar `npm run build` sigue pasando
+
+### Review Findings (AI) — 2026-05-19
+
+**Decisiones necesarias (humano debe resolver antes de parchear):**
+- [x] [Review][Decision] **Conversation.participantId con una sola FK** → Resuelto: dos FKs directas `buyerId` + `artisanId` con `@@unique([buyerId, artisanId])`. Migrado a BD. Fuentes: blind+edge+auditor
+- [x] [Review][Decision] **ProductStatus sin `DELETED`** → Resuelto: mantener solo ACTIVE/SOLD/EXPIRED; `deletedAt` cubre la eliminación. Fuente: auditor
+- [x] [Review][Decision] **Follow sin `deletedAt`** → Resuelto: hard-delete intencional; "dejar de seguir" elimina la relación completamente. Fuente: blind
+
+**Parches (corrección clara sin ambigüedad):**
+- [x] [Review][Patch] `AUTH_SECRET` tiene string vacío `""` en `.env.example` → Resuelto: añadido comentario de generación [.env.example:10]
+- [x] [Review][Patch] Role cast sin validación en session callback → Resuelto: guard explícito con check de enum [src/server/auth/config.ts:43]
+
+**Diferidos (reales pero no accionables en esta historia):**
+- [x] [Review][Defer] `authorize()` retorna null — stub intencional para Historia 1.2 [auth.config.ts:14] — deferred, pre-existing
+- [x] [Review][Defer] `layout.tsx` con metadata placeholder de T3 (`"Create T3 App"`, `lang="en"`) — diferido a Historia 0.2 [src/app/layout.tsx:7] — deferred, pre-existing
+- [x] [Review][Defer] `src/middleware.ts` no existe aún — diferido a Historia 0.3 [auth.config.ts:comment] — deferred, pre-existing
+- [x] [Review][Defer] Índices de BD ausentes en FKs frecuentes (Order.buyerId, Message.conversationId, etc.) — no necesarios para historia de init [prisma/schema.prisma] — deferred, pre-existing
+- [x] [Review][Defer] Secrets de producción opcionales (Stripe, Cloudinary, Resend, Upstash, Cron) — intencional; se harán requeridos en sus historias respectivas [src/env.js] — deferred, pre-existing
 
 ## Dev Notes
 

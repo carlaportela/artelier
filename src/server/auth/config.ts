@@ -38,7 +38,10 @@ export const authConfig = {
       user: {
         ...session.user,
         id: user.id,
-        role: (user as { role?: string }).role ?? "BUYER",
+        role: ((): "ARTISAN" | "BUYER" | "ADMIN" => {
+          const r = (user as { role?: string }).role;
+          return r === "ARTISAN" || r === "ADMIN" ? r : "BUYER";
+        })(),
       },
     }),
   },

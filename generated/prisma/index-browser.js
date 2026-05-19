@@ -207,7 +207,8 @@ exports.Prisma.OrderScalarFieldEnum = {
 
 exports.Prisma.ConversationScalarFieldEnum = {
   id: 'id',
-  participantId: 'participantId',
+  buyerId: 'buyerId',
+  artisanId: 'artisanId',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

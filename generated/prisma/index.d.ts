@@ -2245,7 +2245,8 @@ export namespace Prisma {
     products: number
     buyerOrders: number
     artisanOrders: number
-    conversations: number
+    buyerConversations: number
+    artisanConversations: number
     sentMessages: number
     follows: number
     followers: number
@@ -2260,7 +2261,8 @@ export namespace Prisma {
     products?: boolean | UserCountOutputTypeCountProductsArgs
     buyerOrders?: boolean | UserCountOutputTypeCountBuyerOrdersArgs
     artisanOrders?: boolean | UserCountOutputTypeCountArtisanOrdersArgs
-    conversations?: boolean | UserCountOutputTypeCountConversationsArgs
+    buyerConversations?: boolean | UserCountOutputTypeCountBuyerConversationsArgs
+    artisanConversations?: boolean | UserCountOutputTypeCountArtisanConversationsArgs
     sentMessages?: boolean | UserCountOutputTypeCountSentMessagesArgs
     follows?: boolean | UserCountOutputTypeCountFollowsArgs
     followers?: boolean | UserCountOutputTypeCountFollowersArgs
@@ -2318,7 +2320,14 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountBuyerConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountArtisanConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConversationWhereInput
   }
 
@@ -5983,7 +5992,8 @@ export namespace Prisma {
     products?: boolean | User$productsArgs<ExtArgs>
     buyerOrders?: boolean | User$buyerOrdersArgs<ExtArgs>
     artisanOrders?: boolean | User$artisanOrdersArgs<ExtArgs>
-    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    buyerConversations?: boolean | User$buyerConversationsArgs<ExtArgs>
+    artisanConversations?: boolean | User$artisanConversationsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
     follows?: boolean | User$followsArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
@@ -6054,7 +6064,8 @@ export namespace Prisma {
     products?: boolean | User$productsArgs<ExtArgs>
     buyerOrders?: boolean | User$buyerOrdersArgs<ExtArgs>
     artisanOrders?: boolean | User$artisanOrdersArgs<ExtArgs>
-    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    buyerConversations?: boolean | User$buyerConversationsArgs<ExtArgs>
+    artisanConversations?: boolean | User$artisanConversationsArgs<ExtArgs>
     sentMessages?: boolean | User$sentMessagesArgs<ExtArgs>
     follows?: boolean | User$followsArgs<ExtArgs>
     followers?: boolean | User$followersArgs<ExtArgs>
@@ -6074,7 +6085,8 @@ export namespace Prisma {
       products: Prisma.$ProductPayload<ExtArgs>[]
       buyerOrders: Prisma.$OrderPayload<ExtArgs>[]
       artisanOrders: Prisma.$OrderPayload<ExtArgs>[]
-      conversations: Prisma.$ConversationPayload<ExtArgs>[]
+      buyerConversations: Prisma.$ConversationPayload<ExtArgs>[]
+      artisanConversations: Prisma.$ConversationPayload<ExtArgs>[]
       sentMessages: Prisma.$MessagePayload<ExtArgs>[]
       follows: Prisma.$FollowPayload<ExtArgs>[]
       followers: Prisma.$FollowPayload<ExtArgs>[]
@@ -6497,7 +6509,8 @@ export namespace Prisma {
     products<T extends User$productsArgs<ExtArgs> = {}>(args?: Subset<T, User$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     buyerOrders<T extends User$buyerOrdersArgs<ExtArgs> = {}>(args?: Subset<T, User$buyerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     artisanOrders<T extends User$artisanOrdersArgs<ExtArgs> = {}>(args?: Subset<T, User$artisanOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    conversations<T extends User$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    buyerConversations<T extends User$buyerConversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$buyerConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    artisanConversations<T extends User$artisanConversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$artisanConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sentMessages<T extends User$sentMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     follows<T extends User$followsArgs<ExtArgs> = {}>(args?: Subset<T, User$followsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     followers<T extends User$followersArgs<ExtArgs> = {}>(args?: Subset<T, User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FollowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -7056,9 +7069,33 @@ export namespace Prisma {
   }
 
   /**
-   * User.conversations
+   * User.buyerConversations
    */
-  export type User$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$buyerConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * User.artisanConversations
+   */
+  export type User$artisanConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Conversation
      */
@@ -9851,7 +9888,8 @@ export namespace Prisma {
 
   export type ConversationMinAggregateOutputType = {
     id: string | null
-    participantId: string | null
+    buyerId: string | null
+    artisanId: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9859,7 +9897,8 @@ export namespace Prisma {
 
   export type ConversationMaxAggregateOutputType = {
     id: string | null
-    participantId: string | null
+    buyerId: string | null
+    artisanId: string | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9867,7 +9906,8 @@ export namespace Prisma {
 
   export type ConversationCountAggregateOutputType = {
     id: number
-    participantId: number
+    buyerId: number
+    artisanId: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -9877,7 +9917,8 @@ export namespace Prisma {
 
   export type ConversationMinAggregateInputType = {
     id?: true
-    participantId?: true
+    buyerId?: true
+    artisanId?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9885,7 +9926,8 @@ export namespace Prisma {
 
   export type ConversationMaxAggregateInputType = {
     id?: true
-    participantId?: true
+    buyerId?: true
+    artisanId?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9893,7 +9935,8 @@ export namespace Prisma {
 
   export type ConversationCountAggregateInputType = {
     id?: true
-    participantId?: true
+    buyerId?: true
+    artisanId?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9974,7 +10017,8 @@ export namespace Prisma {
 
   export type ConversationGroupByOutputType = {
     id: string
-    participantId: string
+    buyerId: string
+    artisanId: string
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -9999,63 +10043,75 @@ export namespace Prisma {
 
   export type ConversationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    participantId?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    participantId?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    participantId?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectScalar = {
     id?: boolean
-    participantId?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "participantId" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ConversationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type ConversationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    participant?: boolean | UserDefaultArgs<ExtArgs>
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $ConversationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Conversation"
     objects: {
-      participant: Prisma.$UserPayload<ExtArgs>
+      buyer: Prisma.$UserPayload<ExtArgs>
+      artisan: Prisma.$UserPayload<ExtArgs>
       messages: Prisma.$MessagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      participantId: string
+      buyerId: string
+      artisanId: string
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -10453,7 +10509,8 @@ export namespace Prisma {
    */
   export interface Prisma__ConversationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    participant<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    buyer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    artisan<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -10485,7 +10542,8 @@ export namespace Prisma {
    */
   interface ConversationFieldRefs {
     readonly id: FieldRef<"Conversation", 'String'>
-    readonly participantId: FieldRef<"Conversation", 'String'>
+    readonly buyerId: FieldRef<"Conversation", 'String'>
+    readonly artisanId: FieldRef<"Conversation", 'String'>
     readonly deletedAt: FieldRef<"Conversation", 'DateTime'>
     readonly createdAt: FieldRef<"Conversation", 'DateTime'>
     readonly updatedAt: FieldRef<"Conversation", 'DateTime'>
@@ -19692,7 +19750,8 @@ export namespace Prisma {
 
   export const ConversationScalarFieldEnum: {
     id: 'id',
-    participantId: 'participantId',
+    buyerId: 'buyerId',
+    artisanId: 'artisanId',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -20238,7 +20297,8 @@ export namespace Prisma {
     products?: ProductListRelationFilter
     buyerOrders?: OrderListRelationFilter
     artisanOrders?: OrderListRelationFilter
-    conversations?: ConversationListRelationFilter
+    buyerConversations?: ConversationListRelationFilter
+    artisanConversations?: ConversationListRelationFilter
     sentMessages?: MessageListRelationFilter
     follows?: FollowListRelationFilter
     followers?: FollowListRelationFilter
@@ -20268,7 +20328,8 @@ export namespace Prisma {
     products?: ProductOrderByRelationAggregateInput
     buyerOrders?: OrderOrderByRelationAggregateInput
     artisanOrders?: OrderOrderByRelationAggregateInput
-    conversations?: ConversationOrderByRelationAggregateInput
+    buyerConversations?: ConversationOrderByRelationAggregateInput
+    artisanConversations?: ConversationOrderByRelationAggregateInput
     sentMessages?: MessageOrderByRelationAggregateInput
     follows?: FollowOrderByRelationAggregateInput
     followers?: FollowOrderByRelationAggregateInput
@@ -20301,7 +20362,8 @@ export namespace Prisma {
     products?: ProductListRelationFilter
     buyerOrders?: OrderListRelationFilter
     artisanOrders?: OrderListRelationFilter
-    conversations?: ConversationListRelationFilter
+    buyerConversations?: ConversationListRelationFilter
+    artisanConversations?: ConversationListRelationFilter
     sentMessages?: MessageListRelationFilter
     follows?: FollowListRelationFilter
     followers?: FollowListRelationFilter
@@ -20594,40 +20656,48 @@ export namespace Prisma {
     OR?: ConversationWhereInput[]
     NOT?: ConversationWhereInput | ConversationWhereInput[]
     id?: StringFilter<"Conversation"> | string
-    participantId?: StringFilter<"Conversation"> | string
+    buyerId?: StringFilter<"Conversation"> | string
+    artisanId?: StringFilter<"Conversation"> | string
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
-    participant?: XOR<UserScalarRelationFilter, UserWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
     messages?: MessageListRelationFilter
   }
 
   export type ConversationOrderByWithRelationInput = {
     id?: SortOrder
-    participantId?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    participant?: UserOrderByWithRelationInput
+    buyer?: UserOrderByWithRelationInput
+    artisan?: UserOrderByWithRelationInput
     messages?: MessageOrderByRelationAggregateInput
   }
 
   export type ConversationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    buyerId_artisanId?: ConversationBuyerIdArtisanIdCompoundUniqueInput
     AND?: ConversationWhereInput | ConversationWhereInput[]
     OR?: ConversationWhereInput[]
     NOT?: ConversationWhereInput | ConversationWhereInput[]
-    participantId?: StringFilter<"Conversation"> | string
+    buyerId?: StringFilter<"Conversation"> | string
+    artisanId?: StringFilter<"Conversation"> | string
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
-    participant?: XOR<UserScalarRelationFilter, UserWhereInput>
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
     messages?: MessageListRelationFilter
-  }, "id">
+  }, "id" | "buyerId_artisanId">
 
   export type ConversationOrderByWithAggregationInput = {
     id?: SortOrder
-    participantId?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -20641,7 +20711,8 @@ export namespace Prisma {
     OR?: ConversationScalarWhereWithAggregatesInput[]
     NOT?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Conversation"> | string
-    participantId?: StringWithAggregatesFilter<"Conversation"> | string
+    buyerId?: StringWithAggregatesFilter<"Conversation"> | string
+    artisanId?: StringWithAggregatesFilter<"Conversation"> | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
@@ -21384,7 +21455,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -21414,7 +21486,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -21444,7 +21517,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -21474,7 +21548,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -21813,13 +21888,15 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    participant: UserCreateNestedOneWithoutConversationsInput
+    buyer: UserCreateNestedOneWithoutBuyerConversationsInput
+    artisan: UserCreateNestedOneWithoutArtisanConversationsInput
     messages?: MessageCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateInput = {
     id?: string
-    participantId: string
+    buyerId: string
+    artisanId: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21831,13 +21908,15 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    participant?: UserUpdateOneRequiredWithoutConversationsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerConversationsNestedInput
+    artisan?: UserUpdateOneRequiredWithoutArtisanConversationsNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    participantId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21846,7 +21925,8 @@ export namespace Prisma {
 
   export type ConversationCreateManyInput = {
     id?: string
-    participantId: string
+    buyerId: string
+    artisanId: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21861,7 +21941,8 @@ export namespace Prisma {
 
   export type ConversationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    participantId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23081,9 +23162,15 @@ export namespace Prisma {
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
   }
 
+  export type ConversationBuyerIdArtisanIdCompoundUniqueInput = {
+    buyerId: string
+    artisanId: string
+  }
+
   export type ConversationCountOrderByAggregateInput = {
     id?: SortOrder
-    participantId?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23091,7 +23178,8 @@ export namespace Prisma {
 
   export type ConversationMaxOrderByAggregateInput = {
     id?: SortOrder
-    participantId?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23099,7 +23187,8 @@ export namespace Prisma {
 
   export type ConversationMinOrderByAggregateInput = {
     id?: SortOrder
-    participantId?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23524,10 +23613,17 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
-  export type ConversationCreateNestedManyWithoutParticipantInput = {
-    create?: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput> | ConversationCreateWithoutParticipantInput[] | ConversationUncheckedCreateWithoutParticipantInput[]
-    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantInput | ConversationCreateOrConnectWithoutParticipantInput[]
-    createMany?: ConversationCreateManyParticipantInputEnvelope
+  export type ConversationCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput> | ConversationCreateWithoutBuyerInput[] | ConversationUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutBuyerInput | ConversationCreateOrConnectWithoutBuyerInput[]
+    createMany?: ConversationCreateManyBuyerInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type ConversationCreateNestedManyWithoutArtisanInput = {
+    create?: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput> | ConversationCreateWithoutArtisanInput[] | ConversationUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutArtisanInput | ConversationCreateOrConnectWithoutArtisanInput[]
+    createMany?: ConversationCreateManyArtisanInputEnvelope
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
@@ -23608,10 +23704,17 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
-  export type ConversationUncheckedCreateNestedManyWithoutParticipantInput = {
-    create?: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput> | ConversationCreateWithoutParticipantInput[] | ConversationUncheckedCreateWithoutParticipantInput[]
-    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantInput | ConversationCreateOrConnectWithoutParticipantInput[]
-    createMany?: ConversationCreateManyParticipantInputEnvelope
+  export type ConversationUncheckedCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput> | ConversationCreateWithoutBuyerInput[] | ConversationUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutBuyerInput | ConversationCreateOrConnectWithoutBuyerInput[]
+    createMany?: ConversationCreateManyBuyerInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type ConversationUncheckedCreateNestedManyWithoutArtisanInput = {
+    create?: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput> | ConversationCreateWithoutArtisanInput[] | ConversationUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutArtisanInput | ConversationCreateOrConnectWithoutArtisanInput[]
+    createMany?: ConversationCreateManyArtisanInputEnvelope
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
@@ -23739,17 +23842,31 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
-  export type ConversationUpdateManyWithoutParticipantNestedInput = {
-    create?: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput> | ConversationCreateWithoutParticipantInput[] | ConversationUncheckedCreateWithoutParticipantInput[]
-    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantInput | ConversationCreateOrConnectWithoutParticipantInput[]
-    upsert?: ConversationUpsertWithWhereUniqueWithoutParticipantInput | ConversationUpsertWithWhereUniqueWithoutParticipantInput[]
-    createMany?: ConversationCreateManyParticipantInputEnvelope
+  export type ConversationUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput> | ConversationCreateWithoutBuyerInput[] | ConversationUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutBuyerInput | ConversationCreateOrConnectWithoutBuyerInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutBuyerInput | ConversationUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: ConversationCreateManyBuyerInputEnvelope
     set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
-    update?: ConversationUpdateWithWhereUniqueWithoutParticipantInput | ConversationUpdateWithWhereUniqueWithoutParticipantInput[]
-    updateMany?: ConversationUpdateManyWithWhereWithoutParticipantInput | ConversationUpdateManyWithWhereWithoutParticipantInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutBuyerInput | ConversationUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutBuyerInput | ConversationUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
+  export type ConversationUpdateManyWithoutArtisanNestedInput = {
+    create?: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput> | ConversationCreateWithoutArtisanInput[] | ConversationUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutArtisanInput | ConversationCreateOrConnectWithoutArtisanInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutArtisanInput | ConversationUpsertWithWhereUniqueWithoutArtisanInput[]
+    createMany?: ConversationCreateManyArtisanInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutArtisanInput | ConversationUpdateWithWhereUniqueWithoutArtisanInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutArtisanInput | ConversationUpdateManyWithWhereWithoutArtisanInput[]
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
@@ -23907,17 +24024,31 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
-  export type ConversationUncheckedUpdateManyWithoutParticipantNestedInput = {
-    create?: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput> | ConversationCreateWithoutParticipantInput[] | ConversationUncheckedCreateWithoutParticipantInput[]
-    connectOrCreate?: ConversationCreateOrConnectWithoutParticipantInput | ConversationCreateOrConnectWithoutParticipantInput[]
-    upsert?: ConversationUpsertWithWhereUniqueWithoutParticipantInput | ConversationUpsertWithWhereUniqueWithoutParticipantInput[]
-    createMany?: ConversationCreateManyParticipantInputEnvelope
+  export type ConversationUncheckedUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput> | ConversationCreateWithoutBuyerInput[] | ConversationUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutBuyerInput | ConversationCreateOrConnectWithoutBuyerInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutBuyerInput | ConversationUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: ConversationCreateManyBuyerInputEnvelope
     set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
-    update?: ConversationUpdateWithWhereUniqueWithoutParticipantInput | ConversationUpdateWithWhereUniqueWithoutParticipantInput[]
-    updateMany?: ConversationUpdateManyWithWhereWithoutParticipantInput | ConversationUpdateManyWithWhereWithoutParticipantInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutBuyerInput | ConversationUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutBuyerInput | ConversationUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutArtisanNestedInput = {
+    create?: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput> | ConversationCreateWithoutArtisanInput[] | ConversationUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutArtisanInput | ConversationCreateOrConnectWithoutArtisanInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutArtisanInput | ConversationUpsertWithWhereUniqueWithoutArtisanInput[]
+    createMany?: ConversationCreateManyArtisanInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutArtisanInput | ConversationUpdateWithWhereUniqueWithoutArtisanInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutArtisanInput | ConversationUpdateManyWithWhereWithoutArtisanInput[]
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
@@ -24262,9 +24393,15 @@ export namespace Prisma {
     deleteMany?: DisputeScalarWhereInput | DisputeScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutConversationsInput = {
-    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+  export type UserCreateNestedOneWithoutBuyerConversationsInput = {
+    create?: XOR<UserCreateWithoutBuyerConversationsInput, UserUncheckedCreateWithoutBuyerConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerConversationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutArtisanConversationsInput = {
+    create?: XOR<UserCreateWithoutArtisanConversationsInput, UserUncheckedCreateWithoutArtisanConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutArtisanConversationsInput
     connect?: UserWhereUniqueInput
   }
 
@@ -24282,12 +24419,20 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
-  export type UserUpdateOneRequiredWithoutConversationsNestedInput = {
-    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
-    upsert?: UserUpsertWithoutConversationsInput
+  export type UserUpdateOneRequiredWithoutBuyerConversationsNestedInput = {
+    create?: XOR<UserCreateWithoutBuyerConversationsInput, UserUncheckedCreateWithoutBuyerConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBuyerConversationsInput
+    upsert?: UserUpsertWithoutBuyerConversationsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutConversationsInput, UserUpdateWithoutConversationsInput>, UserUncheckedUpdateWithoutConversationsInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBuyerConversationsInput, UserUpdateWithoutBuyerConversationsInput>, UserUncheckedUpdateWithoutBuyerConversationsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutArtisanConversationsNestedInput = {
+    create?: XOR<UserCreateWithoutArtisanConversationsInput, UserUncheckedCreateWithoutArtisanConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutArtisanConversationsInput
+    upsert?: UserUpsertWithoutArtisanConversationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutArtisanConversationsInput, UserUpdateWithoutArtisanConversationsInput>, UserUncheckedUpdateWithoutArtisanConversationsInput>
   }
 
   export type MessageUpdateManyWithoutConversationNestedInput = {
@@ -24943,7 +25088,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -24972,7 +25118,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -25017,7 +25164,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -25046,7 +25194,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -25075,7 +25224,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -25104,7 +25254,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -25149,7 +25300,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -25178,7 +25330,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -25397,29 +25550,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ConversationCreateWithoutParticipantInput = {
+  export type ConversationCreateWithoutBuyerInput = {
     id?: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    artisan: UserCreateNestedOneWithoutArtisanConversationsInput
     messages?: MessageCreateNestedManyWithoutConversationInput
   }
 
-  export type ConversationUncheckedCreateWithoutParticipantInput = {
+  export type ConversationUncheckedCreateWithoutBuyerInput = {
     id?: string
+    artisanId: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
   }
 
-  export type ConversationCreateOrConnectWithoutParticipantInput = {
+  export type ConversationCreateOrConnectWithoutBuyerInput = {
     where: ConversationWhereUniqueInput
-    create: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput>
+    create: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput>
   }
 
-  export type ConversationCreateManyParticipantInputEnvelope = {
-    data: ConversationCreateManyParticipantInput | ConversationCreateManyParticipantInput[]
+  export type ConversationCreateManyBuyerInputEnvelope = {
+    data: ConversationCreateManyBuyerInput | ConversationCreateManyBuyerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationCreateWithoutArtisanInput = {
+    id?: string
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutBuyerConversationsInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateWithoutArtisanInput = {
+    id?: string
+    buyerId: string
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutArtisanInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput>
+  }
+
+  export type ConversationCreateManyArtisanInputEnvelope = {
+    data: ConversationCreateManyArtisanInput | ConversationCreateManyArtisanInput[]
     skipDuplicates?: boolean
   }
 
@@ -25739,20 +25922,20 @@ export namespace Prisma {
     data: XOR<OrderUpdateManyMutationInput, OrderUncheckedUpdateManyWithoutArtisanInput>
   }
 
-  export type ConversationUpsertWithWhereUniqueWithoutParticipantInput = {
+  export type ConversationUpsertWithWhereUniqueWithoutBuyerInput = {
     where: ConversationWhereUniqueInput
-    update: XOR<ConversationUpdateWithoutParticipantInput, ConversationUncheckedUpdateWithoutParticipantInput>
-    create: XOR<ConversationCreateWithoutParticipantInput, ConversationUncheckedCreateWithoutParticipantInput>
+    update: XOR<ConversationUpdateWithoutBuyerInput, ConversationUncheckedUpdateWithoutBuyerInput>
+    create: XOR<ConversationCreateWithoutBuyerInput, ConversationUncheckedCreateWithoutBuyerInput>
   }
 
-  export type ConversationUpdateWithWhereUniqueWithoutParticipantInput = {
+  export type ConversationUpdateWithWhereUniqueWithoutBuyerInput = {
     where: ConversationWhereUniqueInput
-    data: XOR<ConversationUpdateWithoutParticipantInput, ConversationUncheckedUpdateWithoutParticipantInput>
+    data: XOR<ConversationUpdateWithoutBuyerInput, ConversationUncheckedUpdateWithoutBuyerInput>
   }
 
-  export type ConversationUpdateManyWithWhereWithoutParticipantInput = {
+  export type ConversationUpdateManyWithWhereWithoutBuyerInput = {
     where: ConversationScalarWhereInput
-    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutParticipantInput>
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutBuyerInput>
   }
 
   export type ConversationScalarWhereInput = {
@@ -25760,10 +25943,27 @@ export namespace Prisma {
     OR?: ConversationScalarWhereInput[]
     NOT?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
     id?: StringFilter<"Conversation"> | string
-    participantId?: StringFilter<"Conversation"> | string
+    buyerId?: StringFilter<"Conversation"> | string
+    artisanId?: StringFilter<"Conversation"> | string
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+  }
+
+  export type ConversationUpsertWithWhereUniqueWithoutArtisanInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutArtisanInput, ConversationUncheckedUpdateWithoutArtisanInput>
+    create: XOR<ConversationCreateWithoutArtisanInput, ConversationUncheckedCreateWithoutArtisanInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutArtisanInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutArtisanInput, ConversationUncheckedUpdateWithoutArtisanInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutArtisanInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutArtisanInput>
   }
 
   export type MessageUpsertWithWhereUniqueWithoutSenderInput = {
@@ -25948,7 +26148,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -25977,7 +26178,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -26128,7 +26330,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -26157,7 +26360,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -26244,7 +26448,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     products?: ProductCreateNestedManyWithoutArtisanInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -26273,7 +26478,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -26307,7 +26513,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -26336,7 +26543,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -26454,7 +26662,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     products?: ProductUpdateManyWithoutArtisanNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -26483,7 +26692,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -26523,7 +26733,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -26552,7 +26763,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -26626,7 +26838,7 @@ export namespace Prisma {
     data: XOR<DisputeUpdateManyMutationInput, DisputeUncheckedUpdateManyWithoutOrderInput>
   }
 
-  export type UserCreateWithoutConversationsInput = {
+  export type UserCreateWithoutBuyerConversationsInput = {
     id?: string
     name?: string | null
     email?: string | null
@@ -26647,6 +26859,7 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -26655,7 +26868,7 @@ export namespace Prisma {
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
   }
 
-  export type UserUncheckedCreateWithoutConversationsInput = {
+  export type UserUncheckedCreateWithoutBuyerConversationsInput = {
     id?: string
     name?: string | null
     email?: string | null
@@ -26676,6 +26889,7 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -26684,9 +26898,74 @@ export namespace Prisma {
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
-  export type UserCreateOrConnectWithoutConversationsInput = {
+  export type UserCreateOrConnectWithoutBuyerConversationsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    create: XOR<UserCreateWithoutBuyerConversationsInput, UserUncheckedCreateWithoutBuyerConversationsInput>
+  }
+
+  export type UserCreateWithoutArtisanConversationsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    products?: ProductCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    follows?: FollowCreateNestedManyWithoutFollowerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+  }
+
+  export type UserUncheckedCreateWithoutArtisanConversationsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+  }
+
+  export type UserCreateOrConnectWithoutArtisanConversationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutArtisanConversationsInput, UserUncheckedCreateWithoutArtisanConversationsInput>
   }
 
   export type MessageCreateWithoutConversationInput = {
@@ -26719,18 +26998,18 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutConversationsInput = {
-    update: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
-    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+  export type UserUpsertWithoutBuyerConversationsInput = {
+    update: XOR<UserUpdateWithoutBuyerConversationsInput, UserUncheckedUpdateWithoutBuyerConversationsInput>
+    create: XOR<UserCreateWithoutBuyerConversationsInput, UserUncheckedCreateWithoutBuyerConversationsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutConversationsInput = {
+  export type UserUpdateToOneWithWhereWithoutBuyerConversationsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+    data: XOR<UserUpdateWithoutBuyerConversationsInput, UserUncheckedUpdateWithoutBuyerConversationsInput>
   }
 
-  export type UserUpdateWithoutConversationsInput = {
+  export type UserUpdateWithoutBuyerConversationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26751,6 +27030,7 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -26759,7 +27039,7 @@ export namespace Prisma {
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutConversationsInput = {
+  export type UserUncheckedUpdateWithoutBuyerConversationsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26780,6 +27060,78 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+  }
+
+  export type UserUpsertWithoutArtisanConversationsInput = {
+    update: XOR<UserUpdateWithoutArtisanConversationsInput, UserUncheckedUpdateWithoutArtisanConversationsInput>
+    create: XOR<UserCreateWithoutArtisanConversationsInput, UserUncheckedCreateWithoutArtisanConversationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutArtisanConversationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutArtisanConversationsInput, UserUncheckedUpdateWithoutArtisanConversationsInput>
+  }
+
+  export type UserUpdateWithoutArtisanConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    products?: ProductUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    follows?: FollowUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutArtisanConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -26809,12 +27161,14 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    participant: UserCreateNestedOneWithoutConversationsInput
+    buyer: UserCreateNestedOneWithoutBuyerConversationsInput
+    artisan: UserCreateNestedOneWithoutArtisanConversationsInput
   }
 
   export type ConversationUncheckedCreateWithoutMessagesInput = {
     id?: string
-    participantId: string
+    buyerId: string
+    artisanId: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26846,7 +27200,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
@@ -26875,7 +27230,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
@@ -26904,12 +27260,14 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    participant?: UserUpdateOneRequiredWithoutConversationsNestedInput
+    buyer?: UserUpdateOneRequiredWithoutBuyerConversationsNestedInput
+    artisan?: UserUpdateOneRequiredWithoutArtisanConversationsNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    participantId?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26947,7 +27305,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
@@ -26976,7 +27335,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
@@ -27050,7 +27410,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -27079,7 +27440,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -27175,7 +27537,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -27204,7 +27567,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -27469,7 +27833,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -27498,7 +27863,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -27611,7 +27977,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -27640,7 +28007,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -27749,7 +28117,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
@@ -27778,7 +28147,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
@@ -27812,7 +28182,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
@@ -27841,7 +28212,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
@@ -27886,7 +28258,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
@@ -27915,7 +28288,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
@@ -27955,7 +28329,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
@@ -27984,7 +28359,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
@@ -28013,7 +28389,8 @@ export namespace Prisma {
     products?: ProductCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     follows?: FollowCreateNestedManyWithoutFollowerInput
     followers?: FollowCreateNestedManyWithoutFollowingInput
@@ -28042,7 +28419,8 @@ export namespace Prisma {
     products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
     buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
     artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutParticipantInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
@@ -28087,7 +28465,8 @@ export namespace Prisma {
     products?: ProductUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     follows?: FollowUpdateManyWithoutFollowerNestedInput
     followers?: FollowUpdateManyWithoutFollowingNestedInput
@@ -28116,7 +28495,8 @@ export namespace Prisma {
     products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
     buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
     artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutParticipantNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
@@ -28199,8 +28579,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ConversationCreateManyParticipantInput = {
+  export type ConversationCreateManyBuyerInput = {
     id?: string
+    artisanId: string
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationCreateManyArtisanInput = {
+    id?: string
+    buyerId: string
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28493,24 +28882,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ConversationUpdateWithoutParticipantInput = {
+  export type ConversationUpdateWithoutBuyerInput = {
     id?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    artisan?: UserUpdateOneRequiredWithoutArtisanConversationsNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
   }
 
-  export type ConversationUncheckedUpdateWithoutParticipantInput = {
+  export type ConversationUncheckedUpdateWithoutBuyerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
   }
 
-  export type ConversationUncheckedUpdateManyWithoutParticipantInput = {
+  export type ConversationUncheckedUpdateManyWithoutBuyerInput = {
     id?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationUpdateWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutBuyerConversationsNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
