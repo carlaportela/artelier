@@ -48,7 +48,7 @@ export async function registerUser(data: unknown) {
         data: { sessionToken, userId: newUser.id, expires },
       });
     });
-  } catch (e) {
+  } catch (e: unknown) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
       return {
         error: {
