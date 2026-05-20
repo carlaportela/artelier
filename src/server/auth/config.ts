@@ -1,6 +1,8 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import bcrypt from "bcryptjs";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
 
 import { db } from "~/server/db";
 
@@ -14,12 +16,9 @@ declare module "next-auth" {
   }
 }
 
-// PrismaAdapter has a type conflict with next-auth's bundled @auth/core.
-// This is a known issue in next-auth v5 beta. Suppressed until upstream fix.
 const adapter = PrismaAdapter(db);
 
 export const authConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   adapter,
   session: { strategy: "database" },
   providers: [
@@ -28,8 +27,22 @@ export const authConfig = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      // authorize() implemented in Historia 1.2
-      authorize: async () => null,
+      authorize: async (credentials) => {
+        const parsed = z
+          .object({ email: z.string().email(), password: z.string() })
+          .safeParse(credentials);
+        if (!parsed.success) return null;
+
+        const user = await db.user.findUnique({
+          where: { email: parsed.data.email },
+        });
+        if (!user?.password) return null;
+
+        const valid = await bcrypt.compare(parsed.data.password, user.password);
+        if (!valid) return null;
+
+        return user;
+      },
     }),
   ],
   callbacks: {
