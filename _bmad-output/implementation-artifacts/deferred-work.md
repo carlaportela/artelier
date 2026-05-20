@@ -22,3 +22,16 @@
 - **Redirect targets `/login` y `/feed` no existen todavía** — el middleware redirige correctamente pero las páginas de destino serán implementadas en Historias 1.1 y 1.2.
 - **`getMessages()` en layout.tsx usa locale hardcodeado** — funciona para V1 (solo castellano), pero cuando se implemente routing por locale en V3 (gallego), habrá que migrar a `app/[locale]/layout.tsx` y detección de locale desde URL/cookie.
 - **Middleware matcher no excluye explícitamente archivos de `public/`** — sin impacto actual (solo hay fuentes y favicon ya excluidos), revisar cuando se añadan más assets públicos.
+
+## Deferred from: code review of 1-1-registro-con-eleccion-de-rol (2026-05-20)
+
+- **Sin rate limiting en la Server Action de registro** — necesita infraestructura (ej. Upstash/Redis), fuera de scope de H1.1; planificar antes de producción
+- **Sesión manual bypassa ciclo de vida de Auth.js** — workaround inevitable por incompatibilidad de Auth.js v5 + Credentials + database sessions; documentado en Completion Notes; revisar si Auth.js añade soporte en futuras versiones
+- **Cast unsafe de `user.role` en session callback** — pre-existing de H0.3, no introducido en H1.1; revisar en iteración de hardening de auth
+- **Nombre de cookie hardcodeado** — `authjs.session-token` / `__Secure-authjs.session-token` frágil si Auth.js cambia; extraer a constante compartida en futuro refactor de auth
+- **Email enumeration por timing** — diferencia de tiempo entre `EMAIL_EXISTS` y hash bcrypt revela emails registrados; hardening de seguridad para antes de producción pública
+- **Sin longitud máxima en campos del formulario** — `email`, `password`, `locality` sin `.max()`; añadir en próxima iteración de validaciones
+- **Estado del formulario persiste al volver al selector de rol** — errores stale visibles si el usuario va atrás y vuelve; UX polish para iteraciones posteriores
+- **`isPending` no desactiva el botón de volver** — back button activo durante envío puede causar comportamiento confuso si el SA resuelve tras navegar; UX polish futuro
+- **Mensajes de error de Zod hardcodeados** — `passwordMin` y `localityRequired` en Zod schema no usan i18n; requiere patrón de mensajes dinámicos o schema factory; diferir a refactor de i18n completo
+- **`emailExists` hardcodeado en server action** — i18n en server actions requiere patrón diferente (no hooks); diferir a refactor de i18n server-side

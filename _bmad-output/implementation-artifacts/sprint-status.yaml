@@ -52,7 +52,7 @@ development_status:
 
   # ─── Épico 1: Autenticación y Perfiles de Usuario ─────────────────────────
   epic-1: in-progress
-  1-1-registro-con-eleccion-de-rol: ready-for-dev
+  1-1-registro-con-eleccion-de-rol: done
   1-2-login-logout-y-recuperacion-de-contrasena: backlog
   1-3-perfil-publico-de-artesana: backlog
   1-4-perfil-de-compradora-y-seguir-artesanas: backlog

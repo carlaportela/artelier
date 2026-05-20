@@ -158,6 +158,7 @@ exports.Prisma.UserScalarFieldEnum = {
   image: 'image',
   role: 'role',
   password: 'password',
+  locality: 'locality',
   stripeAccountId: 'stripeAccountId',
   firstSaleCompleted: 'firstSaleCompleted',
   twoFactorSecret: 'twoFactorSecret',

@@ -5761,6 +5761,7 @@ export namespace Prisma {
     image: string | null
     role: $Enums.Role | null
     password: string | null
+    locality: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean | null
     twoFactorSecret: string | null
@@ -5779,6 +5780,7 @@ export namespace Prisma {
     image: string | null
     role: $Enums.Role | null
     password: string | null
+    locality: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean | null
     twoFactorSecret: string | null
@@ -5797,6 +5799,7 @@ export namespace Prisma {
     image: number
     role: number
     password: number
+    locality: number
     stripeAccountId: number
     firstSaleCompleted: number
     twoFactorSecret: number
@@ -5817,6 +5820,7 @@ export namespace Prisma {
     image?: true
     role?: true
     password?: true
+    locality?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
     twoFactorSecret?: true
@@ -5835,6 +5839,7 @@ export namespace Prisma {
     image?: true
     role?: true
     password?: true
+    locality?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
     twoFactorSecret?: true
@@ -5853,6 +5858,7 @@ export namespace Prisma {
     image?: true
     role?: true
     password?: true
+    locality?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
     twoFactorSecret?: true
@@ -5944,6 +5950,7 @@ export namespace Prisma {
     image: string | null
     role: $Enums.Role
     password: string | null
+    locality: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean
     twoFactorSecret: string | null
@@ -5979,6 +5986,7 @@ export namespace Prisma {
     image?: boolean
     role?: boolean
     password?: boolean
+    locality?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
     twoFactorSecret?: boolean
@@ -6011,6 +6019,7 @@ export namespace Prisma {
     image?: boolean
     role?: boolean
     password?: boolean
+    locality?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
     twoFactorSecret?: boolean
@@ -6029,6 +6038,7 @@ export namespace Prisma {
     image?: boolean
     role?: boolean
     password?: boolean
+    locality?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
     twoFactorSecret?: boolean
@@ -6047,6 +6057,7 @@ export namespace Prisma {
     image?: boolean
     role?: boolean
     password?: boolean
+    locality?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
     twoFactorSecret?: boolean
@@ -6057,7 +6068,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "password" | "stripeAccountId" | "firstSaleCompleted" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "password" | "locality" | "stripeAccountId" | "firstSaleCompleted" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -6102,6 +6113,7 @@ export namespace Prisma {
       image: string | null
       role: $Enums.Role
       password: string | null
+      locality: string | null
       stripeAccountId: string | null
       firstSaleCompleted: boolean
       twoFactorSecret: string | null
@@ -6553,6 +6565,7 @@ export namespace Prisma {
     readonly image: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly password: FieldRef<"User", 'String'>
+    readonly locality: FieldRef<"User", 'String'>
     readonly stripeAccountId: FieldRef<"User", 'String'>
     readonly firstSaleCompleted: FieldRef<"User", 'Boolean'>
     readonly twoFactorSecret: FieldRef<"User", 'String'>
@@ -19692,6 +19705,7 @@ export namespace Prisma {
     image: 'image',
     role: 'role',
     password: 'password',
+    locality: 'locality',
     stripeAccountId: 'stripeAccountId',
     firstSaleCompleted: 'firstSaleCompleted',
     twoFactorSecret: 'twoFactorSecret',
@@ -20284,6 +20298,7 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     password?: StringNullableFilter<"User"> | string | null
+    locality?: StringNullableFilter<"User"> | string | null
     stripeAccountId?: StringNullableFilter<"User"> | string | null
     firstSaleCompleted?: BoolFilter<"User"> | boolean
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
@@ -20315,6 +20330,7 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     role?: SortOrder
     password?: SortOrderInput | SortOrder
+    locality?: SortOrderInput | SortOrder
     stripeAccountId?: SortOrderInput | SortOrder
     firstSaleCompleted?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
@@ -20349,6 +20365,7 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     password?: StringNullableFilter<"User"> | string | null
+    locality?: StringNullableFilter<"User"> | string | null
     stripeAccountId?: StringNullableFilter<"User"> | string | null
     firstSaleCompleted?: BoolFilter<"User"> | boolean
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
@@ -20380,6 +20397,7 @@ export namespace Prisma {
     image?: SortOrderInput | SortOrder
     role?: SortOrder
     password?: SortOrderInput | SortOrder
+    locality?: SortOrderInput | SortOrder
     stripeAccountId?: SortOrderInput | SortOrder
     firstSaleCompleted?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
@@ -20404,6 +20422,7 @@ export namespace Prisma {
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
+    locality?: StringNullableWithAggregatesFilter<"User"> | string | null
     stripeAccountId?: StringNullableWithAggregatesFilter<"User"> | string | null
     firstSaleCompleted?: BoolWithAggregatesFilter<"User"> | boolean
     twoFactorSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -21442,6 +21461,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -21473,6 +21493,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -21504,6 +21525,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21535,6 +21557,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21566,6 +21589,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -21584,6 +21608,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21602,6 +21627,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22835,6 +22861,7 @@ export namespace Prisma {
     image?: SortOrder
     role?: SortOrder
     password?: SortOrder
+    locality?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
     twoFactorSecret?: SortOrder
@@ -22853,6 +22880,7 @@ export namespace Prisma {
     image?: SortOrder
     role?: SortOrder
     password?: SortOrder
+    locality?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
     twoFactorSecret?: SortOrder
@@ -22871,6 +22899,7 @@ export namespace Prisma {
     image?: SortOrder
     role?: SortOrder
     password?: SortOrder
+    locality?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
     twoFactorSecret?: SortOrder
@@ -25076,6 +25105,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -25106,6 +25136,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -25152,6 +25183,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25182,6 +25214,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25212,6 +25245,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -25242,6 +25276,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -25288,6 +25323,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25318,6 +25354,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26136,6 +26173,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26166,6 +26204,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26318,6 +26357,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26348,6 +26388,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26436,6 +26477,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26466,6 +26508,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26501,6 +26544,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26531,6 +26575,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26650,6 +26695,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26680,6 +26726,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26721,6 +26768,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26751,6 +26799,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26846,6 +26895,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26876,6 +26926,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26911,6 +26962,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -26941,6 +26993,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27017,6 +27070,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27047,6 +27101,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27088,6 +27143,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27118,6 +27174,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27187,6 +27244,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27217,6 +27275,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27292,6 +27351,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27322,6 +27382,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27397,6 +27458,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27427,6 +27489,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27524,6 +27587,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27554,6 +27618,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27820,6 +27885,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27850,6 +27916,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -27964,6 +28031,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27994,6 +28062,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28104,6 +28173,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28134,6 +28204,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28169,6 +28240,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28199,6 +28271,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28245,6 +28318,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28275,6 +28349,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28316,6 +28391,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28346,6 +28422,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28376,6 +28453,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28406,6 +28484,7 @@ export namespace Prisma {
     image?: string | null
     role?: $Enums.Role
     password?: string | null
+    locality?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
     twoFactorSecret?: string | null
@@ -28452,6 +28531,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28482,6 +28562,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null

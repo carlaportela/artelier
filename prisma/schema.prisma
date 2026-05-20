@@ -108,6 +108,7 @@ model User {
     image              String?
     role               Role      @default(BUYER)
     password           String?
+    locality           String?
     stripeAccountId    String?
     firstSaleCompleted Boolean   @default(false)
     twoFactorSecret    String?

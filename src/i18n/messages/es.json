@@ -16,7 +16,19 @@
     "register": "Registrarse",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "forgotPassword": "¿Olvidaste tu contraseña?"
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "locality": "Localidad",
+    "chooseRole": "¿Cómo quieres usar Artelier?",
+    "artisan": "Artesana / Productora",
+    "buyer": "Compradora",
+    "artisanDescription": "Vende tu trabajo artesanal",
+    "buyerDescription": "Descubre artesanía única",
+    "emailExists": "Este email ya está registrado",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+    "localityRequired": "Introduce tu localidad",
+    "createAccount": "Crear cuenta",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Inicia sesión"
   },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",
