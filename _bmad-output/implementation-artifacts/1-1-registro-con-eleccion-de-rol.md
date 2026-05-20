@@ -1,6 +1,6 @@
 # Story 1.1: Registro con elección de rol
 
-Status: review
+Status: done
 
 ## Story
 
@@ -78,6 +78,25 @@ para acceder a la plataforma con la experiencia adecuada a mi perfil.
   - [x] Manual: flujo completo compradora — registro → redirect a `/feed`
   - [x] Manual: email duplicado → error inline en campo email
   - [x] Manual: campos vacíos → errores específicos por campo
+
+### Review Findings
+
+- [x] [Review][Patch] Envolver `user.create` + `session.create` en `db.$transaction()` — previene usuarios huérfanos si falla la sesión y maneja la race condition de email duplicado con error P2002 [src/app/(auth)/register/actions.ts:36-55]
+- [x] [Review][Patch] Normalizar email a minúsculas antes de guardarlo y buscarlo — `User@Example.com` y `user@example.com` pasan el check de duplicado como emails distintos [src/app/(auth)/register/actions.ts:22, src/lib/validations/auth.ts:4]
+- [x] [Review][Patch] Usar claves i18n (`useTranslations`) en `page.tsx` en lugar de strings hardcodeados — las claves existen en `es.json` pero no se consumen [src/app/(auth)/register/page.tsx]
+- [x] [Review][Patch] Añadir `.trim()` al campo `locality` en Zod schema — `min(2)` acepta strings solo con espacios [src/lib/validations/auth.ts:5]
+- [x] [Review][Patch] Guardar `messages[0]` con null-coalescing en el handler de errores del form — `messages[0]` puede ser `undefined` si el servidor devuelve array vacío [src/app/(auth)/register/page.tsx:99]
+- [x] [Review][Patch] Eliminar campo `password` del objeto user devuelto por `authorize()` — el hash no debería propagarse por callbacks [src/server/auth/config.ts:42]
+- [x] [Review][Defer] Sin rate limiting en la Server Action de registro — deferred, necesita infraestructura, fuera de scope de esta historia
+- [x] [Review][Defer] Sesión manual bypassa ciclo de vida de Auth.js (sin rotación, sin `updateAge`) — deferred, workaround documentado e inevitable con Auth.js v5 + Credentials + database sessions
+- [x] [Review][Defer] Cast unsafe de `user.role` en session callback — deferred, pre-existing de H0.3
+- [x] [Review][Defer] Nombre de cookie hardcodeado, frágil si Auth.js cambia — deferred, contrato de Auth.js v5
+- [x] [Review][Defer] Email enumeration por diferencia de timing entre EMAIL_EXISTS y hash — deferred, hardening de seguridad futuro
+- [x] [Review][Defer] Sin longitud máxima en campos del formulario — deferred, hardening futuro
+- [x] [Review][Defer] Estado del formulario persiste al volver al selector de rol (errores stale) — deferred, UX polish futuro
+- [x] [Review][Defer] `isPending` no desactiva el botón de volver durante el envío — deferred, UX polish futuro
+- [x] [Review][Defer] Mensajes de error de Zod hardcodeados (`passwordMin`, `localityRequired`) — deferred, i18n en Zod requiere patrón diferente (función de mensajes o schema dinámico)
+- [x] [Review][Defer] `emailExists` hardcodeado en server action — deferred, i18n en server actions requiere patrón diferente
 
 ## Dev Notes
 

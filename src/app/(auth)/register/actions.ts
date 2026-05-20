@@ -3,6 +3,7 @@
 import { hash } from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Prisma } from "generated/prisma";
 
 import { db } from "~/server/db";
 import { registerSchema } from "~/lib/validations/auth";
@@ -33,18 +34,32 @@ export async function registerUser(data: unknown) {
 
   const hashedPassword = await hash(password, 12);
 
-  const user = await db.user.create({
-    data: { email, password: hashedPassword, role, locality },
-  });
-
   // Auth.js v5 no permite Credentials + database sessions vía signIn().
   // Creamos la sesión directamente en BD y ponemos la cookie — Auth.js la leerá igual.
   const sessionToken = crypto.randomUUID();
   const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-  await db.session.create({
-    data: { sessionToken, userId: user.id, expires },
-  });
+  try {
+    await db.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: { email, password: hashedPassword, role, locality },
+      });
+      await tx.session.create({
+        data: { sessionToken, userId: newUser.id, expires },
+      });
+    });
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      return {
+        error: {
+          code: "EMAIL_EXISTS" as const,
+          field: "email",
+          message: "Este email ya está registrado",
+        },
+      };
+    }
+    throw e;
+  }
 
   const isProduction = process.env.NODE_ENV === "production";
   const cookieStore = await cookies();

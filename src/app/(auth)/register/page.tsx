@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -16,11 +17,13 @@ function RoleSelector({
 }: {
   onSelect: (role: "ARTISAN" | "BUYER") => void;
 }) {
+  const t = useTranslations("auth");
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h1 className="font-display text-2xl text-[--text]">
-          ¿Cómo quieres usar Artelier?
+          {t("chooseRole")}
         </h1>
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -31,10 +34,10 @@ function RoleSelector({
           <span className="text-4xl">🎨</span>
           <div>
             <p className="font-display text-sm font-semibold text-[--text]">
-              Artesana / Productora
+              {t("artisan")}
             </p>
             <p className="mt-1 text-xs text-[--text-muted]">
-              Vende tu trabajo artesanal
+              {t("artisanDescription")}
             </p>
           </div>
         </button>
@@ -45,18 +48,18 @@ function RoleSelector({
           <span className="text-4xl">🛍️</span>
           <div>
             <p className="font-display text-sm font-semibold text-[--text]">
-              Compradora
+              {t("buyer")}
             </p>
             <p className="mt-1 text-xs text-[--text-muted]">
-              Descubre artesanía única
+              {t("buyerDescription")}
             </p>
           </div>
         </button>
       </div>
       <p className="text-center text-sm text-[--text-muted]">
-        ¿Ya tienes cuenta?{" "}
+        {t("alreadyHaveAccount")}{" "}
         <Link href="/login" className="text-[--primary] underline">
-          Inicia sesión
+          {t("signIn")}
         </Link>
       </p>
     </div>
@@ -64,6 +67,7 @@ function RoleSelector({
 }
 
 export default function RegisterPage() {
+  const t = useTranslations("auth");
   const [role, setRole] = useState<"ARTISAN" | "BUYER" | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -95,7 +99,7 @@ export default function RegisterPage() {
         const fields = result.error.fields as Record<string, string[]>;
         Object.entries(fields).forEach(([field, messages]) => {
           form.setError(field as keyof RegisterInput, {
-            message: messages[0],
+            message: messages[0] ?? "Error de validación",
           });
         });
       }
@@ -113,14 +117,16 @@ export default function RegisterPage() {
           onClick={() => setRole(null)}
           className="mb-4 flex items-center gap-1 text-sm text-[--text-muted] hover:text-[--text]"
         >
-          ← {role === "ARTISAN" ? "Artesana / Productora" : "Compradora"}
+          ← {role === "ARTISAN" ? t("artisan") : t("buyer")}
         </button>
-        <h1 className="font-display text-2xl text-[--text]">Crear cuenta</h1>
+        <h1 className="font-display text-2xl text-[--text]">
+          {t("createAccount")}
+        </h1>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-1">
-          <Label htmlFor="email">Correo electrónico</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             type="email"
@@ -135,7 +141,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="password">Contraseña</Label>
+          <Label htmlFor="password">{t("password")}</Label>
           <Input
             id="password"
             type="password"
@@ -150,7 +156,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="locality">Localidad</Label>
+          <Label htmlFor="locality">{t("locality")}</Label>
           <Input
             id="locality"
             type="text"
@@ -165,14 +171,14 @@ export default function RegisterPage() {
         </div>
 
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? "Creando cuenta..." : "Crear cuenta"}
+          {isPending ? "Creando cuenta..." : t("createAccount")}
         </Button>
       </form>
 
       <p className="text-center text-sm text-[--text-muted]">
-        ¿Ya tienes cuenta?{" "}
+        {t("alreadyHaveAccount")}{" "}
         <Link href="/login" className="text-[--primary] underline">
-          Inicia sesión
+          {t("signIn")}
         </Link>
       </p>
     </div>

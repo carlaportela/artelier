@@ -34,14 +34,15 @@ export const authConfig = {
         if (!parsed.success) return null;
 
         const user = await db.user.findUnique({
-          where: { email: parsed.data.email },
+          where: { email: parsed.data.email.toLowerCase() },
         });
         if (!user?.password) return null;
 
         const valid = await bcrypt.compare(parsed.data.password, user.password);
         if (!valid) return null;
 
-        return user;
+        const { password: _, ...safeUser } = user;
+        return safeUser;
       },
     }),
   ],
