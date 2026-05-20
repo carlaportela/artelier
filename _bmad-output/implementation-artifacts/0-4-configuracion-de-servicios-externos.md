@@ -1,6 +1,6 @@
 # Story 0.4: Configuración de servicios externos
 
-Status: review
+Status: done
 
 ## Story
 
