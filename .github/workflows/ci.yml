@@ -22,8 +22,12 @@ jobs:
           DATABASE_URL: "postgresql://ci:ci@localhost:5432/artelier"
 
       - run: npm run lint
+        env:
+          SKIP_ENV_VALIDATION: true
 
       - run: npm run typecheck
+        env:
+          SKIP_ENV_VALIDATION: true
 
       - run: npm run build
         env:
