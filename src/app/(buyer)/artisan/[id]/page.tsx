@@ -11,7 +11,7 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const artisan = await db.user.findUnique({
-    where: { id },
+    where: { id, role: "ARTISAN", deletedAt: null, suspended: false },
     select: { name: true, bio: true, image: true },
   });
 

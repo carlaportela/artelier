@@ -95,6 +95,31 @@ para que las compradoras me descubran y conozcan mi trabajo.
   - [x] `npm run typecheck` — passed
   - [x] `npm run build` con `SKIP_ENV_VALIDATION=true` — passed (12 páginas compiladas, 0 errores)
 
+### Review Findings (AI)
+
+**Decision Needed:**
+- [ ] [Review][Decision] D1 — AC4: spec dice guardar `publicId` en BD, código guarda la URL (`secure_url`). ¿Almacenamos `publicId` además de la URL o aceptamos URL como suficiente?
+- [ ] [Review][Decision] D2 — AC2: spec dice "bio breve (máx 150 caracteres)". La validación limita la entrada, pero el display no trunca. ¿Es truncado visual requerido en `ArtisanHeader` o la validación de entrada es suficiente?
+
+**Patches:**
+- [ ] [Review][Patch] P1 — `generateMetadata` expone nombre/bio/imagen de artesanas suspendidas o eliminadas vía OG tags [src/app/(buyer)/artisan/[id]/page.tsx]
+- [ ] [Review][Patch] P2 — `saveProfile` guarda `""` en BD cuando no hay imagen (en lugar de `null`); `image ?? null` no convierte strings vacíos [src/app/(artisan)/studio/profile/actions.ts]
+- [ ] [Review][Patch] P3 — Sin validación de tamaño de archivo antes de convertir a base64; riesgo de OOM/DoS [src/app/api/upload/route.ts]
+- [ ] [Review][Patch] P4 — `file.type` validado solo por existencia, no por whitelist de MIME types; spoofable desde el cliente [src/app/api/upload/route.ts]
+- [ ] [Review][Patch] P5 — Upload fallido silenciosamente sin feedback al usuario; componentes quedan en estado inconsistente [ProfileForm.tsx, ProcessUpdateForm.tsx]
+- [ ] [Review][Patch] P6 — Input file no se resetea visualmente tras submit exitoso [ProcessUpdateForm.tsx]
+- [ ] [Review][Patch] P7 — `typeParam` puede ser `File` (FormDataEntryValue), falta `typeof typeParam === "string"` antes de `includes()` [src/app/api/upload/route.ts]
+- [ ] [Review][Patch] P8 — Strings hardcodeadas en español mezcladas con sistema i18n [ProcessUpdateForm.tsx, ProcessUpdateList.tsx]
+- [ ] [Review][Patch] P9 — `alt=""` en imágenes de actualización de proceso (no son decorativas) [ProcessUpdateList.tsx, ArtisanProfileTabs.tsx]
+- [ ] [Review][Patch] P10 — Botón Seguir `disabled` sin `aria-disabled="true"` [ArtisanHeader.tsx]
+
+**Deferred:**
+- [x] [Review][Defer] W1 — Sin rate limiting en `/api/upload` — deferred, pre-existing gap; Upstash disponible para H1.4
+- [x] [Review][Defer] W2 — Doble query DB en `generateMetadata` (performance, no bug) — deferred
+- [x] [Review][Defer] W3 — `form.watch` sin debounce (minor, React Hook Form diseñado para ello) — deferred
+- [x] [Review][Defer] W4 — Schema Zod cliente vs servidor inconsistente para `imageUrl` (patrón aceptable) — deferred
+- [x] [Review][Defer] W5 — Productos en perfil sin link clickable (feature pendiente H2.x) — deferred
+
 ## Dev Notes
 
 ### Estructura de rutas a crear

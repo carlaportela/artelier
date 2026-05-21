@@ -7,11 +7,20 @@ import { env } from "~/env";
 const ALLOWED_TYPES = ["avatar", "banner", "process", "product"] as const;
 type UploadType = (typeof ALLOWED_TYPES)[number];
 
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
+
 const FOLDER_MAP: Record<UploadType, string> = {
   avatar: "artelier/avatars",
   banner: "artelier/banners",
   process: "artelier/process",
   product: "artelier/products",
+};
+
+const TRANSFORMATION_MAP: Record<UploadType, object[]> = {
+  avatar:  [{ width: 400,  height: 400, crop: "fill",  quality: "auto", fetch_format: "auto" }],
+  banner:  [{ width: 1200, height: 300, crop: "fill",  quality: "auto", fetch_format: "auto" }],
+  process: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
+  product: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
 };
 
 export async function POST(req: Request) {
@@ -41,10 +50,17 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!file.type) {
+  if (!ALLOWED_MIME_TYPES.includes(file.type as typeof ALLOWED_MIME_TYPES[number])) {
     return NextResponse.json(
-      { error: { code: "INVALID_FILE", message: "El archivo no tiene un tipo MIME válido" } },
+      { error: { code: "INVALID_FILE", message: "Solo se permiten imágenes JPEG, PNG, WebP o GIF" } },
       { status: 400 },
+    );
+  }
+
+  if (file.size > 20 * 1024 * 1024) {
+    return NextResponse.json(
+      { error: { code: "FILE_TOO_LARGE", message: "El archivo no puede superar 20 MB" } },
+      { status: 413 },
     );
   }
 
@@ -65,6 +81,7 @@ export async function POST(req: Request) {
   try {
     result = await cloudinary.uploader.upload(dataUri, {
       folder: FOLDER_MAP[uploadType],
+      transformation: TRANSFORMATION_MAP[uploadType],
     });
   } catch {
     return NextResponse.json(

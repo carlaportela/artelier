@@ -33,6 +33,14 @@
 - **Entrypoint dual: Auth.js Credentials + login manual** — workaround necesario para incompatibilidad Auth.js v5 + database sessions + Credentials; revisar cuando Auth.js publique fix oficial
 - **Error de envío de email silencioso** — si Resend falla, el token queda en BD válido 1h pero el usuario no recibe email; añadir monitoreo/alerting sobre el `console.error` antes de producción
 
+## Deferred from: code review of 1-3-perfil-publico-de-artesana (2026-05-21)
+
+- **W1 — Sin rate limiting en `/api/upload`** — pre-existing gap; Upstash ratelimiter ya existe para auth/messages, añadir límite de uploads por usuario antes de producción pública
+- **W2 — Doble query DB en `generateMetadata` + `ArtisanPublicPage`** — performance, no bug; considerar unstable_cache de Next.js o mover la select a la misma query cuando se perfile latencia
+- **W3 — `form.watch` sin debounce en contadores de caracteres** — React Hook Form diseñado para re-renders frecuentes; revisar solo si se detecta degradación real en dispositivos de gama baja
+- **W4 — Schema Zod cliente vs servidor inconsistente para `imageUrl`** — el servidor valida con `.url()`, el cliente no; patrón aceptable (server es el boundary de seguridad); unificar en refactor de validaciones compartidas
+- **W5 — Productos en perfil sin link clickable** — feature pendiente H2.x cuando se implemente la página de producto individual
+
 - **Sin rate limiting en la Server Action de registro** — necesita infraestructura (ej. Upstash/Redis), fuera de scope de H1.1; planificar antes de producción
 - **Sesión manual bypassa ciclo de vida de Auth.js** — workaround inevitable por incompatibilidad de Auth.js v5 + Credentials + database sessions; documentado en Completion Notes; revisar si Auth.js añade soporte en futuras versiones
 - **Cast unsafe de `user.role` en session callback** — pre-existing de H0.3, no introducido en H1.1; revisar en iteración de hardening de auth
