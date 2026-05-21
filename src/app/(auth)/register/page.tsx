@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
+import { Palette, ShoppingBag, ArrowLeft } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -22,35 +24,41 @@ function RoleSelector({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="font-display text-2xl text-[--text]">
+        <h1 className="font-display text-2xl font-bold text-[--text]">
           {t("chooseRole")}
         </h1>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex flex-col gap-3">
         <button
+          type="button"
           onClick={() => onSelect("ARTISAN")}
-          className="flex flex-col items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-6 text-center transition-colors hover:border-[--primary] hover:bg-[--surface-2]"
+          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-[--primary] hover:shadow-md active:scale-[0.99]"
         >
-          <span className="text-4xl">🎨</span>
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[--primary]/10 text-[--primary] transition-colors duration-200 group-hover:bg-[--primary]/20">
+            <Palette size={24} strokeWidth={1.5} />
+          </div>
           <div>
             <p className="font-display text-sm font-semibold text-[--text]">
               {t("artisan")}
             </p>
-            <p className="mt-1 text-xs text-[--text-muted]">
+            <p className="mt-0.5 text-xs text-[--text-muted]">
               {t("artisanDescription")}
             </p>
           </div>
         </button>
         <button
+          type="button"
           onClick={() => onSelect("BUYER")}
-          className="flex flex-col items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-6 text-center transition-colors hover:border-[--primary] hover:bg-[--surface-2]"
+          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-[--primary] hover:shadow-md active:scale-[0.99]"
         >
-          <span className="text-4xl">🛍️</span>
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[--primary]/10 text-[--primary] transition-colors duration-200 group-hover:bg-[--primary]/20">
+            <ShoppingBag size={24} strokeWidth={1.5} />
+          </div>
           <div>
             <p className="font-display text-sm font-semibold text-[--text]">
               {t("buyer")}
             </p>
-            <p className="mt-1 text-xs text-[--text-muted]">
+            <p className="mt-0.5 text-xs text-[--text-muted]">
               {t("buyerDescription")}
             </p>
           </div>
@@ -58,7 +66,7 @@ function RoleSelector({
       </div>
       <p className="text-center text-sm text-[--text-muted]">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="text-[--primary] underline">
+        <Link href="/login" className="cursor-pointer font-medium text-[--primary] underline underline-offset-2 transition-colors duration-200 hover:text-[#c4956a]">
           {t("signIn")}
         </Link>
       </p>
@@ -114,10 +122,12 @@ export default function RegisterPage() {
     <div className="space-y-6">
       <div>
         <button
+          type="button"
           onClick={() => setRole(null)}
-          className="mb-4 flex items-center gap-1 text-sm text-[--text-muted] hover:text-[--text]"
+          className="mb-4 flex cursor-pointer items-center gap-1 text-sm text-[--text-muted] transition-colors duration-200 hover:text-[--text]"
         >
-          ← {role === "ARTISAN" ? t("artisan") : t("buyer")}
+          <ArrowLeft size={14} />
+          {role === "ARTISAN" ? t("artisan") : t("buyer")}
         </button>
         <h1 className="font-display text-2xl text-[--text]">
           {t("createAccount")}
@@ -177,7 +187,7 @@ export default function RegisterPage() {
 
       <p className="text-center text-sm text-[--text-muted]">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="text-[--primary] underline">
+        <Link href="/login" className="cursor-pointer font-medium text-[--primary] underline underline-offset-2 transition-colors duration-200 hover:text-[#c4956a]">
           {t("signIn")}
         </Link>
       </p>
