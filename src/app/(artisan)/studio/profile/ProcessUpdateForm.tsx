@@ -58,10 +58,12 @@ export default function ProcessUpdateForm() {
       </div>
 
       <div className="space-y-1">
-        <Label>Imagen (opcional)</Label>
+        <Label htmlFor="process-image">Imagen (opcional)</Label>
         <input
+          id="process-image"
           type="file"
           accept="image/*"
+          aria-label="Imagen opcional para la actualización de proceso"
           className="text-sm text-[--text-muted]"
           disabled={uploading}
           onChange={async (e) => {

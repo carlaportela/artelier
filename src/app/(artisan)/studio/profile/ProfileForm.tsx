@@ -82,15 +82,17 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       {/* Banner */}
       <div className="space-y-2">
-        <Label>{t("uploadBanner")}</Label>
+        <Label htmlFor="banner-upload">{t("uploadBanner")}</Label>
         <div className="relative h-[100px] w-full overflow-hidden rounded-lg bg-[--surface]">
           {bannerUrl && (
             <Image src={bannerUrl} alt="Banner" fill className="object-cover" />
           )}
         </div>
         <input
+          id="banner-upload"
           type="file"
           accept="image/*"
+          aria-label="Subir imagen de portada"
           className="text-sm text-[--text-muted]"
           disabled={uploadingBanner}
           onChange={async (e) => {
@@ -108,15 +110,17 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
       {/* Avatar */}
       <div className="space-y-2">
-        <Label>{t("uploadAvatar")}</Label>
+        <Label htmlFor="avatar-upload">{t("uploadAvatar")}</Label>
         <div className="relative h-16 w-16 overflow-hidden rounded-full bg-[--surface]">
           {avatarUrl && (
             <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
           )}
         </div>
         <input
+          id="avatar-upload"
           type="file"
           accept="image/*"
+          aria-label="Subir foto de perfil"
           className="text-sm text-[--text-muted]"
           disabled={uploadingAvatar}
           onChange={async (e) => {
