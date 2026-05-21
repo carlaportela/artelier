@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
-import { Button } from "~/components/ui/button";
+import FollowButton from "~/components/artisan/FollowButton";
 
 interface ArtisanHeaderProps {
   artisan: {
@@ -14,10 +13,11 @@ interface ArtisanHeaderProps {
     bio: string | null;
   };
   isOwnProfile: boolean;
+  isFollowing: boolean;
+  canFollow: boolean;
 }
 
-export default function ArtisanHeader({ artisan, isOwnProfile }: ArtisanHeaderProps) {
-  const t = useTranslations("profile");
+export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">
@@ -54,15 +54,8 @@ export default function ArtisanHeader({ artisan, isOwnProfile }: ArtisanHeaderPr
             )}
           </div>
 
-          {!isOwnProfile && (
-            <Button
-              variant="default"
-              className="rounded-full px-6"
-              disabled
-              aria-disabled="true"
-            >
-              {t("follow")}
-            </Button>
+          {!isOwnProfile && canFollow && (
+            <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
           )}
         </div>
 

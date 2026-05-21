@@ -51,10 +51,28 @@ export default async function ArtisanPublicPage({ params }: Props) {
   if (!artisan) notFound();
 
   const isOwnProfile = session?.user?.id === artisan.id;
+  const isBuyer = session?.user?.role === "BUYER";
+  const canFollow = !isOwnProfile && isBuyer;
+
+  const follow = canFollow && session?.user?.id
+    ? await db.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: session.user.id,
+            followingId: artisan.id,
+          },
+        },
+      })
+    : null;
 
   return (
     <main className="min-h-screen bg-[--bg]">
-      <ArtisanHeader artisan={artisan} isOwnProfile={isOwnProfile} />
+      <ArtisanHeader
+        artisan={artisan}
+        isOwnProfile={isOwnProfile}
+        isFollowing={!!follow}
+        canFollow={canFollow}
+      />
 
       <div className="mt-6 px-4">
         <ArtisanProfileTabs
