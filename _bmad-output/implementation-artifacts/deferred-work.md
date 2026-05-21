@@ -25,6 +25,14 @@
 
 ## Deferred from: code review of 1-1-registro-con-eleccion-de-rol (2026-05-20)
 
+## Deferred from: code review of 1-2-login-logout-y-recuperacion-de-contrasena (2026-05-21)
+
+- **Token UUID de reset almacenado en texto plano en BD** — security hardening (hashear el token antes de guardar, comparar hash en lookup); no es bug, práctica estándar para este nivel; revisar antes de producción pública
+- **Sesiones expiradas no se purgan automáticamente** — el middleware solo verifica presencia de cookie (TTL de cookie coincide con BD); añadir job de limpieza periódica (Upstash/cron) cuando se implemente infraestructura de tareas en background
+- **Usuarios suspendidos/soft-deleted permanecen autenticados hasta que expira la cookie (30 días)** — requiere feature de admin (fuera de scope H1.2); cuando se implemente suspensión, añadir check en middleware o usar caché de estado en Upstash
+- **Entrypoint dual: Auth.js Credentials + login manual** — workaround necesario para incompatibilidad Auth.js v5 + database sessions + Credentials; revisar cuando Auth.js publique fix oficial
+- **Error de envío de email silencioso** — si Resend falla, el token queda en BD válido 1h pero el usuario no recibe email; añadir monitoreo/alerting sobre el `console.error` antes de producción
+
 - **Sin rate limiting en la Server Action de registro** — necesita infraestructura (ej. Upstash/Redis), fuera de scope de H1.1; planificar antes de producción
 - **Sesión manual bypassa ciclo de vida de Auth.js** — workaround inevitable por incompatibilidad de Auth.js v5 + Credentials + database sessions; documentado en Completion Notes; revisar si Auth.js añade soporte en futuras versiones
 - **Cast unsafe de `user.role` en session callback** — pre-existing de H0.3, no introducido en H1.1; revisar en iteración de hardening de auth

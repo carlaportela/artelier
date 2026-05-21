@@ -9,5 +9,5 @@ if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) {
   );
 }
 
-export const resend = new Resend(env.RESEND_API_KEY);
+export const resend = new Resend(env.RESEND_API_KEY ?? "re_placeholder_dev");
 export const FROM_EMAIL = env.RESEND_FROM_EMAIL ?? "noreply@artelier.es";

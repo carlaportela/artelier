@@ -28,7 +28,21 @@
     "localityRequired": "Introduce tu localidad",
     "createAccount": "Crear cuenta",
     "alreadyHaveAccount": "¿Ya tienes cuenta?",
-    "signIn": "Inicia sesión"
+    "signIn": "Inicia sesión",
+    "loginTitle": "Iniciar sesión",
+    "invalidCredentials": "Email o contraseña incorrectos",
+    "dontHaveAccount": "¿No tienes cuenta?",
+    "createOne": "Créala aquí",
+    "forgotPasswordTitle": "¿Olvidaste tu contraseña?",
+    "forgotPasswordDescription": "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.",
+    "sendInstructions": "Enviar instrucciones",
+    "checkYourEmail": "Si el email está registrado, recibirás las instrucciones en breve.",
+    "resetPasswordTitle": "Restablecer contraseña",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "savePassword": "Guardar contraseña",
+    "invalidToken": "El enlace no es válido o ha expirado."
   },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",

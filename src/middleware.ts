@@ -11,6 +11,11 @@ export function middleware(req: NextRequest) {
     req.cookies.has(SESSION_COOKIE) ||
     req.cookies.has(`__Secure-${SESSION_COOKIE}`);
 
+  // AC3 (H1.2): /login → redirect to /feed if already authenticated
+  if (pathname === "/login" && isLoggedIn) {
+    return NextResponse.redirect(new URL("/feed", req.nextUrl));
+  }
+
   // AC3: /studio/* → requires authentication
   if (pathname.startsWith("/studio") && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
