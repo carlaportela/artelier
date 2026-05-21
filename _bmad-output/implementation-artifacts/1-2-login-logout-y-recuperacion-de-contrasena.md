@@ -1,6 +1,6 @@
 # Story 1.2: Login, logout y recuperación de contraseña
 
-Status: review
+Status: done
 
 ## Story
 
@@ -101,6 +101,18 @@ para acceder de forma segura a mi cuenta en todo momento.
   - [x] Manual: visitar `/login` con sesión activa → redirect a `/feed`
   - [x] Manual: logout desde dashboard → sesión eliminada, redirect a `/login`
   - [x] Manual: solicitar recuperación → mensaje genérico (con email válido y con email inventado)
+
+### Review Findings (AI)
+
+- [x] [Review][Decision] Formulario reset-password sin campo "confirmar contraseña" — Resuelto: añadido campo confirmPassword con validación `.refine()` en el schema Zod del cliente. [src/app/(auth)/reset-password/page.tsx]
+- [x] [Review][Patch] Race condition en creación de token forgot-password — Resuelto: deleteMany + create envueltos en `db.$transaction(async tx => { ... })`. [src/app/(auth)/forgot-password/actions.ts]
+- [x] [Review][Patch] resetPassword no invalida sesiones activas tras el cambio de contraseña — Resuelto: añadido `db.session.deleteMany(...)` como primera operación de la transaction. [src/app/(auth)/reset-password/actions.ts]
+- [x] [Review][Patch] Suspense sin prop `fallback` en ResetPasswordPage — Resuelto: añadido `fallback={null}`. [src/app/(auth)/reset-password/page.tsx]
+- [x] [Review][Defer] Token UUID almacenado en texto plano en BD — security hardening (hashing del token), no es bug. Práctica estándar para este nivel de app. [src/app/(auth)/forgot-password/actions.ts] — deferred, pre-existing
+- [x] [Review][Defer] Sesiones expiradas no se purgan; middleware solo verifica presencia de cookie — limitación arquitectónica pre-existente, el TTL de la cookie coincide con el de la sesión. [src/middleware.ts] — deferred, pre-existing
+- [x] [Review][Defer] Usuarios suspendidos/soft-deleted permanecen autenticados hasta expiración de cookie — fuera de scope, requiere feature de admin. [src/middleware.ts] — deferred, pre-existing
+- [x] [Review][Defer] Entrypoint dual: Auth.js Credentials + login manual coexisten — workaround conocido y documentado para incompatibilidad Auth.js v5 + database sessions. [src/server/auth/config.ts] — deferred, architectural constraint
+- [x] [Review][Defer] Error de envío de email no notificado al usuario (token creado pero email no entregado) — trade-off aceptable; usuario puede reintentar solicitando otro reset. [src/app/(auth)/forgot-password/actions.ts] — deferred, acceptable UX trade-off
 
 ## Dev Notes
 

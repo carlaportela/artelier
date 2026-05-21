@@ -13,10 +13,16 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { resetPassword } from "./actions";
 
-const schema = z.object({
-  token: z.string().min(1),
-  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
-});
+const schema = z
+  .object({
+    token: z.string().min(1),
+    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+    confirmPassword: z.string().min(1, "Confirma tu contraseña"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"],
+  });
 type FormInput = z.infer<typeof schema>;
 
 function ResetPasswordForm() {
@@ -27,13 +33,13 @@ function ResetPasswordForm() {
 
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
-    defaultValues: { token, password: "" },
+    defaultValues: { token, password: "", confirmPassword: "" },
     mode: "onBlur",
   });
 
   function onSubmit(data: FormInput) {
     startTransition(async () => {
-      const result = await resetPassword(data);
+      const result = await resetPassword({ token: data.token, password: data.password });
       if (!result?.error) return;
 
       if (result.error.code === "INVALID_TOKEN") {
@@ -93,6 +99,21 @@ function ResetPasswordForm() {
           )}
         </div>
 
+        <div className="space-y-1">
+          <Label htmlFor="confirmPassword">{t("confirmPassword")}</Label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            autoComplete="new-password"
+            {...form.register("confirmPassword")}
+          />
+          {form.formState.errors.confirmPassword && (
+            <p className="text-sm text-red-600">
+              {form.formState.errors.confirmPassword.message}
+            </p>
+          )}
+        </div>
+
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? "Guardando..." : t("savePassword")}
         </Button>
@@ -103,7 +124,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense>
+    <Suspense fallback={null}>
       <ResetPasswordForm />
     </Suspense>
   );

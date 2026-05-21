@@ -39,6 +39,8 @@
     "checkYourEmail": "Si el email está registrado, recibirás las instrucciones en breve.",
     "resetPasswordTitle": "Restablecer contraseña",
     "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
     "savePassword": "Guardar contraseña",
     "invalidToken": "El enlace no es válido o ha expirado."
   },

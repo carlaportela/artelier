@@ -38,6 +38,7 @@ export async function resetPassword(data: unknown) {
   const hashedPassword = await hash(password, 12);
 
   await db.$transaction([
+    db.session.deleteMany({ where: { user: { email: verificationToken.identifier } } }),
     db.user.update({
       where: { email: verificationToken.identifier },
       data: { password: hashedPassword },

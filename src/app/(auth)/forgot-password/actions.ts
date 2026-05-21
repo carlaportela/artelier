@@ -22,13 +22,14 @@ export async function requestPasswordReset(data: unknown) {
   const user = await db.user.findUnique({ where: { email } });
 
   if (user) {
-    await db.verificationToken.deleteMany({ where: { identifier: email } });
-
     const token = crypto.randomUUID();
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 
-    await db.verificationToken.create({
-      data: { identifier: email, token, expires },
+    await db.$transaction(async (tx) => {
+      await tx.verificationToken.deleteMany({ where: { identifier: email } });
+      await tx.verificationToken.create({
+        data: { identifier: email, token, expires },
+      });
     });
 
     const baseUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
