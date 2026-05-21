@@ -1,0 +1,132 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import type { Product, ProcessUpdate } from "generated/prisma";
+
+interface ArtisanProfileTabsProps {
+  products: Product[];
+  processUpdates: ProcessUpdate[];
+  artisanName: string | null;
+}
+
+export default function ArtisanProfileTabs({
+  products,
+  processUpdates,
+  artisanName,
+}: ArtisanProfileTabsProps) {
+  const t = useTranslations("profile");
+  const [activeTab, setActiveTab] = useState<"shop" | "process">("shop");
+
+  return (
+    <div>
+      {/* Tabs */}
+      <div className="flex border-b border-[--border]">
+        <button
+          onClick={() => setActiveTab("shop")}
+          className={`px-4 pb-3 text-sm font-medium transition-colors ${
+            activeTab === "shop"
+              ? "border-b-2 border-[--primary] text-[--primary]"
+              : "text-[--text-muted]"
+          }`}
+        >
+          {t("products")}
+        </button>
+        <button
+          onClick={() => setActiveTab("process")}
+          className={`px-4 pb-3 text-sm font-medium transition-colors ${
+            activeTab === "process"
+              ? "border-b-2 border-[--primary] text-[--primary]"
+              : "text-[--text-muted]"
+          }`}
+        >
+          {t("process")}
+        </button>
+      </div>
+
+      {/* Tienda */}
+      {activeTab === "shop" && (
+        <div className="mt-4">
+          {products.length === 0 ? (
+            <p className="py-12 text-center text-sm text-[--text-muted]">
+              {t("noProducts")}
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  className="overflow-hidden rounded-lg bg-[--surface] border border-[--border]"
+                >
+                  {product.imageUrls[0] ? (
+                    <div className="relative aspect-square w-full">
+                      <Image
+                        src={product.imageUrls[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-square w-full bg-[--border]" />
+                  )}
+                  <div className="p-2">
+                    <p className="truncate text-sm text-[--text]">{product.name}</p>
+                    <p className="text-sm text-[--text-muted]">
+                      {(product.priceInCents / 100).toLocaleString("es-ES", {
+                        style: "currency",
+                        currency: "EUR",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Proceso */}
+      {activeTab === "process" && (
+        <div className="mt-4 space-y-4">
+          {processUpdates.length === 0 ? (
+            <p className="py-12 text-center text-sm text-[--text-muted]">
+              {t("noProcessUpdates")}
+            </p>
+          ) : (
+            processUpdates.map((update) => (
+              <div key={update.id} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-semibold text-[--text]">
+                    {artisanName ?? "Artesana"}
+                  </span>
+                  <span className="text-xs text-[--text-muted]">
+                    {new Intl.DateTimeFormat("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }).format(new Date(update.createdAt))}
+                  </span>
+                </div>
+                <blockquote className="rounded-lg bg-[--surface] px-4 py-3 font-display text-sm text-[--text]">
+                  {update.content}
+                </blockquote>
+                {update.imageUrl && (
+                  <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+                    <Image
+                      src={update.imageUrl}
+                      alt={t("processImageAlt")}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

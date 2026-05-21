@@ -1,9 +1,37 @@
 import { NextResponse } from "next/server";
 
+import { auth } from "~/server/auth";
 import { cloudinary } from "~/lib/cloudinary";
 import { env } from "~/env";
 
+const ALLOWED_TYPES = ["avatar", "banner", "process", "product"] as const;
+type UploadType = (typeof ALLOWED_TYPES)[number];
+
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
+
+const FOLDER_MAP: Record<UploadType, string> = {
+  avatar: "artelier/avatars",
+  banner: "artelier/banners",
+  process: "artelier/process",
+  product: "artelier/products",
+};
+
+const TRANSFORMATION_MAP: Record<UploadType, object[]> = {
+  avatar:  [{ width: 400,  height: 400, crop: "fill",  quality: "auto", fetch_format: "auto" }],
+  banner:  [{ width: 1200, height: 300, crop: "fill",  quality: "auto", fetch_format: "auto" }],
+  process: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
+  product: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
+};
+
 export async function POST(req: Request) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: { code: "UNAUTHORIZED", message: "Debes iniciar sesión para subir imágenes" } },
+      { status: 401 },
+    );
+  }
+
   if (!env.CLOUDINARY_CLOUD_NAME) {
     return NextResponse.json(
       { error: { code: "SERVICE_UNAVAILABLE", message: "Servicio de imágenes no configurado" } },
@@ -13,6 +41,7 @@ export async function POST(req: Request) {
 
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
+  const typeParam = formData.get("type") as string | null;
 
   if (!file) {
     return NextResponse.json(
@@ -21,12 +50,27 @@ export async function POST(req: Request) {
     );
   }
 
-  if (!file.type) {
+  if (!ALLOWED_MIME_TYPES.includes(file.type as typeof ALLOWED_MIME_TYPES[number])) {
     return NextResponse.json(
-      { error: { code: "INVALID_FILE", message: "El archivo no tiene un tipo MIME válido" } },
+      { error: { code: "INVALID_FILE", message: "Solo se permiten imágenes JPEG, PNG, WebP o GIF" } },
       { status: 400 },
     );
   }
+
+  if (file.size > 20 * 1024 * 1024) {
+    return NextResponse.json(
+      { error: { code: "FILE_TOO_LARGE", message: "El archivo no puede superar 20 MB" } },
+      { status: 413 },
+    );
+  }
+
+  if (!typeParam || !(ALLOWED_TYPES as readonly string[]).includes(typeParam)) {
+    return NextResponse.json(
+      { error: { code: "INVALID_TYPE", message: `Tipo de upload no válido: ${typeParam ?? "none"}` } },
+      { status: 400 },
+    );
+  }
+  const uploadType = typeParam as UploadType;
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -36,7 +80,8 @@ export async function POST(req: Request) {
   let result;
   try {
     result = await cloudinary.uploader.upload(dataUri, {
-      folder: "artelier",
+      folder: FOLDER_MAP[uploadType],
+      transformation: TRANSFORMATION_MAP[uploadType],
     });
   } catch {
     return NextResponse.json(
