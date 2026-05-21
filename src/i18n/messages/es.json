@@ -44,6 +44,25 @@
     "savePassword": "Guardar contraseña",
     "invalidToken": "El enlace no es válido o ha expirado."
   },
+  "profile": {
+    "editProfile": "Editar perfil",
+    "saveChanges": "Guardar cambios",
+    "profileSaved": "Perfil guardado",
+    "bio": "Bio",
+    "bioPlaceholder": "Cuéntanos sobre tu trabajo artesanal...",
+    "bioMaxLength": "150 caracteres máximo",
+    "follow": "Seguir",
+    "following": "Siguiendo",
+    "followers": "Seguidores",
+    "products": "Tienda",
+    "process": "Proceso",
+    "noProducts": "Aún no hay productos publicados.",
+    "noProcessUpdates": "Aún no hay actualizaciones de proceso.",
+    "addProcessUpdate": "Publicar actualización",
+    "processUpdatePlaceholder": "Comparte cómo va tu proceso creativo...",
+    "uploadAvatar": "Foto de perfil",
+    "uploadBanner": "Imagen de portada"
+  },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",
     "notFound": "Página no encontrada.",

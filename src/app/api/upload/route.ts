@@ -1,9 +1,25 @@
 import { NextResponse } from "next/server";
 
+import { auth } from "~/server/auth";
 import { cloudinary } from "~/lib/cloudinary";
 import { env } from "~/env";
 
+const ALLOWED_TYPES = ["avatar", "banner", "process", "product"] as const;
+type UploadType = (typeof ALLOWED_TYPES)[number];
+
+function folderForType(type: UploadType): string {
+  return `artelier/${type}s`;
+}
+
 export async function POST(req: Request) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: { code: "UNAUTHORIZED", message: "Debes iniciar sesión para subir imágenes" } },
+      { status: 401 },
+    );
+  }
+
   if (!env.CLOUDINARY_CLOUD_NAME) {
     return NextResponse.json(
       { error: { code: "SERVICE_UNAVAILABLE", message: "Servicio de imágenes no configurado" } },
@@ -13,6 +29,7 @@ export async function POST(req: Request) {
 
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
+  const typeParam = formData.get("type") as string | null;
 
   if (!file) {
     return NextResponse.json(
@@ -28,6 +45,11 @@ export async function POST(req: Request) {
     );
   }
 
+  const uploadType: UploadType =
+    typeParam && (ALLOWED_TYPES as readonly string[]).includes(typeParam)
+      ? (typeParam as UploadType)
+      : "product";
+
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const base64 = buffer.toString("base64");
@@ -36,7 +58,7 @@ export async function POST(req: Request) {
   let result;
   try {
     result = await cloudinary.uploader.upload(dataUri, {
-      folder: "artelier",
+      folder: folderForType(uploadType),
     });
   } catch {
     return NextResponse.json(

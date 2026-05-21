@@ -5759,6 +5759,8 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
+    bannerImage: string | null
+    bio: string | null
     role: $Enums.Role | null
     password: string | null
     locality: string | null
@@ -5778,6 +5780,8 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
+    bannerImage: string | null
+    bio: string | null
     role: $Enums.Role | null
     password: string | null
     locality: string | null
@@ -5797,6 +5801,8 @@ export namespace Prisma {
     email: number
     emailVerified: number
     image: number
+    bannerImage: number
+    bio: number
     role: number
     password: number
     locality: number
@@ -5818,6 +5824,8 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    bannerImage?: true
+    bio?: true
     role?: true
     password?: true
     locality?: true
@@ -5837,6 +5845,8 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    bannerImage?: true
+    bio?: true
     role?: true
     password?: true
     locality?: true
@@ -5856,6 +5866,8 @@ export namespace Prisma {
     email?: true
     emailVerified?: true
     image?: true
+    bannerImage?: true
+    bio?: true
     role?: true
     password?: true
     locality?: true
@@ -5948,6 +5960,8 @@ export namespace Prisma {
     email: string | null
     emailVerified: Date | null
     image: string | null
+    bannerImage: string | null
+    bio: string | null
     role: $Enums.Role
     password: string | null
     locality: string | null
@@ -5984,6 +5998,8 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    bannerImage?: boolean
+    bio?: boolean
     role?: boolean
     password?: boolean
     locality?: boolean
@@ -6017,6 +6033,8 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    bannerImage?: boolean
+    bio?: boolean
     role?: boolean
     password?: boolean
     locality?: boolean
@@ -6036,6 +6054,8 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    bannerImage?: boolean
+    bio?: boolean
     role?: boolean
     password?: boolean
     locality?: boolean
@@ -6055,6 +6075,8 @@ export namespace Prisma {
     email?: boolean
     emailVerified?: boolean
     image?: boolean
+    bannerImage?: boolean
+    bio?: boolean
     role?: boolean
     password?: boolean
     locality?: boolean
@@ -6068,7 +6090,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "password" | "locality" | "stripeAccountId" | "firstSaleCompleted" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "bannerImage" | "bio" | "role" | "password" | "locality" | "stripeAccountId" | "firstSaleCompleted" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -6111,6 +6133,8 @@ export namespace Prisma {
       email: string | null
       emailVerified: Date | null
       image: string | null
+      bannerImage: string | null
+      bio: string | null
       role: $Enums.Role
       password: string | null
       locality: string | null
@@ -6563,6 +6587,8 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly emailVerified: FieldRef<"User", 'DateTime'>
     readonly image: FieldRef<"User", 'String'>
+    readonly bannerImage: FieldRef<"User", 'String'>
+    readonly bio: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly password: FieldRef<"User", 'String'>
     readonly locality: FieldRef<"User", 'String'>
@@ -19703,6 +19729,8 @@ export namespace Prisma {
     email: 'email',
     emailVerified: 'emailVerified',
     image: 'image',
+    bannerImage: 'bannerImage',
+    bio: 'bio',
     role: 'role',
     password: 'password',
     locality: 'locality',
@@ -20296,6 +20324,8 @@ export namespace Prisma {
     email?: StringNullableFilter<"User"> | string | null
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
+    bannerImage?: StringNullableFilter<"User"> | string | null
+    bio?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     password?: StringNullableFilter<"User"> | string | null
     locality?: StringNullableFilter<"User"> | string | null
@@ -20328,6 +20358,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    bannerImage?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
     role?: SortOrder
     password?: SortOrderInput | SortOrder
     locality?: SortOrderInput | SortOrder
@@ -20363,6 +20395,8 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
+    bannerImage?: StringNullableFilter<"User"> | string | null
+    bio?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     password?: StringNullableFilter<"User"> | string | null
     locality?: StringNullableFilter<"User"> | string | null
@@ -20395,6 +20429,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
+    bannerImage?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
     role?: SortOrder
     password?: SortOrderInput | SortOrder
     locality?: SortOrderInput | SortOrder
@@ -20420,6 +20456,8 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"User"> | string | null
     emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
+    bannerImage?: StringNullableWithAggregatesFilter<"User"> | string | null
+    bio?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     locality?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -21459,6 +21497,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -21491,6 +21531,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -21523,6 +21565,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21555,6 +21599,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21587,6 +21633,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -21606,6 +21654,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21625,6 +21675,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22859,6 +22911,8 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    bannerImage?: SortOrder
+    bio?: SortOrder
     role?: SortOrder
     password?: SortOrder
     locality?: SortOrder
@@ -22878,6 +22932,8 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    bannerImage?: SortOrder
+    bio?: SortOrder
     role?: SortOrder
     password?: SortOrder
     locality?: SortOrder
@@ -22897,6 +22953,8 @@ export namespace Prisma {
     email?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
+    bannerImage?: SortOrder
+    bio?: SortOrder
     role?: SortOrder
     password?: SortOrder
     locality?: SortOrder
@@ -25103,6 +25161,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -25134,6 +25194,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -25181,6 +25243,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25212,6 +25276,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25243,6 +25309,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -25274,6 +25342,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -25321,6 +25391,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25352,6 +25424,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26171,6 +26245,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26202,6 +26278,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26355,6 +26433,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26386,6 +26466,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26475,6 +26557,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26506,6 +26590,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26542,6 +26628,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26573,6 +26661,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26693,6 +26783,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26724,6 +26816,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26766,6 +26860,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26797,6 +26893,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26893,6 +26991,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26924,6 +27024,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26960,6 +27062,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -26991,6 +27095,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27068,6 +27174,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27099,6 +27207,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27141,6 +27251,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27172,6 +27284,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27242,6 +27356,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27273,6 +27389,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27349,6 +27467,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27380,6 +27500,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27456,6 +27578,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27487,6 +27611,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27585,6 +27711,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27616,6 +27744,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27883,6 +28013,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -27914,6 +28046,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28029,6 +28163,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28060,6 +28196,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28171,6 +28309,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28202,6 +28342,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28238,6 +28380,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28269,6 +28413,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28316,6 +28462,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28347,6 +28495,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28389,6 +28539,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28420,6 +28572,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28451,6 +28605,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28482,6 +28638,8 @@ export namespace Prisma {
     email?: string | null
     emailVerified?: Date | string | null
     image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
     role?: $Enums.Role
     password?: string | null
     locality?: string | null
@@ -28529,6 +28687,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28560,6 +28720,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     password?: NullableStringFieldUpdateOperationsInput | string | null
     locality?: NullableStringFieldUpdateOperationsInput | string | null
