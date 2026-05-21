@@ -7,9 +7,12 @@ import { env } from "~/env";
 const ALLOWED_TYPES = ["avatar", "banner", "process", "product"] as const;
 type UploadType = (typeof ALLOWED_TYPES)[number];
 
-function folderForType(type: UploadType): string {
-  return `artelier/${type}s`;
-}
+const FOLDER_MAP: Record<UploadType, string> = {
+  avatar: "artelier/avatars",
+  banner: "artelier/banners",
+  process: "artelier/process",
+  product: "artelier/products",
+};
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -45,10 +48,13 @@ export async function POST(req: Request) {
     );
   }
 
-  const uploadType: UploadType =
-    typeParam && (ALLOWED_TYPES as readonly string[]).includes(typeParam)
-      ? (typeParam as UploadType)
-      : "product";
+  if (!typeParam || !(ALLOWED_TYPES as readonly string[]).includes(typeParam)) {
+    return NextResponse.json(
+      { error: { code: "INVALID_TYPE", message: `Tipo de upload no válido: ${typeParam ?? "none"}` } },
+      { status: 400 },
+    );
+  }
+  const uploadType = typeParam as UploadType;
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -58,7 +64,7 @@ export async function POST(req: Request) {
   let result;
   try {
     result = await cloudinary.uploader.upload(dataUri, {
-      folder: folderForType(uploadType),
+      folder: FOLDER_MAP[uploadType],
     });
   } catch {
     return NextResponse.json(

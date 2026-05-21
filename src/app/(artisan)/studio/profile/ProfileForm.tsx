@@ -61,10 +61,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     formData.append("file", file);
     formData.append("type", type);
 
-    const res = await fetch("/api/upload", { method: "POST", body: formData });
-    const json = await res.json() as { data?: { url: string } };
-    if (json.data?.url) {
-      onSuccess(json.data.url);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!res.ok) return;
+      const json = await res.json() as { data?: { url: string } };
+      if (json.data?.url) onSuccess(json.data.url);
+    } catch {
+      // upload failed silently — user can retry
     }
   }
 

@@ -73,9 +73,15 @@ export default function ProcessUpdateForm() {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("type", "process");
-            const res = await fetch("/api/upload", { method: "POST", body: formData });
-            const json = await res.json() as { data?: { url: string } };
-            if (json.data?.url) setImageUrl(json.data.url);
+            try {
+              const res = await fetch("/api/upload", { method: "POST", body: formData });
+              if (res.ok) {
+                const json = await res.json() as { data?: { url: string } };
+                if (json.data?.url) setImageUrl(json.data.url);
+              }
+            } catch {
+              // upload failed silently — user can retry
+            }
             setUploading(false);
           }}
         />
