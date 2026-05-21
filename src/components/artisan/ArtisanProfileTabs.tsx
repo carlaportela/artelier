@@ -116,7 +116,7 @@ export default function ArtisanProfileTabs({
                   <div className="relative aspect-video w-full overflow-hidden rounded-lg">
                     <Image
                       src={update.imageUrl}
-                      alt=""
+                      alt={t("processImageAlt")}
                       fill
                       className="object-cover"
                     />

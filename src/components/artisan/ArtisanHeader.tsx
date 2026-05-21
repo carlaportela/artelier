@@ -59,6 +59,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile }: ArtisanHeaderPr
               variant="default"
               className="rounded-full px-6"
               disabled
+              aria-disabled="true"
             >
               {t("follow")}
             </Button>
@@ -74,7 +75,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile }: ArtisanHeaderPr
             <p className="text-sm text-[--text-muted]">{artisan.locality}</p>
           )}
           {artisan.bio && (
-            <p className="text-sm text-[--text]">{artisan.bio}</p>
+            <p className="line-clamp-3 text-sm text-[--text]">{artisan.bio}</p>
           )}
         </div>
       </div>

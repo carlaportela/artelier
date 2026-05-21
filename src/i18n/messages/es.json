@@ -61,7 +61,10 @@
     "addProcessUpdate": "Publicar actualización",
     "processUpdatePlaceholder": "Comparte cómo va tu proceso creativo...",
     "uploadAvatar": "Foto de perfil",
-    "uploadBanner": "Imagen de portada"
+    "uploadBanner": "Imagen de portada",
+    "imageOptional": "Imagen (opcional)",
+    "publishing": "Publicando...",
+    "processImageAlt": "Imagen del proceso creativo"
   },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",

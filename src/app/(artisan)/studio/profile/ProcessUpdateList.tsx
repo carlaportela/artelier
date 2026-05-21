@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { ProcessUpdate } from "generated/prisma";
 
 interface ProcessUpdateListProps {
@@ -8,10 +9,12 @@ interface ProcessUpdateListProps {
 }
 
 export default function ProcessUpdateList({ updates }: ProcessUpdateListProps) {
+  const t = useTranslations("profile");
+
   if (updates.length === 0) {
     return (
       <p className="py-6 text-center text-sm text-[--text-muted]">
-        Aún no tienes actualizaciones de proceso.
+        {t("noProcessUpdates")}
       </p>
     );
   }
@@ -30,7 +33,7 @@ export default function ProcessUpdateList({ updates }: ProcessUpdateListProps) {
           <p className="text-sm text-[--text]">{update.content}</p>
           {update.imageUrl && (
             <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-              <Image src={update.imageUrl} alt="" fill className="object-cover" />
+              <Image src={update.imageUrl} alt={t("processImageAlt")} fill className="object-cover" />
             </div>
           )}
         </div>

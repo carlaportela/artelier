@@ -39,6 +39,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   const [bannerUrl, setBannerUrl] = useState(user.bannerImage ?? "");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
@@ -63,11 +64,17 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
-      if (!res.ok) return;
+      if (!res.ok) {
+        setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
+        return;
+      }
       const json = await res.json() as { data?: { url: string } };
-      if (json.data?.url) onSuccess(json.data.url);
+      if (json.data?.url) {
+        setUploadError(null);
+        onSuccess(json.data.url);
+      }
     } catch {
-      // upload failed silently — user can retry
+      setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
     }
   }
 
@@ -109,6 +116,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             setUploadingBanner(false);
           }}
         />
+        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
       {/* Avatar */}
@@ -137,6 +145,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             setUploadingAvatar(false);
           }}
         />
+        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
       {/* Nombre */}

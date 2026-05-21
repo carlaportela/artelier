@@ -42,8 +42,8 @@ export async function saveProfile(data: unknown) {
       name,
       bio: bio ?? null,
       locality,
-      image: image ?? null,
-      bannerImage: bannerImage ?? null,
+      image: image?.length ? image : null,
+      bannerImage: bannerImage?.length ? bannerImage : null,
     },
   });
 

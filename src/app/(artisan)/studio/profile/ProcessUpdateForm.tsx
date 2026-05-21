@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,6 +21,8 @@ export default function ProcessUpdateForm() {
   const [isPending, startTransition] = useTransition();
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
@@ -33,6 +35,7 @@ export default function ProcessUpdateForm() {
       if (!result?.error) {
         form.reset();
         setImageUrl("");
+        if (fileInputRef.current) fileInputRef.current.value = "";
       }
     });
   }
@@ -58,8 +61,9 @@ export default function ProcessUpdateForm() {
       </div>
 
       <div className="space-y-1">
-        <Label htmlFor="process-image">Imagen (opcional)</Label>
+        <Label htmlFor="process-image">{t("imageOptional")}</Label>
         <input
+          ref={fileInputRef}
           id="process-image"
           type="file"
           accept="image/*"
@@ -77,18 +81,24 @@ export default function ProcessUpdateForm() {
               const res = await fetch("/api/upload", { method: "POST", body: formData });
               if (res.ok) {
                 const json = await res.json() as { data?: { url: string } };
-                if (json.data?.url) setImageUrl(json.data.url);
+                if (json.data?.url) {
+                  setUploadError(null);
+                  setImageUrl(json.data.url);
+                }
+              } else {
+                setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
               }
             } catch {
-              // upload failed silently — user can retry
+              setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
             }
             setUploading(false);
           }}
         />
+        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
       <Button type="submit" disabled={isPending || uploading} className="w-full">
-        {isPending ? "Publicando..." : t("addProcessUpdate")}
+        {isPending ? t("publishing") : t("addProcessUpdate")}
       </Button>
     </form>
   );
