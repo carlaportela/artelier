@@ -16,7 +16,8 @@ export default function CookieBanner() {
   }, []);
 
   function saveConsent(value: "all" | "necessary") {
-    document.cookie = `${COOKIE_NAME}=${value}; max-age=${COOKIE_MAX_AGE}; path=/; SameSite=Lax`;
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${COOKIE_NAME}=${value}; max-age=${COOKIE_MAX_AGE}; path=/; SameSite=Lax${secure}`;
     setVisible(false);
   }
 
