@@ -22,5 +22,5 @@ export async function getServerSession() {
   });
 
   if (!row || row.expires < new Date()) return null;
-  return { user: row.user };
+  return { user: row.user, sessionToken: token };
 }

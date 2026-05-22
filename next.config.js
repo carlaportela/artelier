@@ -8,6 +8,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  serverExternalPackages: ["@react-pdf/renderer"],
+};
 
 export default withNextIntl(config);
