@@ -40,7 +40,7 @@ export default async function AppHeader() {
                   />
                 </div>
               ) : (
-                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[--border] bg-[--surface] text-sm font-medium text-[--text]">
+                <div className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium leading-none ${user.role === "ARTISAN" ? "border-[#b8d4cc] bg-[#d4e8e2] text-[#3d5a4f]" : "border-[#e8d5be] bg-[#f5e8d8] text-[#c4956a]"}`}>
                   {user.name?.charAt(0).toUpperCase() ?? "?"}
                 </div>
               )}

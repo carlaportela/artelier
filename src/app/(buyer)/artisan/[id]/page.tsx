@@ -79,7 +79,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
         sealRequests={artisan.sealRequests}
       />
 
-      <div className="mt-6 px-4">
+      <div className="mx-auto mt-6 max-w-lg px-4">
         <ArtisanProfileTabs
           products={artisan.products}
           processUpdates={artisan.processUpdates}

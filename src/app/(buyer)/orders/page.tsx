@@ -25,7 +25,7 @@ export default async function OrdersPage() {
   return (
     <main className="min-h-screen bg-[--bg] px-4 py-8">
       <div className="mx-auto max-w-lg space-y-6">
-        <h1 className="font-display text-2xl text-[--text]">{t("myOrders")}</h1>
+        <h1 className="font-display text-2xl font-bold text-[--text]">{t("myOrders")}</h1>
 
         {orders.length === 0 ? (
           <p className="py-12 text-center text-sm text-[--text-muted]">
