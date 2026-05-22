@@ -46,7 +46,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
       </div>
 
       {/* Avatar superpuesto */}
-      <div className="px-4">
+      <div className="mx-auto max-w-lg px-4">
         <div className="relative -mt-8 flex items-end justify-between">
 
           {/* Avatar: foto → circular; sin foto → forma paleta de pintar */}

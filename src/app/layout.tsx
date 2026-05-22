@@ -5,10 +5,13 @@ import localFont from "next/font/local";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 
+import CookieBanner from "~/components/CookieBanner";
+
+
 export const metadata: Metadata = {
   title: "Artelier",
   description: "Marketplace de artesanía gallega",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
 };
 
 const dmSans = localFont({
@@ -42,7 +45,9 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <CookieBanner />
         </NextIntlClientProvider>
+
       </body>
     </html>
   );

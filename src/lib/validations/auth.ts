@@ -15,3 +15,20 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Introduce tu contraseña actual"),
+  newPassword: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
+});
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Introduce tu contraseña para confirmar"),
+});
+
+export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;

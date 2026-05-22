@@ -6,9 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { saveAccount } from "./actions";
 
 const schema = z.object({
@@ -18,10 +15,11 @@ const schema = z.object({
 type FormInput = z.infer<typeof schema>;
 
 interface AccountFormProps {
-  user: { name: string | null; locality: string | null };
+  user: { name: string | null; locality: string | null; email: string | null };
 }
 
 export default function AccountForm({ user }: AccountFormProps) {
+  const email = user.email;
   const t = useTranslations("account");
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
@@ -48,28 +46,46 @@ export default function AccountForm({ user }: AccountFormProps) {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-1">
-        <Label htmlFor="name">{t("name")}</Label>
-        <Input id="name" {...form.register("name")} />
+        <label htmlFor="name" className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
+        <input
+          id="name"
+          {...form.register("name")}
+          className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+        />
         {form.formState.errors.name && (
           <p className="text-sm text-red-600">{form.formState.errors.name.message}</p>
         )}
       </div>
 
       <div className="space-y-1">
-        <Label htmlFor="locality">{t("locality")}</Label>
-        <Input
+        <label htmlFor="locality" className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
+        <input
           id="locality"
           placeholder="Ej: Santiago de Compostela"
           {...form.register("locality")}
+          className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
         />
         {form.formState.errors.locality && (
           <p className="text-sm text-red-600">{form.formState.errors.locality.message}</p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPending}>
+      {email && (
+        <div className="space-y-1">
+          <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
+          <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
+            {email}
+          </div>
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={isPending}
+        className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#2d4a3f] disabled:cursor-not-allowed disabled:opacity-60"
+      >
         {isPending ? "Guardando..." : saved ? t("profileSaved") : t("saveChanges")}
-      </Button>
+      </button>
     </form>
   );
 }

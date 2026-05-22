@@ -5,6 +5,9 @@ import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import AccountForm from "./AccountForm";
 
+import Link from "next/link";
+
+
 export const metadata: Metadata = { title: "Mi cuenta — Artelier" };
 
 export default async function AccountPage() {
@@ -21,11 +24,13 @@ export default async function AccountPage() {
   return (
     <main className="min-h-screen bg-[--bg] px-4 py-8">
       <div className="mx-auto max-w-lg space-y-6">
-        <h1 className="font-display text-2xl text-[--text]">Mi cuenta</h1>
-        {user.email && (
-          <p className="text-sm text-[--text-muted]">{user.email}</p>
-        )}
+        <h1 className="font-display text-2xl font-bold text-[--text]">Mi cuenta</h1>
         <AccountForm user={user} />
+        <div className="text-center">
+          <Link href="/account/settings" className="text-sm text-[--text-muted] transition-colors hover:text-[#3d5a4f]">
+            Configuración y privacidad
+          </Link>
+        </div>
       </div>
     </main>
   );

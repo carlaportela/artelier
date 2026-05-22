@@ -86,10 +86,27 @@
       "IN_DISPUTE": "En disputa"
     }
   },
+  "settings": {
+    "title": "Configuración",
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "passwordChanged": "Contraseña actualizada. Las demás sesiones han sido cerradas.",
+    "wrongPassword": "La contraseña actual no es correcta",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccountWarning": "Esta acción es irreversible. Tus datos se anonimizarán permanentemente.",
+    "confirmWithPassword": "Introduce tu contraseña para confirmar",
+    "exportData": "Exportar mis datos",
+    "exportDataDescription": "Recibirás un correo con todos tus datos en PDF.",
+    "exportRequested": "Correo enviado. Revisa tu bandeja de entrada.",
+    "cancel": "Cancelar"
+  },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",
     "notFound": "Página no encontrada.",
     "unauthorized": "No tienes permiso para acceder a esta página.",
     "serverError": "Error del servidor. Inténtalo más tarde."
+    
   }
 }
