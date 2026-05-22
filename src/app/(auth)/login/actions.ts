@@ -60,5 +60,5 @@ export async function loginUser(data: unknown) {
     path: "/",
   });
 
-  redirect(user.role === "ARTISAN" ? "/studio/dashboard" : "/feed");
+  redirect(user.role === "ARTISAN" ? "/studio/profile" : "/feed");
 }

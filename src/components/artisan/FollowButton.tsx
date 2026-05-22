@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Button } from "~/components/ui/button";
 import { followArtisan, unfollowArtisan } from "~/app/(buyer)/artisan/[id]/actions";
 
 interface FollowButtonProps {
@@ -30,13 +29,17 @@ export default function FollowButton({ artisanId, initialIsFollowing }: FollowBu
   }
 
   return (
-    <Button
-      variant={isFollowing ? "outline" : "default"}
-      className="rounded-full px-6"
+    <button
+      type="button"
       onClick={handleClick}
       disabled={isPending}
+      className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 ${
+        isFollowing
+          ? "border border-[#c4956a] bg-transparent text-[#c4956a] hover:bg-[#c4956a]/10"
+          : "bg-[#c4956a] text-white hover:bg-[#b5894e] active:scale-95"
+      }`}
     >
       {isFollowing ? t("following") : t("follow")}
-    </Button>
+    </button>
   );
 }

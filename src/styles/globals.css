@@ -177,3 +177,11 @@
     @apply font-sans;
   }
 }
+
+@layer components {
+  .seal-mano      { background-color: var(--seal-mano-bg);      color: var(--seal-mano-text); }
+  .seal-eco       { background-color: var(--seal-eco-bg);       color: var(--seal-eco-text); }
+  .seal-reciclado { background-color: var(--seal-reciclado-bg); color: var(--seal-reciclado-text); }
+  .seal-galicia   { background-color: var(--seal-galicia-bg);   color: var(--seal-galicia-text); }
+  .seal-km0       { background-color: var(--seal-km0-bg);       color: var(--seal-km0-text); }
+}

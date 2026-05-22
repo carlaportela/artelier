@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import AccountForm from "./AccountForm";
 
 export const metadata: Metadata = { title: "Mi cuenta — Artelier" };
 
 export default async function AccountPage() {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) redirect("/login");
 
   const user = await db.user.findUnique({

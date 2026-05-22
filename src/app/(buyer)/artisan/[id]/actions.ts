@@ -2,11 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 
 export async function followArtisan(artisanId: string) {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
 
   await db.follow.create({
@@ -18,7 +18,7 @@ export async function followArtisan(artisanId: string) {
 }
 
 export async function unfollowArtisan(artisanId: string) {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
 
   await db.follow.delete({

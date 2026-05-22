@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 
 export const metadata: Metadata = { title: "Mis pedidos — Artelier" };
 
 export default async function OrdersPage() {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) redirect("/login");
 
   const t = await getTranslations("account");
