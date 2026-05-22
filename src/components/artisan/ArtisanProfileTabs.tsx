@@ -25,20 +25,20 @@ export default function ArtisanProfileTabs({
       <div className="flex border-b border-[--border]">
         <button
           onClick={() => setActiveTab("shop")}
-          className={`px-4 pb-3 text-sm font-medium transition-colors ${
+          className={`-mb-px cursor-pointer border-b-[3px] px-4 pb-3 text-sm font-medium transition-colors ${
             activeTab === "shop"
-              ? "border-b-2 border-[--primary] text-[--primary]"
-              : "text-[--text-muted]"
+              ? "border-[#3d5a4f] text-[#3d5a4f] font-semibold"
+              : "border-transparent text-[--text-muted] hover:text-[#3d5a4f]/70"
           }`}
         >
           {t("products")}
         </button>
         <button
           onClick={() => setActiveTab("process")}
-          className={`px-4 pb-3 text-sm font-medium transition-colors ${
+          className={`-mb-px cursor-pointer border-b-[3px] px-4 pb-3 text-sm font-medium transition-colors ${
             activeTab === "process"
-              ? "border-b-2 border-[--primary] text-[--primary]"
-              : "text-[--text-muted]"
+              ? "border-[#3d5a4f] text-[#3d5a4f] font-semibold"
+              : "border-transparent text-[--text-muted] hover:text-[#3d5a4f]/70"
           }`}
         >
           {t("process")}

@@ -73,5 +73,5 @@ export async function registerUser(data: unknown) {
     path: "/",
   });
 
-  redirect(role === "ARTISAN" ? "/studio/dashboard" : "/feed");
+  redirect(role === "ARTISAN" ? "/studio/profile" : "/feed");
 }

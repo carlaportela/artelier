@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { db } from "~/server/db";
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import ArtisanHeader from "~/components/artisan/ArtisanHeader";
 import ArtisanProfileTabs from "~/components/artisan/ArtisanProfileTabs";
 
@@ -43,18 +43,41 @@ export default async function ArtisanPublicPage({ params }: Props) {
           where: { deletedAt: null },
           orderBy: { createdAt: "desc" },
         },
+        sealRequests: {
+          where: { status: "APPROVED", productId: null, deletedAt: null },
+          include: { seal: { select: { name: true, type: true } } },
+        },
       },
     }),
-    auth(),
+    getServerSession(),
   ]);
 
   if (!artisan) notFound();
 
   const isOwnProfile = session?.user?.id === artisan.id;
+  const isBuyer = session?.user?.role === "BUYER";
+  const canFollow = !isOwnProfile && isBuyer;
+
+  const follow = canFollow && session?.user?.id
+    ? await db.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: session.user.id,
+            followingId: artisan.id,
+          },
+        },
+      })
+    : null;
 
   return (
     <main className="min-h-screen bg-[--bg]">
-      <ArtisanHeader artisan={artisan} isOwnProfile={isOwnProfile} />
+      <ArtisanHeader
+        artisan={artisan}
+        isOwnProfile={isOwnProfile}
+        isFollowing={!!follow}
+        canFollow={canFollow}
+        sealRequests={artisan.sealRequests}
+      />
 
       <div className="mt-6 px-4">
         <ArtisanProfileTabs

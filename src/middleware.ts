@@ -21,6 +21,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
+  // H1.4: /account y /orders → requires authentication
+  if ((pathname.startsWith("/account") || pathname.startsWith("/orders")) && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+
   // AC4: /admin/* → requires authentication (role check deferred to Historia 1.2)
   if (pathname.startsWith("/admin") && !isLoggedIn) {
     return NextResponse.redirect(new URL("/feed", req.nextUrl));
