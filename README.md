@@ -1,4 +1,9 @@
-# Artelier
+<p align="center">
+  <img src="./docs/logo.svg" alt="Artelier" width="160" />
+</p>
+
+<h1 align="center">Artelier</h1>
+
 <p align="center">
   <img src="https://img.shields.io/badge/Status-En%20desarrollo-orange" />
   <img src="https://img.shields.io/badge/Next.js-15.x-black?logo=nextdotjs" />
@@ -8,9 +13,17 @@
   <img src="https://img.shields.io/badge/Vercel-Deploy-000000?logo=vercel" />
 </p>
 
-**Marketplace de artesanía y producción local de Galicia.**
+<p align="center"><strong>Marketplace de artesanía y producción local de Galicia.</strong></p>
 
+<p align="center">
 Artelier conecta artesanos y pequeños productores gallegos con compradores interesados en consumo lento, responsable y de proximidad — disponible 24/7, sin coste para el artesano, sin depender de mercados físicos.
+</p>
+
+---
+
+<p align="center">
+  <img src="./docs/preview.png" alt="Vista previa de Artelier" width="320" />
+</p>
 
 ---
 
@@ -56,11 +69,35 @@ Artelier opera bajo el principio del **slow commerce**: el tiempo de espera, la 
 
 | Capa | Tecnología |
 |------|------------|
-| Frontend web | Next.js (SSR/SSG) — perfiles de artesano indexables por buscadores |
-| Backend | API REST |
+| Frontend | Next.js 15 (App Router, SSR/SSG) |
+| Lenguaje | TypeScript 5 |
+| Estilos | Tailwind CSS |
+| ORM | Prisma + PostgreSQL 17 |
+| Auth | Auth.js v5 |
 | Pagos | Stripe Connect Express |
-| Notificaciones | Email transaccional (MVP) |
+| i18n | next-intl |
+| Deploy | Vercel |
 | Mobile (V2) | Flutter — iOS y Android sobre la misma API |
+
+---
+
+## Desarrollo local
+
+```bash
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env
+
+# Aplicar migraciones de base de datos
+npx prisma migrate dev
+
+# Arrancar servidor de desarrollo
+npm run dev
+```
+
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
 ---
 
@@ -76,7 +113,7 @@ Artelier opera bajo el principio del **slow commerce**: el tiempo de espera, la 
 
 ## Hoja de ruta
 
-### MVP — Web App *(en desarrollo)*
+### MVP — Web App *(en desarrollo activo)*
 Perfiles · Catálogo · Pagos · Mensajería · Sellos verificados · Notificaciones por email · Descubrimiento · Disputas y devoluciones
 
 ### V2 — Mobile + Crecimiento
@@ -87,12 +124,6 @@ Live streaming desde el taller · Cesta multi-artesano · Eventos promocionales 
 
 ---
 
-## Estado del proyecto
-
-El proyecto está actualmente en fase de planificación. El PRD completo está disponible en [`_bmad-output/planning-artifacts/prd.md`](./_bmad-output/planning-artifacts/prd.md).
-
----
-
 ## Licencia
 
-[MIT](./LICENSE) © 2026 Carla Portela Ubeira
+© 2026 Carla Portela Ubeira — Todos los derechos reservados. Consulta [LICENSE](./LICENSE).
