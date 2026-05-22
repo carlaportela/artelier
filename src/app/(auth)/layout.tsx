@@ -1,4 +1,4 @@
-import ArtelierLogo from "~/components/ArtelierLogo";
+import AppHeader from "~/components/AppHeader";
 
 export default function AuthLayout({
   children,
@@ -6,11 +6,11 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[--bg] px-4">
-      <div className="mb-8">
-        <ArtelierLogo />
-      </div>
-      <div className="w-full max-w-[400px]">{children}</div>
-    </div>
+    <>
+      <AppHeader />
+      <main className="min-h-screen bg-[--bg] px-4 py-10">
+        <div className="mx-auto max-w-[400px]">{children}</div>
+      </main>
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 
 const profileSchema = z.object({
@@ -20,7 +20,7 @@ const processUpdateSchema = z.object({
 });
 
 export async function saveProfile(data: unknown) {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
   if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
 
@@ -53,7 +53,7 @@ export async function saveProfile(data: unknown) {
 }
 
 export async function createProcessUpdate(data: unknown) {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
   if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
 

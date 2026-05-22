@@ -66,6 +66,26 @@
     "publishing": "Publicando...",
     "processImageAlt": "Imagen del proceso creativo"
   },
+  "account": {
+    "editProfile": "Editar perfil",
+    "saveChanges": "Guardar cambios",
+    "profileSaved": "Perfil guardado",
+    "name": "Nombre",
+    "locality": "Localidad",
+    "myOrders": "Mis pedidos",
+    "noOrders": "Aquí verás tus pedidos cuando hagas tu primera compra",
+    "orderStatus": {
+      "CONFIRMED": "Confirmado",
+      "IN_PREPARATION": "En preparación",
+      "READY": "Listo para enviar",
+      "SHIPPED": "Enviado",
+      "DELIVERED": "Entregado",
+      "ACCEPTED": "Aceptado",
+      "CANCELLED": "Cancelado",
+      "REFUNDED": "Reembolsado",
+      "IN_DISPUTE": "En disputa"
+    }
+  },
   "errors": {
     "generic": "Algo fue mal. Inténtalo de nuevo.",
     "notFound": "Página no encontrada.",
