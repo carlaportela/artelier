@@ -188,7 +188,7 @@ export default function NewProductWizard() {
   // ─── Paso 1: fotos ────────────────────────────────────────────────────────
   if (step === 1) {
     return (
-      <main className="mx-auto max-w-lg space-y-6 px-4 py-8">
+      <main className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -284,17 +284,18 @@ export default function NewProductWizard() {
           type="button"
           onClick={() => setStep(2)}
           disabled={imageUrls.length === 0 || isUploading}
-          className="w-full rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#2d4a3f]"
+          className="w-full rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e]"
         >
           Siguiente
         </Button>
-      </main>
+      </div>
+    </main>
     );
   }
 
   // ─── Paso 2: datos ────────────────────────────────────────────────────────
   return (
-    <main className="mx-auto max-w-lg space-y-6 px-4 py-8">
+    <main className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -438,10 +439,11 @@ export default function NewProductWizard() {
         type="button"
         onClick={handlePublish}
         disabled={isPending}
-        className="w-full rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#2d4a3f]"
+        className="w-full rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e]"
       >
         {isPending ? "Publicando..." : "Publicar"}
       </Button>
+      </div>
     </main>
   );
 }

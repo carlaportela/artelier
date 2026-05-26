@@ -1,13 +1,17 @@
-"use client";
+//Página que muestra las actualizaciones de un proceso en el perfil del usuario. Cada actualización incluye fecha, contenido y una imagen.
+
+"use client"; //Se renderiza en el cliente.
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import type { ProcessUpdate } from "generated/prisma";
+import type { ProcessUpdate } from "generated/prisma"; //Componente que muestra una lista de actualizaciones de procesos en el perfil del usuario.
 
+//Definición de las propiedades del componente, que incluye un array de actualizaciones de procesos.
 interface ProcessUpdateListProps {
   updates: ProcessUpdate[];
 }
 
+//Función que renderiza la lista de actualizaciones de procesos. SI no hay actualizaciones, muestra un mensaje indicándolo y si las hay, muestra cada una con fecha, contenido e imagen.
 export default function ProcessUpdateList({ updates }: ProcessUpdateListProps) {
   const t = useTranslations("profile");
 

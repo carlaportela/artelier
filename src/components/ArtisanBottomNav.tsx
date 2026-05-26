@@ -1,12 +1,12 @@
-//Componente de navegación inferior para el estudio de artesano, con enlaces a productos, perfil y creación de nuevo producto. Visible solo bajo rutas /studio
+//Componente de navegación inferior para el estudio del artesano, con enlaces a productos, publicaciones, mensajes y configuración de perfil.
 
-"use client"; //Este componente se renderiza en el cliente
+"use client";//Se renderiza en cliente.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag, Plus, User } from "lucide-react";
+import { ShoppingBag, Images, Plus, MessageCircle, User } from "lucide-react";
 
-//Función auxiliar para renderizar cada item de navegación, con su icono, etiqueta y estado actual.
+//Función para cada elemento de navegación, que recibe la ruta, el icono, la etiqueta y se está activo o no para aplicar estilos condicionales.
 function NavItem({
   href,
   icon: Icon,
@@ -22,37 +22,47 @@ function NavItem({
     <Link
       href={href}
       aria-label={label}
-      className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 transition-colors ${
-        active ? "text-[#3d5a4f]" : "text-[--text-muted] hover:text-[--text]"
+      className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center transition-colors ${
+        active ? "text-[#c4956a]" : "text-[--text-muted] hover:text-[--text]"
       }`}
     >
-      <Icon size={22} strokeWidth={active ? 2 : 1.5} />
-      <span className="text-[10px] font-medium">{label}</span>
-      {active && <span className="mt-0.5 h-1 w-1 rounded-full bg-[#3d5a4f]" />}
+      <Icon size={24} strokeWidth={active ? 2 : 1.5} />
     </Link>
   );
 }
 
-//Función principal del componente de navegación inferior, que muestra enlaces a productos, perfil y creación de nuevo producto.
+//Función para la la barra de navegación inferior que muestra los enlaces a productos , publicaciones, mensajes y perfil.
 export default function ArtisanBottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[--border] bg-[--bg]/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-16 max-w-lg items-center justify-around px-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[--border] bg-[#f4f0e8]">
+      <div className="mx-auto flex h-16 w-full max-w-lg md:max-w-2xl lg:max-w-4xl items-center justify-around px-2">
         <NavItem
           href="/studio/products"
           icon={ShoppingBag}
-          label="Mis productos"
+          label="Productos"
           active={pathname.startsWith("/studio/products") && !pathname.includes("/new")}
+        />
+        <NavItem
+          href="/studio/publicaciones"
+          icon={Images}
+          label="Publicaciones"
+          active={pathname.startsWith("/studio/publicaciones")}
         />
         <Link
           href="/studio/products/new"
           aria-label="Publicar producto"
-          className="-mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-transform hover:scale-105 active:scale-95"
+          className="-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-transform hover:scale-105 active:scale-95"
         >
           <Plus size={24} />
         </Link>
+        <NavItem
+          href="/studio/mensajes"
+          icon={MessageCircle}
+          label="Mensajes"
+          active={pathname.startsWith("/studio/mensajes")}
+        />
         <NavItem
           href="/studio/profile"
           icon={User}

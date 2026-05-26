@@ -44,3 +44,6 @@ yarn-error.log*
 
 # idea files
 .idea
+
+# MCP config (contains env var references, keep local)
+.mcp.json

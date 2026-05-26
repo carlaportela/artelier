@@ -71,7 +71,7 @@ export default function AccountForm({ user }: AccountFormProps) {
       </div>
 
       {email && (
-        <div className="space-y-1">
+        <div className="space-y-2">
           <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
           <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
             {email}
@@ -82,7 +82,7 @@ export default function AccountForm({ user }: AccountFormProps) {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#2d4a3f] disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Guardando..." : saved ? t("profileSaved") : t("saveChanges")}
       </button>

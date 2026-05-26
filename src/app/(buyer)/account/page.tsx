@@ -13,6 +13,7 @@ export const metadata: Metadata = { title: "Mi cuenta — Artelier" };
 export default async function AccountPage() {
   const session = await getServerSession();
   if (!session?.user) redirect("/login");
+  if (session.user.role === "ARTISAN") redirect("/studio/profile");
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },

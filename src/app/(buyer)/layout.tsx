@@ -6,7 +6,9 @@ export default function BuyerLayout({ children }: { children: React.ReactNode })
   return (
     <>
       <AppHeader />
-      {children}
+      <div className="mx-auto w-full max-w-lg md:max-w-2xl lg:max-w-4xl">
+        {children}
+      </div>
     </>
   );
 }

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { Plus } from "lucide-react"; //Icono de "Más" para publicar nuevo producto.
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
@@ -34,16 +33,10 @@ export default async function StudioProductsPage() {
     (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-xl font-bold text-[--text]">Mis productos</h1>
-        <Link
-          href="/studio/products/new"
-          className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#2d4a3f]"
-        >
-          <Plus size={14} />
-          Nueva pieza
-        </Link>
+    <main className="bg-[--bg]">
+      <div className="px-4 py-8">
+      <div className="mb-6">
+        <h1 className="font-display text-xl font-bold text-[--text]">Productos</h1>
       </div>
 
       {products.length === 0 ? ( //Si no se han publicado productos muestra un mensaje indicándolo.
@@ -51,7 +44,7 @@ export default async function StudioProductsPage() {
           <p className="text-[--text-muted]">Aún no has publicado ninguna pieza.</p>
           <Link
             href="/studio/products/new"
-            className="rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#2d4a3f]"
+            className="rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
           >
             Publica tu primera pieza
           </Link>
@@ -93,6 +86,7 @@ export default async function StudioProductsPage() {
           ))}
         </div>
       )}
+      </div>
     </main>
   );
 }

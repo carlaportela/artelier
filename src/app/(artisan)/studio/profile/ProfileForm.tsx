@@ -1,3 +1,5 @@
+//Formulario para editar el perfil del artesano en su estudio. Permite subir foto de perfil y banner, además de editar su información personal.
+
 "use client";
 
 import { useTransition, useState } from "react";
@@ -5,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
+import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
@@ -12,6 +15,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { saveProfile } from "./actions";
 
+//Esquema de validación para el formulario de edición de perfil.
 const schema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
   bio: z.string().trim().max(150, "La bio no puede superar 150 caracteres"),
@@ -21,6 +25,7 @@ const schema = z.object({
 });
 type FormInput = z.infer<typeof schema>;
 
+//Argumentos que recibe la función principal del componente.
 interface ProfileFormProps {
   user: {
     name: string | null;
@@ -31,6 +36,7 @@ interface ProfileFormProps {
   };
 }
 
+//Función principal que renderiza el formulario. Permite subir foto de perfil y banner, editar nombre, bio y localidad. Muestra mensajes de error en caso de validación fallida o error en la subida de imágenes, y un mensaje de éxito al guardar cambios.
 export default function ProfileForm({ user }: ProfileFormProps) {
   const t = useTranslations("profile");
   const [isPending, startTransition] = useTransition();
@@ -53,6 +59,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     mode: "onBlur",
   });
 
+  //Función para manejar la subida de la imagen. Envía el archivo al endpoint de Cloudinary y actualiza el estado con la URL de la imagen subida.
   async function handleImageUpload(
     file: File,
     type: "avatar" | "banner",
@@ -78,6 +85,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     }
   }
 
+  //Función que se ejecuta al enviar el formulario para guardar los cambios en el perfil.
   function onSubmit(data: FormInput) {
     startTransition(async () => {
       const result = await saveProfile({ ...data, image: avatarUrl, bannerImage: bannerUrl });
@@ -102,8 +110,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           id="banner-upload"
           type="file"
           accept="image/*"
-          aria-label="Subir imagen de portada"
-          className="text-sm text-[--text-muted]"
+          className="sr-only"
           disabled={uploadingBanner}
           onChange={async (e) => {
             const file = e.target.files?.[0];
@@ -116,6 +123,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             setUploadingBanner(false);
           }}
         />
+        <label
+          htmlFor="banner-upload"
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploadingBanner ? "cursor-not-allowed opacity-50" : ""}`}
+        >
+          <Upload size={13} />
+          {uploadingBanner ? "Subiendo..." : bannerUrl ? "Cambiar portada" : "Subir portada"}
+        </label>
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
@@ -131,8 +145,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           id="avatar-upload"
           type="file"
           accept="image/*"
-          aria-label="Subir foto de perfil"
-          className="text-sm text-[--text-muted]"
+          className="sr-only"
           disabled={uploadingAvatar}
           onChange={async (e) => {
             const file = e.target.files?.[0];
@@ -145,13 +158,20 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             setUploadingAvatar(false);
           }}
         />
+        <label
+          htmlFor="avatar-upload"
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploadingAvatar ? "cursor-not-allowed opacity-50" : ""}`}
+        >
+          <Upload size={13} />
+          {uploadingAvatar ? "Subiendo..." : avatarUrl ? "Cambiar foto" : "Subir foto de perfil"}
+        </label>
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
       {/* Nombre */}
       <div className="space-y-1">
         <Label htmlFor="name">Nombre</Label>
-        <Input id="name" {...form.register("name")} />
+        <Input id="name" className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0" {...form.register("name")} />
         {form.formState.errors.name && (
           <p className="text-sm text-red-600">{form.formState.errors.name.message}</p>
         )}
@@ -165,7 +185,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           rows={3}
           maxLength={150}
           placeholder={t("bioPlaceholder")}
-          className="w-full rounded-md border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-2 focus:ring-[--primary]"
+          className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           {...form.register("bio")}
         />
         <p className="text-right text-xs text-[--text-muted]">
@@ -179,13 +199,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       {/* Localidad */}
       <div className="space-y-1">
         <Label htmlFor="locality">Localidad</Label>
-        <Input id="locality" {...form.register("locality")} />
+        <Input id="locality" className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0" {...form.register("locality")} />
         {form.formState.errors.locality && (
           <p className="text-sm text-red-600">{form.formState.errors.locality.message}</p>
         )}
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPending || uploadingAvatar || uploadingBanner}>
+      <Button type="submit" className="w-full cursor-pointer hover:bg-[#4a6b5e]" disabled={isPending || uploadingAvatar || uploadingBanner}>
         {isPending ? "Guardando..." : saved ? t("profileSaved") : t("saveChanges")}
       </Button>
     </form>
