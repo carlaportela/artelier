@@ -38,7 +38,7 @@ export default function DeleteAccountForm() {
         <Button
           type="button"
           onClick={() => setOpen(true)}
-          className="rounded-full bg-red-700 px-5 py-2 text-sm font-medium text-white hover:bg-red-800"
+          className="rounded-full bg-red-700 px-5 py-2 text-sm font-medium text-white hover:bg-red-600"
         >
           {t("deleteAccount")}
         </Button>
@@ -63,7 +63,7 @@ export default function DeleteAccountForm() {
               type="button"
               onClick={handleDelete}
               disabled={isPending || !password}
-              className="rounded-full bg-red-600 px-5 py-2 text-sm font-medium text-white hover:bg-red-700"
+              className="rounded-full bg-red-600 hover:bg-red-500"
             >
               {isPending ? "Eliminando..." : t("deleteAccount")}
             </Button>

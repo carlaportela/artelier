@@ -1,9 +1,14 @@
-"use client";
+//Componente de encabezado del perfil del artesano.
+//Muestra banner, avatar, nombre, localidad, biografía y sellos de calidad. También incluye el botón de seguir perfil.
+
+"use client";//Se renderiza en cliente.
 
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import FollowButton from "~/components/artisan/FollowButton";
+import PaletteAvatar from "~/components/PaletteAvatar";
 
+//Clases de estilo para los diferentes tipos de sellos de perfil.
 const SEAL_CLASS: Record<string, string> = {
   mano:      "seal-mano",
   eco:       "seal-eco",
@@ -12,6 +17,7 @@ const SEAL_CLASS: Record<string, string> = {
   km0:       "seal-km0",
 };
 
+//Argumentos que recibe la función del componente.
 interface ArtisanHeaderProps {
   artisan: {
     id: string;
@@ -25,10 +31,13 @@ interface ArtisanHeaderProps {
   isFollowing: boolean;
   canFollow: boolean;
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
+  studioMode?: boolean;
 }
 
-export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests }: ArtisanHeaderProps) {
+//Función del componente que renderiza el encabezado del perfil del artesano.
+export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests, studioMode = false }: ArtisanHeaderProps) {
   const initial = artisan.name?.charAt(0).toUpperCase() ?? "A";
+  const firstName = artisan.name?.split(" ")[0] ?? "artesana";
 
   return (
     <div className="relative">
@@ -49,47 +58,17 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
       <div className="mx-auto max-w-lg px-4">
         <div className="relative -mt-8 flex items-end justify-between">
 
-          {/* Avatar: foto → circular; sin foto → forma paleta de pintar */}
-          {artisan.image ? (
-            <div className="relative h-20 w-20 overflow-hidden rounded-full">
-              <Image
-                src={artisan.image}
-                alt={artisan.name ?? "Artesana"}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ) : (
-            <svg
-              viewBox="0 0 24 24"
-              className="h-20 w-20"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label={artisan.name ?? "Artesana"}
-            >
-              {/* Forma de paleta de Lucide sin los puntitos de pintura */}
-              <path
-                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                fill="#3d5a4f"
-                fillOpacity={0.55}
-              />
-              {/* Inicial centrada en el cuerpo circular de la paleta */}
-              <text
-                x="12"
-                y="12"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#3d5a4f"
-                fontSize="7"
-                fontFamily="The Girl Next Door, cursive"
-              >
-                {initial}
-              </text>
-            </svg>
+          {/* Avatar: izquierda en modo público, derecha en modo studio */}
+          {!studioMode && (
+            <PaletteAvatar src={artisan.image} name={artisan.name} className="h-20 w-20" />
           )}
 
-          {!isOwnProfile && canFollow && (
-            <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
+          {studioMode ? (
+            <PaletteAvatar src={artisan.image} name={artisan.name} className="h-20 w-20" />
+          ) : (
+            !isOwnProfile && canFollow && (
+              <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
+            )
           )}
         </div>
 

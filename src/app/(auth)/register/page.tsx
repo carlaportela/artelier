@@ -13,6 +13,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { registerSchema, type RegisterInput } from "~/lib/validations/auth";
 import { registerUser } from "./actions";
+import LocalidadSelect from "~/components/LocalidadSelect";
 
 function RoleSelector({
   onSelect,
@@ -166,18 +167,13 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="locality">{t("locality")}</Label>
-          <Input
-            id="locality"
-            type="text"
-            placeholder="Ej: Santiago de Compostela"
-            {...form.register("locality")}
+          <Label>{t("locality")}</Label>
+          <LocalidadSelect
+            value={form.watch("locality")}
+            onChange={(val) => form.setValue("locality", val, { shouldValidate: true })}
+            error={form.formState.errors.locality?.message}
+            inputClassName="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none transition-colors focus-visible:border-ring md:text-sm"
           />
-          {form.formState.errors.locality && (
-            <p className="text-sm text-red-600">
-              {form.formState.errors.locality.message}
-            </p>
-          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isPending}>
