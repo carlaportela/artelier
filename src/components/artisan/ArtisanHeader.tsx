@@ -56,14 +56,14 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
       </div>
 
       {/* ── Avatar + FollowButton ── */}
-      <div className="px-4 md:px-6">
-        <div className="relative -mt-12 flex items-end justify-between md:-mt-16 lg:-mt-20">
+      <div className="px-2">
+        <div className="relative -mt-[79px] flex items-end justify-between">
           {/* Avatar: izquierda en modo público */}
           {!studioMode && (
             <PaletteAvatar
               src={artisan.image}
               name={artisan.name}
-              className="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40"
+              className="h-40 w-40"
             />
           )}
 
@@ -71,7 +71,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             <PaletteAvatar
               src={artisan.image}
               name={artisan.name}
-              className="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40"
+              className="h-40 w-40"
             />
           ) : isOwnProfile ? (
             <Link
@@ -89,8 +89,8 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
         </div>
 
         {/* ── Info ── */}
-        <div className="mt-3 space-y-1.5">
-          <h1 className="font-display text-xl font-bold text-[--text] md:text-2xl">
+        <div className="mt-4 w-full space-y-2 pl-3">
+          <h1 className="font-display text-xl font-bold text-[--text]">
             {artisan.name ?? "Artesana"}
           </h1>
           {artisan.locality && (
@@ -112,7 +112,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             </div>
           )}
           {artisan.bio && (
-            <p className="mt-1 text-sm text-[--text-muted] md:max-w-2xl">{artisan.bio}</p>
+            <p className="line-clamp-3 text-sm text-[--text-muted]">{artisan.bio}</p>
           )}
         </div>
       </div>

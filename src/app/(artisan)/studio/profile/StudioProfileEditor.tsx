@@ -181,7 +181,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           {/* Vista previa — se oculta mientras se edita para evitar duplicados */}
           {!isEditing && (
             <>
-              <h2 className="font-display text-xl text-[--text]">
+              <h2 className="font-display text-xl font-bold text-[--text]">
                 {name || <span className="text-[--text-muted]">Sin nombre</span>}
               </h2>
               {locality && (
