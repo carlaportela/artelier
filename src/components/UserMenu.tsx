@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { logoutUser } from "~/app/(auth)/logout/actions";
-import { Eye, LogOut, Package, TrendingUp, User } from "lucide-react";
+import { Eye, LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -92,6 +92,27 @@ export default function UserMenu({ name, image, role, userId, profileHref }: Pro
               {divider}
             </>
           )}
+
+          {/* Enlaces legales — uno por línea, sección propia */}
+          {[
+            { href: "/quienes-somos", label: "Quiénes somos", Icon: Users     },
+            { href: "/aviso-legal",   label: "Aviso legal",   Icon: FileText  },
+            { href: "/privacidad",    label: "Privacidad",    Icon: Shield    },
+            { href: "/cookies",       label: "Cookies",       Icon: Cookie    },
+            { href: "/contacto",      label: "Contacto",      Icon: Mail      },
+          ].map(({ href, label, Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={close}
+              className="flex cursor-pointer items-center gap-2.5 px-4 py-2 text-sm text-[--text-muted] transition-colors hover:text-[#c4956a]"
+            >
+              <Icon size={14} className="shrink-0" />
+              {label}
+            </Link>
+          ))}
+
+          {divider}
 
           <form action={logoutUser} className="contents">
             <button type="submit" className={`${linkClass} w-full`}>

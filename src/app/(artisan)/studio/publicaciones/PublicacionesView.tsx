@@ -71,6 +71,7 @@ function PublicacionForm({
             <Image src={imageUrl} alt="Preview" fill className="object-cover" />
             <button
               type="button"
+              aria-label="Eliminar imagen"
               onClick={() => setImageUrl("")}
               className="absolute right-2 top-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white transition-opacity hover:opacity-80"
             >
@@ -160,6 +161,8 @@ function Sheet({
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-display text-lg text-[--text]">{title}</h2>
           <button
+            type="button"
+            aria-label="Cerrar"
             onClick={onClose}
             className="cursor-pointer text-[--text-muted] transition-colors hover:text-[--text]"
           >
@@ -352,6 +355,8 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
               <div className="relative aspect-square w-full">
                 <Image src={viewPost.imageUrl} alt="" fill className="object-cover" />
                 <button
+                  type="button"
+                  aria-label="Cerrar"
                   onClick={() => { setViewPost(null); setConfirmDeleteId(null); }}
                   className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white transition-opacity hover:opacity-80"
                 >

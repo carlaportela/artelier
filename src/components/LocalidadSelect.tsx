@@ -168,10 +168,11 @@ export default function LocalidadSelect({
         spellCheck={false}
         aria-label="Ubicación"
         role="combobox"
-        aria-expanded={Boolean(abierto)}
+        aria-expanded={abierto}
         aria-controls="localidad-listbox"
         aria-autocomplete="list"
         aria-haspopup="listbox"
+        aria-activedescendant={activo >= 0 ? `localidad-option-${activo}` : undefined}
       />
 
       {abierto && sugerencias.length > 0 && (
@@ -186,8 +187,9 @@ export default function LocalidadSelect({
             return (
               <li
                 key={`${item.provincia}-${item.municipio}`}
+                id={`localidad-option-${i}`}
                 role="option"
-                aria-selected={Boolean(isActive)}
+                aria-selected={isActive}
                 onMouseDown={(e) => {
                   // preventDefault evita que el input pierda el foco antes de que
                   // se procese este click, lo que abortaría el handleBlur prematuro.
