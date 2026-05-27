@@ -36,13 +36,11 @@ interface ArtisanHeaderProps {
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
 export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests, studioMode = false }: ArtisanHeaderProps) {
-  const initial = artisan.name?.charAt(0).toUpperCase() ?? "A";
-  const firstName = artisan.name?.split(" ")[0] ?? "artesana";
 
   return (
     <div className="relative">
-      {/* Banner con logo de Artelier centrado — como una artesana en el mercado */}
-      <div className="relative h-[100px] w-full overflow-hidden bg-[--surface] md:h-[120px]">
+      {/* ── Banner ── */}
+      <div className="relative h-[155px] w-full overflow-hidden bg-[--surface] md:h-[175px]">
         {artisan.bannerImage && (
           <Image
             src={artisan.bannerImage}
@@ -52,19 +50,28 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             priority
           />
         )}
+        {/* Fondo de textura si no hay imagen */}
+        {!artisan.bannerImage && <div className="banner-lino h-full w-full" />}
       </div>
 
-      {/* Avatar superpuesto */}
-      <div className="mx-auto max-w-lg px-4">
-        <div className="relative -mt-8 flex items-end justify-between">
-
-          {/* Avatar: izquierda en modo público, derecha en modo studio */}
+      {/* ── Avatar + FollowButton ── */}
+      <div className="px-4 md:px-6">
+        <div className="relative -mt-12 flex items-end justify-between md:-mt-16 lg:-mt-20">
+          {/* Avatar: izquierda en modo público */}
           {!studioMode && (
-            <PaletteAvatar src={artisan.image} name={artisan.name} className="h-20 w-20" />
+            <PaletteAvatar
+              src={artisan.image}
+              name={artisan.name}
+              className="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40"
+            />
           )}
 
           {studioMode ? (
-            <PaletteAvatar src={artisan.image} name={artisan.name} className="h-20 w-20" />
+            <PaletteAvatar
+              src={artisan.image}
+              name={artisan.name}
+              className="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40"
+            />
           ) : (
             !isOwnProfile && canFollow && (
               <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
@@ -72,13 +79,13 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
           )}
         </div>
 
-        {/* Info */}
-        <div className="mt-3 space-y-1">
-          <h1 className="font-display text-xl font-bold text-[--text]">
+        {/* ── Info ── */}
+        <div className="mt-3 space-y-1.5">
+          <h1 className="font-display text-xl font-bold text-[--text] md:text-2xl">
             {artisan.name ?? "Artesana"}
           </h1>
           {artisan.locality && (
-            <p className="flex items-center gap-1 text-base font-medium text-[#3d5a4f]">
+            <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
               <MapPin size={12} />
               {artisan.locality}
             </p>
@@ -96,7 +103,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             </div>
           )}
           {artisan.bio && (
-            <p className="mt-2 line-clamp-3 text-sm text-[--text-muted]">{artisan.bio}</p>
+            <p className="mt-1 text-sm text-[--text-muted] md:max-w-2xl">{artisan.bio}</p>
           )}
         </div>
       </div>
