@@ -163,7 +163,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploadingAvatar ? "cursor-not-allowed opacity-50" : ""}`}
         >
           <Upload size={13} />
-          {uploadingAvatar ? "Subiendo..." : avatarUrl ? "Cambiar foto" : "Subir foto de perfil"}
+          {uploadingAvatar ? "Subiendo..." : avatarUrl ? "Cambiar imagen" : "Subir imagen de perfil"}
         </label>
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>

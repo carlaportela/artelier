@@ -40,6 +40,11 @@ export default async function StudioProfilePage() {
 
   return (
     <main className="bg-[--bg]">
+      {/* ── Título de sección ── */}
+      <div className="px-4 pt-8 pb-4">
+        <h1 className="font-display text-xl font-bold text-[--text]">Mi perfil</h1>
+      </div>
+
       {/* ── Perfil público ── */}
       <StudioProfileEditor user={user} sealRequests={sealRequests} />
 

@@ -36,7 +36,7 @@ export default async function StudioProductsPage() {
     <main className="bg-[--bg]">
       <div className="px-4 py-8">
       <div className="mb-6">
-        <h1 className="font-display text-xl font-bold text-[--text]">Productos</h1>
+        <h1 className="font-display text-xl font-bold text-[--text]">Mi catálogo</h1>
       </div>
 
       {products.length === 0 ? ( //Si no se han publicado productos muestra un mensaje indicándolo.
@@ -67,7 +67,7 @@ export default async function StudioProductsPage() {
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-[--surface-2]">
-                    <span className="text-xs text-[--text-muted]">Sin foto</span>
+                    <span className="text-xs text-[--text-muted]">Sin imagen</span>
                   </div>
                 )}
                 {product.status === "SOLD" && (

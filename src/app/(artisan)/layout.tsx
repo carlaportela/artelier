@@ -3,16 +3,15 @@
 import AppHeader from "~/components/AppHeader";
 import ArtisanBottomNav from "~/components/ArtisanBottomNav";
 
+// El scroll ocurre en el body (un solo scrollbar). AppHeader es sticky y ArtisanBottomNav es fixed.
 export default function ArtisanLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col h-full">
+    <>
       <AppHeader />
-      <div className="flex-1 overflow-y-auto min-h-0 pb-16">
-        <div className="mx-auto w-full max-w-lg md:max-w-2xl lg:max-w-4xl">
-          {children}
-        </div>
+      <div className="mx-auto w-full max-w-lg pb-16 md:max-w-2xl lg:max-w-4xl">
+        {children}
       </div>
       <ArtisanBottomNav />
-    </div>
+    </>
   );
 }

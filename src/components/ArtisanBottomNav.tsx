@@ -23,7 +23,7 @@ function NavItem({
       href={href}
       aria-label={label}
       className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center transition-colors ${
-        active ? "text-[#c4956a]" : "text-[--text-muted] hover:text-[--text]"
+        active ? "text-[#c4956a]" : "text-[--text-muted] hover:text-[#c4956a]"
       }`}
     >
       <Icon size={24} strokeWidth={active ? 2 : 1.5} />
@@ -53,7 +53,11 @@ export default function ArtisanBottomNav() {
         <Link
           href="/studio/products/new"
           aria-label="Publicar producto"
-          className="-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-transform hover:scale-105 active:scale-95"
+          className={`-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:scale-110 active:scale-95 ${
+            pathname.startsWith("/studio/products/new")
+              ? "bg-[#c4956a]"
+              : "bg-[#3d5a4f] hover:bg-[#c4956a]"
+          }`}
         >
           <Plus size={24} />
         </Link>

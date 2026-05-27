@@ -14,7 +14,7 @@ const createProductSchema = z.object({
   description: z.string().trim().max(280, "La descripción no puede superar 280 caracteres"),
   priceInCents: z.number().int().min(1, "El precio debe ser mayor que 0"),
   type: z.enum(["UNIQUE", "PERISHABLE", "STANDARD"]),
-  imageUrls: z.array(z.string().url()).min(1, "Añade al menos una foto").max(3, "Máximo 3 fotos"),
+  imageUrls: z.array(z.string().url()).min(1, "Añade al menos una imagen").max(7, "Máximo 7 imágenes"),
   category: z.string().trim().min(1, "Selecciona una categoría"),
   expiresAt: z.string().optional(),
 });

@@ -20,7 +20,7 @@ export default async function PublicacionesPage() {
   return (
     <main className="bg-[--bg]">
       <div className="space-y-6 px-4 py-8">
-        <h1 className="font-display text-2xl font-bold text-[--text]">Publicaciones</h1>
+        <h1 className="font-display text-xl font-bold text-[--text]">Mis publicaciones</h1>
         <PublicacionesView posts={posts} />
       </div>
     </main>

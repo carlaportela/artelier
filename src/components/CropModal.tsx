@@ -162,7 +162,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className={`w-full ${aspectRatio >= 2 ? "max-w-md" : "max-w-sm"} rounded-2xl bg-[#f4f0e8] p-6 shadow-2xl`}>
         <h2 className="mb-4 font-display text-lg font-bold text-[--text]">
-          Encuadra tu {label}
+          Encuadra {label}
         </h2>
 
         {/* Recuadro de recorte */}

@@ -19,7 +19,7 @@ export default async function MensajesPage() {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3d5a4f]/10">
           <MessageCircle size={28} className="text-[#3d5a4f]" />
         </div>
-        <h1 className="font-display text-2xl font-bold text-[--text]">Mensajes</h1>
+        <h1 className="font-display text-xl font-bold text-[--text]">Mis mensajes</h1>
         <p className="max-w-xs text-sm text-[--text-muted]">
           Aquí podrás comunicarte directamente con tus clientes: consultas, pedidos personalizados y seguimiento de envíos.
           <br /><br />

@@ -157,12 +157,12 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
               type="button"
               onClick={() => setOptionsOpen("avatar")}
               disabled={uploadingAvatar}
-              aria-label="Editar foto de perfil"
+              aria-label="Editar imagen de perfil"
               className="absolute bottom-10 right-5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
             >
               {uploadingAvatar ? <Loader2 size={14} className="animate-spin" /> : <Pencil size={14} />}
             </button>
-            <input ref={avatarRef} type="file" accept="image/*" aria-label="Subir foto de perfil"
+            <input ref={avatarRef} type="file" accept="image/*" aria-label="Subir imagen de perfil"
               className="sr-only" disabled={uploadingAvatar}
               onChange={(e) => {
                 const f = e.target.files?.[0];
@@ -177,9 +177,9 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           {uploadError && (
             <p className="text-xs text-red-600">⚠ {uploadError}</p>
           )}
-          <h1 className="font-display text-xl font-bold text-[--text]">
+          <h2 className="font-display text-xl text-[--text]">
             {name || <span className="text-[--text-muted]">Sin nombre</span>}
-          </h1>
+          </h2>
           {locality && (
             <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
               <MapPin size={12} />
@@ -281,7 +281,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           onClick={(e) => e.stopPropagation()}
         >
           <h2 className="mb-4 font-display text-base font-bold text-[--text]">
-            {optionsOpen === "avatar" ? "Foto de perfil" : "Foto de portada"}
+            {optionsOpen === "avatar" ? "Imagen de perfil" : "Imagen de portada"}
           </h2>
           <div className="flex flex-col gap-2">
             <button
@@ -323,7 +323,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         file={cropState.file}
         aspectRatio={cropState.type === "banner" ? 3 : 1}
         shape={cropState.type === "banner" ? "rect" : "circle"}
-        label={cropState.type === "banner" ? "foto de portada" : "foto de perfil"}
+        label={cropState.type === "banner" ? "tu imagen de portada" : "tu imagen de perfil"}
         onConfirm={(blob) => {
           const ext = "jpeg";
           const file = new File([blob], `${cropState.type}.${ext}`, { type: "image/jpeg" });

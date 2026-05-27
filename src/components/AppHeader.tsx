@@ -18,7 +18,7 @@ export default async function AppHeader() {
     : "/";
 
   return (
-    <header className="shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
+    <header className="sticky top-0 shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
       <div className="mx-auto grid h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl grid-cols-[1fr_auto_1fr] items-center px-4">
 
         {/* Columna izquierda — vacía, misma anchura que la derecha para centrar el logo */}
@@ -33,7 +33,7 @@ export default async function AppHeader() {
         <div className="flex items-center justify-end gap-3">
           {user ? (
             <>
-              <span className="font-display text-xl leading-none translate-y-0.5 text-[--text]">
+              <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-[--text]">
                 ¡Hola {user.name?.split(" ")[0]}!
               </span>
               <UserMenu
