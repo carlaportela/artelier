@@ -3,8 +3,9 @@
 
 "use client";//Se renderiza en cliente.
 
+import Link from "next/link";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { ArrowLeft, MapPin } from "lucide-react";
 import FollowButton from "~/components/artisan/FollowButton";
 import PaletteAvatar from "~/components/PaletteAvatar";
 
@@ -72,8 +73,16 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
               name={artisan.name}
               className="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40"
             />
+          ) : isOwnProfile ? (
+            <Link
+              href="/studio/profile"
+              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+            >
+              <ArrowLeft size={13} />
+              Volver a mi perfil
+            </Link>
           ) : (
-            !isOwnProfile && canFollow && (
+            canFollow && (
               <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
             )
           )}

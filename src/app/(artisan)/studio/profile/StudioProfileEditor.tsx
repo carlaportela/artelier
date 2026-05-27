@@ -172,47 +172,48 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           </div>
         </div>
 
-        {/* ── Info (siempre visible) ── */}
+        {/* ── Info ── */}
         <div className="mt-4 space-y-2 w-full pl-3">
           {uploadError && (
             <p className="text-xs text-red-600">⚠ {uploadError}</p>
           )}
-          <h2 className="font-display text-xl text-[--text]">
-            {name || <span className="text-[--text-muted]">Sin nombre</span>}
-          </h2>
-          {locality && (
-            <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
-              <MapPin size={12} />
-              {locality}
-            </p>
-          )}
-          {sealRequests.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {sealRequests.map((sr) => (
-                <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-[--surface] text-[--text-muted]"}`}>
-                  {sr.seal.name}
-                </span>
-              ))}
-            </div>
-          )}
-          {bio && <p className="line-clamp-3 text-sm text-[--text-muted]">{bio}</p>}
-          {saved && <p className="text-xs text-[#3d5a4f]">✓ Cambios guardados</p>}
 
-          {/* Botón Editar perfil — siempre visible, activo cuando isEditing */}
-          <div className="pt-1">
-            <button
-              type="button"
-              onClick={() => { if (!isEditing) setIsEditing(true); }}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
-                isEditing
-                  ? "cursor-default bg-[#3d5a4f] opacity-60 shadow-inner"
-                  : "cursor-pointer bg-[#3d5a4f] hover:bg-[#4a6b5e] transition-colors"
-              }`}
-            >
-              <Pencil size={12} />
-              Editar perfil
-            </button>
-          </div>
+          {/* Vista previa — se oculta mientras se edita para evitar duplicados */}
+          {!isEditing && (
+            <>
+              <h2 className="font-display text-xl text-[--text]">
+                {name || <span className="text-[--text-muted]">Sin nombre</span>}
+              </h2>
+              {locality && (
+                <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
+                  <MapPin size={12} />
+                  {locality}
+                </p>
+              )}
+              {sealRequests.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {sealRequests.map((sr) => (
+                    <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-[--surface] text-[--text-muted]"}`}>
+                      {sr.seal.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {bio && <p className="line-clamp-3 text-sm text-[--text-muted]">{bio}</p>}
+              {saved && <p className="text-xs text-[#3d5a4f]">✓ Cambios guardados</p>}
+
+              <div className="pt-1">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                >
+                  <Pencil size={12} />
+                  Editar perfil
+                </button>
+              </div>
+            </>
+          )}
 
           {/* Formulario de edición — se expande al activar */}
           {isEditing && (

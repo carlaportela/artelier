@@ -71,6 +71,11 @@ export default async function ArtisanPublicPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[--bg]">
+      {isOwnProfile && (
+        <div className="px-4 pt-8 pb-4">
+          <h1 className="font-display text-xl font-bold text-[--text]">Tu puesto de artesanía</h1>
+        </div>
+      )}
       <ArtisanHeader
         artisan={artisan}
         isOwnProfile={isOwnProfile}
