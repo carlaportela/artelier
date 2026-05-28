@@ -41,11 +41,11 @@ const PERISHABLE_CATEGORIES: readonly string[] = ["Alimentación", "Perfumería 
 const PRODUCT_TYPES = [
   { value: "UNIQUE", label: "Única pieza" },
   { value: "PERISHABLE", label: "Perecedero" },
-  { value: "STANDARD", label: "Estándar" },
+  { value: "STANDARD", label: "Otro" },
 ] as const;
 
-//Número máximo de imágenes por producto: 1 portada grande + 2 filas de 3 imágenes secundarias.
-const MAX_IMAGES = 7;
+//Número máximo de imágenes por producto: 1 portada 2×2 + 2 laterales + 3 en fila inferior.
+const MAX_IMAGES = 6;
 
 //Descripciones para cada tipo de producto, que se muestran en la interfaz para ayudar a las artesanas a elegir el tipo correcto.
 const TYPE_DESCRIPTIONS: Record<"UNIQUE" | "PERISHABLE" | "STANDARD", string> = {
@@ -132,34 +132,36 @@ function SortablePhoto({
       style={{ transform: CSS.Transform.toString(transform), transition, zIndex: isDragging ? 10 : undefined }}
       {...attributes}
       {...listeners}
-      className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-3" : ""}${isDragging ? " opacity-70 ring-2 ring-[#3d5a4f]" : ""}`}
+      className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-2 row-span-2" : ""}${isDragging ? " opacity-70 ring-2 ring-[#3d5a4f]" : ""}`}
     >
       <Image
         src={url}
         alt={isHero ? "Imagen de portada" : `Imagen ${index + 1}`}
         fill
         className="object-cover"
-        sizes={isHero ? "(max-width: 640px) 100vw, 512px" : "33vw"}
+        sizes={isHero ? "(max-width: 640px) 67vw, 340px" : "33vw"}
       />
       <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/30" />
-      <button
-        type="button"
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); onEdit(); }}
-        aria-label="Editar encuadre"
-        className="absolute right-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
-      >
-        <Pencil size={13} />
-      </button>
-      <button
-        type="button"
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={(e) => { e.stopPropagation(); onRemove(); }}
-        aria-label="Eliminar imagen"
-        className="absolute left-1.5 top-1.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
-      >
-        <X size={13} />
-      </button>
+      <div className="absolute right-1.5 top-1.5 flex flex-row gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <button
+          type="button"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); onEdit(); }}
+          aria-label="Editar encuadre"
+          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-transparent bg-black/50 text-white transition-colors hover:border-white/40"
+        >
+          <Pencil size={13} />
+        </button>
+        <button
+          type="button"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          aria-label="Eliminar imagen"
+          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-transparent bg-black/50 text-white transition-colors hover:border-white/40"
+        >
+          <X size={13} />
+        </button>
+      </div>
       {isHero ? (
         <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-0.5 text-[11px] font-medium text-white">
           Portada
@@ -383,10 +385,10 @@ function DatePickerField({
             <div className="mt-2 border-t border-[--border] pt-2 text-right">
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={() => { onChange(""); setOpen(false); }}
                 className="cursor-pointer text-xs text-[--text-muted] transition-colors hover:text-[--text]"
               >
-                Cerrar
+                Borrar selección
               </button>
             </div>
           )}
@@ -413,6 +415,7 @@ export default function NewProductWizard() {
   const [cropQueue, setCropQueue] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [stepOneError, setStepOneError] = useState<string | null>(null); // P31: error de validación del paso 1
   const [isPending, setIsPending] = useState(false);
 
   const [name, setName] = useState("");
@@ -444,6 +447,10 @@ export default function NewProductWizard() {
     setCategory(newCategory);
     if (PERISHABLE_CATEGORIES.includes(newCategory)) {
       setType("PERISHABLE");
+    } else if (type === "PERISHABLE") {
+      // Si la nueva categoría ya no es perecedera, resetear el tipo
+      setType("STANDARD");
+      setExpiresAt("");
     }
   }
 
@@ -482,14 +489,22 @@ export default function NewProductWizard() {
           setImages((prev) => prev.map((img, i) => i === current.replacingIndex ? newEntry : img));
         } else {
           setImages((prev) => [...prev, newEntry]);
-          // Abre el siguiente de la cola si lo hay
-          const [next, ...remaining] = cropQueue;
-          if (next) { setCropQueue(remaining); setCropState({ file: next, replacingIndex: null }); }
+          setStepOneError(null); // P31: limpiar error de "sin fotos" al añadir la primera
+          // P4: lee la cola con updater funcional para evitar stale closure
+          setCropQueue((prev) => {
+            const [next, ...remaining] = prev;
+            if (next) setCropState({ file: next, replacingIndex: null });
+            return remaining;
+          });
         }
       } else {
+        // P5: vaciar la cola en caso de error para no abrir el siguiente modal
+        setCropQueue([]);
         setUploadError(json.error?.message ?? "Error al subir la imagen");
       }
     } catch {
+      // P5: vaciar la cola también si el fetch lanza
+      setCropQueue([]);
       setUploadError("Error de conexión al subir la imagen");
     }
 
@@ -542,6 +557,11 @@ export default function NewProductWizard() {
 
     setIsPending(false);
 
+    if (!result) {
+      toast.error("Algo fue mal. Inténtalo de nuevo.");
+      return;
+    }
+
     if (result?.error) {
       if (result.error.code === "VALIDATION_ERROR" && "fields" in result.error) {
         const fieldErrors: Record<string, string> = {};
@@ -574,7 +594,7 @@ export default function NewProductWizard() {
   // ─── Paso 1: fotos ────────────────────────────────────────────────────────
   if (step === 1) {
     return (
-      <main className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
+      <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
         <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
 
         <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes del producto</p>
@@ -587,8 +607,8 @@ export default function NewProductWizard() {
               - sensors detectan tanto el arrastre con ratón como con táctil, con activación tras cierta distancia o tiempo para evitar conflictos con clicks o taps normales.
               - collisionDetection determina cómo se detecta el elemento sobre el que se suelta la foto (decide cuando un item entras en una zona). 
         */}
-        {/* Grid con portada grande (col-span-3) + hasta 6 imágenes secundarias en filas de 3.
-              El primer elemento siempre es la portada: ocupa toda la fila y se muestra más grande.
+        {/* Grid mosaico: portada 2×2 (col-span-2 row-span-2) + 2 laterales a la derecha + 3 en fila inferior.
+              El primer elemento siempre es la portada.
               Al arrastrar cualquier imagen a la primera posición, pasa a ser portada automáticamente. */}
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={images.map((img) => img.url)} strategy={rectSortingStrategy}>
@@ -614,7 +634,7 @@ export default function NewProductWizard() {
                 return (
                   <label
                     key={`empty-${i}`}
-                    className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] transition-colors hover:border-[#3d5a4f]/50 hover:bg-[--surface-2]${isHero ? " col-span-3" : ""}`}
+                    className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] transition-colors hover:border-[#3d5a4f]/50 hover:bg-[--surface-2]${isHero ? " col-span-2 row-span-2" : ""}`}
                   >
                     <Plus size={isHero ? 32 : 22} className="text-[#3d5a4f]/60" />
                     <span className={`text-[--text-muted] ${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
@@ -638,7 +658,7 @@ export default function NewProductWizard() {
         
         <p className="text-center text-xs text-[--text-muted]">
           {images.length === 0
-            ? "Puedes subir hasta 7 imágenes en formato JPEG, PNG o WebP"
+            ? "Puedes subir hasta 6 imágenes en formato JPEG, PNG o WebP"
             : `${images.length}/${MAX_IMAGES} imagen${images.length > 1 ? "es" : ""} añadida${images.length > 1 ? "s" : ""} · Arrastra para reordenar`}
         </p>
 
@@ -646,12 +666,20 @@ export default function NewProductWizard() {
           <p className="text-center text-sm text-[--text-muted]">Subiendo imagen...</p>
         )}
         {uploadError && <p className="text-center text-sm text-red-600">{uploadError}</p>}
+        {stepOneError && <p className="text-center text-sm text-red-600">{stepOneError}</p>}
 
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => setStep(2)}
-            disabled={images.length === 0 || isUploading}
+            onClick={() => {
+              if (images.length === 0) {
+                setStepOneError("Añade al menos una imagen del producto para continuar.");
+                return;
+              }
+              setStepOneError(null);
+              setStep(2);
+            }}
+            disabled={isUploading}
             className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
           >
             Siguiente
@@ -676,13 +704,13 @@ export default function NewProductWizard() {
           onCancel={() => { setCropState(null); setCropQueue([]); }}
         />
       )}
-    </main>
+    </div>
     );
   }
 
   // ─── Paso 2: datos ────────────────────────────────────────────────────────
   return (
-    <main className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
+    <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
       <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
 
       <p className="text-sm text-[--text-muted]">Paso 2 de 2 — Completa los detalles</p>
@@ -735,7 +763,10 @@ export default function NewProductWizard() {
             <span
               className={`text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}
             >
-              {description.length}/280
+              {/* P27: mostrar restantes cuando queden ≤20 caracteres */}
+              {description.length > 260
+                ? `${280 - description.length} restantes`
+                : `${description.length}/280`}
             </span>
           </div>
           <textarea
@@ -790,7 +821,7 @@ export default function NewProductWizard() {
               id="expiresAt"
               value={expiresAt}
               onChange={setExpiresAt}
-              min={new Date().toISOString().split("T")[0]}
+              min={(() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; })()}
             />
             <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
               <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
@@ -819,6 +850,6 @@ export default function NewProductWizard() {
         </button>
       </div>
       </div>
-    </main>
+    </div>
   );
 }

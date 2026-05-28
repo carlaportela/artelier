@@ -45,7 +45,8 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   const [bannerUrl, setBannerUrl] = useState(user.bannerImage ?? "");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadAvatarError, setUploadAvatarError] = useState<string | null>(null); // P25
+  const [uploadBannerError, setUploadBannerError] = useState<string | null>(null); // P25
 
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
@@ -65,6 +66,8 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     type: "avatar" | "banner",
     onSuccess: (url: string) => void,
   ) {
+    // P25: setter específico según tipo para no mezclar errores de avatar y banner
+    const setError = type === "avatar" ? setUploadAvatarError : setUploadBannerError;
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", type);
@@ -72,16 +75,16 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) {
-        setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
+        setError("Error al subir la imagen. Inténtalo de nuevo.");
         return;
       }
       const json = await res.json() as { data?: { url: string } };
       if (json.data?.url) {
-        setUploadError(null);
+        setError(null);
         onSuccess(json.data.url);
       }
     } catch {
-      setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
+      setError("Error al subir la imagen. Inténtalo de nuevo.");
     }
   }
 
@@ -130,7 +133,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           <Upload size={13} />
           {uploadingBanner ? "Subiendo..." : bannerUrl ? "Cambiar portada" : "Subir portada"}
         </label>
-        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+        {uploadBannerError && <p className="text-sm text-red-600">{uploadBannerError}</p>}
       </div>
 
       {/* Avatar */}
@@ -165,7 +168,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           <Upload size={13} />
           {uploadingAvatar ? "Subiendo..." : avatarUrl ? "Cambiar imagen" : "Subir imagen de perfil"}
         </label>
-        {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
+        {uploadAvatarError && <p className="text-sm text-red-600">{uploadAvatarError}</p>}
       </div>
 
       {/* Nombre */}

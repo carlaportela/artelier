@@ -31,11 +31,10 @@ interface ArtisanHeaderProps {
   isFollowing: boolean;
   canFollow: boolean;
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
-  studioMode?: boolean;
 }
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
-export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests, studioMode = false }: ArtisanHeaderProps) {
+export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">
@@ -57,25 +56,16 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
       {/* ── Avatar + FollowButton ── */}
       <div className="px-2">
         <div className="relative -mt-[79px] flex items-end justify-between">
-          {/* Avatar: izquierda en modo público */}
-          {!studioMode && (
-            <PaletteAvatar
-              src={artisan.image}
-              name={artisan.name}
-              className="h-40 w-40"
-            />
-          )}
+          {/* Avatar siempre a la izquierda */}
+          <PaletteAvatar
+            src={artisan.image}
+            name={artisan.name}
+            className="h-40 w-40"
+          />
 
-          {studioMode ? (
-            <PaletteAvatar
-              src={artisan.image}
-              name={artisan.name}
-              className="h-40 w-40"
-            />
-          ) : (
-            !isOwnProfile && canFollow && (
-              <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
-            )
+          {/* FollowButton solo en perfil ajeno */}
+          {!isOwnProfile && canFollow && (
+            <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
           )}
         </div>
 

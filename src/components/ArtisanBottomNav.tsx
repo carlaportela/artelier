@@ -22,8 +22,12 @@ function NavItem({
     <Link
       href={href}
       aria-label={label}
+      aria-current={active ? "page" : undefined}
+      onClick={active ? (e) => e.preventDefault() : undefined}
       className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center transition-colors ${
-        active ? "text-[#c4956a]" : "text-[--text-muted] hover:text-[#c4956a]"
+        active
+          ? "cursor-default text-[#c4956a]"
+          : "cursor-pointer text-[--text-muted] hover:text-[#c4956a]"
       }`}
     >
       <Icon size={24} strokeWidth={active ? 2 : 1.5} />
@@ -53,10 +57,12 @@ export default function ArtisanBottomNav() {
         <Link
           href="/studio/products/new"
           aria-label="Publicar producto"
-          className={`-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md transition hover:scale-110 active:scale-95 ${
+          aria-current={pathname.startsWith("/studio/products/new") ? "page" : undefined}
+          onClick={pathname.startsWith("/studio/products/new") ? (e) => e.preventDefault() : undefined}
+          className={`-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md transition ${
             pathname.startsWith("/studio/products/new")
-              ? "bg-[#c4956a]"
-              : "bg-[#3d5a4f] hover:bg-[#c4956a]"
+              ? "cursor-default bg-[#c4956a]"
+              : "cursor-pointer bg-[#3d5a4f] hover:scale-110 hover:bg-[#c4956a] active:scale-95"
           }`}
         >
           <Plus size={24} />

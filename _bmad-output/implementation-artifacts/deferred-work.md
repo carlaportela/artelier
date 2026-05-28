@@ -51,3 +51,16 @@
 - **`isPending` no desactiva el botón de volver** — back button activo durante envío puede causar comportamiento confuso si el SA resuelve tras navegar; UX polish futuro
 - **Mensajes de error de Zod hardcodeados** — `passwordMin` y `localityRequired` en Zod schema no usan i18n; requiere patrón de mensajes dinámicos o schema factory; diferir a refactor de i18n completo
 - **`emailExists` hardcodeado en server action** — i18n en server actions requiere patrón diferente (no hooks); diferir a refactor de i18n server-side
+
+## Deferred from: code review de 2-1-publicar-un-producto-flujo-foto-primero (2026-05-28)
+
+- **W1 — Imágenes Cloudinary huérfanas al cancelar o quitar foto** — Cancel en paso 1/2 y `removeImage` no llaman a DELETE; las imágenes quedan en el bucket. Requiere endpoint `DELETE /api/upload` con cleanup, planificable en H2.2 (edición de productos).
+- **W2 — `imageUrls` acepta cualquier URL string** — Un cliente malicioso puede almacenar URLs externas como imágenes de producto. Requiere restricción de hostname Cloudinary en Zod (necesita `CLOUDINARY_URL` o `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` en env); decisión arquitectónica.
+- **W3 — SelectField sin navegación por teclado** — Dropdown custom `<ul>` sin `onKeyDown`; falla WCAG 2.1 SC 2.1.1. Requiere refactorización a Radix `Select` o implementación completa de pattern ARIA Listbox. Considerar en H2.2.
+- **W4 — Race condition `isFirstProduct`** — Dos envíos simultáneos pueden ver `count=0` y devolver `isFirstProduct=true` ambos. Consecuencia cosmética (toast doble). Solución: wrap en transacción DB o campo `firstProductAt` en User.
+- **W5 — Timer de blur en LocalidadSelect no se limpia en unmount** — `setTimeout` de 120ms sin ref; puede llamar a `setState` en componente ya desmontado. Solución: `useRef` para el timer + cleanup en `useEffect`.
+- **W6 — localStorage en PublicacionesView causa layout shift** — Preferencia grid/lista leída en `useEffect`; SSR renderiza "grid" siempre. Solución: cookie SSR-safe o `suppressHydrationWarning`.
+- **W7 — Año copyright en AppFooter estático** — `new Date().getFullYear()` en Server Component puede quedar obsoleto en páginas con ISR largo. Solución: revalidación diaria o prop externa.
+- **W8 — `dragStart` en CropModal obsoleto tras pinch** — Estado `offset` capturado en `onPointerDown` puede ser stale si pinch dispara `setOffset` entre eventos. Efecto: salto sutil al pasar de pinch a drag. Solución: ref para offset.
+- **W9 — `@ts-ignore` en PaletteAvatar sobre `<image>` SVG** — Suprime error sin investigar; la solución correcta es tipar via `React.SVGProps<SVGImageElement>`.
+- **W10 — `isoToDisplay` sin guard en input malformado** — Destructuring sin validar; actualmente segura en call sites, pero frágil para futuros usos.

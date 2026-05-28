@@ -53,10 +53,14 @@ function PublicacionForm({
       return;
     }
     startTransition(async () => {
-      if (initial) {
-        await updatePublicacion(initial.id, { content, imageUrl });
-      } else {
-        await createPublicacion({ content, imageUrl });
+      const result = initial
+        ? await updatePublicacion(initial.id, { content, imageUrl })
+        : await createPublicacion({ content, imageUrl });
+
+      if (result?.error) {
+        const firstError = Object.values(result.error).flat()[0];
+        setUploadError(firstError ?? "Algo fue mal. Inténtalo de nuevo.");
+        return;
       }
       onSuccess();
     });
@@ -98,7 +102,11 @@ function PublicacionForm({
           disabled={uploading}
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void handleUpload(file);
+            if (file) {
+              // P22: limpiar el valor para que onChange se dispare aunque se reseleccione el mismo archivo
+              e.target.value = "";
+              void handleUpload(file);
+            }
           }}
         />
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
@@ -351,7 +359,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
             className="w-full max-w-sm overflow-hidden rounded-2xl bg-[--bg]"
             onClick={(e) => e.stopPropagation()}
           >
-            {viewPost.imageUrl && (
+            {viewPost.imageUrl ? (
               <div className="relative aspect-square w-full">
                 <Image src={viewPost.imageUrl} alt="" fill className="object-cover" />
                 <button
@@ -359,6 +367,18 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                   aria-label="Cerrar"
                   onClick={() => { setViewPost(null); setConfirmDeleteId(null); }}
                   className="absolute right-3 top-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white transition-opacity hover:opacity-80"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ) : (
+              /* Sin imagen: botón de cierre visible en la esquina del card */
+              <div className="flex justify-end px-3 pt-3">
+                <button
+                  type="button"
+                  aria-label="Cerrar"
+                  onClick={() => { setViewPost(null); setConfirmDeleteId(null); }}
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-[--text-muted] transition-colors hover:bg-[--surface]"
                 >
                   <X size={16} />
                 </button>

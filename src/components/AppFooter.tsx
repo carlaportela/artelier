@@ -25,7 +25,7 @@ export default function AppFooter() {
           <span className="font-display text-lg text-[#3d5a4f]">Artelier</span>
         </Link>
 
-        {/* Enlances legales */}
+        {/* Enlaces legales */}
         <nav aria-label="Información legal" className="flex flex-wrap justify-center gap-x-5 gap-y-1.5">
           {LEGAL_LINKS.map(({ href, label }) => (
             <Link

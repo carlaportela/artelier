@@ -10,5 +10,5 @@ export default async function NewProductPage() {
   if (!session?.user) redirect("/login");
   if (session.user.role !== "ARTISAN") redirect("/feed");
 
-  return <NewProductWizard />;
+  return <main className="bg-[--bg]"><NewProductWizard /></main>;
 }

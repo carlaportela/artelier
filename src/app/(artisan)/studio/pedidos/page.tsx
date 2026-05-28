@@ -1,4 +1,4 @@
-//Página de mensajes del estudio del artesano.
+//Página de pedidos del estudio del artesano.
 
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";

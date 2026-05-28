@@ -1,8 +1,8 @@
-//Página de selecciñon de localidad con autocompletado y dropdown de sugerencias basado en la lista de ciudades y municipios de España.
+﻿//Página de selecciñon de localidad con autocompletado y dropdown de sugerencias basado en la lista de ciudades y municipios de España.
 
 "use client"; //Se renderiza en cliente
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { provincias } from "~/lib/data/localidades"; //Importa la lista de provincias y municipios desde un archivo local.
 
 // Lista plana generada una sola vez al cargar el módulo
@@ -14,7 +14,7 @@ const LOCALIDADES = provincias.flatMap((p) =>
 function norm(str: string) {
   return str
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "") // P30: escapes \u en vez de literales Unicode frágiles
     .toLowerCase()
     .trim();
 }
@@ -40,6 +40,12 @@ export default function LocalidadSelect({
   placeholder = "Ej: Santiago de Compostela, A Coruña",
   inputClassName,
 }: Props) {
+  // IDs únicos por instancia para que el ARIA combobox funcione si hay
+  // varios LocalidadSelect en la misma página al mismo tiempo.
+  const uid = useId();
+  const listboxId = `localidad-listbox-${uid}`;
+  const optionId = (i: number) => `localidad-option-${uid}-${i}`;
+
   const [text, setText] = useState(value);
   const [sugerencias, setSugerencias] = useState<typeof LOCALIDADES>([]);
   const [abierto, setAbierto] = useState(false);
@@ -64,13 +70,14 @@ export default function LocalidadSelect({
 
   // Cierra el dropdown al hacer click fuera del componente
   useEffect(() => {
-    function onClickOutside(e: MouseEvent) {
+    function onClickOutside(e: PointerEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setAbierto(false);
       }
     }
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
+    // pointerdown funciona tanto con ratón como con pantalla táctil
+    document.addEventListener("pointerdown", onClickOutside);
+    return () => document.removeEventListener("pointerdown", onClickOutside);
   }, []);
 
   //Función para que al escribir: actualiza texto y sugerencias, pero NO llama a onChange todavía.
@@ -138,7 +145,8 @@ export default function LocalidadSelect({
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (!abierto && sugerencias.length > 0) setAbierto(true);
+      if (sugerencias.length === 0) return; // P24: no mover índice si no hay sugerencias
+      if (!abierto) setAbierto(true);
       setActivo((prev) => Math.min(prev + 1, sugerencias.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -169,15 +177,15 @@ export default function LocalidadSelect({
         aria-label="Ubicación"
         role="combobox"
         aria-expanded={abierto}
-        aria-controls="localidad-listbox"
+        aria-controls={listboxId}
         aria-autocomplete="list"
         aria-haspopup="listbox"
-        aria-activedescendant={activo >= 0 ? `localidad-option-${activo}` : undefined}
+        aria-activedescendant={activo >= 0 ? optionId(activo) : undefined}
       />
 
       {abierto && sugerencias.length > 0 && (
         <ul
-          id="localidad-listbox"
+          id={listboxId}
           role="listbox"
           aria-label="Sugerencias de ubicación"
           className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-[#f4f0e8] shadow-lg"
@@ -187,7 +195,7 @@ export default function LocalidadSelect({
             return (
               <li
                 key={`${item.provincia}-${item.municipio}`}
-                id={`localidad-option-${i}`}
+                id={optionId(i)}
                 role="option"
                 aria-selected={isActive}
                 onMouseDown={(e) => {

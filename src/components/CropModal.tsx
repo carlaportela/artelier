@@ -1,7 +1,7 @@
 //Modal para recortar las imagenes de perfil y portada antes de subirlas.
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useId } from "react";
 
 //Argumentos que recibe el componente.
 interface Props {
@@ -17,7 +17,11 @@ interface Props {
 
 //Función principal. Permite cargar la imagen, mostrar un recuadro de recorte con la relación de aspecto adecuada, y aplicar zoom y desplazamiento para encuadrar la imagen antes de confirmarla.
 export default function CropModal({ file, aspectRatio, shape, label, onConfirm, onCancel }: Props) {
-  
+
+  // ID único por instancia para evitar colisión de SVG mask si hay dos modales abiertos
+  const uid = useId().replace(/:/g, "");
+  const maskId = `palette-crop-mask-${uid}`;
+
   // Portada (3:1) usa recuadro más ancho para que el modal no sea diminuto
   const cropW = aspectRatio >= 2 ? 370 : 280;
   const cropH = Math.round(cropW / aspectRatio);
@@ -70,7 +74,10 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
   // ── Drag ─────────────────────────────────────────────────────────────────
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
+    // P32: ignorar tercer dedo (o más) — evita salto al apoyar un dedo extra durante pinch
+    if (pointers.current.size >= 2) return;
+
+    e.currentTarget.setPointerCapture(e.pointerId);
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (pointers.current.size === 1) {
@@ -134,7 +141,8 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
     const canvas = document.createElement("canvas");
     canvas.width = outW;
     canvas.height = outH;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     // Posición de la imagen en el recuadro de recorte (px de pantalla)
     const renderedW = naturalSize.w * scale;
@@ -202,7 +210,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
                 style={{ width: cropW, height: cropH }}
               >
                 <defs>
-                  <mask id="palette-crop-mask">
+                  <mask id={maskId}>
                     <rect width="24" height="24" fill="white" />
                     <path
                       d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
@@ -211,7 +219,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
                   </mask>
                 </defs>
                 {/* Zona exterior → color de fondo del modal */}
-                <rect width="24" height="24" fill="#f4f0e8" mask="url(#palette-crop-mask)" />
+                <rect width="24" height="24" fill="#f4f0e8" mask={`url(#${maskId})`} />
                 {/* Borde sutil de la paleta */}
                 <path
                   d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"

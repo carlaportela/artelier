@@ -46,6 +46,21 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // P21: último estado guardado con éxito — Cancelar revierte a esto, no al prop original
+  const [lastSaved, setLastSaved] = useState({
+    name: user.name ?? "",
+    bio: user.bio ?? "",
+    locality: user.locality ?? "",
+  });
+
+  // P20: refs que siempre reflejan el valor actual, sin stale closure en funciones async
+  const nameRef = useRef(name);
+  const bioRef = useRef(bio);
+  const localityRef = useRef(locality);
+  nameRef.current = name;
+  bioRef.current = bio;
+  localityRef.current = locality;
+
   const [cropState, setCropState] = useState<{ file: File; type: "avatar" | "banner" } | null>(null);
   const [optionsOpen, setOptionsOpen] = useState<"avatar" | "banner" | null>(null);
 
@@ -70,7 +85,8 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         const nextBanner = type === "banner" ? newUrl : bannerUrl;
         if (type === "avatar") setAvatarUrl(newUrl);
         else setBannerUrl(newUrl);
-        await saveProfile({ name, bio, locality, image: nextAvatar, bannerImage: nextBanner });
+        // P20: leer desde refs para tener siempre el valor actual (evita stale closure en async)
+        await saveProfile({ name: nameRef.current, bio: bioRef.current, locality: localityRef.current, image: nextAvatar, bannerImage: nextBanner });
       } else {
         const msg = json.error?.message ?? "Error al subir la imagen";
         console.error("[upload]", json.error);
@@ -86,26 +102,47 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
   // ── Eliminar imagen ─────────────────────────────────────────────────────
 
   async function handleDelete(type: "avatar" | "banner") {
+    // Guardar URLs previas por si hay que revertir
+    const prevAvatar = avatarUrl;
+    const prevBanner = bannerUrl;
     const nextAvatar = type === "avatar" ? "" : avatarUrl;
     const nextBanner = type === "banner" ? "" : bannerUrl;
     if (type === "avatar") setAvatarUrl("");
     else setBannerUrl("");
-    await saveProfile({ name, bio, locality, image: nextAvatar, bannerImage: nextBanner });
+    try {
+      await saveProfile({ name, bio, locality, image: nextAvatar, bannerImage: nextBanner });
+    } catch {
+      // Revertir el estado visual si el servidor falló
+      if (type === "avatar") setAvatarUrl(prevAvatar);
+      else setBannerUrl(prevBanner);
+      setUploadError("No se pudo eliminar la imagen. Inténtalo de nuevo.");
+    }
   }
 
   // ── Guardar campos de texto ──────────────────────────────────────────────
 
   function handleSave() {
     setErrors({});
+    setUploadError(null);
     startTransition(async () => {
       const result = await saveProfile({ name, bio, locality, image: avatarUrl, bannerImage: bannerUrl });
-      if (result && "error" in result && result.error?.code === "VALIDATION_ERROR") {
-        const fields = (result.error as { code: string; fields: Record<string, string[]> }).fields;
-        const flat: Record<string, string> = {};
-        Object.entries(fields).forEach(([k, v]) => { if (v?.[0]) flat[k] = v[0]; });
-        setErrors(flat);
+      if (!result) {
+        setUploadError("Algo fue mal. Inténtalo de nuevo.");
         return;
       }
+      if ("error" in result) {
+        if (result.error?.code === "VALIDATION_ERROR") {
+          const fields = (result.error as { code: string; fields: Record<string, string[]> }).fields;
+          const flat: Record<string, string> = {};
+          Object.entries(fields).forEach(([k, v]) => { if (v?.[0]) flat[k] = v[0]; });
+          setErrors(flat);
+        } else {
+          setUploadError("Algo fue mal. Inténtalo de nuevo.");
+        }
+        return;
+      }
+      // P21: guardar los valores confirmados para que Cancelar revierta a esto
+      setLastSaved({ name, bio, locality });
       setSaved(true);
       setIsEditing(false);
       setTimeout(() => setSaved(false), 3000);
@@ -113,9 +150,10 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
   }
 
   function handleCancel() {
-    setName(user.name ?? "");
-    setBio(user.bio ?? "");
-    setLocality(user.locality ?? "");
+    // P21: revertir al último guardado exitoso, no al prop original del servidor
+    setName(lastSaved.name);
+    setBio(lastSaved.bio);
+    setLocality(lastSaved.locality);
     setErrors({});
     setIsEditing(false);
   }
@@ -260,7 +298,8 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+                  disabled={isPending}
+                  className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
                 >
                   Cancelar
                 </button>
