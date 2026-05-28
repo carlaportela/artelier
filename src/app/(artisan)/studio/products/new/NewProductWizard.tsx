@@ -577,7 +577,7 @@ export default function NewProductWizard() {
       <main className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
         <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
 
-        <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes</p>
+        <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes del producto</p>
 
         {/* Grid de 3 huecos con drag & drop — siempre visible:
               - DndContext es el contenedor que habilita el drag & drop.
