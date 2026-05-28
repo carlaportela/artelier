@@ -66,7 +66,7 @@ export default function ChangePasswordForm() {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white hover:bg-[#2d4a3f]"
+        className="w-full rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white hover:bg-[#4a6b5e]"
       >
         {isPending ? "Guardando..." : t("changePassword")}
       </Button>

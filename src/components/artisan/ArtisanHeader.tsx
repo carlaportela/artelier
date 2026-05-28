@@ -1,9 +1,14 @@
-"use client";
+//Componente de encabezado del perfil del artesano.
+//Muestra banner, avatar, nombre, localidad, biografía y sellos de calidad. También incluye el botón de seguir perfil.
+
+"use client";//Se renderiza en cliente.
 
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import FollowButton from "~/components/artisan/FollowButton";
+import PaletteAvatar from "~/components/PaletteAvatar";
 
+//Clases de estilo para los diferentes tipos de sellos de perfil.
 const SEAL_CLASS: Record<string, string> = {
   mano:      "seal-mano",
   eco:       "seal-eco",
@@ -12,6 +17,7 @@ const SEAL_CLASS: Record<string, string> = {
   km0:       "seal-km0",
 };
 
+//Argumentos que recibe la función del componente.
 interface ArtisanHeaderProps {
   artisan: {
     id: string;
@@ -27,13 +33,13 @@ interface ArtisanHeaderProps {
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
 }
 
+//Función del componente que renderiza el encabezado del perfil del artesano.
 export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests }: ArtisanHeaderProps) {
-  const initial = artisan.name?.charAt(0).toUpperCase() ?? "A";
 
   return (
     <div className="relative">
-      {/* Banner con logo de Artelier centrado — como una artesana en el mercado */}
-      <div className="relative h-[100px] w-full overflow-hidden bg-[--surface] md:h-[120px]">
+      {/* ── Banner ── */}
+      <div className="relative h-[155px] w-full overflow-hidden bg-[--surface] md:h-[175px]">
         {artisan.bannerImage && (
           <Image
             src={artisan.bannerImage}
@@ -43,63 +49,33 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             priority
           />
         )}
+        {/* Fondo de textura si no hay imagen */}
+        {!artisan.bannerImage && <div className="banner-lino h-full w-full" />}
       </div>
 
-      {/* Avatar superpuesto */}
-      <div className="mx-auto max-w-lg px-4">
-        <div className="relative -mt-8 flex items-end justify-between">
+      {/* ── Avatar + FollowButton ── */}
+      <div className="px-2">
+        <div className="relative -mt-[79px] flex items-end justify-between">
+          {/* Avatar siempre a la izquierda */}
+          <PaletteAvatar
+            src={artisan.image}
+            name={artisan.name}
+            className="h-40 w-40"
+          />
 
-          {/* Avatar: foto → circular; sin foto → forma paleta de pintar */}
-          {artisan.image ? (
-            <div className="relative h-20 w-20 overflow-hidden rounded-full">
-              <Image
-                src={artisan.image}
-                alt={artisan.name ?? "Artesana"}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ) : (
-            <svg
-              viewBox="0 0 24 24"
-              className="h-20 w-20"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-              aria-label={artisan.name ?? "Artesana"}
-            >
-              {/* Forma de paleta de Lucide sin los puntitos de pintura */}
-              <path
-                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                fill="#3d5a4f"
-                fillOpacity={0.55}
-              />
-              {/* Inicial centrada en el cuerpo circular de la paleta */}
-              <text
-                x="12"
-                y="12"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="#3d5a4f"
-                fontSize="7"
-                fontFamily="The Girl Next Door, cursive"
-              >
-                {initial}
-              </text>
-            </svg>
-          )}
-
+          {/* FollowButton solo en perfil ajeno */}
           {!isOwnProfile && canFollow && (
             <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
           )}
         </div>
 
-        {/* Info */}
-        <div className="mt-3 space-y-1">
+        {/* ── Info ── */}
+        <div className="mt-4 w-full space-y-2 pl-3">
           <h1 className="font-display text-xl font-bold text-[--text]">
             {artisan.name ?? "Artesana"}
           </h1>
           {artisan.locality && (
-            <p className="flex items-center gap-1 text-base font-medium text-[#3d5a4f]">
+            <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
               <MapPin size={12} />
               {artisan.locality}
             </p>
@@ -117,7 +93,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             </div>
           )}
           {artisan.bio && (
-            <p className="mt-2 line-clamp-3 text-sm text-[--text-muted]">{artisan.bio}</p>
+            <p className="line-clamp-3 text-sm text-[--text-muted]">{artisan.bio}</p>
           )}
         </div>
       </div>

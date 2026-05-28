@@ -1,9 +1,12 @@
+//Página del header de la aplicación, que se muestra en la parte superior de todas las páginas. Contiene el logo de Artelier, un enlace a la página de inicio y un menú desplegable de usuario.
+
 import Link from "next/link";
-import Image from "next/image";
 
 import { getServerSession } from "~/server/auth/session";
 import ArtelierLogo from "~/components/ArtelierLogo";
+import UserMenu from "~/components/UserMenu"; //Se importa el componente para mostrar el menú de usuario en el header.
 
+//Función de componente para el header de la aplicación, que muestra el logo de Artelier, un enlace a la página de inicio y un menú de usuario o botón de inicio de sesión dependiendo del estado de autenticación del usuario.
 export default async function AppHeader() {
   const session = await getServerSession();
   const user = session?.user;
@@ -15,8 +18,8 @@ export default async function AppHeader() {
     : "/";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[--border] bg-[--bg]/95 backdrop-blur-sm">
-      <div className="mx-auto grid h-14 max-w-lg grid-cols-[1fr_auto_1fr] items-center px-4">
+    <header className="sticky top-0 shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
+      <div className="mx-auto grid h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl grid-cols-[1fr_auto_1fr] items-center px-4">
 
         {/* Columna izquierda — vacía, misma anchura que la derecha para centrar el logo */}
         <div />
@@ -26,25 +29,21 @@ export default async function AppHeader() {
           <ArtelierLogo width={80} height={46} />
         </Link>
 
-        {/* Columna derecha — avatar o botón Entrar */}
-        <div className="flex justify-end">
+        {/* Columna derecha — saludo + avatar con menú o botón Entrar */}
+        <div className="flex items-center justify-end gap-3">
           {user ? (
-            <Link href={profileHref} aria-label="Mi perfil">
-              {user.image ? (
-                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-[--border]">
-                  <Image
-                    src={user.image}
-                    alt={user.name ?? "Mi perfil"}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ) : (
-                <div className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm font-medium leading-none ${user.role === "ARTISAN" ? "border-[#b8d4cc] bg-[#d4e8e2] text-[#3d5a4f]" : "border-[#e8d5be] bg-[#f5e8d8] text-[#c4956a]"}`}>
-                  {user.name?.charAt(0).toUpperCase() ?? "?"}
-                </div>
-              )}
-            </Link>
+            <>
+              <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-[--text]">
+                ¡Hola {user.name?.split(" ")[0] ?? "artesana"}!
+              </span>
+              <UserMenu
+                name={user.name ?? null}
+                image={user.image ?? null}
+                role={user.role}
+                userId={user.id}
+                profileHref={profileHref}
+              />
+            </>
           ) : (
             <Link
               href="/login"

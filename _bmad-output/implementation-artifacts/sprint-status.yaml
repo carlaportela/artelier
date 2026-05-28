@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-05-21
+# last_updated: 2026-05-28
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-05-21
+last_updated: 2026-05-28
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -51,18 +51,18 @@ development_status:
   epic-0-retrospective: optional
 
   # ─── Épico 1: Autenticación y Perfiles de Usuario ─────────────────────────
-  epic-1: in-progress
+  epic-1: done
   1-1-registro-con-eleccion-de-rol: done
   1-2-login-logout-y-recuperacion-de-contrasena: done
   1-3-perfil-publico-de-artesana: done
   1-3b-polish-visual-iconos-y-ui: done
   1-4-perfil-de-compradora-y-seguir-artesanas: done
-  1-5-derechos-rgpd-y-gestion-de-cuenta: ready-for-dev
+  1-5-derechos-rgpd-y-gestion-de-cuenta: done
   epic-1-retrospective: optional
 
   # ─── Épico 2: Catálogo y Publicación de Productos ─────────────────────────
-  epic-2: backlog
-  2-1-publicar-un-producto-flujo-foto-primero: backlog
+  epic-2: in-progress
+  2-1-publicar-un-producto-flujo-foto-primero: done
   2-2-editar-eliminar-productos-y-gestionar-sellos: backlog
   2-3-gestion-de-stock-y-pedidos-personalizados: backlog
   2-4-retiro-automatico-de-productos-perecederos: backlog

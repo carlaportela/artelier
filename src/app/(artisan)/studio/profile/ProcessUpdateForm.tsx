@@ -1,21 +1,27 @@
-"use client";
+//Página que permite a la artesana agregar actualizaciones de proceso (publicaciones)
+
+"use client"; //Se renderiza en cliente
 
 import { useTransition, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { createProcessUpdate } from "./actions";
 
+//Esquema de validación para el formulación de nueva publicación
 const schema = z.object({
   content: z.string().trim().min(1, "El contenido no puede estar vacío").max(500),
   imageUrl: z.string().optional(),
 });
+
 type FormInput = z.infer<typeof schema>;
 
+//Función principal que renderiza el formulario para aregar una actualización de proceso o publicación
 export default function ProcessUpdateForm() {
   const t = useTranslations("profile");
   const [isPending, startTransition] = useTransition();
@@ -29,6 +35,7 @@ export default function ProcessUpdateForm() {
     defaultValues: { content: "", imageUrl: "" },
   });
 
+  //Función que se ejecuta al enviar el formulario, crea una nueva actualización de proceso con el contenido y la imagen y luego resetea el formulario y limpia la imagen subida.
   function onSubmit(data: FormInput) {
     startTransition(async () => {
       const result = await createProcessUpdate({ ...data, imageUrl: imageUrl || undefined });
@@ -49,7 +56,7 @@ export default function ProcessUpdateForm() {
           rows={3}
           maxLength={500}
           placeholder={t("processUpdatePlaceholder")}
-          className="w-full rounded-md border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-2 focus:ring-[--primary]"
+          className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           {...form.register("content")}
         />
         <p className="text-right text-xs text-[--text-muted]">
@@ -68,7 +75,7 @@ export default function ProcessUpdateForm() {
           type="file"
           accept="image/*"
           aria-label="Imagen opcional para la actualización de proceso"
-          className="text-sm text-[--text-muted]"
+          className="sr-only"
           disabled={uploading}
           onChange={async (e) => {
             const file = e.target.files?.[0];
@@ -94,10 +101,17 @@ export default function ProcessUpdateForm() {
             setUploading(false);
           }}
         />
+        <label
+          htmlFor="process-image"
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploading ? "cursor-not-allowed opacity-50" : ""}`}
+        >
+          <Upload size={13} />
+          {uploading ? "Subiendo..." : imageUrl ? "Cambiar imagen" : "Adjuntar imagen"}
+        </label>
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
-      <Button type="submit" disabled={isPending || uploading} className="w-full">
+      <Button type="submit" disabled={isPending || uploading} className="w-full cursor-pointer hover:bg-[#4a6b5e]">
         {isPending ? t("publishing") : t("addProcessUpdate")}
       </Button>
     </form>

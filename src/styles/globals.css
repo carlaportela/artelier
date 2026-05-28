@@ -170,11 +170,11 @@
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
-    @apply font-sans;
+    @apply font-sans h-full;
+  }
+  body {
+    @apply bg-background text-foreground h-full;
   }
 }
 
@@ -184,4 +184,24 @@
   .seal-reciclado { background-color: var(--seal-reciclado-bg); color: var(--seal-reciclado-text); }
   .seal-galicia   { background-color: var(--seal-galicia-bg);   color: var(--seal-galicia-text); }
   .seal-km0       { background-color: var(--seal-km0-bg);       color: var(--seal-km0-text); }
+
+  /* Avatar con forma de paleta — sombra sigue la silueta irregular */
+  .palette-avatar {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+  }
+
+  /* Rejilla de tercios del modal de recorte — backgroundSize se aplica inline (es dinámico) */
+  .crop-thirds-guide {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+  }
+
+  /* Banner por defecto: textura lino — tramado cruzado sobre fondo crema cálido */
+  .banner-lino {
+    background-color: #e8ddd0;
+    background-image:
+      repeating-linear-gradient(0deg,   transparent, transparent 3px, rgba(160,140,110,0.13) 3px, rgba(160,140,110,0.13) 4px),
+      repeating-linear-gradient(90deg,  transparent, transparent 3px, rgba(160,140,110,0.13) 3px, rgba(160,140,110,0.13) 4px);
+  }
 }

@@ -1,6 +1,8 @@
+//Página de la API para subir imágenes a Cloudinary. Se espera un formulario con un campo "file" que contenga la imagen a subir, y un campo "type" que indique el tipo de imagen (avatar, banner, process o product). Solo se permiten imágenes JPEG, PNG, WebP o GIF de hasta 20 MB. El endpoint devuelve la URL segura y el public ID de la imagen subida, o un error si algo sale mal.
+
 import { NextResponse } from "next/server";
 
-import { auth } from "~/server/auth";
+import { getServerSession } from "~/server/auth/session";
 import { cloudinary } from "~/lib/cloudinary";
 import { env } from "~/env";
 
@@ -24,7 +26,7 @@ const TRANSFORMATION_MAP: Record<UploadType, object[]> = {
 };
 
 export async function POST(req: Request) {
-  const session = await auth();
+  const session = await getServerSession();
   if (!session?.user) {
     return NextResponse.json(
       { error: { code: "UNAUTHORIZED", message: "Debes iniciar sesión para subir imágenes" } },

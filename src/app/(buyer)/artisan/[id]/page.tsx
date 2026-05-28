@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
@@ -71,6 +73,18 @@ export default async function ArtisanPublicPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[--bg]">
+      {isOwnProfile && (
+        <div className="flex items-center justify-between px-4 pt-8 pb-4">
+          <h1 className="font-display text-xl font-bold text-[--text]">Tu puesto de artesanía</h1>
+          <Link
+            href="/studio/profile"
+            className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+          >
+            <ArrowLeft size={13} />
+            Volver a mi perfil
+          </Link>
+        </div>
+      )}
       <ArtisanHeader
         artisan={artisan}
         isOwnProfile={isOwnProfile}
@@ -79,7 +93,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
         sealRequests={artisan.sealRequests}
       />
 
-      <div className="mx-auto mt-6 max-w-lg px-4">
+      <div className="mt-6 px-4 md:px-6">
         <ArtisanProfileTabs
           products={artisan.products}
           processUpdates={artisan.processUpdates}

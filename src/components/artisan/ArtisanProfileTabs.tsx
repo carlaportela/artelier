@@ -72,8 +72,8 @@ export default function ArtisanProfileTabs({
                     <div className="aspect-square w-full bg-[--border]" />
                   )}
                   <div className="p-2">
-                    <p className="truncate text-sm text-[--text]">{product.name}</p>
-                    <p className="text-sm text-[--text-muted]">
+                    <p className="truncate font-display text-base text-[--text]">{product.name}</p>
+                    <p className="text-xs text-[--text-muted]">
                       {(product.priceInCents / 100).toLocaleString("es-ES", {
                         style: "currency",
                         currency: "EUR",
