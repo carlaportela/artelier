@@ -162,13 +162,13 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className={`w-full ${aspectRatio >= 2 ? "max-w-md" : "max-w-sm"} rounded-2xl bg-[#f4f0e8] p-6 shadow-2xl`}>
         <h2 className="mb-4 font-display text-lg font-bold text-[--text]">
-          Encuadra {label}
+          Ajusta {label}
         </h2>
 
         {/* Recuadro de recorte */}
         <div className="mx-auto flex items-center justify-center">
           <div
-            className={`relative overflow-hidden bg-black/10 select-none cursor-grab touch-none ${shape === "circle" ? "rounded-full" : "rounded-lg"}`}
+            className={`relative overflow-hidden bg-black/10 select-none cursor-grab touch-none ${shape === "rect" ? "rounded-lg" : ""}`}
             style={{ width: cropW, height: cropH }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -193,6 +193,34 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               className="crop-thirds-guide pointer-events-none absolute inset-0"
               style={{ backgroundSize: `${cropW / 3}px ${cropH / 3}px` }}
             />
+            {/* Overlay con forma de paleta: cubre lo exterior con el fondo del modal */}
+            {shape === "circle" && (
+              <svg
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                className="pointer-events-none absolute inset-0 z-10"
+                style={{ width: cropW, height: cropH }}
+              >
+                <defs>
+                  <mask id="palette-crop-mask">
+                    <rect width="24" height="24" fill="white" />
+                    <path
+                      d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                      fill="black"
+                    />
+                  </mask>
+                </defs>
+                {/* Zona exterior → color de fondo del modal */}
+                <rect width="24" height="24" fill="#f4f0e8" mask="url(#palette-crop-mask)" />
+                {/* Borde sutil de la paleta */}
+                <path
+                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
+                  fill="none"
+                  stroke="#ccc8bc"
+                  strokeWidth="0.3"
+                />
+              </svg>
+            )}
           </div>
         </div>
 

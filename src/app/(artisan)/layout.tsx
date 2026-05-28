@@ -8,7 +8,7 @@ export default function ArtisanLayout({ children }: { children: React.ReactNode 
   return (
     <>
       <AppHeader />
-      <div className="mx-auto w-full max-w-lg pb-16 md:max-w-2xl lg:max-w-4xl">
+      <div className="mx-auto w-full max-w-lg pb-24 md:max-w-2xl lg:max-w-4xl">
         {children}
       </div>
       <ArtisanBottomNav />
