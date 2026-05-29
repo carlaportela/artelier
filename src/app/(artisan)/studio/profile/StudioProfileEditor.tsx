@@ -283,7 +283,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                   placeholder="Cuéntanos algo sobre ti..."
                   className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f]"
                 />
-                <p className="text-right text-xs text-[--text-muted]">{bio.length}/150</p>
+                <p className={`text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-[--text-muted]"}`}>{150 - bio.length} restantes</p>
               </div>
 
               <div className="flex gap-2">

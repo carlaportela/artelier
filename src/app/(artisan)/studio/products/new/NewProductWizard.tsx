@@ -788,10 +788,7 @@ export default function NewProductWizard() {
             <span
               className={`text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}
             >
-              {/* P27: mostrar restantes cuando queden ≤20 caracteres */}
-              {description.length > 260
-                ? `${280 - description.length} restantes`
-                : `${description.length}/280`}
+              {280 - description.length} restantes
             </span>
           </div>
           <textarea
