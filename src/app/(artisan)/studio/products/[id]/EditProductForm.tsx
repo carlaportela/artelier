@@ -517,6 +517,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
       setFieldErrors({});
       toast.success("Cambios guardados");
+      router.push("/studio/products");
     });
   }
 
