@@ -780,11 +780,11 @@ export default function NewProductWizard() {
           {errors.priceInCents && <p className="text-xs text-red-600">{errors.priceInCents}</p>}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
-            Descripción breve
-          </Label>
-          <div className="relative">
+        <div>
+          <div className="space-y-2">
+            <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
+              Descripción breve
+            </Label>
             <textarea
               id="description"
               value={description}
@@ -792,16 +792,16 @@ export default function NewProductWizard() {
               maxLength={280}
               rows={3}
               placeholder="Cuéntanos sobre esta pieza..."
-              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 pb-5 pt-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
             />
-            <p className={`absolute bottom-1.5 right-2.5 text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
-              {280 - description.length} restantes
-            </p>
           </div>
+          <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+            {280 - description.length} restantes
+          </p>
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
         </div>
 
-        <div className="space-y-2">
+        <div className="!mt-2 space-y-2">
           <SelectField
             label="Categoría"
             value={category}
