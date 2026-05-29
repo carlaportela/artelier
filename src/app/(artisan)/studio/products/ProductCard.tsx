@@ -161,7 +161,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 cursor-pointer rounded-full border border-[--border] py-2 text-sm text-[--text] transition-colors hover:bg-[--surface-2]"
+                className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
               >
                 Cancelar
               </button>
