@@ -244,9 +244,8 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                 <button
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                  className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
                 >
-                  <Pencil size={12} />
                   Editar perfil
                 </button>
               </div>
@@ -298,7 +297,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                   type="button"
                   onClick={handleSave}
                   disabled={isPending}
-                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+                  className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
                 >
                   {isPending ? "Guardando..." : "Guardar cambios"}
                 </button>
@@ -306,7 +305,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                   type="button"
                   onClick={handleCancel}
                   disabled={isPending}
-                  className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
+                  className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
                 >
                   Cancelar
                 </button>

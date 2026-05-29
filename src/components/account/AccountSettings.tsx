@@ -203,7 +203,7 @@ export default function AccountSettings() {
         <button
           type="button"
           onClick={() => toggle("password")}
-          className={`rounded-full px-3 py-1.5 text-sm font-medium text-white transition-all ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             active === "password"
               ? "cursor-default bg-[#3d5a4f] opacity-75 shadow-inner"
               : "cursor-pointer bg-[#3d5a4f] hover:bg-[#4a6b5e] transition-colors"
@@ -214,7 +214,7 @@ export default function AccountSettings() {
         <button
           type="button"
           onClick={() => toggle("export")}
-          className={`rounded-full px-3 py-1.5 text-sm font-medium text-white transition-all ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             active === "export"
               ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
               : "cursor-pointer bg-[#94a49e] hover:opacity-80"
@@ -225,7 +225,7 @@ export default function AccountSettings() {
         <button
           type="button"
           onClick={() => toggle("delete")}
-          className={`rounded-full px-3 py-1.5 text-sm font-medium text-white transition-all ${
+          className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             active === "delete"
               ? "cursor-default bg-red-700 opacity-60 shadow-inner"
               : "cursor-pointer bg-red-700 hover:bg-red-600"
