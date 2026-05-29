@@ -53,11 +53,9 @@ export default async function StudioProfilePage() {
         <hr className="border-[#ccc8bc]" />
 
         {/* Email */}
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-[--text-muted]">Correo electrónico</p>
-          <div className="w-full rounded-lg border border-[#ccc8bc] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
-            {user.email}
-          </div>
+        <div className="space-y-1">
+          <p className="pl-1 text-xs font-medium text-[--text-muted]">Correo electrónico</p>
+          <p className="pl-1 text-sm text-[--text]">{user.email}</p>
         </div>
 
         <AccountSettings />

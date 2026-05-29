@@ -255,18 +255,20 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
 
           {/* Formulario de edición — se expande al activar */}
           {isEditing && (
-            <div className="space-y-3 pt-2">
-              <div className="space-y-1">
+            <div className="space-y-4 pt-2">
+              <div className="space-y-2">
+                <label className="block pl-1 text-sm font-medium text-[--text]">Nombre</label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Tu nombre"
-                  className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-1.5 font-display text-xl font-bold text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+                  className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-1.5 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
                 />
                 {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
+                <label className="block pl-1 text-sm font-medium text-[--text]">Localidad</label>
                 <LocalidadSelect
                   value={locality}
                   onChange={(val) => setLocality(val)}
@@ -274,24 +276,29 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                 />
               </div>
 
-              <div className="space-y-1">
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  rows={3}
-                  maxLength={150}
-                  placeholder="Cuéntanos algo sobre ti..."
-                  className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f]"
-                />
-                <p className={`text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-[--text-muted]"}`}>{150 - bio.length} restantes</p>
+              <div>
+                <div className="space-y-2">
+                  <label className="block pl-1 text-sm font-medium text-[--text]">Biografía</label>
+                  <textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    rows={3}
+                    maxLength={150}
+                    placeholder="Cuéntanos algo sobre ti..."
+                    className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] transition-colors focus-visible:border-[#3d5a4f]"
+                  />
+                </div>
+                <p className={`mt-1 text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-[--text-muted]"}`}>
+                  {150 - bio.length} restantes
+                </p>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-1">
                 <button
                   type="button"
                   onClick={handleSave}
                   disabled={isPending}
-                  className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
                 >
                   {isPending ? "Guardando..." : "Guardar cambios"}
                 </button>
@@ -299,7 +306,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
                   type="button"
                   onClick={handleCancel}
                   disabled={isPending}
-                  className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
+                  className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
                 >
                   Cancelar
                 </button>
