@@ -784,7 +784,7 @@ export default function NewProductWizard() {
           <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
             Descripción breve
           </Label>
-          <div>
+          <div className="relative">
             <textarea
               id="description"
               value={description}
@@ -792,9 +792,9 @@ export default function NewProductWizard() {
               maxLength={280}
               rows={3}
               placeholder="Cuéntanos sobre esta pieza..."
-              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 pb-5 pt-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
             />
-            <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+            <p className={`absolute bottom-1.5 right-2.5 text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
               {280 - description.length} restantes
             </p>
           </div>

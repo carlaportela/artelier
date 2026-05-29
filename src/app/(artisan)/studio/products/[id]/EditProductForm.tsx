@@ -626,14 +626,14 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           {/* ── Descripción ───────────────────────────────────────────── */}
           <div className="space-y-2">
             <label htmlFor="description" className="block pl-1 text-sm font-medium text-[--text]">Descripción</label>
-            <div>
+            <div className="relative">
               <textarea
                 id="description" rows={3} maxLength={280} value={description}
                 disabled={isDisabled}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg border border-[--border] bg-white px-3 pb-5 pt-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
               />
-              <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+              <p className={`absolute bottom-1.5 right-2.5 text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
                 {280 - description.length} restantes
               </p>
             </div>
