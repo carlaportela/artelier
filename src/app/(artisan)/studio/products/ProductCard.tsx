@@ -79,9 +79,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative cursor-pointer overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-colors hover:border-[#c4956a]/40">
-        {/* Área imagen con hover */}
-        <div className="relative aspect-square">
+      <div className="group relative overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-colors hover:border-[#c4956a]/40">
+        {/* Imagen — Link que navega a editar al hacer clic en cualquier punto de la foto */}
+        <Link href={`/studio/products/${product.id}`} className="relative block aspect-square" aria-label={`Editar ${product.name}`}>
           {product.imageUrls[0] ? (
             <Image
               src={product.imageUrls[0]}
@@ -99,26 +99,6 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Overlay oscuro al pasar el ratón */}
           <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-200 group-hover:bg-black/30" />
 
-          {/* Botones de acción (arriba a la derecha, aparecen en hover) */}
-          <div className="absolute right-2 top-2 flex gap-1.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-            <Link
-              href={`/studio/products/${product.id}`}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
-              aria-label="Editar producto"
-            >
-              <Pencil size={13} />
-            </Link>
-            <button
-              type="button"
-              onClick={() => setShowConfirm(true)}
-              disabled={isPending}
-              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-red-500/80 disabled:opacity-60"
-              aria-label="Eliminar producto"
-            >
-              <Trash2 size={13} />
-            </button>
-          </div>
-
           {/* Sellos verificados */}
           {product.seals.length > 0 && (
             <div className="absolute bottom-2 left-2 flex flex-col gap-1">
@@ -127,6 +107,26 @@ export function ProductCard({ product }: ProductCardProps) {
               ))}
             </div>
           )}
+        </Link>
+
+        {/* Botones de acción — fuera del Link, posicionados encima de la imagen con absolute */}
+        <div className="absolute right-2 top-2 z-10 flex gap-1.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <Link
+            href={`/studio/products/${product.id}`}
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+            aria-label="Editar producto"
+          >
+            <Pencil size={13} />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowConfirm(true)}
+            disabled={isPending}
+            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-red-500/80 disabled:opacity-60"
+            aria-label="Eliminar producto"
+          >
+            <Trash2 size={13} />
+          </button>
         </div>
 
         {/* Info (clickable → editar producto) */}
