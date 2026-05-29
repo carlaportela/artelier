@@ -176,7 +176,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
         {/* Recuadro de recorte */}
         <div className="mx-auto flex items-center justify-center">
           <div
-            className={`relative overflow-hidden bg-black/10 select-none cursor-grab touch-none ${shape === "rect" ? "rounded-lg" : ""}`}
+            className="relative overflow-hidden bg-black/10 select-none cursor-grab touch-none"
             style={{ width: cropW, height: cropH }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}

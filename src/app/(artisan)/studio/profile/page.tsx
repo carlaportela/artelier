@@ -5,8 +5,7 @@ import type { Metadata } from "next"; //Para definir el título de la página en
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
-import StudioProfileEditor from "./StudioProfileEditor"; //Componente para editar el perfil público del artesano (nombre, localidad y biografía)
-import AccountSettings from "~/components/account/AccountSettings"; //Componente para mostrar opciones de configuración de cuenta (cambiar contraseña, eliminar cuenta...)
+import ProfilePageClient from "./ProfilePageClient"; // Gestiona editor de perfil + botones de cuenta en una sola fila
 
 //Metadata para definir el título de la página
 export const metadata: Metadata = { title: "Mi perfil — Artelier" };
@@ -45,21 +44,8 @@ export default async function StudioProfilePage() {
         <h1 className="font-display text-xl font-bold text-[--text]">Mi perfil</h1>
       </div>
 
-      {/* ── Perfil público ── */}
-      <StudioProfileEditor user={user} sealRequests={sealRequests} />
-
-      {/* ── Cuenta ── */}
-      <section className="mt-8 space-y-8 px-5">
-        <hr className="border-[#ccc8bc]" />
-
-        {/* Email */}
-        <div className="space-y-1">
-          <p className="pl-1 text-xs font-medium text-[--text-muted]">Correo electrónico</p>
-          <p className="pl-1 text-sm text-[--text]">{user.email}</p>
-        </div>
-
-        <AccountSettings />
-      </section>
+      {/* ── Editor de perfil + botones de cuenta ── */}
+      <ProfilePageClient user={user} sealRequests={sealRequests} />
     </main>
   );
 }

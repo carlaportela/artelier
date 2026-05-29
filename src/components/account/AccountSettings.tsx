@@ -19,11 +19,11 @@ const btnOutline =
   "cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]";
 
 const btnDanger =
-  "cursor-pointer rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed";
+  "cursor-pointer rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none";
 
 // ── Sección: Cambiar contraseña ──────────────────────────────────────────────
 
-function PasswordSection({ onClose }: { onClose: () => void }) {
+export function PasswordSection({ onClose }: { onClose: () => void }) {
   const t = useTranslations("settings");
   const tErrors = useTranslations("errors");
   const [fields, setFields] = useState({
@@ -74,8 +74,8 @@ function PasswordSection({ onClose }: { onClose: () => void }) {
       {error && <p className="text-sm text-red-600">{error}</p>}
       {success && <p className="text-sm text-[#3d5a4f]">{t("passwordChanged")}</p>}
       <div className="flex gap-2 pt-1">
-        <button type="submit" disabled={isPending} className={btnPrimary}>
-          {isPending ? "Guardando..." : "Guardar cambios"}
+        <button type="submit" disabled={isPending || !fields.currentPassword || !fields.newPassword || !fields.confirmPassword} className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a3b1ab] disabled:opacity-50 disabled:pointer-events-none">
+          {isPending ? "Guardando..." : "Guardar nueva contraseña"}
         </button>
         <button type="button" onClick={onClose} className={btnOutline}>
           Cancelar
@@ -87,7 +87,7 @@ function PasswordSection({ onClose }: { onClose: () => void }) {
 
 // ── Sección: Exportar datos ──────────────────────────────────────────────────
 
-function ExportSection({ onClose }: { onClose: () => void }) {
+export function ExportSection({ onClose }: { onClose: () => void }) {
   const t = useTranslations("settings");
   const tErrors = useTranslations("errors");
   const [status, setStatus] = useState<"idle" | "pending" | "done" | "error">("idle");
@@ -131,7 +131,7 @@ function ExportSection({ onClose }: { onClose: () => void }) {
 
 // ── Sección: Eliminar cuenta ─────────────────────────────────────────────────
 
-function DeleteSection({ onClose }: { onClose: () => void }) {
+export function DeleteSection({ onClose }: { onClose: () => void }) {
   const t = useTranslations("settings");
   const tErrors = useTranslations("errors");
   const [password, setPassword] = useState("");
