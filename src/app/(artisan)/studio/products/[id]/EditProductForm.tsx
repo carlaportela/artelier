@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
-  X, Pencil, Plus, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, AlertTriangle,
+  X, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, AlertTriangle,
 } from "lucide-react";
 
 //Librerías de Drag and Drop (DND kit) para reordenar las fotos.
@@ -362,8 +362,10 @@ function SortablePhoto({
           </button>
         </div>
       )}
-      {isHero && (
+      {isHero ? (
         <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-0.5 text-[11px] font-medium text-white">Portada</span>
+      ) : (
+        <span className="absolute bottom-1.5 left-1.5 rounded bg-black/40 px-1.5 py-0.5 text-[10px] text-white">{index + 1}</span>
       )}
     </div>
   );
@@ -567,7 +569,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Fotos ─────────────────────────────────────────────────── */}
           <div className="space-y-2">
-            <p className="text-sm font-medium text-[--text]">Fotos del producto</p>
+            <p className="text-sm font-medium text-[--text]">Imágenes del producto</p>
             {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
 
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -590,7 +592,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
                   ))}
                   {images.length < MAX_IMAGES && !isDisabled && (
                     <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] text-[--text-muted] transition-colors hover:border-[#c4956a]/40 hover:text-[#c4956a]">
-                      <Plus size={20} />
+                      <span className="select-none text-3xl font-extralight leading-none">+</span>
                       <span className="text-xs">
                         {isUploading ? "Subiendo..." : `${MAX_IMAGES - images.length} más`}
                       </span>

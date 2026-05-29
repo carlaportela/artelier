@@ -6,7 +6,7 @@ import { useState, useRef, useEffect, useId } from "react"; //Función de React 
 import { useRouter } from "next/navigation"; //Función para programáticamente navegar a otras páginas después de publicar el producto.
 import Image from "next/image"; //Componente optimizado para mostrar las imágenes de los productos.
 import { toast } from "sonner"; //Librería para mostrar notificaciones al usuario, como errores de validación o confirmación de publicación.
-import { X, Plus, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, Info } from "lucide-react";
+import { X, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, Info } from "lucide-react";
 import CropModal from "~/components/CropModal";
 
 import {
@@ -652,7 +652,7 @@ export default function NewProductWizard() {
                     key={`empty-${i}`}
                     className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] transition-colors hover:border-[#3d5a4f]/50 hover:bg-[--surface-2]${isHero ? " col-span-2 row-span-2" : ""}`}
                   >
-                    <Plus size={isHero ? 32 : 22} className="text-[#3d5a4f]/60" />
+                    <span className={`select-none font-extralight leading-none text-[#3d5a4f]/50 ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
                     <span className={`text-[--text-muted] ${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
                       {isHero ? "Portada" : `Imagen ${i + 1}`}
                     </span>
