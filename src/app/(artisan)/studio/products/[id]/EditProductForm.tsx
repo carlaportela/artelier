@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
-  X, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, AlertTriangle,
+  X, Pencil, ChevronDown, ChevronRight, CalendarDays, AlertTriangle,
 } from "lucide-react";
 
 //Librerías de Drag and Drop (DND kit) para reordenar las fotos.
@@ -146,7 +146,7 @@ function SelectField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block text-sm font-medium text-[--text]">
+        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-[--text]">
           {label}
         </label>
       )}
@@ -261,7 +261,7 @@ function DatePickerField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block text-sm font-medium text-[--text]">
+        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-[--text]">
           {label}
         </label>
       )}
@@ -363,7 +363,7 @@ function SortablePhoto({
         </div>
       )}
       {isHero ? (
-        <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-0.5 text-[11px] font-medium text-white">Portada</span>
+        <span className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-0.5 text-[11px] font-medium text-white">Portada</span>
       ) : (
         <span className="absolute bottom-1.5 left-1.5 rounded bg-black/40 px-1.5 py-0.5 text-[10px] text-white">{index + 1}</span>
       )}
@@ -540,18 +540,10 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
   return (
     <main className="bg-[--bg]">
-      <div className="mx-auto max-w-lg px-4 py-8">
+      <div className="px-4 py-8">
 
         {/* Cabecera */}
-        <div className="mb-6 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => router.push("/studio/products")}
-            className="cursor-pointer rounded-full p-1.5 text-[--text-muted] transition-colors hover:bg-[--surface] hover:text-[--text]"
-            aria-label="Volver al catálogo"
-          >
-            <ChevronLeft size={20} />
-          </button>
+        <div className="mb-6">
           <h1 className="font-display text-xl font-bold text-[--text]">Editar producto</h1>
         </div>
 
@@ -574,43 +566,54 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <SortableContext items={images.map((img) => img.url)} strategy={rectSortingStrategy}>
+                {/* Siempre mostramos los 6 huecos: rellenos con foto o vacíos con slot de carga */}
                 <div className="grid grid-cols-3 gap-2">
-                  {images.map((img, index) => (
-                    <SortablePhoto
-                      key={img.url}
-                      id={img.url}
-                      url={img.url}
-                      index={index}
-                      isHero={index === 0}
-                      canEdit={img.file !== null}
-                      disabled={isDisabled}
-                      onEdit={() => {
-                        if (img.file) setCropState({ file: img.file, replacingIndex: index });
-                      }}
-                      onRemove={() => setImages((prev) => prev.filter((_, i) => i !== index))}
-                    />
-                  ))}
-                  {images.length < MAX_IMAGES && !isDisabled && (
-                    <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] text-[--text-muted] transition-colors hover:border-[#c4956a]/40 hover:text-[#c4956a]">
-                      <span className="select-none text-3xl font-extralight leading-none">+</span>
-                      <span className="text-xs">
-                        {isUploading ? "Subiendo..." : `${MAX_IMAGES - images.length} más`}
-                      </span>
-                      <input
-                        type="file" accept="image/*" multiple className="sr-only"
-                        disabled={isUploading}
-                        onChange={handleFileChange}
-                      />
-                    </label>
-                  )}
+                  {Array.from({ length: MAX_IMAGES }, (_, i) => {
+                    const img = images[i];
+                    const isHero = i === 0;
+                    if (img) {
+                      return (
+                        <SortablePhoto
+                          key={img.url}
+                          id={img.url}
+                          url={img.url}
+                          index={i}
+                          isHero={isHero}
+                          canEdit={img.file !== null}
+                          disabled={isDisabled}
+                          onEdit={() => {
+                            if (img.file) setCropState({ file: img.file, replacingIndex: i });
+                          }}
+                          onRemove={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                        />
+                      );
+                    }
+                    // Hueco vacío — siempre visible para indicar el espacio disponible
+                    return (
+                      <label
+                        key={`empty-${i}`}
+                        className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] text-[--text-muted] transition-colors${isHero ? " col-span-2 row-span-2" : ""}${isDisabled ? " pointer-events-none opacity-50" : " cursor-pointer hover:border-[#c4956a]/40 hover:text-[#c4956a]"}`}
+                      >
+                        <span className={`select-none font-extralight leading-none ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
+                        <span className={`${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
+                          {isHero ? "Portada" : `Imagen ${i + 1}`}
+                        </span>
+                        <input
+                          type="file" accept="image/*" multiple className="sr-only"
+                          disabled={isUploading || isDisabled}
+                          onChange={handleFileChange}
+                        />
+                      </label>
+                    );
+                  })}
                 </div>
               </SortableContext>
             </DndContext>
           </div>
 
           {/* ── Nombre ────────────────────────────────────────────────── */}
-          <div className="space-y-1">
-            <label htmlFor="name" className="text-sm font-medium text-[--text]">Nombre</label>
+          <div className="space-y-2">
+            <label htmlFor="name" className="block pl-1 text-sm font-medium text-[--text]">Nombre</label>
             <input
               id="name" type="text" value={name} disabled={isDisabled}
               onChange={(e) => setName(e.target.value)}
@@ -620,8 +623,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           </div>
 
           {/* ── Descripción ───────────────────────────────────────────── */}
-          <div className="space-y-1">
-            <label htmlFor="description" className="text-sm font-medium text-[--text]">Descripción</label>
+          <div className="space-y-2">
+            <label htmlFor="description" className="block pl-1 text-sm font-medium text-[--text]">Descripción</label>
             <textarea
               id="description" rows={3} maxLength={280} value={description}
               disabled={isDisabled}
@@ -635,8 +638,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           </div>
 
           {/* ── Precio ────────────────────────────────────────────────── */}
-          <div className="space-y-1">
-            <label htmlFor="price" className="text-sm font-medium text-[--text]">Precio (€)</label>
+          <div className="space-y-2">
+            <label htmlFor="price" className="block pl-1 text-sm font-medium text-[--text]">Precio (€)</label>
             <input
               id="price" type="number" min="0.01" step="0.01" value={priceEuros}
               disabled={isDisabled}
@@ -647,7 +650,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           </div>
 
           {/* ── Categoría ─────────────────────────────────────────────── */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <SelectField
               label="Categoría"
               value={category}
@@ -659,7 +662,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           </div>
 
           {/* ── Tipo ──────────────────────────────────────────────────── */}
-          <div className="space-y-1">
+          <div className="space-y-2">
             <SelectField
               label="Tipo de producto"
               value={type}
@@ -678,7 +681,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Fecha de caducidad (solo perecederos) ─────────────────── */}
           {type === "PERISHABLE" && (
-            <div className="space-y-1">
+            <div className="space-y-2">
               <DatePickerField
                 label="Fecha límite de compra"
                 value={expiresAt}
@@ -705,29 +708,37 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
             </div>
           )}
 
-          {/* ── Guardar ───────────────────────────────────────────────── */}
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isDisabled}
-            className="w-full rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isPendingSave ? "Guardando..." : "Guardar cambios"}
-          </button>
-
-          {/* ── Eliminar ──────────────────────────────────────────────── */}
-          {!hasActiveOrders && (
-            <div className="border-t border-[--border] pt-4">
+          {/* ── Acciones ──────────────────────────────────────────────── */}
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isDisabled}
+              className="w-full cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isPendingSave ? "Guardando..." : "Guardar cambios"}
+            </button>
+            <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => setShowDeleteDialog(true)}
+                onClick={() => router.push("/studio/products")}
                 disabled={isPendingSave || isPendingDelete}
-                className="w-full rounded-full border border-red-200 bg-white px-5 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex-1 cursor-pointer rounded-full border border-[--border] px-5 py-2.5 text-sm font-medium text-[--text] transition-colors hover:bg-[--surface-2] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Eliminar pieza
+                Cancelar
               </button>
+              {!hasActiveOrders && (
+                <button
+                  type="button"
+                  onClick={() => setShowDeleteDialog(true)}
+                  disabled={isPendingSave || isPendingDelete}
+                  className="flex-1 cursor-pointer rounded-full bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isPendingDelete ? "Eliminando..." : "Eliminar"}
+                </button>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
@@ -735,9 +746,9 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>¿Eliminar esta pieza?</DialogTitle>
+            <DialogTitle>¿Eliminar este producto?</DialogTitle>
             <DialogDescription>
-              La pieza desaparecerá de tu catálogo y del feed. Esta acción no se puede deshacer.
+              El producto desaparecerá de tu catálogo y del feed. Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">

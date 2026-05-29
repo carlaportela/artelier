@@ -171,7 +171,7 @@ function SortablePhoto({
         </button>
       </div>
       {isHero ? (
-        <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-0.5 text-[11px] font-medium text-white">
+        <span className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-0.5 text-[11px] font-medium text-white">
           Portada
         </span>
       ) : (
@@ -611,7 +611,7 @@ export default function NewProductWizard() {
   if (step === 1) {
     return (
       <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-        <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
+        <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
 
         <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes del producto</p>
 
@@ -727,7 +727,7 @@ export default function NewProductWizard() {
   // ─── Paso 2: datos ────────────────────────────────────────────────────────
   return (
     <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-      <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
+      <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
 
       <p className="text-sm text-[--text-muted]">Paso 2 de 2 — Completa los detalles</p>
 
@@ -735,13 +735,22 @@ export default function NewProductWizard() {
         {images.map(({ url }, i) => (
           <div key={url} className="relative h-14 w-14 overflow-hidden rounded-lg border border-[--border]">
             <Image src={url} alt={`Imagen ${i + 1}`} fill className="object-cover" sizes="56px" />
+            {i === 0 ? (
+              <span className="absolute bottom-1 left-1 rounded bg-black/50 px-1 py-0.5 text-[8px] font-medium leading-none text-white">
+                Portada
+              </span>
+            ) : (
+              <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 py-0.5 text-[8px] leading-none text-white">
+                {i + 1}
+              </span>
+            )}
           </div>
         ))}
       </div>
 
       <div className="space-y-4">
-        <div className="space-y-1">
-          <Label htmlFor="name" className="font-normal text-[--text-muted]">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="block pl-1 font-normal text-[--text-muted]">
             Nombre del producto
           </Label>
           <Input
@@ -754,8 +763,8 @@ export default function NewProductWizard() {
           {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="price" className="font-normal text-[--text-muted]">
+        <div className="space-y-2">
+          <Label htmlFor="price" className="block pl-1 font-normal text-[--text-muted]">
             Precio (€)
           </Label>
           <Input
@@ -771,9 +780,9 @@ export default function NewProductWizard() {
           {errors.priceInCents && <p className="text-xs text-red-600">{errors.priceInCents}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="description" className="font-normal text-[--text-muted]">
+            <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
               Descripción breve
             </Label>
             <span
@@ -797,7 +806,7 @@ export default function NewProductWizard() {
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-2">
           <SelectField
             label="Categoría"
             value={category}
@@ -808,7 +817,7 @@ export default function NewProductWizard() {
           {errors.category && <p className="text-xs text-red-600">{errors.category}</p>}
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-2">
           <SelectField
             label="Tipo de producto"
             value={type}
@@ -823,7 +832,7 @@ export default function NewProductWizard() {
         </div>
 
         {type === "PERISHABLE" && (
-          <div className="space-y-1">
+          <div className="space-y-2">
             <DatePickerField
               label="Fecha límite de disponibilidad"
               value={expiresAt}
