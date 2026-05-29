@@ -42,7 +42,7 @@ export default async function StudioProductsPage() {
           <h1 className="font-display text-xl font-bold text-[--text]">Mi catálogo</h1>
           <Link
             href="/studio/products/new"
-            className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            className="rounded-full bg-[#8f9e94] px-4 py-1.5 text-sm font-medium text-[#1a1a18] transition-colors hover:bg-[#7d8e83]"
           >
             Añadir producto
           </Link>
@@ -53,7 +53,7 @@ export default async function StudioProductsPage() {
             <p className="text-[--text-muted]">Aún no has publicado ningún producto.</p>
             <Link
               href="/studio/products/new"
-              className="rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+              className="rounded-full bg-[#8f9e94] px-5 py-2 text-sm font-medium text-[#1a1a18] transition-colors hover:bg-[#7d8e83]"
             >
               Publica tu primer producto
             </Link>
