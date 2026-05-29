@@ -641,7 +641,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           </div>
 
           {/* ── Precio ────────────────────────────────────────────────── */}
-          <div className="!mt-2 space-y-2">
+          <div className="!mt-1 space-y-2">
             <label htmlFor="price" className="block pl-1 text-sm font-medium text-[--text]">Precio (€)</label>
             <input
               id="price" type="number" min="0.01" step="0.01" value={priceEuros}
