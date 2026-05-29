@@ -725,7 +725,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
                 disabled={isPendingSave || isPendingDelete}
                 className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] px-5 py-2.5 text-sm font-medium text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Cancelar edición
+                Cancelar
               </button>
               {!hasActiveOrders && (
                 <button
