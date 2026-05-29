@@ -801,7 +801,7 @@ export default function NewProductWizard() {
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
         </div>
 
-        <div className="!mt-1 space-y-2">
+        <div className="!mt-0 space-y-2">
           <SelectField
             label="Categoría"
             value={category}
