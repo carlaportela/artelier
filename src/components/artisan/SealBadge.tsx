@@ -1,5 +1,5 @@
-// Componente de sello verificado. Los sellos son asignados por el sistema (nunca por la artesana).
-// Se usa tanto en tarjetas de producto como en la página de edición y en el perfil de artesana.
+//Componente de sello verificado. Existen dos tipos de sellos: asignados automáticamente por el sistema y verificados por el admin a petición de la artesana.
+//Se usa tanto en tarjetas de producto como en la página de edición y en el perfil de artesana.
 
 interface SealBadgeProps {
   name: string;

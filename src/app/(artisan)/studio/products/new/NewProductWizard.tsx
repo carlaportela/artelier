@@ -2,7 +2,7 @@
 
 "use client"; //Este archivo se ejecuta en el cliente.
 
-import { useState, useRef, useEffect } from "react"; //Función de React para maneja el estado local como detalles del producto, imágenes subidas...
+import { useState, useRef, useEffect, useId } from "react"; //Función de React para maneja el estado local como detalles del producto, imágenes subidas...
 import { useRouter } from "next/navigation"; //Función para programáticamente navegar a otras páginas después de publicar el producto.
 import Image from "next/image"; //Componente optimizado para mostrar las imágenes de los productos.
 import { toast } from "sonner"; //Librería para mostrar notificaciones al usuario, como errores de validación o confirmación de publicación.
@@ -57,15 +57,16 @@ const TYPE_DESCRIPTIONS: Record<"UNIQUE" | "PERISHABLE" | "STANDARD", string> = 
 //Selector personalizado con dropdown estilizado con la paleta de la app, igual que LocalidadSelect.
 //Evita el dropdown nativo del navegador (que no se puede estilizar) y usa un <ul> custom.
 function SelectField({
-  id, value, onChange, options, placeholder, disabled = false,
+  label, value, onChange, options, placeholder, disabled = false,
 }: {
-  id: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   options: readonly { value: string; label: string }[];
   placeholder?: string;
   disabled?: boolean;
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -80,40 +81,47 @@ function SelectField({
   const selected = options.find((o) => o.value === value);
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        id={id}
-        disabled={disabled}
-        onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
-        className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
-      >
-        <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
-        <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
-          {placeholder && (
-            <li
-              onMouseDown={(e) => { e.preventDefault(); onChange(""); setOpen(false); }}
-              className="cursor-pointer px-3 py-2 text-sm text-[--text-muted] transition-colors hover:bg-[#ccc8bc]"
-            >
-              {placeholder}
-            </li>
-          )}
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
-              className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+          {label}
+        </label>
       )}
-    </div>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          id={uid}
+          disabled={disabled}
+          onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
+          className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
+        >
+          <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
+          <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
+        </button>
+
+        {open && (
+          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
+            {placeholder && (
+              <li
+                onMouseDown={(e) => { e.preventDefault(); onChange(""); setOpen(false); }}
+                className="cursor-pointer px-3 py-2 text-sm text-[--text-muted] transition-colors hover:bg-[#ccc8bc]"
+              >
+                {placeholder}
+              </li>
+            )}
+            {options.map((opt) => (
+              <li
+                key={opt.value}
+                onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
+                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -194,13 +202,14 @@ function dateToISO(date: Date): string {
 }
 
 function DatePickerField({
-  id, value, onChange, min,
+  label, value, onChange, min,
 }: {
-  id: string;
+  label?: string;
   value: string; // YYYY-MM-DD o vacío
   onChange: (value: string) => void;
   min?: string;  // YYYY-MM-DD
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -295,11 +304,17 @@ function DatePickerField({
   }
 
   return (
-    <div ref={ref} className="relative">
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+          {label}
+        </label>
+      )}
+      <div ref={ref} className="relative">
       {/* Trigger: input de texto + botón icono calendario */}
       <div className="flex items-center overflow-hidden rounded-lg border border-[--border] bg-white transition-colors focus-within:border-[#3d5a4f]">
         <input
-          id={id}
+          id={uid}
           type="text"
           inputMode="numeric"
           value={inputText}
@@ -395,6 +410,7 @@ function DatePickerField({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -782,11 +798,8 @@ export default function NewProductWizard() {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="category" className="font-normal text-[--text-muted]">
-            Categoría
-          </Label>
           <SelectField
-            id="category"
+            label="Categoría"
             value={category}
             onChange={handleCategoryChange}
             placeholder="Selecciona una categoría"
@@ -796,11 +809,8 @@ export default function NewProductWizard() {
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="type" className="font-normal text-[--text-muted]">
-            Tipo de producto
-          </Label>
           <SelectField
-            id="type"
+            label="Tipo de producto"
             value={type}
             onChange={(v) => setType(v as typeof type)}
             disabled={typeIsForced}
@@ -814,11 +824,8 @@ export default function NewProductWizard() {
 
         {type === "PERISHABLE" && (
           <div className="space-y-1">
-            <Label htmlFor="expiresAt" className="font-normal text-[--text-muted]">
-              Fecha límite de disponibilidad
-            </Label>
             <DatePickerField
-              id="expiresAt"
+              label="Fecha límite de disponibilidad"
               value={expiresAt}
               onChange={setExpiresAt}
               min={(() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; })()}

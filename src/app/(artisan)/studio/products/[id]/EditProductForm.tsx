@@ -4,7 +4,7 @@
 
 "use client";
 
-import { useState, useRef, useEffect, useTransition } from "react";
+import { useState, useRef, useEffect, useTransition, useId } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -120,15 +120,16 @@ function arrayMove<T>(arr: T[], from: number, to: number): T[] {
 //Componente de selector personalizado, usado para elegir categoria y tipo de producto.
 
 function SelectField({
-  id, value, onChange, options, placeholder, disabled = false,
+  label, value, onChange, options, placeholder, disabled = false,
 }: {
-  id: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   options: readonly { value: string; label: string }[];
   placeholder?: string;
   disabled?: boolean;
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -143,31 +144,38 @@ function SelectField({
   const selected = options.find((o) => o.value === value);
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        id={id}
-        disabled={disabled}
-        onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
-        className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
-      >
-        <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
-        <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
-              className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-medium text-[--text]">
+          {label}
+        </label>
       )}
-    </div>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          id={uid}
+          disabled={disabled}
+          onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
+          className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
+        >
+          <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
+          <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
+        </button>
+        {open && (
+          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
+            {options.map((opt) => (
+              <li
+                key={opt.value}
+                onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
+                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -175,14 +183,15 @@ function SelectField({
 //Componente de selector de fecha personalizado, usado para elegir la fecha límite de compra en productos perecederos.
 
 function DatePickerField({
-  id, value, onChange, min, disabled = false,
+  label, value, onChange, min, disabled = false,
 }: {
-  id: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   min?: string;
   disabled?: boolean;
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [inputText, setInputText] = useState(() => value ? isoToDisplay(value) : "");
@@ -250,10 +259,16 @@ function DatePickerField({
   }
 
   return (
-    <div ref={ref} className="relative">
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-medium text-[--text]">
+          {label}
+        </label>
+      )}
+      <div ref={ref} className="relative">
       <div className={`flex items-center overflow-hidden rounded-lg border border-[--border] bg-white transition-colors focus-within:border-[#3d5a4f] ${disabled ? "opacity-60" : ""}`}>
         <input
-          id={id}
+          id={uid}
           type="text"
           inputMode="numeric"
           value={inputText}
@@ -306,6 +321,7 @@ function DatePickerField({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -534,7 +550,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           >
             <ChevronLeft size={20} />
           </button>
-          <h1 className="font-display text-xl font-bold text-[--text]">Editar pieza</h1>
+          <h1 className="font-display text-xl font-bold text-[--text]">Editar producto</h1>
         </div>
 
         {/* Aviso pedidos activos */}
@@ -630,9 +646,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Categoría ─────────────────────────────────────────────── */}
           <div className="space-y-1">
-            <label htmlFor="category" className="text-sm font-medium text-[--text]">Categoría</label>
             <SelectField
-              id="category"
+              label="Categoría"
               value={category}
               onChange={handleCategoryChange}
               options={CATEGORIES.map((c) => ({ value: c, label: c }))}
@@ -643,9 +658,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Tipo ──────────────────────────────────────────────────── */}
           <div className="space-y-1">
-            <label htmlFor="type" className="text-sm font-medium text-[--text]">Tipo de producto</label>
             <SelectField
-              id="type"
+              label="Tipo de producto"
               value={type}
               onChange={(v) => setType(v as "UNIQUE" | "PERISHABLE" | "STANDARD")}
               options={PRODUCT_TYPES}
@@ -663,9 +677,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           {/* ── Fecha de caducidad (solo perecederos) ─────────────────── */}
           {type === "PERISHABLE" && (
             <div className="space-y-1">
-              <label htmlFor="expiresAt" className="text-sm font-medium text-[--text]">Fecha límite de compra</label>
               <DatePickerField
-                id="expiresAt"
+                label="Fecha límite de compra"
                 value={expiresAt}
                 onChange={setExpiresAt}
                 min={todayMin}
