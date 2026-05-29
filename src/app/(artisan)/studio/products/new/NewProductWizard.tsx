@@ -781,25 +781,23 @@ export default function NewProductWizard() {
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
-              Descripción breve
-            </Label>
-            <span
-              className={`text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}
-            >
+          <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
+            Descripción breve
+          </Label>
+          <div>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="Cuéntanos sobre esta pieza..."
+              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+            />
+            <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
               {280 - description.length} restantes
-            </span>
+            </p>
           </div>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            maxLength={280}
-            rows={3}
-            placeholder="Cuéntanos sobre esta pieza..."
-            className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
-          />
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
         </div>
 
