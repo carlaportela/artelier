@@ -18,7 +18,7 @@ import { deleteProduct } from "./[id]/actions";
 function StatusPill({ status }: { status: "ACTIVE" | "SOLD" | "EXPIRED" }) {
   if (status === "ACTIVE") {
     return (
-      <span className="rounded-full bg-[#c8ddd8] px-2 py-0.5 text-xs font-medium text-[#3d5a4f]">
+      <span className="rounded-full bg-[#8f9e94] px-2 py-0.5 text-xs font-medium text-white">
         Disponible
       </span>
     );
