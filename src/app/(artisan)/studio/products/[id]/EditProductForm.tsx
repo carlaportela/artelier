@@ -631,8 +631,8 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
               onChange={(e) => setDescription(e.target.value)}
               className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
             />
-            <p className="text-right text-xs text-[--text-muted]">
-              {description.length > 260 ? `${280 - description.length} restantes` : `${description.length}/280`}
+            <p className={`text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+              {280 - description.length} restantes
             </p>
             {fieldErrors.description && <p className="text-xs text-red-600">{fieldErrors.description}</p>}
           </div>
