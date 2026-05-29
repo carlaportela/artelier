@@ -725,16 +725,16 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
                 disabled={isPendingSave || isPendingDelete}
                 className="flex-1 cursor-pointer rounded-full border border-[--border] px-5 py-2.5 text-sm font-medium text-[--text] transition-colors hover:bg-[--surface-2] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Cancelar
+                Cancelar edición
               </button>
               {!hasActiveOrders && (
                 <button
                   type="button"
                   onClick={() => setShowDeleteDialog(true)}
                   disabled={isPendingSave || isPendingDelete}
-                  className="flex-1 cursor-pointer rounded-full bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex-1 cursor-pointer rounded-full bg-red-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isPendingDelete ? "Eliminando..." : "Eliminar"}
+                  {isPendingDelete ? "Eliminando..." : "Eliminar producto"}
                 </button>
               )}
             </div>
