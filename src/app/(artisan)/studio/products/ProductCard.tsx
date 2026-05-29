@@ -18,20 +18,20 @@ import { deleteProduct } from "./[id]/actions";
 function StatusPill({ status }: { status: "ACTIVE" | "SOLD" | "EXPIRED" }) {
   if (status === "ACTIVE") {
     return (
-      <span className="rounded-full bg-[#8f9e94] px-2 py-0.5 text-xs font-medium text-white">
-        Disponible
+      <span className="rounded bg-[#8f9e94] px-2 py-0.5 text-xs font-medium text-white">
+        En stock
       </span>
     );
   }
   if (status === "SOLD") {
     return (
-      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
+      <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
         Vendido
       </span>
     );
   }
   return (
-    <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
+    <span className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
       Caducado
     </span>
   );

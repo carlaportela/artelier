@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
-import { ProductCard } from "./ProductCard";
+import CatalogoView from "./CatalogoView";
 
 export default async function StudioProductsPage() {
   const session = await getServerSession();
@@ -38,15 +38,7 @@ export default async function StudioProductsPage() {
   return (
     <main className="bg-[--bg]">
       <div className="px-4 py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="font-display text-xl font-bold text-[--text]">Mi catálogo</h1>
-          <Link
-            href="/studio/products/new"
-            className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-          >
-            Añadir producto
-          </Link>
-        </div>
+        <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Mi catálogo</h1>
 
         {products.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
@@ -59,11 +51,7 @@ export default async function StudioProductsPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <CatalogoView products={products} />
         )}
       </div>
     </main>
