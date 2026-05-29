@@ -38,8 +38,8 @@ export default async function ArtisanPublicPage({ params }: Props) {
       where: { id, role: "ARTISAN", deletedAt: null, suspended: false },
       include: {
         products: {
-          where: { status: "ACTIVE", deletedAt: null },
-          orderBy: { createdAt: "desc" },
+          where: { status: { in: ["ACTIVE", "SOLD"] }, deletedAt: null },
+          orderBy: [{ status: "asc" }, { createdAt: "desc" }],
         },
         processUpdates: {
           where: { deletedAt: null },
