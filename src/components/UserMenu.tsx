@@ -6,18 +6,17 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { logoutUser } from "~/app/(auth)/logout/actions";
-import { Eye, LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail } from "lucide-react";
 
 type Props = {
   name: string | null;
   image: string | null;
   role: string;
-  userId: string;
   profileHref: string;
 };
 
 //Función principal que muestra el menú. Muestra opciones diferentes dependiendo del rol del usuario.
-export default function UserMenu({ name, image, role, userId, profileHref }: Props) {
+export default function UserMenu({ name, image, role, profileHref }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -76,10 +75,6 @@ export default function UserMenu({ name, image, role, userId, profileHref }: Pro
         <div className="absolute right-0 top-full z-50 mt-4 w-52 rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
           {role === "ARTISAN" ? (
             <>
-              <Link href={`/artisan/${userId}`} onClick={close} className={linkClass}>
-                <Eye size={14} className={iconClass} />
-                Perfil público
-              </Link>
               <Link href="/studio/estadisticas" onClick={close} className={linkClass}>
                 <TrendingUp size={14} className={iconClass} />
                 Estadísticas

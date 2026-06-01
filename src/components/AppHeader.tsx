@@ -40,7 +40,6 @@ export default async function AppHeader() {
                 name={user.name ?? null}
                 image={user.image ?? null}
                 role={user.role}
-                userId={user.id}
                 profileHref={profileHref}
               />
             </>
