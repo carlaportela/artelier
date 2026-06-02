@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
-  X, Pencil, ChevronDown, ChevronRight, CalendarDays, AlertTriangle,
+  X, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, AlertTriangle,
 } from "lucide-react";
 
 //Librerías de Drag and Drop (DND kit) para reordenar las fotos.
