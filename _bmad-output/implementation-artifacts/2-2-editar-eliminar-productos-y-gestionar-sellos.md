@@ -75,7 +75,7 @@ Cambios necesarios para AC4:
 3. Reemplazar el overlay de "Vendido" por una pill de estado más discreta en la esquina inferior derecha, distinguiendo los 3 estados
 4. Envolver el `<div>` de cada producto en un `<Link href={`/studio/products/${product.id}`}>`
 
-El empty state ya existe y ya muestra el CTA — no modificar ese parte.
+El empty state ya existe y ya muestra el CTA — no modificar esa parte.
 
 **`src/app/(artisan)/studio/products/new/NewProductWizard.tsx` — NO MODIFICAR**
 
