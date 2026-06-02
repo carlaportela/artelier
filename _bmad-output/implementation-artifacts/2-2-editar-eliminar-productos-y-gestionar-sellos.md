@@ -72,7 +72,7 @@ Estado actual: grid 2 columnas, query con `deletedAt: null` y `status: { in: ["A
 Cambios necesarios para AC4:
 1. Quitar `status: { in: ["ACTIVE", "SOLD"] }` de la query para incluir EXPIRED
 2. Añadir `type: true, expiresAt: true` al select (para calcular estado real si fuera necesario)
-3. Reemplazar el overlay de "Vendido" por una pill de estado más discreta en la esquina inferior derecha, distingiendo los 3 estados
+3. Reemplazar el overlay de "Vendido" por una pill de estado más discreta en la esquina inferior derecha, distinguiendo los 3 estados
 4. Envolver el `<div>` de cada producto en un `<Link href={`/studio/products/${product.id}`}>`
 
 El empty state ya existe y ya muestra el CTA — no modificar ese parte.
