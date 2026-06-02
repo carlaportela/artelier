@@ -19,28 +19,46 @@ const BLOCKING_ORDER_STATUSES = [
 ] as const;
 
 //Schema compartido entre updateProduct y la validación del formulario.
-const updateProductSchema = z.object({
-  name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
-  description: z
-    .string()
-    .trim()
-    .max(280, "La descripción no puede superar 280 caracteres"),
-  priceInCents: z
-    .number()
-    .int()
-    .min(1, "El precio debe ser mayor que 0")
-    .max(2_147_483_647, "El precio introducido es demasiado alto"),
-  type: z.enum(["UNIQUE", "PERISHABLE", "STANDARD"]),
-  imageUrls: z
-    .array(z.string().url())
-    .min(1, "Añade al menos una imagen")
-    .max(6, "Máximo 6 imágenes"),
-  category: z.string().trim().min(1, "Selecciona una categoría"),
-  expiresAt: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (YYYY-MM-DD)")
-    .optional(),
-});
+const updateProductSchema = z
+  .object({
+    name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
+    description: z
+      .string()
+      .trim()
+      .max(280, "La descripción no puede superar 280 caracteres"),
+    priceInCents: z
+      .number()
+      .int()
+      .min(1, "El precio debe ser mayor que 0")
+      .max(2_147_483_647, "El precio introducido es demasiado alto"),
+    type: z.enum(["UNIQUE", "PERISHABLE", "STANDARD"]),
+    imageUrls: z
+      .array(z.string().url())
+      .min(1, "Añade al menos una imagen")
+      .max(6, "Máximo 6 imágenes"),
+    category: z.string().trim().min(1, "Selecciona una categoría"),
+    expiresAt: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Formato de fecha inválido (YYYY-MM-DD)")
+      .optional(),
+  })
+  //Validaciones cruzadas: expiresAt solo es válido para productos perecederos y viceversa.
+  .superRefine((data, ctx) => {
+    if (data.type === "PERISHABLE" && !data.expiresAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "La fecha de caducidad es obligatoria para productos perecederos",
+        path: ["expiresAt"],
+      });
+    }
+    if (data.type !== "PERISHABLE" && data.expiresAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Solo los productos perecederos pueden tener fecha de caducidad",
+        path: ["expiresAt"],
+      });
+    }
+  });
 
 //Helper: carga el producto con ownership y pedidos activos.
 //Devuelve null si no existe o está soft-deleted.
