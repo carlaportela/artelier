@@ -2,11 +2,11 @@
 
 "use client"; //Este archivo se ejecuta en el cliente.
 
-import { useState, useRef, useEffect } from "react"; //Función de React para maneja el estado local como detalles del producto, imágenes subidas...
+import { useState, useRef, useEffect, useId } from "react"; //Función de React para maneja el estado local como detalles del producto, imágenes subidas...
 import { useRouter } from "next/navigation"; //Función para programáticamente navegar a otras páginas después de publicar el producto.
 import Image from "next/image"; //Componente optimizado para mostrar las imágenes de los productos.
 import { toast } from "sonner"; //Librería para mostrar notificaciones al usuario, como errores de validación o confirmación de publicación.
-import { X, Plus, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, Info } from "lucide-react";
+import { X, Pencil, ChevronDown, ChevronLeft, ChevronRight, CalendarDays, Info } from "lucide-react";
 import CropModal from "~/components/CropModal";
 
 import {
@@ -57,15 +57,16 @@ const TYPE_DESCRIPTIONS: Record<"UNIQUE" | "PERISHABLE" | "STANDARD", string> = 
 //Selector personalizado con dropdown estilizado con la paleta de la app, igual que LocalidadSelect.
 //Evita el dropdown nativo del navegador (que no se puede estilizar) y usa un <ul> custom.
 function SelectField({
-  id, value, onChange, options, placeholder, disabled = false,
+  label, value, onChange, options, placeholder, disabled = false,
 }: {
-  id: string;
+  label?: string;
   value: string;
   onChange: (value: string) => void;
   options: readonly { value: string; label: string }[];
   placeholder?: string;
   disabled?: boolean;
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -80,40 +81,47 @@ function SelectField({
   const selected = options.find((o) => o.value === value);
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        id={id}
-        disabled={disabled}
-        onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
-        className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
-      >
-        <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
-        <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
-      </button>
-
-      {open && (
-        <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
-          {placeholder && (
-            <li
-              onMouseDown={(e) => { e.preventDefault(); onChange(""); setOpen(false); }}
-              className="cursor-pointer px-3 py-2 text-sm text-[--text-muted] transition-colors hover:bg-[#ccc8bc]"
-            >
-              {placeholder}
-            </li>
-          )}
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
-              className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+          {label}
+        </label>
       )}
-    </div>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          id={uid}
+          disabled={disabled}
+          onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
+          className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
+        >
+          <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
+          <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
+        </button>
+
+        {open && (
+          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
+            {placeholder && (
+              <li
+                onMouseDown={(e) => { e.preventDefault(); onChange(""); setOpen(false); }}
+                className="cursor-pointer px-3 py-2 text-sm text-[--text-muted] transition-colors hover:bg-[#ccc8bc]"
+              >
+                {placeholder}
+              </li>
+            )}
+            {options.map((opt) => (
+              <li
+                key={opt.value}
+                onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
+                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
+              >
+                {opt.label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -163,7 +171,7 @@ function SortablePhoto({
         </button>
       </div>
       {isHero ? (
-        <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-0.5 text-[11px] font-medium text-white">
+        <span className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-0.5 text-[11px] font-medium text-white">
           Portada
         </span>
       ) : (
@@ -194,13 +202,14 @@ function dateToISO(date: Date): string {
 }
 
 function DatePickerField({
-  id, value, onChange, min,
+  label, value, onChange, min,
 }: {
-  id: string;
+  label?: string;
   value: string; // YYYY-MM-DD o vacío
   onChange: (value: string) => void;
   min?: string;  // YYYY-MM-DD
 }) {
+  const uid = useId();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -295,11 +304,17 @@ function DatePickerField({
   }
 
   return (
-    <div ref={ref} className="relative">
+    <>
+      {label && (
+        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+          {label}
+        </label>
+      )}
+      <div ref={ref} className="relative">
       {/* Trigger: input de texto + botón icono calendario */}
       <div className="flex items-center overflow-hidden rounded-lg border border-[--border] bg-white transition-colors focus-within:border-[#3d5a4f]">
         <input
-          id={id}
+          id={uid}
           type="text"
           inputMode="numeric"
           value={inputText}
@@ -395,6 +410,7 @@ function DatePickerField({
         </div>
       )}
     </div>
+    </>
   );
 }
 
@@ -412,7 +428,7 @@ export default function NewProductWizard() {
   // Cada foto guarda la URL ya subida + el File original para poder re-recortar
   const [images, setImages] = useState<Array<{ url: string; file: File }>>([]);
   const [cropState, setCropState] = useState<{ file: File; replacingIndex: number | null } | null>(null);
-  const [cropQueue, setCropQueue] = useState<File[]>([]);
+  const [_cropQueue, setCropQueue] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [stepOneError, setStepOneError] = useState<string | null>(null); // P31: error de validación del paso 1
@@ -595,7 +611,7 @@ export default function NewProductWizard() {
   if (step === 1) {
     return (
       <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-        <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
+        <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
 
         <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes del producto</p>
 
@@ -636,7 +652,7 @@ export default function NewProductWizard() {
                     key={`empty-${i}`}
                     className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] transition-colors hover:border-[#3d5a4f]/50 hover:bg-[--surface-2]${isHero ? " col-span-2 row-span-2" : ""}`}
                   >
-                    <Plus size={isHero ? 32 : 22} className="text-[#3d5a4f]/60" />
+                    <span className={`select-none font-extralight leading-none text-[#3d5a4f]/50 ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
                     <span className={`text-[--text-muted] ${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
                       {isHero ? "Portada" : `Imagen ${i + 1}`}
                     </span>
@@ -711,7 +727,7 @@ export default function NewProductWizard() {
   // ─── Paso 2: datos ────────────────────────────────────────────────────────
   return (
     <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-      <h1 className="font-display text-xl font-bold text-[--text]">Añadir nuevo producto</h1>
+      <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
 
       <p className="text-sm text-[--text-muted]">Paso 2 de 2 — Completa los detalles</p>
 
@@ -719,13 +735,22 @@ export default function NewProductWizard() {
         {images.map(({ url }, i) => (
           <div key={url} className="relative h-14 w-14 overflow-hidden rounded-lg border border-[--border]">
             <Image src={url} alt={`Imagen ${i + 1}`} fill className="object-cover" sizes="56px" />
+            {i === 0 ? (
+              <span className="absolute bottom-1 left-1 rounded bg-black/50 px-1 py-0.5 text-[8px] font-medium leading-none text-white">
+                Portada
+              </span>
+            ) : (
+              <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 py-0.5 text-[8px] leading-none text-white">
+                {i + 1}
+              </span>
+            )}
           </div>
         ))}
       </div>
 
       <div className="space-y-4">
-        <div className="space-y-1">
-          <Label htmlFor="name" className="font-normal text-[--text-muted]">
+        <div className="space-y-2">
+          <Label htmlFor="name" className="block pl-1 font-normal text-[--text-muted]">
             Nombre del producto
           </Label>
           <Input
@@ -738,8 +763,8 @@ export default function NewProductWizard() {
           {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="price" className="font-normal text-[--text-muted]">
+        <div className="space-y-2">
+          <Label htmlFor="price" className="block pl-1 font-normal text-[--text-muted]">
             Precio (€)
           </Label>
           <Input
@@ -755,38 +780,30 @@ export default function NewProductWizard() {
           {errors.priceInCents && <p className="text-xs text-red-600">{errors.priceInCents}</p>}
         </div>
 
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="description" className="font-normal text-[--text-muted]">
+        <div>
+          <div className="space-y-2">
+            <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
               Descripción breve
             </Label>
-            <span
-              className={`text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}
-            >
-              {/* P27: mostrar restantes cuando queden ≤20 caracteres */}
-              {description.length > 260
-                ? `${280 - description.length} restantes`
-                : `${description.length}/280`}
-            </span>
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="Cuéntanos sobre esta pieza..."
+              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+            />
           </div>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            maxLength={280}
-            rows={3}
-            placeholder="Cuéntanos sobre esta pieza..."
-            className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
-          />
+          <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+            {280 - description.length} restantes
+          </p>
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="category" className="font-normal text-[--text-muted]">
-            Categoría
-          </Label>
+        <div className="!mt-0 space-y-2">
           <SelectField
-            id="category"
+            label="Categoría"
             value={category}
             onChange={handleCategoryChange}
             placeholder="Selecciona una categoría"
@@ -795,12 +812,9 @@ export default function NewProductWizard() {
           {errors.category && <p className="text-xs text-red-600">{errors.category}</p>}
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="type" className="font-normal text-[--text-muted]">
-            Tipo de producto
-          </Label>
+        <div className="space-y-2">
           <SelectField
-            id="type"
+            label="Tipo de producto"
             value={type}
             onChange={(v) => setType(v as typeof type)}
             disabled={typeIsForced}
@@ -813,12 +827,9 @@ export default function NewProductWizard() {
         </div>
 
         {type === "PERISHABLE" && (
-          <div className="space-y-1">
-            <Label htmlFor="expiresAt" className="font-normal text-[--text-muted]">
-              Fecha límite de disponibilidad
-            </Label>
+          <div className="space-y-2">
             <DatePickerField
-              id="expiresAt"
+              label="Fecha límite de disponibilidad"
               value={expiresAt}
               onChange={setExpiresAt}
               min={(() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; })()}

@@ -1,12 +1,12 @@
 //Esta página es para que la artesana pueda editar su perfil público (nombre, localidad, biografía, foto de perfil y portada)
 
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next"; //Para definir el título de la página en el navegador.
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
-import StudioProfileEditor from "./StudioProfileEditor"; //Componente para editar el perfil público del artesano (nombre, localidad y biografía)
-import AccountSettings from "~/components/account/AccountSettings"; //Componente para mostrar opciones de configuración de cuenta (cambiar contraseña, eliminar cuenta...)
+import ProfilePageClient from "./ProfilePageClient"; // Gestiona editor de perfil + botones de cuenta en una sola fila
 
 //Metadata para definir el título de la página
 export const metadata: Metadata = { title: "Mi perfil — Artelier" };
@@ -41,27 +41,18 @@ export default async function StudioProfilePage() {
   return (
     <main className="bg-[--bg]">
       {/* ── Título de sección ── */}
-      <div className="px-4 pt-8 pb-4">
+      <div className="flex items-center justify-between px-4 pt-8 pb-4">
         <h1 className="font-display text-xl font-bold text-[--text]">Mi perfil</h1>
+        <Link
+          href={`/artisan/${user.id}`}
+          className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+        >
+          Ver tu perfil público
+        </Link>
       </div>
 
-      {/* ── Perfil público ── */}
-      <StudioProfileEditor user={user} sealRequests={sealRequests} />
-
-      {/* ── Cuenta ── */}
-      <section className="mt-8 space-y-8 px-5">
-        <hr className="border-[#ccc8bc]" />
-
-        {/* Email */}
-        <div className="space-y-2">
-          <p className="text-xs font-medium text-[--text-muted]">Correo electrónico</p>
-          <div className="w-full rounded-lg border border-[#ccc8bc] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
-            {user.email}
-          </div>
-        </div>
-
-        <AccountSettings />
-      </section>
+      {/* ── Editor de perfil + botones de cuenta ── */}
+      <ProfilePageClient user={user} sealRequests={sealRequests} />
     </main>
   );
 }

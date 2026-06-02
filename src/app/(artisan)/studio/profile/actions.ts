@@ -19,6 +19,41 @@ const processUpdateSchema = z.object({
   imageUrl: z.string().url().optional().or(z.literal("")),
 });
 
+// Guarda solo los campos de texto del perfil (nombre, bio, localidad) sin tocar las imágenes
+export async function saveProfileInfo(data: unknown) {
+  const session = await getServerSession();
+  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
+  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+
+  const schema = z.object({
+    name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
+    bio: z.string().trim().max(150, "La bio no puede superar 150 caracteres").optional().or(z.literal("")),
+    locality: z.string().trim().min(2, "Introduce tu localidad"),
+  });
+
+  const parsed = schema.safeParse(data);
+  if (!parsed.success) {
+    return {
+      error: {
+        code: "VALIDATION_ERROR" as const,
+        fields: parsed.error.flatten().fieldErrors,
+      },
+    };
+  }
+
+  const { name, bio, locality } = parsed.data;
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { name, bio: bio ?? null, locality },
+  });
+
+  revalidatePath(`/artisan/${session.user.id}`);
+  revalidatePath("/studio/profile");
+
+  return { success: true } as const;
+}
+
 export async function saveProfile(data: unknown) {
   const session = await getServerSession();
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };

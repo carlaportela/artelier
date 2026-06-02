@@ -47,7 +47,7 @@ export default function ArtisanProfileTabs({
 
       {/* Tienda */}
       {activeTab === "shop" && (
-        <div className="mt-4">
+        <div className="mt-4 pb-8">
           {products.length === 0 ? (
             <p className="py-12 text-center text-sm text-[--text-muted]">
               {t("noProducts")}
@@ -59,18 +59,28 @@ export default function ArtisanProfileTabs({
                   key={product.id}
                   className="overflow-hidden rounded-lg bg-[--surface] border border-[--border]"
                 >
-                  {product.imageUrls[0] ? (
-                    <div className="relative aspect-square w-full">
+                  <div className="relative aspect-square w-full">
+                    {product.imageUrls[0] ? (
                       <Image
                         src={product.imageUrls[0]}
                         alt={product.name}
                         fill
-                        className="object-cover"
+                        className={`object-cover ${product.status === "SOLD" ? "opacity-70" : ""}`}
                       />
-                    </div>
-                  ) : (
-                    <div className="aspect-square w-full bg-[--border]" />
-                  )}
+                    ) : (
+                      <div className="h-full w-full bg-[--border]" />
+                    )}
+                    {/* Badge de estado */}
+                    <span
+                      className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${
+                        product.status === "SOLD"
+                          ? "bg-gray-900/65 text-white"
+                          : "bg-[#8f9e94]/90 text-white"
+                      }`}
+                    >
+                      {product.status === "SOLD" ? "Vendido" : "En stock"}
+                    </span>
+                  </div>
                   <div className="p-2">
                     <p className="truncate font-display text-base text-[--text]">{product.name}</p>
                     <p className="text-xs text-[--text-muted]">

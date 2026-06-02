@@ -4,12 +4,12 @@
 
 import { useState, useEffect, useTransition, useRef } from "react";
 import Image from "next/image";
-import { LayoutGrid, List, Plus, X, Upload, Pencil, Trash2 } from "lucide-react";
+import { Grid3x3, Grid2x2, Rows3, LayoutList, X, Upload, Pencil, Trash2 } from "lucide-react";
 import type { ProcessUpdate } from "generated/prisma";
 
 import { createPublicacion, updatePublicacion, deletePublicacion } from "./actions";
 
-type View = "grid" | "scroll";
+type View = "grid3" | "grid2" | "grid1" | "scroll";
 
 // ─── Form (new / edit) ────────────────────────────────────────────────────────
 
@@ -130,7 +130,7 @@ function PublicacionForm({
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 cursor-pointer rounded-full border border-[--border] py-2 text-sm text-[--text] transition-colors hover:bg-[--surface]"
+          className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
         >
           Cancelar
         </button>
@@ -186,7 +186,7 @@ function Sheet({
 // ─── Main view ────────────────────────────────────────────────────────────────
 
 export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] }) {
-  const [view, setView] = useState<View>("grid");
+  const [view, setView] = useState<View>("grid3");
   const [viewPost, setViewPost] = useState<ProcessUpdate | null>(null);
   const [editPost, setEditPost] = useState<ProcessUpdate | null>(null);
   const [showNew, setShowNew] = useState(false);
@@ -195,7 +195,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
 
   useEffect(() => {
     const saved = localStorage.getItem("publicaciones-view") as View | null;
-    if (saved === "grid" || saved === "scroll") setView(saved);
+    if (saved && ["grid3", "grid2", "grid1", "scroll"].includes(saved)) setView(saved);
   }, []);
 
   function switchView(v: View) {
@@ -226,35 +226,34 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
       {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <div className="flex gap-1">
-          <button
-            onClick={() => switchView("grid")}
-            aria-label="Vista cuadrícula"
-            className={`cursor-pointer rounded-lg p-2 transition-colors ${
-              view === "grid"
-                ? "bg-[--surface-2] text-[#3d5a4f]"
-                : "text-[--text-muted] hover:text-[--text]"
-            }`}
-          >
-            <LayoutGrid size={18} />
-          </button>
-          <button
-            onClick={() => switchView("scroll")}
-            aria-label="Vista lista"
-            className={`cursor-pointer rounded-lg p-2 transition-colors ${
-              view === "scroll"
-                ? "bg-[--surface-2] text-[#3d5a4f]"
-                : "text-[--text-muted] hover:text-[--text]"
-            }`}
-          >
-            <List size={18} />
-          </button>
+          {(
+            [
+              { v: "grid3", icon: <Grid3x3 size={18} />, label: "3 columnas" },
+              { v: "grid2", icon: <Grid2x2 size={18} />, label: "2 columnas" },
+              { v: "grid1", icon: <Rows3 size={18} />, label: "1 columna" },
+              { v: "scroll", icon: <LayoutList size={18} />, label: "Vista artículo" },
+            ] as { v: typeof view; icon: React.ReactNode; label: string }[]
+          ).map(({ v, icon, label }) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => switchView(v)}
+              aria-label={label}
+              className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors ${
+                view === v
+                  ? "bg-[--surface-2] text-[#3d5a4f]"
+                  : "text-[--text-muted] hover:bg-[#ccc8bc]/50 hover:text-[--text]"
+              }`}
+            >
+              {icon}
+            </button>
+          ))}
         </div>
         <button
           onClick={() => setShowNew(true)}
           className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
         >
-          <Plus size={14} />
-          Nueva
+          Añadir novedad
         </button>
       </div>
 
@@ -271,9 +270,17 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
         </div>
       )}
 
-      {/* ── Grid view ── */}
-      {posts.length > 0 && view === "grid" && (
-        <div className="grid grid-cols-3 gap-0.5 overflow-hidden rounded-xl">
+      {/* ── Grid views (3 / 2 / 1 columna) ── */}
+      {posts.length > 0 && view !== "scroll" && (
+        <div
+          className={`grid gap-0.5 overflow-hidden rounded-xl ${
+            view === "grid3"
+              ? "grid-cols-3"
+              : view === "grid2"
+                ? "grid-cols-2"
+                : "grid-cols-1"
+          }`}
+        >
           {posts.map((post) => (
             <button
               key={post.id}

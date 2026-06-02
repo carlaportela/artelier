@@ -1,7 +1,8 @@
+//Página pública del artesano, acceso para compradores y para el propio artesano desde "Mi perfil público"
+
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
@@ -38,8 +39,8 @@ export default async function ArtisanPublicPage({ params }: Props) {
       where: { id, role: "ARTISAN", deletedAt: null, suspended: false },
       include: {
         products: {
-          where: { status: "ACTIVE", deletedAt: null },
-          orderBy: { createdAt: "desc" },
+          where: { status: { in: ["ACTIVE", "SOLD"] }, deletedAt: null },
+          orderBy: [{ status: "asc" }, { createdAt: "desc" }],
         },
         processUpdates: {
           where: { deletedAt: null },
@@ -75,12 +76,11 @@ export default async function ArtisanPublicPage({ params }: Props) {
     <main className="min-h-screen bg-[--bg]">
       {isOwnProfile && (
         <div className="flex items-center justify-between px-4 pt-8 pb-4">
-          <h1 className="font-display text-xl font-bold text-[--text]">Tu puesto de artesanía</h1>
+          <h1 className="font-display text-xl font-bold text-[--text]">Mi puesto de artesanía</h1>
           <Link
             href="/studio/profile"
-            className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+            className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
           >
-            <ArrowLeft size={13} />
             Volver a mi perfil
           </Link>
         </div>
