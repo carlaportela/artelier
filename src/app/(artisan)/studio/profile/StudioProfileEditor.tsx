@@ -137,7 +137,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
       <div className="px-2">
         <div className="relative -mt-[79px] flex items-end justify-start">
           <div className="relative">
-            <PaletteAvatar src={avatarUrl || null} name={user.name ?? ""} className="h-40 w-40" />
+            <PaletteAvatar src={avatarUrl ?? null} name={user.name ?? ""} className="h-40 w-40" />
             <button
               type="button"
               onClick={() => setOptionsOpen("avatar")}
@@ -163,7 +163,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
             <p className="text-xs text-red-600">⚠ {uploadError}</p>
           )}
           <h2 className="font-display text-xl font-bold text-[--text]">
-            {user.name || <span className="text-[--text-muted]">Sin nombre</span>}
+            {user.name ?? <span className="text-[--text-muted]">Sin nombre</span>}
           </h2>
           {user.locality && (
             <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">

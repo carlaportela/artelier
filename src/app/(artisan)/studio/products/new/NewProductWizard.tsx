@@ -428,7 +428,7 @@ export default function NewProductWizard() {
   // Cada foto guarda la URL ya subida + el File original para poder re-recortar
   const [images, setImages] = useState<Array<{ url: string; file: File }>>([]);
   const [cropState, setCropState] = useState<{ file: File; replacingIndex: number | null } | null>(null);
-  const [cropQueue, setCropQueue] = useState<File[]>([]);
+  const [_cropQueue, setCropQueue] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [stepOneError, setStepOneError] = useState<string | null>(null); // P31: error de validación del paso 1

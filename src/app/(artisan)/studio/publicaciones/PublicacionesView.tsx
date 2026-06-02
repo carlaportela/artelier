@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useTransition, useRef } from "react";
 import Image from "next/image";
-import { Grid3x3, Grid2x2, Rows3, LayoutList, Plus, X, Upload, Pencil, Trash2 } from "lucide-react";
+import { Grid3x3, Grid2x2, Rows3, LayoutList, X, Upload, Pencil, Trash2 } from "lucide-react";
 import type { ProcessUpdate } from "generated/prisma";
 
 import { createPublicacion, updatePublicacion, deletePublicacion } from "./actions";

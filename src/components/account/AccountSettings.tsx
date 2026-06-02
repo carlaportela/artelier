@@ -12,9 +12,6 @@ type Section = "password" | "export" | "delete" | null;
 
 // ── Estilos compartidos ──────────────────────────────────────────────────────
 
-const btnPrimary =
-  "cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-60 disabled:cursor-not-allowed";
-
 const btnOutline =
   "cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]";
 
