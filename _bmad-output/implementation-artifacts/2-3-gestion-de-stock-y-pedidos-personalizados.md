@@ -285,14 +285,18 @@ En H2.2 se añadieron badges de estado sobre las imágenes de producto ("Vendido
 
 ### Completion Notes
 - Añadido modelo `CustomOrderRequest` + enum `CustomOrderStatus` al schema de Prisma con migración `20260602100330_add_custom_order_request`
-- Server actions de artesana: `acceptCustomOrder` (con upsert transaccional de Conversation) y `rejectCustomOrder`
-- Server action de compradora: `submitCustomOrderRequest` con validación Zod
+- Server actions de artesana: `acceptCustomOrder` (con upsert transaccional de Conversation) y `rejectCustomOrder` — en codebase para uso futuro
+- Server action de compradora: `submitCustomOrderRequest` con validación Zod — en codebase para uso futuro
 - Actions de follow/unfollow recuperadas en el mismo archivo (existían antes de esta historia)
-- `CustomOrderForm.tsx`: formulario con textarea + presupuesto en euros (convertido a cents), validación inline, estado de enviado
-- `/studio/pedidos/page.tsx`: reemplazado el placeholder por query real con separación pending/processed
-- `PedidosView.tsx`: lista con modales de confirmación Dialog para aceptar/rechazar, empty state
+- `CustomOrderForm.tsx`: existe en codebase pero NO integrado en ninguna página (reservado para historia futura)
+- `PedidosView.tsx`: existe en codebase pero NO usado (reservado para historia futura)
+- `/studio/pedidos/page.tsx`: placeholder descriptivo con icono Package — explica que los pedidos llegan con el sistema de pagos (Épica 5)
+- `/artisan/[id]/page.tsx`: NO integra CustomOrderForm — los encargos personalizados son funcionalidad posterior
 - Badge "Vendido" en perfil público ya presente desde H2.2 — T6 verificado sin cambios
 - Typecheck y lint pasan sin errores
+
+### ⚠️ Ajuste de alcance post-implementación
+Los encargos personalizados (formulario + lista en /studio/pedidos) se implementaron inicialmente pero se retiraron de la UI activa. El modelo de BD y las server actions se mantienen en el código para reutilizar cuando se implemente la funcionalidad completa. La página /studio/pedidos queda como placeholder para pedidos reales de compra (Épica 5).
 
 ### Debug Log
 - Al crear `actions.ts` en `/artisan/[id]/` se sobreescribieron las funciones `followArtisan`/`unfollowArtisan` que ya existían → recuperadas en el mismo archivo combinando las tres acciones
@@ -300,13 +304,15 @@ En H2.2 se añadieron badges de estado sobre las imágenes de producto ("Vendido
 ## Change Log
 - 2026-06-02: Historia creada (create-story, Historia 2.3)
 - 2026-06-02: Historia implementada (dev-story, Historia 2.3)
+- 2026-06-02: Ajuste de alcance — UI de encargos personalizados retirada; placeholder mejorado en /studio/pedidos
 
 ## File List
 - `prisma/schema.prisma` — añadido enum `CustomOrderStatus` + modelo `CustomOrderRequest` + relaciones en `User`
 - `prisma/migrations/20260602100330_add_custom_order_request/migration.sql` — migración generada
-- `src/app/(artisan)/studio/pedidos/actions.ts` — NEW: `acceptCustomOrder`, `rejectCustomOrder`
-- `src/app/(artisan)/studio/pedidos/page.tsx` — UPDATE: reemplazado placeholder por query real
-- `src/app/(artisan)/studio/pedidos/PedidosView.tsx` — NEW: Client Component con listas + modales
+- `generated/prisma/` — cliente Prisma regenerado
+- `src/app/(artisan)/studio/pedidos/actions.ts` — NEW: `acceptCustomOrder`, `rejectCustomOrder` (sin UI activa aún)
+- `src/app/(artisan)/studio/pedidos/page.tsx` — UPDATE: placeholder descriptivo para pedidos de compra futuros
+- `src/app/(artisan)/studio/pedidos/PedidosView.tsx` — NEW: Client Component (sin uso activo aún, reservado)
 - `src/app/(buyer)/artisan/[id]/actions.ts` — UPDATE: añadido `submitCustomOrderRequest` (conservadas `followArtisan`/`unfollowArtisan`)
-- `src/app/(buyer)/artisan/[id]/CustomOrderForm.tsx` — NEW: formulario de encargo para compradora
-- `src/app/(buyer)/artisan/[id]/page.tsx` — UPDATE: integrado `CustomOrderForm` para compradores
+- `src/app/(buyer)/artisan/[id]/CustomOrderForm.tsx` — NEW: formulario de encargo (sin integración activa aún)
+- `src/app/(buyer)/artisan/[id]/page.tsx` — UPDATE: sin CustomOrderForm (retirado del perfil público)
