@@ -58,7 +58,7 @@ export async function submitCustomOrderRequest(artisanId: string, data: unknown)
   if (session.user.role !== "BUYER") return { error: { code: "FORBIDDEN" as const } };
 
   //Verificar que la artesana existe y está activa.
-  const artisan = await db.user.findUnique({
+  const artisan = await db.user.findFirst({
     where: { id: artisanId, role: "ARTISAN", deletedAt: null, suspended: false },
     select: { id: true },
   });

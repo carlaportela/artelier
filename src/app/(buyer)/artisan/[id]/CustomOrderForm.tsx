@@ -28,10 +28,13 @@ export default function CustomOrderForm({ artisanId, artisanName }: Props) {
     setFieldErrors({});
     setIsPending(true);
 
-    const budgetInCents =
-      budgetEuros.trim() !== ""
-        ? Math.round(parseFloat(budgetEuros) * 100)
-        : undefined;
+    const parsedBudget = budgetEuros.trim() !== "" ? parseFloat(budgetEuros) : undefined;
+    if (parsedBudget !== undefined && Number.isNaN(parsedBudget)) {
+      setFieldErrors({ budgetInCents: ["Introduce un número válido"] });
+      setIsPending(false);
+      return;
+    }
+    const budgetInCents = parsedBudget !== undefined ? Math.round(parsedBudget * 100) : undefined;
 
     const result = await submitCustomOrderRequest(artisanId, {
       description,

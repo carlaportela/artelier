@@ -15,7 +15,7 @@ export async function acceptCustomOrder(requestId: string) {
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
   if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
 
-  const request = await db.customOrderRequest.findUnique({
+  const request = await db.customOrderRequest.findFirst({
     where: { id: requestId, deletedAt: null },
     select: { artisanId: true, buyerId: true, status: true },
   });
@@ -55,7 +55,7 @@ export async function rejectCustomOrder(requestId: string) {
   if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
   if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
 
-  const request = await db.customOrderRequest.findUnique({
+  const request = await db.customOrderRequest.findFirst({
     where: { id: requestId, deletedAt: null },
     select: { artisanId: true, status: true },
   });
