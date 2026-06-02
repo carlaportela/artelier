@@ -61,6 +61,12 @@ enum ShippingMethod {
   PICKUP
 }
 
+enum CustomOrderStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 // ─── Auth.js required models ──────────────────────────────────────────────────
 
 model Account {
@@ -120,19 +126,21 @@ model User {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
-  accounts             Account[]
-  sessions             Session[]
-  products             Product[]
-  buyerOrders          Order[]         @relation("BuyerOrders")
-  artisanOrders        Order[]         @relation("ArtisanOrders")
-  buyerConversations   Conversation[]  @relation("BuyerConversations")
-  artisanConversations Conversation[]  @relation("ArtisanConversations")
-  sentMessages         Message[]
-  follows              Follow[]        @relation("Follower")
-  followers            Follow[]        @relation("Following")
-  disputes             Dispute[]
-  processUpdates       ProcessUpdate[]
-  sealRequests         SealRequest[]
+  accounts              Account[]
+  sessions              Session[]
+  products              Product[]
+  buyerOrders           Order[]              @relation("BuyerOrders")
+  artisanOrders         Order[]              @relation("ArtisanOrders")
+  buyerConversations    Conversation[]       @relation("BuyerConversations")
+  artisanConversations  Conversation[]       @relation("ArtisanConversations")
+  sentMessages          Message[]
+  follows               Follow[]             @relation("Follower")
+  followers             Follow[]             @relation("Following")
+  disputes              Dispute[]
+  processUpdates        ProcessUpdate[]
+  sealRequests          SealRequest[]
+  customOrdersAsBuyer   CustomOrderRequest[] @relation("BuyerCustomOrders")
+  customOrdersAsArtisan CustomOrderRequest[] @relation("ArtisanCustomOrders")
 }
 
 model Product {
@@ -180,6 +188,21 @@ model Order {
   artisan  User      @relation("ArtisanOrders", fields: [artisanId], references: [id])
   product  Product   @relation(fields: [productId], references: [id])
   disputes Dispute[]
+}
+
+model CustomOrderRequest {
+  id            String            @id @default(cuid())
+  buyerId       String
+  artisanId     String
+  description   String
+  budgetInCents Int?
+  status        CustomOrderStatus @default(PENDING)
+  deletedAt     DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  buyer   User @relation("BuyerCustomOrders", fields: [buyerId], references: [id])
+  artisan User @relation("ArtisanCustomOrders", fields: [artisanId], references: [id])
 }
 
 model Conversation {
