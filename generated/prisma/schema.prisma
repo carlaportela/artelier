@@ -203,6 +203,9 @@ model CustomOrderRequest {
 
   buyer   User @relation("BuyerCustomOrders", fields: [buyerId], references: [id])
   artisan User @relation("ArtisanCustomOrders", fields: [artisanId], references: [id])
+
+  @@index([artisanId, status, deletedAt])
+  @@index([buyerId])
 }
 
 model Conversation {
