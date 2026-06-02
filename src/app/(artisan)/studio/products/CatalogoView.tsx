@@ -22,6 +22,7 @@ type Product = {
   priceInCents: number;
   status: "ACTIVE" | "SOLD" | "EXPIRED";
   imageUrls: string[];
+  expiresAt: Date | null;
   seals: { seal: { id: string; name: string } }[];
 };
 
@@ -30,22 +31,27 @@ const fmt = (cents: number) =>
 
 // ── StatusPill ────────────────────────────────────────────────────────────────
 
-function StatusPill({ status }: { status: "ACTIVE" | "SOLD" | "EXPIRED" }) {
-  if (status === "ACTIVE")
-    return (
-      <span className="rounded bg-[#8f9e94] px-1.5 py-0.5 text-xs font-medium text-white">
-        En stock
-      </span>
-    );
-  if (status === "SOLD")
-    return (
-      <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
-        Vendido
-      </span>
-    );
+type Status = "ACTIVE" | "SOLD" | "EXPIRED";
+
+function getListBadge(status: Status, expiresAt: Date | null) {
+  if (status === "ACTIVE" && expiresAt) {
+    return { label: "Por tiempo limitado", className: "bg-[#c4956a] text-white" };
+  }
+  if (status === "ACTIVE") return null;
+  const labels: Record<"SOLD" | "EXPIRED", string> = { SOLD: "Vendido", EXPIRED: "No disponible" };
+  const classes: Record<"SOLD" | "EXPIRED", string> = {
+    SOLD:    "bg-gray-900/65 text-white",
+    EXPIRED: "bg-gray-700 text-white",
+  };
+  return { label: labels[status], className: classes[status] };
+}
+
+function StatusPill({ status, expiresAt }: { status: Status; expiresAt: Date | null }) {
+  const badge = getListBadge(status, expiresAt);
+  if (!badge) return null;
   return (
-    <span className="rounded bg-amber-50 px-1.5 py-0.5 text-xs text-amber-700">
-      Caducado
+    <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+      {badge.label}
     </span>
   );
 }
@@ -76,7 +82,7 @@ function ProductListRow({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2 transition-colors hover:border-[#c4956a]/40">
+      <div className={`flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2 transition-colors ${product.status !== "EXPIRED" ? "hover:border-[#c4956a]/40" : "opacity-60"}`}>
         {/* Miniatura */}
         <Link
           href={`/studio/products/${product.id}`}
@@ -100,10 +106,10 @@ function ProductListRow({ product }: { product: Product }) {
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-[--text]">{product.name}</p>
+          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
           <div className="mt-0.5 flex items-center gap-2">
             <p className="text-xs text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
-            <StatusPill status={product.status} />
+            <StatusPill status={product.status} expiresAt={product.expiresAt} />
           </div>
         </div>
 

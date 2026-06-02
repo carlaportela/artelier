@@ -39,7 +39,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
       where: { id, role: "ARTISAN", deletedAt: null, suspended: false },
       include: {
         products: {
-          where: { status: { in: ["ACTIVE", "SOLD"] }, deletedAt: null },
+          where: { status: { in: ["ACTIVE", "SOLD", "EXPIRED"] }, deletedAt: null },
           orderBy: [{ status: "asc" }, { createdAt: "desc" }],
         },
         processUpdates: {

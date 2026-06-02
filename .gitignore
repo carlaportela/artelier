@@ -47,3 +47,6 @@ yarn-error.log*
 
 # MCP config (contains env var references, keep local)
 .mcp.json
+
+# Prisma temporary files (generated during prisma generate, safe to ignore)
+generated/prisma/*.tmp*
