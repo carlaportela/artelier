@@ -1,3 +1,5 @@
+//Página pública del artesano, acceso para compradores y para el propio artesano desde "Mi perfil público"
+
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
