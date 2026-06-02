@@ -67,7 +67,7 @@ Como artesana, quiero editar los datos de mis productos, eliminarlos cuando sea 
 
 **`src/app/(artisan)/studio/products/page.tsx` — MODIFICAR**
 
-Estado actual: grid 2 columnas, query con `deletedAt: null` y `status: { in: ["ACTIVE", "SOLD"] }`, overlay de "Vendido" sobre imagen, empty state con CTA "Publica tu primera pieza", format de precio en EUR.
+Estado actual: grid 2 columnas, query con `deletedAt: null` y `status: { in: ["ACTIVE", "SOLD"] }`, overlay de "Vendido" sobre imagen, empty state con CTA "Publica tu primera pieza", formato de precio en EUR.
 
 Cambios necesarios para AC4:
 1. Quitar `status: { in: ["ACTIVE", "SOLD"] }` de la query para incluir EXPIRED
