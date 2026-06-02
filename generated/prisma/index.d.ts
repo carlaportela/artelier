@@ -44,6 +44,11 @@ export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
  */
 export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
 /**
+ * Model CustomOrderRequest
+ * 
+ */
+export type CustomOrderRequest = $Result.DefaultSelection<Prisma.$CustomOrderRequestPayload>
+/**
  * Model Conversation
  * 
  */
@@ -164,6 +169,15 @@ export const ShippingMethod: {
 
 export type ShippingMethod = (typeof ShippingMethod)[keyof typeof ShippingMethod]
 
+
+export const CustomOrderStatus: {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED'
+};
+
+export type CustomOrderStatus = (typeof CustomOrderStatus)[keyof typeof CustomOrderStatus]
+
 }
 
 export type Role = $Enums.Role
@@ -193,6 +207,10 @@ export const SealRequestStatus: typeof $Enums.SealRequestStatus
 export type ShippingMethod = $Enums.ShippingMethod
 
 export const ShippingMethod: typeof $Enums.ShippingMethod
+
+export type CustomOrderStatus = $Enums.CustomOrderStatus
+
+export const CustomOrderStatus: typeof $Enums.CustomOrderStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -371,6 +389,16 @@ export class PrismaClient<
     * ```
     */
   get order(): Prisma.OrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customOrderRequest`: Exposes CRUD operations for the **CustomOrderRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomOrderRequests
+    * const customOrderRequests = await prisma.customOrderRequest.findMany()
+    * ```
+    */
+  get customOrderRequest(): Prisma.CustomOrderRequestDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.conversation`: Exposes CRUD operations for the **Conversation** model.
@@ -908,6 +936,7 @@ export namespace Prisma {
     User: 'User',
     Product: 'Product',
     Order: 'Order',
+    CustomOrderRequest: 'CustomOrderRequest',
     Conversation: 'Conversation',
     Message: 'Message',
     Dispute: 'Dispute',
@@ -935,7 +964,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "user" | "product" | "order" | "conversation" | "message" | "dispute" | "seal" | "productSeal" | "sealRequest" | "follow" | "processUpdate" | "transactionLog"
+      modelProps: "account" | "session" | "verificationToken" | "user" | "product" | "order" | "customOrderRequest" | "conversation" | "message" | "dispute" | "seal" | "productSeal" | "sealRequest" | "follow" | "processUpdate" | "transactionLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1380,6 +1409,80 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderCountArgs<ExtArgs>
             result: $Utils.Optional<OrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      CustomOrderRequest: {
+        payload: Prisma.$CustomOrderRequestPayload<ExtArgs>
+        fields: Prisma.CustomOrderRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomOrderRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomOrderRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomOrderRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomOrderRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          findMany: {
+            args: Prisma.CustomOrderRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>[]
+          }
+          create: {
+            args: Prisma.CustomOrderRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          createMany: {
+            args: Prisma.CustomOrderRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomOrderRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomOrderRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          update: {
+            args: Prisma.CustomOrderRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomOrderRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomOrderRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomOrderRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomOrderRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomOrderRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomOrderRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomOrderRequest>
+          }
+          groupBy: {
+            args: Prisma.CustomOrderRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomOrderRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomOrderRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomOrderRequestCountAggregateOutputType> | number
           }
         }
       }
@@ -2151,6 +2254,7 @@ export namespace Prisma {
     user?: UserOmit
     product?: ProductOmit
     order?: OrderOmit
+    customOrderRequest?: CustomOrderRequestOmit
     conversation?: ConversationOmit
     message?: MessageOmit
     dispute?: DisputeOmit
@@ -2253,6 +2357,8 @@ export namespace Prisma {
     disputes: number
     processUpdates: number
     sealRequests: number
+    customOrdersAsBuyer: number
+    customOrdersAsArtisan: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2269,6 +2375,8 @@ export namespace Prisma {
     disputes?: boolean | UserCountOutputTypeCountDisputesArgs
     processUpdates?: boolean | UserCountOutputTypeCountProcessUpdatesArgs
     sealRequests?: boolean | UserCountOutputTypeCountSealRequestsArgs
+    customOrdersAsBuyer?: boolean | UserCountOutputTypeCountCustomOrdersAsBuyerArgs
+    customOrdersAsArtisan?: boolean | UserCountOutputTypeCountCustomOrdersAsArtisanArgs
   }
 
   // Custom InputTypes
@@ -2371,6 +2479,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSealRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SealRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCustomOrdersAsBuyerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomOrderRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCustomOrdersAsArtisanArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomOrderRequestWhereInput
   }
 
 
@@ -6024,6 +6146,8 @@ export namespace Prisma {
     disputes?: boolean | User$disputesArgs<ExtArgs>
     processUpdates?: boolean | User$processUpdatesArgs<ExtArgs>
     sealRequests?: boolean | User$sealRequestsArgs<ExtArgs>
+    customOrdersAsBuyer?: boolean | User$customOrdersAsBuyerArgs<ExtArgs>
+    customOrdersAsArtisan?: boolean | User$customOrdersAsArtisanArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6105,6 +6229,8 @@ export namespace Prisma {
     disputes?: boolean | User$disputesArgs<ExtArgs>
     processUpdates?: boolean | User$processUpdatesArgs<ExtArgs>
     sealRequests?: boolean | User$sealRequestsArgs<ExtArgs>
+    customOrdersAsBuyer?: boolean | User$customOrdersAsBuyerArgs<ExtArgs>
+    customOrdersAsArtisan?: boolean | User$customOrdersAsArtisanArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6126,6 +6252,8 @@ export namespace Prisma {
       disputes: Prisma.$DisputePayload<ExtArgs>[]
       processUpdates: Prisma.$ProcessUpdatePayload<ExtArgs>[]
       sealRequests: Prisma.$SealRequestPayload<ExtArgs>[]
+      customOrdersAsBuyer: Prisma.$CustomOrderRequestPayload<ExtArgs>[]
+      customOrdersAsArtisan: Prisma.$CustomOrderRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6553,6 +6681,8 @@ export namespace Prisma {
     disputes<T extends User$disputesArgs<ExtArgs> = {}>(args?: Subset<T, User$disputesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     processUpdates<T extends User$processUpdatesArgs<ExtArgs> = {}>(args?: Subset<T, User$processUpdatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessUpdatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sealRequests<T extends User$sealRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$sealRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SealRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customOrdersAsBuyer<T extends User$customOrdersAsBuyerArgs<ExtArgs> = {}>(args?: Subset<T, User$customOrdersAsBuyerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customOrdersAsArtisan<T extends User$customOrdersAsArtisanArgs<ExtArgs> = {}>(args?: Subset<T, User$customOrdersAsArtisanArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7297,6 +7427,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SealRequestScalarFieldEnum | SealRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.customOrdersAsBuyer
+   */
+  export type User$customOrdersAsBuyerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    where?: CustomOrderRequestWhereInput
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    cursor?: CustomOrderRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomOrderRequestScalarFieldEnum | CustomOrderRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.customOrdersAsArtisan
+   */
+  export type User$customOrdersAsArtisanArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    where?: CustomOrderRequestWhereInput
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    cursor?: CustomOrderRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CustomOrderRequestScalarFieldEnum | CustomOrderRequestScalarFieldEnum[]
   }
 
   /**
@@ -9912,6 +10090,1158 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CustomOrderRequest
+   */
+
+  export type AggregateCustomOrderRequest = {
+    _count: CustomOrderRequestCountAggregateOutputType | null
+    _avg: CustomOrderRequestAvgAggregateOutputType | null
+    _sum: CustomOrderRequestSumAggregateOutputType | null
+    _min: CustomOrderRequestMinAggregateOutputType | null
+    _max: CustomOrderRequestMaxAggregateOutputType | null
+  }
+
+  export type CustomOrderRequestAvgAggregateOutputType = {
+    budgetInCents: number | null
+  }
+
+  export type CustomOrderRequestSumAggregateOutputType = {
+    budgetInCents: number | null
+  }
+
+  export type CustomOrderRequestMinAggregateOutputType = {
+    id: string | null
+    buyerId: string | null
+    artisanId: string | null
+    description: string | null
+    budgetInCents: number | null
+    status: $Enums.CustomOrderStatus | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomOrderRequestMaxAggregateOutputType = {
+    id: string | null
+    buyerId: string | null
+    artisanId: string | null
+    description: string | null
+    budgetInCents: number | null
+    status: $Enums.CustomOrderStatus | null
+    deletedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomOrderRequestCountAggregateOutputType = {
+    id: number
+    buyerId: number
+    artisanId: number
+    description: number
+    budgetInCents: number
+    status: number
+    deletedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomOrderRequestAvgAggregateInputType = {
+    budgetInCents?: true
+  }
+
+  export type CustomOrderRequestSumAggregateInputType = {
+    budgetInCents?: true
+  }
+
+  export type CustomOrderRequestMinAggregateInputType = {
+    id?: true
+    buyerId?: true
+    artisanId?: true
+    description?: true
+    budgetInCents?: true
+    status?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomOrderRequestMaxAggregateInputType = {
+    id?: true
+    buyerId?: true
+    artisanId?: true
+    description?: true
+    budgetInCents?: true
+    status?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomOrderRequestCountAggregateInputType = {
+    id?: true
+    buyerId?: true
+    artisanId?: true
+    description?: true
+    budgetInCents?: true
+    status?: true
+    deletedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomOrderRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomOrderRequest to aggregate.
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomOrderRequests to fetch.
+     */
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomOrderRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomOrderRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomOrderRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomOrderRequests
+    **/
+    _count?: true | CustomOrderRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CustomOrderRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomOrderRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomOrderRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomOrderRequestMaxAggregateInputType
+  }
+
+  export type GetCustomOrderRequestAggregateType<T extends CustomOrderRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomOrderRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomOrderRequest[P]>
+      : GetScalarType<T[P], AggregateCustomOrderRequest[P]>
+  }
+
+
+
+
+  export type CustomOrderRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomOrderRequestWhereInput
+    orderBy?: CustomOrderRequestOrderByWithAggregationInput | CustomOrderRequestOrderByWithAggregationInput[]
+    by: CustomOrderRequestScalarFieldEnum[] | CustomOrderRequestScalarFieldEnum
+    having?: CustomOrderRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomOrderRequestCountAggregateInputType | true
+    _avg?: CustomOrderRequestAvgAggregateInputType
+    _sum?: CustomOrderRequestSumAggregateInputType
+    _min?: CustomOrderRequestMinAggregateInputType
+    _max?: CustomOrderRequestMaxAggregateInputType
+  }
+
+  export type CustomOrderRequestGroupByOutputType = {
+    id: string
+    buyerId: string
+    artisanId: string
+    description: string
+    budgetInCents: number | null
+    status: $Enums.CustomOrderStatus
+    deletedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomOrderRequestCountAggregateOutputType | null
+    _avg: CustomOrderRequestAvgAggregateOutputType | null
+    _sum: CustomOrderRequestSumAggregateOutputType | null
+    _min: CustomOrderRequestMinAggregateOutputType | null
+    _max: CustomOrderRequestMaxAggregateOutputType | null
+  }
+
+  type GetCustomOrderRequestGroupByPayload<T extends CustomOrderRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomOrderRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomOrderRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomOrderRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomOrderRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomOrderRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
+    description?: boolean
+    budgetInCents?: boolean
+    status?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customOrderRequest"]>
+
+  export type CustomOrderRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
+    description?: boolean
+    budgetInCents?: boolean
+    status?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customOrderRequest"]>
+
+  export type CustomOrderRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
+    description?: boolean
+    budgetInCents?: boolean
+    status?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["customOrderRequest"]>
+
+  export type CustomOrderRequestSelectScalar = {
+    id?: boolean
+    buyerId?: boolean
+    artisanId?: boolean
+    description?: boolean
+    budgetInCents?: boolean
+    status?: boolean
+    deletedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomOrderRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "description" | "budgetInCents" | "status" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["customOrderRequest"]>
+  export type CustomOrderRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CustomOrderRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CustomOrderRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    buyer?: boolean | UserDefaultArgs<ExtArgs>
+    artisan?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CustomOrderRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomOrderRequest"
+    objects: {
+      buyer: Prisma.$UserPayload<ExtArgs>
+      artisan: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      buyerId: string
+      artisanId: string
+      description: string
+      budgetInCents: number | null
+      status: $Enums.CustomOrderStatus
+      deletedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customOrderRequest"]>
+    composites: {}
+  }
+
+  type CustomOrderRequestGetPayload<S extends boolean | null | undefined | CustomOrderRequestDefaultArgs> = $Result.GetResult<Prisma.$CustomOrderRequestPayload, S>
+
+  type CustomOrderRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomOrderRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomOrderRequestCountAggregateInputType | true
+    }
+
+  export interface CustomOrderRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomOrderRequest'], meta: { name: 'CustomOrderRequest' } }
+    /**
+     * Find zero or one CustomOrderRequest that matches the filter.
+     * @param {CustomOrderRequestFindUniqueArgs} args - Arguments to find a CustomOrderRequest
+     * @example
+     * // Get one CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomOrderRequestFindUniqueArgs>(args: SelectSubset<T, CustomOrderRequestFindUniqueArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomOrderRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomOrderRequestFindUniqueOrThrowArgs} args - Arguments to find a CustomOrderRequest
+     * @example
+     * // Get one CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomOrderRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomOrderRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomOrderRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestFindFirstArgs} args - Arguments to find a CustomOrderRequest
+     * @example
+     * // Get one CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomOrderRequestFindFirstArgs>(args?: SelectSubset<T, CustomOrderRequestFindFirstArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomOrderRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestFindFirstOrThrowArgs} args - Arguments to find a CustomOrderRequest
+     * @example
+     * // Get one CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomOrderRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomOrderRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomOrderRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomOrderRequests
+     * const customOrderRequests = await prisma.customOrderRequest.findMany()
+     * 
+     * // Get first 10 CustomOrderRequests
+     * const customOrderRequests = await prisma.customOrderRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customOrderRequestWithIdOnly = await prisma.customOrderRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomOrderRequestFindManyArgs>(args?: SelectSubset<T, CustomOrderRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomOrderRequest.
+     * @param {CustomOrderRequestCreateArgs} args - Arguments to create a CustomOrderRequest.
+     * @example
+     * // Create one CustomOrderRequest
+     * const CustomOrderRequest = await prisma.customOrderRequest.create({
+     *   data: {
+     *     // ... data to create a CustomOrderRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomOrderRequestCreateArgs>(args: SelectSubset<T, CustomOrderRequestCreateArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomOrderRequests.
+     * @param {CustomOrderRequestCreateManyArgs} args - Arguments to create many CustomOrderRequests.
+     * @example
+     * // Create many CustomOrderRequests
+     * const customOrderRequest = await prisma.customOrderRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomOrderRequestCreateManyArgs>(args?: SelectSubset<T, CustomOrderRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomOrderRequests and returns the data saved in the database.
+     * @param {CustomOrderRequestCreateManyAndReturnArgs} args - Arguments to create many CustomOrderRequests.
+     * @example
+     * // Create many CustomOrderRequests
+     * const customOrderRequest = await prisma.customOrderRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomOrderRequests and only return the `id`
+     * const customOrderRequestWithIdOnly = await prisma.customOrderRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomOrderRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomOrderRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomOrderRequest.
+     * @param {CustomOrderRequestDeleteArgs} args - Arguments to delete one CustomOrderRequest.
+     * @example
+     * // Delete one CustomOrderRequest
+     * const CustomOrderRequest = await prisma.customOrderRequest.delete({
+     *   where: {
+     *     // ... filter to delete one CustomOrderRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomOrderRequestDeleteArgs>(args: SelectSubset<T, CustomOrderRequestDeleteArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomOrderRequest.
+     * @param {CustomOrderRequestUpdateArgs} args - Arguments to update one CustomOrderRequest.
+     * @example
+     * // Update one CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomOrderRequestUpdateArgs>(args: SelectSubset<T, CustomOrderRequestUpdateArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomOrderRequests.
+     * @param {CustomOrderRequestDeleteManyArgs} args - Arguments to filter CustomOrderRequests to delete.
+     * @example
+     * // Delete a few CustomOrderRequests
+     * const { count } = await prisma.customOrderRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomOrderRequestDeleteManyArgs>(args?: SelectSubset<T, CustomOrderRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomOrderRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomOrderRequests
+     * const customOrderRequest = await prisma.customOrderRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomOrderRequestUpdateManyArgs>(args: SelectSubset<T, CustomOrderRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomOrderRequests and returns the data updated in the database.
+     * @param {CustomOrderRequestUpdateManyAndReturnArgs} args - Arguments to update many CustomOrderRequests.
+     * @example
+     * // Update many CustomOrderRequests
+     * const customOrderRequest = await prisma.customOrderRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomOrderRequests and only return the `id`
+     * const customOrderRequestWithIdOnly = await prisma.customOrderRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomOrderRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomOrderRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomOrderRequest.
+     * @param {CustomOrderRequestUpsertArgs} args - Arguments to update or create a CustomOrderRequest.
+     * @example
+     * // Update or create a CustomOrderRequest
+     * const customOrderRequest = await prisma.customOrderRequest.upsert({
+     *   create: {
+     *     // ... data to create a CustomOrderRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomOrderRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomOrderRequestUpsertArgs>(args: SelectSubset<T, CustomOrderRequestUpsertArgs<ExtArgs>>): Prisma__CustomOrderRequestClient<$Result.GetResult<Prisma.$CustomOrderRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomOrderRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestCountArgs} args - Arguments to filter CustomOrderRequests to count.
+     * @example
+     * // Count the number of CustomOrderRequests
+     * const count = await prisma.customOrderRequest.count({
+     *   where: {
+     *     // ... the filter for the CustomOrderRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomOrderRequestCountArgs>(
+      args?: Subset<T, CustomOrderRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomOrderRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomOrderRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomOrderRequestAggregateArgs>(args: Subset<T, CustomOrderRequestAggregateArgs>): Prisma.PrismaPromise<GetCustomOrderRequestAggregateType<T>>
+
+    /**
+     * Group by CustomOrderRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomOrderRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomOrderRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomOrderRequestGroupByArgs['orderBy'] }
+        : { orderBy?: CustomOrderRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomOrderRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomOrderRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomOrderRequest model
+   */
+  readonly fields: CustomOrderRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomOrderRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomOrderRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    buyer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    artisan<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomOrderRequest model
+   */
+  interface CustomOrderRequestFieldRefs {
+    readonly id: FieldRef<"CustomOrderRequest", 'String'>
+    readonly buyerId: FieldRef<"CustomOrderRequest", 'String'>
+    readonly artisanId: FieldRef<"CustomOrderRequest", 'String'>
+    readonly description: FieldRef<"CustomOrderRequest", 'String'>
+    readonly budgetInCents: FieldRef<"CustomOrderRequest", 'Int'>
+    readonly status: FieldRef<"CustomOrderRequest", 'CustomOrderStatus'>
+    readonly deletedAt: FieldRef<"CustomOrderRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"CustomOrderRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomOrderRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomOrderRequest findUnique
+   */
+  export type CustomOrderRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomOrderRequest to fetch.
+     */
+    where: CustomOrderRequestWhereUniqueInput
+  }
+
+  /**
+   * CustomOrderRequest findUniqueOrThrow
+   */
+  export type CustomOrderRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomOrderRequest to fetch.
+     */
+    where: CustomOrderRequestWhereUniqueInput
+  }
+
+  /**
+   * CustomOrderRequest findFirst
+   */
+  export type CustomOrderRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomOrderRequest to fetch.
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomOrderRequests to fetch.
+     */
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomOrderRequests.
+     */
+    cursor?: CustomOrderRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomOrderRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomOrderRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomOrderRequests.
+     */
+    distinct?: CustomOrderRequestScalarFieldEnum | CustomOrderRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomOrderRequest findFirstOrThrow
+   */
+  export type CustomOrderRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomOrderRequest to fetch.
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomOrderRequests to fetch.
+     */
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomOrderRequests.
+     */
+    cursor?: CustomOrderRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomOrderRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomOrderRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomOrderRequests.
+     */
+    distinct?: CustomOrderRequestScalarFieldEnum | CustomOrderRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomOrderRequest findMany
+   */
+  export type CustomOrderRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which CustomOrderRequests to fetch.
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomOrderRequests to fetch.
+     */
+    orderBy?: CustomOrderRequestOrderByWithRelationInput | CustomOrderRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomOrderRequests.
+     */
+    cursor?: CustomOrderRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomOrderRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomOrderRequests.
+     */
+    skip?: number
+    distinct?: CustomOrderRequestScalarFieldEnum | CustomOrderRequestScalarFieldEnum[]
+  }
+
+  /**
+   * CustomOrderRequest create
+   */
+  export type CustomOrderRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CustomOrderRequest.
+     */
+    data: XOR<CustomOrderRequestCreateInput, CustomOrderRequestUncheckedCreateInput>
+  }
+
+  /**
+   * CustomOrderRequest createMany
+   */
+  export type CustomOrderRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomOrderRequests.
+     */
+    data: CustomOrderRequestCreateManyInput | CustomOrderRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomOrderRequest createManyAndReturn
+   */
+  export type CustomOrderRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomOrderRequests.
+     */
+    data: CustomOrderRequestCreateManyInput | CustomOrderRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomOrderRequest update
+   */
+  export type CustomOrderRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CustomOrderRequest.
+     */
+    data: XOR<CustomOrderRequestUpdateInput, CustomOrderRequestUncheckedUpdateInput>
+    /**
+     * Choose, which CustomOrderRequest to update.
+     */
+    where: CustomOrderRequestWhereUniqueInput
+  }
+
+  /**
+   * CustomOrderRequest updateMany
+   */
+  export type CustomOrderRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomOrderRequests.
+     */
+    data: XOR<CustomOrderRequestUpdateManyMutationInput, CustomOrderRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomOrderRequests to update
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * Limit how many CustomOrderRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomOrderRequest updateManyAndReturn
+   */
+  export type CustomOrderRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomOrderRequests.
+     */
+    data: XOR<CustomOrderRequestUpdateManyMutationInput, CustomOrderRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomOrderRequests to update
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * Limit how many CustomOrderRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CustomOrderRequest upsert
+   */
+  export type CustomOrderRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CustomOrderRequest to update in case it exists.
+     */
+    where: CustomOrderRequestWhereUniqueInput
+    /**
+     * In case the CustomOrderRequest found by the `where` argument doesn't exist, create a new CustomOrderRequest with this data.
+     */
+    create: XOR<CustomOrderRequestCreateInput, CustomOrderRequestUncheckedCreateInput>
+    /**
+     * In case the CustomOrderRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomOrderRequestUpdateInput, CustomOrderRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomOrderRequest delete
+   */
+  export type CustomOrderRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
+    /**
+     * Filter which CustomOrderRequest to delete.
+     */
+    where: CustomOrderRequestWhereUniqueInput
+  }
+
+  /**
+   * CustomOrderRequest deleteMany
+   */
+  export type CustomOrderRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomOrderRequests to delete
+     */
+    where?: CustomOrderRequestWhereInput
+    /**
+     * Limit how many CustomOrderRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomOrderRequest without action
+   */
+  export type CustomOrderRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomOrderRequest
+     */
+    select?: CustomOrderRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomOrderRequest
+     */
+    omit?: CustomOrderRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomOrderRequestInclude<ExtArgs> | null
   }
 
 
@@ -19790,6 +21120,21 @@ export namespace Prisma {
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
+  export const CustomOrderRequestScalarFieldEnum: {
+    id: 'id',
+    buyerId: 'buyerId',
+    artisanId: 'artisanId',
+    description: 'description',
+    budgetInCents: 'budgetInCents',
+    status: 'status',
+    deletedAt: 'deletedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomOrderRequestScalarFieldEnum = (typeof CustomOrderRequestScalarFieldEnum)[keyof typeof CustomOrderRequestScalarFieldEnum]
+
+
   export const ConversationScalarFieldEnum: {
     id: 'id',
     buyerId: 'buyerId',
@@ -20062,6 +21407,20 @@ export namespace Prisma {
    * Reference to a field of type 'ShippingMethod[]'
    */
   export type ListEnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomOrderStatus'
+   */
+  export type EnumCustomOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomOrderStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CustomOrderStatus[]'
+   */
+  export type ListEnumCustomOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CustomOrderStatus[]'>
     
 
 
@@ -20350,6 +21709,8 @@ export namespace Prisma {
     disputes?: DisputeListRelationFilter
     processUpdates?: ProcessUpdateListRelationFilter
     sealRequests?: SealRequestListRelationFilter
+    customOrdersAsBuyer?: CustomOrderRequestListRelationFilter
+    customOrdersAsArtisan?: CustomOrderRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -20384,6 +21745,8 @@ export namespace Prisma {
     disputes?: DisputeOrderByRelationAggregateInput
     processUpdates?: ProcessUpdateOrderByRelationAggregateInput
     sealRequests?: SealRequestOrderByRelationAggregateInput
+    customOrdersAsBuyer?: CustomOrderRequestOrderByRelationAggregateInput
+    customOrdersAsArtisan?: CustomOrderRequestOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -20421,6 +21784,8 @@ export namespace Prisma {
     disputes?: DisputeListRelationFilter
     processUpdates?: ProcessUpdateListRelationFilter
     sealRequests?: SealRequestListRelationFilter
+    customOrdersAsBuyer?: CustomOrderRequestListRelationFilter
+    customOrdersAsArtisan?: CustomOrderRequestListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -20706,6 +22071,86 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+  }
+
+  export type CustomOrderRequestWhereInput = {
+    AND?: CustomOrderRequestWhereInput | CustomOrderRequestWhereInput[]
+    OR?: CustomOrderRequestWhereInput[]
+    NOT?: CustomOrderRequestWhereInput | CustomOrderRequestWhereInput[]
+    id?: StringFilter<"CustomOrderRequest"> | string
+    buyerId?: StringFilter<"CustomOrderRequest"> | string
+    artisanId?: StringFilter<"CustomOrderRequest"> | string
+    description?: StringFilter<"CustomOrderRequest"> | string
+    budgetInCents?: IntNullableFilter<"CustomOrderRequest"> | number | null
+    status?: EnumCustomOrderStatusFilter<"CustomOrderRequest"> | $Enums.CustomOrderStatus
+    deletedAt?: DateTimeNullableFilter<"CustomOrderRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type CustomOrderRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
+    description?: SortOrder
+    budgetInCents?: SortOrderInput | SortOrder
+    status?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    buyer?: UserOrderByWithRelationInput
+    artisan?: UserOrderByWithRelationInput
+  }
+
+  export type CustomOrderRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomOrderRequestWhereInput | CustomOrderRequestWhereInput[]
+    OR?: CustomOrderRequestWhereInput[]
+    NOT?: CustomOrderRequestWhereInput | CustomOrderRequestWhereInput[]
+    buyerId?: StringFilter<"CustomOrderRequest"> | string
+    artisanId?: StringFilter<"CustomOrderRequest"> | string
+    description?: StringFilter<"CustomOrderRequest"> | string
+    budgetInCents?: IntNullableFilter<"CustomOrderRequest"> | number | null
+    status?: EnumCustomOrderStatusFilter<"CustomOrderRequest"> | $Enums.CustomOrderStatus
+    deletedAt?: DateTimeNullableFilter<"CustomOrderRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+    buyer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type CustomOrderRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
+    description?: SortOrder
+    budgetInCents?: SortOrderInput | SortOrder
+    status?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomOrderRequestCountOrderByAggregateInput
+    _avg?: CustomOrderRequestAvgOrderByAggregateInput
+    _max?: CustomOrderRequestMaxOrderByAggregateInput
+    _min?: CustomOrderRequestMinOrderByAggregateInput
+    _sum?: CustomOrderRequestSumOrderByAggregateInput
+  }
+
+  export type CustomOrderRequestScalarWhereWithAggregatesInput = {
+    AND?: CustomOrderRequestScalarWhereWithAggregatesInput | CustomOrderRequestScalarWhereWithAggregatesInput[]
+    OR?: CustomOrderRequestScalarWhereWithAggregatesInput[]
+    NOT?: CustomOrderRequestScalarWhereWithAggregatesInput | CustomOrderRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomOrderRequest"> | string
+    buyerId?: StringWithAggregatesFilter<"CustomOrderRequest"> | string
+    artisanId?: StringWithAggregatesFilter<"CustomOrderRequest"> | string
+    description?: StringWithAggregatesFilter<"CustomOrderRequest"> | string
+    budgetInCents?: IntNullableWithAggregatesFilter<"CustomOrderRequest"> | number | null
+    status?: EnumCustomOrderStatusWithAggregatesFilter<"CustomOrderRequest"> | $Enums.CustomOrderStatus
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"CustomOrderRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CustomOrderRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomOrderRequest"> | Date | string
   }
 
   export type ConversationWhereInput = {
@@ -21523,6 +22968,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -21557,6 +23004,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUpdateInput = {
@@ -21591,6 +23040,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -21625,6 +23076,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -21956,6 +23409,88 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestCreateInput = {
+    id?: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutCustomOrdersAsBuyerInput
+    artisan: UserCreateNestedOneWithoutCustomOrdersAsArtisanInput
+  }
+
+  export type CustomOrderRequestUncheckedCreateInput = {
+    id?: string
+    buyerId: string
+    artisanId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutCustomOrdersAsBuyerNestedInput
+    artisan?: UserUpdateOneRequiredWithoutCustomOrdersAsArtisanNestedInput
+  }
+
+  export type CustomOrderRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestCreateManyInput = {
+    id?: string
+    buyerId: string
+    artisanId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22865,6 +24400,12 @@ export namespace Prisma {
     none?: SealRequestWhereInput
   }
 
+  export type CustomOrderRequestListRelationFilter = {
+    every?: CustomOrderRequestWhereInput
+    some?: CustomOrderRequestWhereInput
+    none?: CustomOrderRequestWhereInput
+  }
+
   export type AccountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -22902,6 +24443,10 @@ export namespace Prisma {
   }
 
   export type SealRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CustomOrderRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23247,6 +24792,67 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShippingMethodFilter<$PrismaModel>
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
+  }
+
+  export type EnumCustomOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomOrderStatus | EnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomOrderStatusFilter<$PrismaModel> | $Enums.CustomOrderStatus
+  }
+
+  export type CustomOrderRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
+    description?: SortOrder
+    budgetInCents?: SortOrder
+    status?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomOrderRequestAvgOrderByAggregateInput = {
+    budgetInCents?: SortOrder
+  }
+
+  export type CustomOrderRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
+    description?: SortOrder
+    budgetInCents?: SortOrder
+    status?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomOrderRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    buyerId?: SortOrder
+    artisanId?: SortOrder
+    description?: SortOrder
+    budgetInCents?: SortOrder
+    status?: SortOrder
+    deletedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomOrderRequestSumOrderByAggregateInput = {
+    budgetInCents?: SortOrder
+  }
+
+  export type EnumCustomOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomOrderStatus | EnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomOrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomOrderStatusFilter<$PrismaModel>
   }
 
   export type ConversationBuyerIdArtisanIdCompoundUniqueInput = {
@@ -23756,6 +25362,20 @@ export namespace Prisma {
     connect?: SealRequestWhereUniqueInput | SealRequestWhereUniqueInput[]
   }
 
+  export type CustomOrderRequestCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput> | CustomOrderRequestCreateWithoutBuyerInput[] | CustomOrderRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutBuyerInput | CustomOrderRequestCreateOrConnectWithoutBuyerInput[]
+    createMany?: CustomOrderRequestCreateManyBuyerInputEnvelope
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+  }
+
+  export type CustomOrderRequestCreateNestedManyWithoutArtisanInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput> | CustomOrderRequestCreateWithoutArtisanInput[] | CustomOrderRequestUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutArtisanInput | CustomOrderRequestCreateOrConnectWithoutArtisanInput[]
+    createMany?: CustomOrderRequestCreateManyArtisanInputEnvelope
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -23845,6 +25465,20 @@ export namespace Prisma {
     connectOrCreate?: SealRequestCreateOrConnectWithoutArtisanInput | SealRequestCreateOrConnectWithoutArtisanInput[]
     createMany?: SealRequestCreateManyArtisanInputEnvelope
     connect?: SealRequestWhereUniqueInput | SealRequestWhereUniqueInput[]
+  }
+
+  export type CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput> | CustomOrderRequestCreateWithoutBuyerInput[] | CustomOrderRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutBuyerInput | CustomOrderRequestCreateOrConnectWithoutBuyerInput[]
+    createMany?: CustomOrderRequestCreateManyBuyerInputEnvelope
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+  }
+
+  export type CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput> | CustomOrderRequestCreateWithoutArtisanInput[] | CustomOrderRequestUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutArtisanInput | CustomOrderRequestCreateOrConnectWithoutArtisanInput[]
+    createMany?: CustomOrderRequestCreateManyArtisanInputEnvelope
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -24041,6 +25675,34 @@ export namespace Prisma {
     deleteMany?: SealRequestScalarWhereInput | SealRequestScalarWhereInput[]
   }
 
+  export type CustomOrderRequestUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput> | CustomOrderRequestCreateWithoutBuyerInput[] | CustomOrderRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutBuyerInput | CustomOrderRequestCreateOrConnectWithoutBuyerInput[]
+    upsert?: CustomOrderRequestUpsertWithWhereUniqueWithoutBuyerInput | CustomOrderRequestUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: CustomOrderRequestCreateManyBuyerInputEnvelope
+    set?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    disconnect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    delete?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    update?: CustomOrderRequestUpdateWithWhereUniqueWithoutBuyerInput | CustomOrderRequestUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: CustomOrderRequestUpdateManyWithWhereWithoutBuyerInput | CustomOrderRequestUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
+  }
+
+  export type CustomOrderRequestUpdateManyWithoutArtisanNestedInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput> | CustomOrderRequestCreateWithoutArtisanInput[] | CustomOrderRequestUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutArtisanInput | CustomOrderRequestCreateOrConnectWithoutArtisanInput[]
+    upsert?: CustomOrderRequestUpsertWithWhereUniqueWithoutArtisanInput | CustomOrderRequestUpsertWithWhereUniqueWithoutArtisanInput[]
+    createMany?: CustomOrderRequestCreateManyArtisanInputEnvelope
+    set?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    disconnect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    delete?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    update?: CustomOrderRequestUpdateWithWhereUniqueWithoutArtisanInput | CustomOrderRequestUpdateWithWhereUniqueWithoutArtisanInput[]
+    updateMany?: CustomOrderRequestUpdateManyWithWhereWithoutArtisanInput | CustomOrderRequestUpdateManyWithWhereWithoutArtisanInput[]
+    deleteMany?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -24221,6 +25883,34 @@ export namespace Prisma {
     update?: SealRequestUpdateWithWhereUniqueWithoutArtisanInput | SealRequestUpdateWithWhereUniqueWithoutArtisanInput[]
     updateMany?: SealRequestUpdateManyWithWhereWithoutArtisanInput | SealRequestUpdateManyWithWhereWithoutArtisanInput[]
     deleteMany?: SealRequestScalarWhereInput | SealRequestScalarWhereInput[]
+  }
+
+  export type CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput> | CustomOrderRequestCreateWithoutBuyerInput[] | CustomOrderRequestUncheckedCreateWithoutBuyerInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutBuyerInput | CustomOrderRequestCreateOrConnectWithoutBuyerInput[]
+    upsert?: CustomOrderRequestUpsertWithWhereUniqueWithoutBuyerInput | CustomOrderRequestUpsertWithWhereUniqueWithoutBuyerInput[]
+    createMany?: CustomOrderRequestCreateManyBuyerInputEnvelope
+    set?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    disconnect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    delete?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    update?: CustomOrderRequestUpdateWithWhereUniqueWithoutBuyerInput | CustomOrderRequestUpdateWithWhereUniqueWithoutBuyerInput[]
+    updateMany?: CustomOrderRequestUpdateManyWithWhereWithoutBuyerInput | CustomOrderRequestUpdateManyWithWhereWithoutBuyerInput[]
+    deleteMany?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
+  }
+
+  export type CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput = {
+    create?: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput> | CustomOrderRequestCreateWithoutArtisanInput[] | CustomOrderRequestUncheckedCreateWithoutArtisanInput[]
+    connectOrCreate?: CustomOrderRequestCreateOrConnectWithoutArtisanInput | CustomOrderRequestCreateOrConnectWithoutArtisanInput[]
+    upsert?: CustomOrderRequestUpsertWithWhereUniqueWithoutArtisanInput | CustomOrderRequestUpsertWithWhereUniqueWithoutArtisanInput[]
+    createMany?: CustomOrderRequestCreateManyArtisanInputEnvelope
+    set?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    disconnect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    delete?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    connect?: CustomOrderRequestWhereUniqueInput | CustomOrderRequestWhereUniqueInput[]
+    update?: CustomOrderRequestUpdateWithWhereUniqueWithoutArtisanInput | CustomOrderRequestUpdateWithWhereUniqueWithoutArtisanInput[]
+    updateMany?: CustomOrderRequestUpdateManyWithWhereWithoutArtisanInput | CustomOrderRequestUpdateManyWithWhereWithoutArtisanInput[]
+    deleteMany?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
   }
 
   export type ProductCreateimageUrlsInput = {
@@ -24478,6 +26168,38 @@ export namespace Prisma {
     update?: DisputeUpdateWithWhereUniqueWithoutOrderInput | DisputeUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: DisputeUpdateManyWithWhereWithoutOrderInput | DisputeUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: DisputeScalarWhereInput | DisputeScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutCustomOrdersAsBuyerInput = {
+    create?: XOR<UserCreateWithoutCustomOrdersAsBuyerInput, UserUncheckedCreateWithoutCustomOrdersAsBuyerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCustomOrdersAsBuyerInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCustomOrdersAsArtisanInput = {
+    create?: XOR<UserCreateWithoutCustomOrdersAsArtisanInput, UserUncheckedCreateWithoutCustomOrdersAsArtisanInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCustomOrdersAsArtisanInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumCustomOrderStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CustomOrderStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutCustomOrdersAsBuyerNestedInput = {
+    create?: XOR<UserCreateWithoutCustomOrdersAsBuyerInput, UserUncheckedCreateWithoutCustomOrdersAsBuyerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCustomOrdersAsBuyerInput
+    upsert?: UserUpsertWithoutCustomOrdersAsBuyerInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCustomOrdersAsBuyerInput, UserUpdateWithoutCustomOrdersAsBuyerInput>, UserUncheckedUpdateWithoutCustomOrdersAsBuyerInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCustomOrdersAsArtisanNestedInput = {
+    create?: XOR<UserCreateWithoutCustomOrdersAsArtisanInput, UserUncheckedCreateWithoutCustomOrdersAsArtisanInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCustomOrdersAsArtisanInput
+    upsert?: UserUpsertWithoutCustomOrdersAsArtisanInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCustomOrdersAsArtisanInput, UserUpdateWithoutCustomOrdersAsArtisanInput>, UserUncheckedUpdateWithoutCustomOrdersAsArtisanInput>
   }
 
   export type UserCreateNestedOneWithoutBuyerConversationsInput = {
@@ -25098,6 +26820,23 @@ export namespace Prisma {
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
   }
 
+  export type NestedEnumCustomOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomOrderStatus | EnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomOrderStatusFilter<$PrismaModel> | $Enums.CustomOrderStatus
+  }
+
+  export type NestedEnumCustomOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CustomOrderStatus | EnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CustomOrderStatus[] | ListEnumCustomOrderStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCustomOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.CustomOrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCustomOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumCustomOrderStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumDisputeStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.DisputeStatus | EnumDisputeStatusFieldRefInput<$PrismaModel>
     in?: $Enums.DisputeStatus[] | ListEnumDisputeStatusFieldRefInput<$PrismaModel>
@@ -25186,6 +26925,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -25219,6 +26960,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -25268,6 +27011,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -25301,6 +27046,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -25334,6 +27081,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -25367,6 +27116,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -25416,6 +27167,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -25449,6 +27202,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -25881,6 +27636,70 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomOrderRequestCreateWithoutBuyerInput = {
+    id?: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    artisan: UserCreateNestedOneWithoutCustomOrdersAsArtisanInput
+  }
+
+  export type CustomOrderRequestUncheckedCreateWithoutBuyerInput = {
+    id?: string
+    artisanId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestCreateOrConnectWithoutBuyerInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    create: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type CustomOrderRequestCreateManyBuyerInputEnvelope = {
+    data: CustomOrderRequestCreateManyBuyerInput | CustomOrderRequestCreateManyBuyerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CustomOrderRequestCreateWithoutArtisanInput = {
+    id?: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutCustomOrdersAsBuyerInput
+  }
+
+  export type CustomOrderRequestUncheckedCreateWithoutArtisanInput = {
+    id?: string
+    buyerId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestCreateOrConnectWithoutArtisanInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    create: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput>
+  }
+
+  export type CustomOrderRequestCreateManyArtisanInputEnvelope = {
+    data: CustomOrderRequestCreateManyArtisanInput | CustomOrderRequestCreateManyArtisanInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -26239,6 +28058,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"SealRequest"> | Date | string
   }
 
+  export type CustomOrderRequestUpsertWithWhereUniqueWithoutBuyerInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    update: XOR<CustomOrderRequestUpdateWithoutBuyerInput, CustomOrderRequestUncheckedUpdateWithoutBuyerInput>
+    create: XOR<CustomOrderRequestCreateWithoutBuyerInput, CustomOrderRequestUncheckedCreateWithoutBuyerInput>
+  }
+
+  export type CustomOrderRequestUpdateWithWhereUniqueWithoutBuyerInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    data: XOR<CustomOrderRequestUpdateWithoutBuyerInput, CustomOrderRequestUncheckedUpdateWithoutBuyerInput>
+  }
+
+  export type CustomOrderRequestUpdateManyWithWhereWithoutBuyerInput = {
+    where: CustomOrderRequestScalarWhereInput
+    data: XOR<CustomOrderRequestUpdateManyMutationInput, CustomOrderRequestUncheckedUpdateManyWithoutBuyerInput>
+  }
+
+  export type CustomOrderRequestScalarWhereInput = {
+    AND?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
+    OR?: CustomOrderRequestScalarWhereInput[]
+    NOT?: CustomOrderRequestScalarWhereInput | CustomOrderRequestScalarWhereInput[]
+    id?: StringFilter<"CustomOrderRequest"> | string
+    buyerId?: StringFilter<"CustomOrderRequest"> | string
+    artisanId?: StringFilter<"CustomOrderRequest"> | string
+    description?: StringFilter<"CustomOrderRequest"> | string
+    budgetInCents?: IntNullableFilter<"CustomOrderRequest"> | number | null
+    status?: EnumCustomOrderStatusFilter<"CustomOrderRequest"> | $Enums.CustomOrderStatus
+    deletedAt?: DateTimeNullableFilter<"CustomOrderRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomOrderRequest"> | Date | string
+  }
+
+  export type CustomOrderRequestUpsertWithWhereUniqueWithoutArtisanInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    update: XOR<CustomOrderRequestUpdateWithoutArtisanInput, CustomOrderRequestUncheckedUpdateWithoutArtisanInput>
+    create: XOR<CustomOrderRequestCreateWithoutArtisanInput, CustomOrderRequestUncheckedCreateWithoutArtisanInput>
+  }
+
+  export type CustomOrderRequestUpdateWithWhereUniqueWithoutArtisanInput = {
+    where: CustomOrderRequestWhereUniqueInput
+    data: XOR<CustomOrderRequestUpdateWithoutArtisanInput, CustomOrderRequestUncheckedUpdateWithoutArtisanInput>
+  }
+
+  export type CustomOrderRequestUpdateManyWithWhereWithoutArtisanInput = {
+    where: CustomOrderRequestScalarWhereInput
+    data: XOR<CustomOrderRequestUpdateManyMutationInput, CustomOrderRequestUncheckedUpdateManyWithoutArtisanInput>
+  }
+
   export type UserCreateWithoutProductsInput = {
     id?: string
     name?: string | null
@@ -26270,6 +28136,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -26303,6 +28171,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -26458,6 +28328,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -26491,6 +28363,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type OrderUpsertWithWhereUniqueWithoutProductInput = {
@@ -26582,6 +28456,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutBuyerOrdersInput = {
@@ -26615,6 +28491,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutBuyerOrdersInput = {
@@ -26653,6 +28531,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutArtisanOrdersInput = {
@@ -26686,6 +28566,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutArtisanOrdersInput = {
@@ -26808,6 +28690,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
@@ -26841,6 +28725,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUpsertWithoutArtisanOrdersInput = {
@@ -26885,6 +28771,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutArtisanOrdersInput = {
@@ -26918,6 +28806,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type ProductUpsertWithoutOrdersInput = {
@@ -26985,6 +28875,318 @@ export namespace Prisma {
     data: XOR<DisputeUpdateManyMutationInput, DisputeUncheckedUpdateManyWithoutOrderInput>
   }
 
+  export type UserCreateWithoutCustomOrdersAsBuyerInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    locality?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    products?: ProductCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    follows?: FollowCreateNestedManyWithoutFollowerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
+  }
+
+  export type UserUncheckedCreateWithoutCustomOrdersAsBuyerInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    locality?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
+  }
+
+  export type UserCreateOrConnectWithoutCustomOrdersAsBuyerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCustomOrdersAsBuyerInput, UserUncheckedCreateWithoutCustomOrdersAsBuyerInput>
+  }
+
+  export type UserCreateWithoutCustomOrdersAsArtisanInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    locality?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    products?: ProductCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationCreateNestedManyWithoutArtisanInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    follows?: FollowCreateNestedManyWithoutFollowerInput
+    followers?: FollowCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+  }
+
+  export type UserUncheckedCreateWithoutCustomOrdersAsArtisanInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    bannerImage?: string | null
+    bio?: string | null
+    role?: $Enums.Role
+    password?: string | null
+    locality?: string | null
+    stripeAccountId?: string | null
+    firstSaleCompleted?: boolean
+    twoFactorSecret?: string | null
+    twoFactorEnabled?: boolean
+    suspended?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    products?: ProductUncheckedCreateNestedManyWithoutArtisanInput
+    buyerOrders?: OrderUncheckedCreateNestedManyWithoutBuyerInput
+    artisanOrders?: OrderUncheckedCreateNestedManyWithoutArtisanInput
+    buyerConversations?: ConversationUncheckedCreateNestedManyWithoutBuyerInput
+    artisanConversations?: ConversationUncheckedCreateNestedManyWithoutArtisanInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    follows?: FollowUncheckedCreateNestedManyWithoutFollowerInput
+    followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
+    disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
+    processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
+    sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+  }
+
+  export type UserCreateOrConnectWithoutCustomOrdersAsArtisanInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCustomOrdersAsArtisanInput, UserUncheckedCreateWithoutCustomOrdersAsArtisanInput>
+  }
+
+  export type UserUpsertWithoutCustomOrdersAsBuyerInput = {
+    update: XOR<UserUpdateWithoutCustomOrdersAsBuyerInput, UserUncheckedUpdateWithoutCustomOrdersAsBuyerInput>
+    create: XOR<UserCreateWithoutCustomOrdersAsBuyerInput, UserUncheckedCreateWithoutCustomOrdersAsBuyerInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCustomOrdersAsBuyerInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCustomOrdersAsBuyerInput, UserUncheckedUpdateWithoutCustomOrdersAsBuyerInput>
+  }
+
+  export type UserUpdateWithoutCustomOrdersAsBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    products?: ProductUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    follows?: FollowUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCustomOrdersAsBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
+  }
+
+  export type UserUpsertWithoutCustomOrdersAsArtisanInput = {
+    update: XOR<UserUpdateWithoutCustomOrdersAsArtisanInput, UserUncheckedUpdateWithoutCustomOrdersAsArtisanInput>
+    create: XOR<UserCreateWithoutCustomOrdersAsArtisanInput, UserUncheckedCreateWithoutCustomOrdersAsArtisanInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCustomOrdersAsArtisanInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCustomOrdersAsArtisanInput, UserUncheckedUpdateWithoutCustomOrdersAsArtisanInput>
+  }
+
+  export type UserUpdateWithoutCustomOrdersAsArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    products?: ProductUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUpdateManyWithoutArtisanNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    follows?: FollowUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCustomOrdersAsArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    products?: ProductUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerOrders?: OrderUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanOrders?: OrderUncheckedUpdateManyWithoutArtisanNestedInput
+    buyerConversations?: ConversationUncheckedUpdateManyWithoutBuyerNestedInput
+    artisanConversations?: ConversationUncheckedUpdateManyWithoutArtisanNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    follows?: FollowUncheckedUpdateManyWithoutFollowerNestedInput
+    followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
+    disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
+    processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
+    sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+  }
+
   export type UserCreateWithoutBuyerConversationsInput = {
     id?: string
     name?: string | null
@@ -27016,6 +29218,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutBuyerConversationsInput = {
@@ -27049,6 +29253,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutBuyerConversationsInput = {
@@ -27087,6 +29293,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutArtisanConversationsInput = {
@@ -27120,6 +29328,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutArtisanConversationsInput = {
@@ -27199,6 +29409,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBuyerConversationsInput = {
@@ -27232,6 +29444,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUpsertWithoutArtisanConversationsInput = {
@@ -27276,6 +29490,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutArtisanConversationsInput = {
@@ -27309,6 +29525,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
@@ -27381,6 +29599,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -27414,6 +29634,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -27492,6 +29714,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -27525,6 +29749,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type OrderCreateWithoutDisputesInput = {
@@ -27603,6 +29829,8 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutDisputesInput = {
@@ -27636,6 +29864,8 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutDisputesInput = {
@@ -27736,6 +29966,8 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDisputesInput = {
@@ -27769,6 +30001,8 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type ProductSealCreateWithoutSealInput = {
@@ -28038,6 +30272,8 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutSealRequestsInput = {
@@ -28071,6 +30307,8 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutSealRequestsInput = {
@@ -28188,6 +30426,8 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSealRequestsInput = {
@@ -28221,6 +30461,8 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type ProductUpsertWithoutSealRequestsInput = {
@@ -28334,6 +30576,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutFollowsInput = {
@@ -28367,6 +30611,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutFollowsInput = {
@@ -28405,6 +30651,8 @@ export namespace Prisma {
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutFollowersInput = {
@@ -28438,6 +30686,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     processUpdates?: ProcessUpdateUncheckedCreateNestedManyWithoutArtisanInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutFollowersInput = {
@@ -28487,6 +30737,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowsInput = {
@@ -28520,6 +30772,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUpsertWithoutFollowersInput = {
@@ -28564,6 +30818,8 @@ export namespace Prisma {
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFollowersInput = {
@@ -28597,6 +30853,8 @@ export namespace Prisma {
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     processUpdates?: ProcessUpdateUncheckedUpdateManyWithoutArtisanNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserCreateWithoutProcessUpdatesInput = {
@@ -28630,6 +30888,8 @@ export namespace Prisma {
     followers?: FollowCreateNestedManyWithoutFollowingInput
     disputes?: DisputeCreateNestedManyWithoutOpenerInput
     sealRequests?: SealRequestCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestCreateNestedManyWithoutArtisanInput
   }
 
   export type UserUncheckedCreateWithoutProcessUpdatesInput = {
@@ -28663,6 +30923,8 @@ export namespace Prisma {
     followers?: FollowUncheckedCreateNestedManyWithoutFollowingInput
     disputes?: DisputeUncheckedCreateNestedManyWithoutOpenerInput
     sealRequests?: SealRequestUncheckedCreateNestedManyWithoutArtisanInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedCreateNestedManyWithoutBuyerInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedCreateNestedManyWithoutArtisanInput
   }
 
   export type UserCreateOrConnectWithoutProcessUpdatesInput = {
@@ -28712,6 +30974,8 @@ export namespace Prisma {
     followers?: FollowUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUpdateManyWithoutOpenerNestedInput
     sealRequests?: SealRequestUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUpdateManyWithoutArtisanNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProcessUpdatesInput = {
@@ -28745,6 +31009,8 @@ export namespace Prisma {
     followers?: FollowUncheckedUpdateManyWithoutFollowingNestedInput
     disputes?: DisputeUncheckedUpdateManyWithoutOpenerNestedInput
     sealRequests?: SealRequestUncheckedUpdateManyWithoutArtisanNestedInput
+    customOrdersAsBuyer?: CustomOrderRequestUncheckedUpdateManyWithoutBuyerNestedInput
+    customOrdersAsArtisan?: CustomOrderRequestUncheckedUpdateManyWithoutArtisanNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -28885,6 +31151,28 @@ export namespace Prisma {
     status?: $Enums.SealRequestStatus
     justification?: string | null
     rejectReason?: string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestCreateManyBuyerInput = {
+    id?: string
+    artisanId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomOrderRequestCreateManyArtisanInput = {
+    id?: string
+    buyerId: string
+    description: string
+    budgetInCents?: number | null
+    status?: $Enums.CustomOrderStatus
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29328,6 +31616,72 @@ export namespace Prisma {
     status?: EnumSealRequestStatusFieldUpdateOperationsInput | $Enums.SealRequestStatus
     justification?: NullableStringFieldUpdateOperationsInput | string | null
     rejectReason?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    artisan?: UserUpdateOneRequiredWithoutCustomOrdersAsArtisanNestedInput
+  }
+
+  export type CustomOrderRequestUncheckedUpdateWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestUncheckedUpdateManyWithoutBuyerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestUpdateWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutCustomOrdersAsBuyerNestedInput
+  }
+
+  export type CustomOrderRequestUncheckedUpdateWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomOrderRequestUncheckedUpdateManyWithoutArtisanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    budgetInCents?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCustomOrderStatusFieldUpdateOperationsInput | $Enums.CustomOrderStatus
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

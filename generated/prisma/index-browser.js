@@ -208,6 +208,18 @@ exports.Prisma.OrderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CustomOrderRequestScalarFieldEnum = {
+  id: 'id',
+  buyerId: 'buyerId',
+  artisanId: 'artisanId',
+  description: 'description',
+  budgetInCents: 'budgetInCents',
+  status: 'status',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.ConversationScalarFieldEnum = {
   id: 'id',
   buyerId: 'buyerId',
@@ -352,6 +364,12 @@ exports.ShippingMethod = exports.$Enums.ShippingMethod = {
   PICKUP: 'PICKUP'
 };
 
+exports.CustomOrderStatus = exports.$Enums.CustomOrderStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED'
+};
+
 exports.DisputeStatus = exports.$Enums.DisputeStatus = {
   OPEN: 'OPEN',
   RETURN_REQUESTED: 'RETURN_REQUESTED',
@@ -374,6 +392,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Product: 'Product',
   Order: 'Order',
+  CustomOrderRequest: 'CustomOrderRequest',
   Conversation: 'Conversation',
   Message: 'Message',
   Dispute: 'Dispute',

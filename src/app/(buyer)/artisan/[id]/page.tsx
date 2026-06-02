@@ -99,6 +99,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
           processUpdates={artisan.processUpdates}
           artisanName={artisan.name}
         />
+
       </div>
     </main>
   );
