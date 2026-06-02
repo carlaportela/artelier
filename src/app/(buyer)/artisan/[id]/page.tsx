@@ -8,6 +8,7 @@ import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
 import ArtisanHeader from "~/components/artisan/ArtisanHeader";
 import ArtisanProfileTabs from "~/components/artisan/ArtisanProfileTabs";
+import CustomOrderForm from "./CustomOrderForm";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -60,6 +61,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
   const isOwnProfile = session?.user?.id === artisan.id;
   const isBuyer = session?.user?.role === "BUYER";
   const canFollow = !isOwnProfile && isBuyer;
+  const canRequestOrder = !isOwnProfile && isBuyer;
 
   const follow = canFollow && session?.user?.id
     ? await db.follow.findUnique({
@@ -99,6 +101,12 @@ export default async function ArtisanPublicPage({ params }: Props) {
           processUpdates={artisan.processUpdates}
           artisanName={artisan.name}
         />
+
+        {canRequestOrder && (
+          <div className="mt-8 pb-8">
+            <CustomOrderForm artisanId={artisan.id} artisanName={artisan.name} />
+          </div>
+        )}
       </div>
     </main>
   );

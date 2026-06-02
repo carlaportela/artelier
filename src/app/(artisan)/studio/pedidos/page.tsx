@@ -1,10 +1,11 @@
-//Página de pedidos del estudio del artesano.
+//Página de pedidos del estudio: muestra encargos personalizados recibidos por la artesana.
 
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { Package } from "lucide-react";
 
 import { getServerSession } from "~/server/auth/session";
+import { db } from "~/server/db";
+import PedidosView from "./PedidosView";
 
 export const metadata: Metadata = { title: "Pedidos — Artelier" };
 
@@ -13,18 +14,22 @@ export default async function PedidosPage() {
   if (!session?.user) redirect("/login");
   if (session.user.role !== "ARTISAN") redirect("/feed");
 
+  const requests = await db.customOrderRequest.findMany({
+    where: { artisanId: session.user.id, deletedAt: null },
+    include: {
+      buyer: { select: { id: true, name: true, image: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const pending = requests.filter((r) => r.status === "PENDING");
+  const processed = requests.filter((r) => r.status !== "PENDING");
+
   return (
     <main className="bg-[--bg]">
-      <div className="flex flex-col items-center justify-center gap-4 px-6 py-24 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3d5a4f]/10">
-          <Package size={28} className="text-[#3d5a4f]" />
-        </div>
-        <h1 className="font-display text-2xl font-bold text-[--text]">Pedidos</h1>
-        <p className="max-w-xs text-sm text-[--text-muted]">
-          Aquí aparecerán los pedidos que recibas de tus clientes: estado, detalles y gestión de envíos.
-          <br /><br />
-          Próximamente.
-        </p>
+      <div className="mx-auto max-w-lg px-4 py-8">
+        <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Pedidos</h1>
+        <PedidosView pending={pending} processed={processed} />
       </div>
     </main>
   );
