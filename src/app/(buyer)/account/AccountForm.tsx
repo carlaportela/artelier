@@ -39,11 +39,12 @@ export default function AccountForm({ user }: AccountFormProps) {
     setUploading(true);
     const formData = new FormData();
     formData.append("file", blob, "avatar.jpg");
+    formData.append("type", "avatar");
     try {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) { setUploadError("Error al subir la imagen. Inténtalo de nuevo."); return; }
-      const json = await res.json() as { url?: string };
-      if (json.url) setImageUrl(json.url);
+      const json = await res.json() as { data?: { url: string } };
+      if (json.data?.url) setImageUrl(json.data.url);
     } catch {
       setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
     } finally {
