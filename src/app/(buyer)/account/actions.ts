@@ -9,6 +9,7 @@ import { db } from "~/server/db";
 const accountSchema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
   locality: z.string().trim().min(2, "Introduce tu localidad"),
+  image: z.string().optional(),
 });
 
 export async function saveAccount(data: unknown) {
@@ -25,11 +26,11 @@ export async function saveAccount(data: unknown) {
     };
   }
 
-  const { name, locality } = parsed.data;
+  const { name, locality, image } = parsed.data;
 
   await db.user.update({
     where: { id: session.user.id },
-    data: { name, locality },
+    data: { name, locality, ...(image !== undefined && { image }) },
   });
 
   revalidatePath("/account");

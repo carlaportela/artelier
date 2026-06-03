@@ -55,7 +55,7 @@ export default function ChangePasswordForm() {
             value={fields[field]}
             onChange={(e) => setFields((prev) => ({ ...prev, [field]: e.target.value }))}
             required
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0 focus-visible:outline-none"
           />
         </div>
       ))}
@@ -66,7 +66,7 @@ export default function ChangePasswordForm() {
       <Button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white hover:bg-[#4a6b5e]"
+        className="w-full cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Guardando..." : t("changePassword")}
       </Button>

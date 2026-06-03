@@ -5,8 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { Info, Upload } from "lucide-react";
 
 import { saveAccount } from "./actions";
+import CropModal from "~/components/CropModal";
 
 const schema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -15,14 +18,37 @@ const schema = z.object({
 type FormInput = z.infer<typeof schema>;
 
 interface AccountFormProps {
-  user: { name: string | null; locality: string | null; email: string | null };
+  user: { name: string | null; locality: string | null; email: string | null; image: string | null };
 }
 
 export default function AccountForm({ user }: AccountFormProps) {
   const email = user.email;
+  const initial = user.name?.charAt(0).toUpperCase() ?? "A";
   const t = useTranslations("account");
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
+  const [imageUrl, setImageUrl] = useState(user.image ?? "");
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+
+  async function handleCropConfirm(blob: Blob) {
+    setCropFile(null);
+    setUploadError(null);
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", blob, "avatar.jpg");
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (!res.ok) { setUploadError("Error al subir la imagen. Inténtalo de nuevo."); return; }
+      const json = await res.json() as { url?: string };
+      if (json.url) setImageUrl(json.url);
+    } catch {
+      setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   const form = useForm<FormInput>({
     resolver: zodResolver(schema),
@@ -35,7 +61,7 @@ export default function AccountForm({ user }: AccountFormProps) {
 
   function onSubmit(data: FormInput) {
     startTransition(async () => {
-      const result = await saveAccount(data);
+      const result = await saveAccount({ ...data, image: imageUrl || undefined });
       if (!result?.error) {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
@@ -44,7 +70,43 @@ export default function AccountForm({ user }: AccountFormProps) {
   }
 
   return (
+    <>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+
+      {/* ── Foto de perfil ── */}
+      <div className="flex flex-col items-center gap-3 pb-2">
+        <div className="relative h-24 w-24 overflow-hidden rounded-full bg-[--surface]">
+          {imageUrl ? (
+            <Image src={imageUrl} alt="Foto de perfil" fill className="object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[#c4956a]">
+              <span className="font-display text-3xl font-bold text-white">{initial}</span>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <label
+            htmlFor="avatar-upload"
+            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploading ? "cursor-not-allowed opacity-50" : ""}`}
+          >
+            <Upload size={13} />
+            {uploading ? "Subiendo..." : imageUrl ? "Cambiar foto" : "Subir foto"}
+          </label>
+          <input
+            id="avatar-upload"
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) { e.target.value = ""; setCropFile(file); }
+            }}
+          />
+          {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
+        </div>
+      </div>
+
       <div className="space-y-1">
         <label htmlFor="name" className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
         <input
@@ -76,16 +138,32 @@ export default function AccountForm({ user }: AccountFormProps) {
           <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
             {email}
           </div>
+          <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
+            <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
+            <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse.</p>
+          </div>
         </div>
       )}
 
       <button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || uploading}
         className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Guardando..." : saved ? t("profileSaved") : t("saveChanges")}
       </button>
     </form>
+
+    {cropFile && (
+      <CropModal
+        file={cropFile}
+        aspectRatio={1}
+        shape="circle"
+        label="tu foto de perfil"
+        onConfirm={handleCropConfirm}
+        onCancel={() => setCropFile(null)}
+      />
+    )}
+    </>
   );
 }

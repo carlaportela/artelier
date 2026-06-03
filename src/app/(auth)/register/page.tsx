@@ -141,6 +141,7 @@ export default function RegisterPage() {
             type="email"
             autoComplete="email"
             {...form.register("email")}
+            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-600">
@@ -156,6 +157,7 @@ export default function RegisterPage() {
             type="password"
             autoComplete="new-password"
             {...form.register("password")}
+            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           />
           {form.formState.errors.password && (
             <p className="text-sm text-red-600">
@@ -170,11 +172,11 @@ export default function RegisterPage() {
             value={form.watch("locality")}
             onChange={(val) => form.setValue("locality", val, { shouldValidate: true })}
             error={form.formState.errors.locality?.message}
-            inputClassName="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none transition-colors focus-visible:border-ring md:text-sm"
+            inputClassName="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0 md:text-sm"
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60">
           {isPending ? "Creando cuenta..." : t("createAccount")}
         </Button>
       </form>

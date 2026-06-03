@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { logoutUser } from "~/app/(auth)/logout/actions";
-import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, Settings } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -59,10 +59,10 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
           </div>
         ) : (
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-full border font-display text-base leading-none ${
+            className={`flex h-8 w-8 items-center justify-center rounded-full font-display text-base leading-none ${
               role === "ARTISAN"
-                ? "border-[#94a49e]/50 bg-[#94a49e] text-white"
-                : "border-[#e8d5be] bg-[#f5e8d8] text-[#c4956a]"
+                ? "bg-[#4a9e8c] text-white"
+                : "bg-[#c4956a] text-white"
             }`}
           >
             <span className="translate-y-0.5">{name?.charAt(0).toUpperCase() ?? "?"}</span>
@@ -89,7 +89,11 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
             <>
               <Link href={profileHref} onClick={close} className={linkClass}>
                 <User size={14} className={iconClass} />
-                Mi perfil
+                Mi cuenta
+              </Link>
+              <Link href="/account/settings" onClick={close} className={linkClass}>
+                <Settings size={14} className={iconClass} />
+                Configuración
               </Link>
               {divider}
             </>

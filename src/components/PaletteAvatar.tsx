@@ -28,7 +28,7 @@ export default function PaletteAvatar({
   src,
   name,
   className = "h-20 w-20",
-  fillColor = "#94a49e",
+  fillColor = "#4a9e8c",
   plain = false,
 }: Props) {
   const uid = useId().replace(/:/g, "");

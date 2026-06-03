@@ -17,7 +17,7 @@ export default async function AccountPage() {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { name: true, locality: true, email: true },
+    select: { name: true, locality: true, email: true, image: true },
   });
 
   if (!user) redirect("/login");

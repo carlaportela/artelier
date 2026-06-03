@@ -59,6 +59,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             {...form.register("email")}
+            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-600">
@@ -82,6 +83,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             {...form.register("password")}
+            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
           />
           {form.formState.errors.password && (
             <p className="text-sm text-red-600">
@@ -90,7 +92,7 @@ export default function LoginPage() {
           )}
         </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60">
           {isPending ? "Iniciando sesión..." : t("login")}
         </Button>
       </form>
