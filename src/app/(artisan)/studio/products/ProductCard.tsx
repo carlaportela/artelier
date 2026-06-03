@@ -11,27 +11,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { SealBadge } from "~/components/artisan/SealBadge";
+import { getProductBadge } from "~/lib/product-badges";
 import { deleteProduct } from "./[id]/actions";
-
-// ─── StatusBadge (overlay sobre imagen) ─────────────────────────────────────
-
-type Status = "ACTIVE" | "SOLD" | "EXPIRED";
-
-function getBadge(status: Status, expiresAt: Date | null) {
-  if (status === "ACTIVE" && expiresAt) {
-    return { label: "Por tiempo limitado", className: "bg-[#c4956a]/90 text-white" };
-  }
-  if (status === "ACTIVE") return null;
-  const labels: Record<"SOLD" | "EXPIRED", string> = {
-    SOLD:    "Vendido",
-    EXPIRED: "No disponible",
-  };
-  const classes: Record<"SOLD" | "EXPIRED", string> = {
-    SOLD:    "bg-gray-900/65 text-white",
-    EXPIRED: "bg-gray-700/80 text-white",
-  };
-  return { label: labels[status], className: classes[status] };
-}
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 
@@ -106,7 +87,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <SealBadge key={ps.seal.id} name={ps.seal.name} />
             ))}
             {(() => {
-              const badge = getBadge(product.status, product.expiresAt);
+              const badge = getProductBadge(product.status, product.expiresAt);
               return badge ? (
                 <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
                   {badge.label}

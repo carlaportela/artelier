@@ -22,9 +22,9 @@ export async function GET(req: Request) {
 
   const now = new Date();
 
-  // AC1 + AC3 — Buscar candidatos a expirar
+  // AC1 + AC3 — Buscar candidatos a expirar (solo productos PERISHABLE)
   const expiredCandidates = await db.product.findMany({
-    where: { expiresAt: { lte: now }, status: "ACTIVE", deletedAt: null },
+    where: { type: "PERISHABLE", expiresAt: { lte: now }, status: "ACTIVE", deletedAt: null },
     select: { id: true },
   });
 

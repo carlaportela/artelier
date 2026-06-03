@@ -12,6 +12,7 @@ import { Grid3x3, Grid2x2, Rows3, LayoutList, Pencil, Trash2 } from "lucide-reac
 import { toast } from "sonner";
 
 import { ProductCard } from "./ProductCard";
+import { getProductBadge } from "~/lib/product-badges";
 import { deleteProduct } from "./[id]/actions";
 
 type View = "grid3" | "grid2" | "grid1" | "list";
@@ -33,21 +34,8 @@ const fmt = (cents: number) =>
 
 type Status = "ACTIVE" | "SOLD" | "EXPIRED";
 
-function getListBadge(status: Status, expiresAt: Date | null) {
-  if (status === "ACTIVE" && expiresAt) {
-    return { label: "Por tiempo limitado", className: "bg-[#c4956a] text-white" };
-  }
-  if (status === "ACTIVE") return null;
-  const labels: Record<"SOLD" | "EXPIRED", string> = { SOLD: "Vendido", EXPIRED: "No disponible" };
-  const classes: Record<"SOLD" | "EXPIRED", string> = {
-    SOLD:    "bg-gray-900/65 text-white",
-    EXPIRED: "bg-gray-700 text-white",
-  };
-  return { label: labels[status], className: classes[status] };
-}
-
 function StatusPill({ status, expiresAt }: { status: Status; expiresAt: Date | null }) {
-  const badge = getListBadge(status, expiresAt);
+  const badge = getProductBadge(status, expiresAt, "solid");
   if (!badge) return null;
   return (
     <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>

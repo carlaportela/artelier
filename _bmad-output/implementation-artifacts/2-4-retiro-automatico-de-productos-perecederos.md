@@ -191,7 +191,7 @@ Línea 34: `CRON_SECRET: z.string().optional()` — ya declarado ✅
 Una vez implementado, iniciar el dev server y hacer:
 ```bash
 curl -X GET http://localhost:3000/api/cron/expire-products \
-  -H "Authorization: Bearer dev-secret-local"
+  -H "Authorization: Bearer $CRON_SECRET"
 ```
 Debería devolver `{ "data": { "expired": 0 } }` (o N si hay productos con `expiresAt` en el pasado en la BD de dev).
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Product, ProcessUpdate } from "generated/prisma";
+import { getProductBadge } from "~/lib/product-badges";
 
 interface ArtisanProfileTabsProps {
   products: Product[];
@@ -78,16 +79,15 @@ export default function ArtisanProfileTabs({
                     {product.status !== "ACTIVE" && (
                       <div className="pointer-events-none absolute inset-0 bg-black/50" />
                     )}
-                    {/* Badge — no disponible/vendido, o tiempo limitado si es perecedero activo */}
-                    {product.status !== "ACTIVE" ? (
-                      <span className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium text-white ${product.status === "SOLD" ? "bg-gray-900/65" : "bg-gray-700/80"}`}>
-                        {product.status === "SOLD" ? "Vendido" : "No disponible"}
-                      </span>
-                    ) : product.expiresAt ? (
-                      <span className="absolute bottom-2 left-2 rounded bg-[#c4956a]/90 px-1.5 py-0.5 text-xs font-medium text-white">
-                        Por tiempo limitado
-                      </span>
-                    ) : null}
+                    {/* Badge de estado */}
+                    {(() => {
+                      const badge = getProductBadge(product.status, product.expiresAt);
+                      return badge ? (
+                        <span className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+                          {badge.label}
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
                   <div className="p-2">
                     <p className={`truncate font-display text-base ${product.status !== "ACTIVE" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
