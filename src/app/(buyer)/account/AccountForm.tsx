@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Info, Pencil, Plus } from "lucide-react";
+import { Info, Pencil, Plus, Camera, Trash2 } from "lucide-react";
 
-import { saveAccount } from "./actions";
+import { saveAccount, saveProfileImage } from "./actions";
 import CropModal from "~/components/CropModal";
 
 const schema = z.object({
@@ -31,6 +31,7 @@ export default function AccountForm({ user }: AccountFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleCropConfirm(blob: Blob) {
@@ -44,12 +45,23 @@ export default function AccountForm({ user }: AccountFormProps) {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) { setUploadError("Error al subir la imagen. Inténtalo de nuevo."); return; }
       const json = await res.json() as { data?: { url: string } };
-      if (json.data?.url) setImageUrl(json.data.url);
+      if (json.data?.url) {
+        const url = json.data.url;
+        setImageUrl(url);
+        // Guardar en BD inmediatamente para que el nav se actualice sin esperar al submit
+        await saveProfileImage(url);
+      }
     } catch {
       setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
     } finally {
       setUploading(false);
     }
+  }
+
+  async function handleDeletePhoto() {
+    setShowPhotoMenu(false);
+    setImageUrl("");
+    await saveProfileImage(null);
   }
 
   const form = useForm<FormInput>({
@@ -89,12 +101,12 @@ export default function AccountForm({ user }: AccountFormProps) {
             )}
           </div>
 
-          {/* Botón overlay: lápiz (abre selector directamente) o + */}
+          {/* Botón overlay */}
           {imageUrl ? (
             <button
               type="button"
               aria-label="Editar foto de perfil"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => setShowPhotoMenu((v) => !v)}
               disabled={uploading}
               className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
             >
@@ -108,6 +120,31 @@ export default function AccountForm({ user }: AccountFormProps) {
               <Plus size={15} />
             </label>
           )}
+
+          {/* Mini panel del lápiz — aparece a la derecha del avatar */}
+          {showPhotoMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
+              <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                <label
+                  htmlFor="avatar-upload"
+                  onClick={() => setShowPhotoMenu(false)}
+                  className="flex cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                >
+                  <Camera size={14} className="shrink-0" />
+                  Cambiar foto
+                </label>
+                <button
+                  type="button"
+                  onClick={handleDeletePhoto}
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition-colors hover:text-red-700"
+                >
+                  <Trash2 size={14} className="shrink-0" />
+                  Eliminar foto
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         <input
@@ -120,7 +157,7 @@ export default function AccountForm({ user }: AccountFormProps) {
           disabled={uploading}
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) { e.target.value = ""; setCropFile(file); }
+            if (file) { e.target.value = ""; setShowPhotoMenu(false); setCropFile(file); }
           }}
         />
         {uploading && <p className="text-xs text-[--text-muted]">Subiendo...</p>}
@@ -182,7 +219,6 @@ export default function AccountForm({ user }: AccountFormProps) {
         label="tu foto de perfil"
         onConfirm={handleCropConfirm}
         onCancel={() => setCropFile(null)}
-        onDelete={imageUrl ? () => { setImageUrl(""); setCropFile(null); } : undefined}
       />
     )}
     </>

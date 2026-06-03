@@ -34,7 +34,23 @@ export async function saveAccount(data: unknown) {
   });
 
   revalidatePath("/account");
-  revalidatePath("/", "layout"); // refresca AppHeader (imagen en nav)
+  revalidatePath("/", "layout");
+
+  return { success: true } as const;
+}
+
+/** Guarda solo la foto de perfil de forma inmediata, sin esperar al submit del formulario. */
+export async function saveProfileImage(imageUrl: string | null) {
+  const session = await getServerSession();
+  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
+
+  await db.user.update({
+    where: { id: session.user.id },
+    data: { image: imageUrl ?? null },
+  });
+
+  revalidatePath("/account");
+  revalidatePath("/", "layout");
 
   return { success: true } as const;
 }
