@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import ProductCard from "~/components/ProductCard";
+import AppHeader from "~/components/AppHeader";
 
 export const metadata: Metadata = {
   title: "Artelier — Artesanía hecha a mano",
@@ -42,22 +43,23 @@ export default async function HomePage() {
   });
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-8">
-      <h1 className="mb-6 font-display text-2xl font-bold text-[--text]">
-        Artesanía hecha a mano
-      </h1>
-
-      {products.length === 0 ? (
-        <p className="py-20 text-center text-sm text-[--text-muted]">
-          Pronto habrá artesanas aquí.
-        </p>
-      ) : (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+    <>
+      <AppHeader />
+      <main className="min-h-screen bg-[--bg] px-4 py-8">
+        <div className="mx-auto max-w-lg md:max-w-2xl lg:max-w-4xl">
+          {products.length === 0 ? (
+            <p className="py-20 text-center text-sm text-[--text-muted]">
+              Pronto habrá artesanas aquí.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </main>
+      </main>
+    </>
   );
 }

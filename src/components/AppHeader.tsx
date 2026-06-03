@@ -44,12 +44,22 @@ export default async function AppHeader() {
               />
             </>
           ) : (
-            <Link
-              href="/login"
-              className="rounded-full bg-[#c4956a] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#b5894e]"
-            >
-              Entrar
-            </Link>
+            <div className="flex items-center gap-2">
+              {/* En móvil solo "Entrar" — usuarios existentes primero.
+                  La página de login tiene enlace a registro para nuevas usuarias. */}
+              <Link
+                href="/login"
+                className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+              >
+                Entrar
+              </Link>
+              <Link
+                href="/register"
+                className="hidden md:block rounded-full border border-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+              >
+                Registrarme
+              </Link>
+            </div>
           )}
         </div>
 

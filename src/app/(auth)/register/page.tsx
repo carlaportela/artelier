@@ -68,7 +68,7 @@ function RoleSelector({
       </div>
       <p className="text-center text-sm text-[--text-muted]">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="cursor-pointer font-medium text-[--primary] underline underline-offset-2 transition-colors duration-200 hover:text-[#c4956a]">
+        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-[#4a9e8c]">
           {t("signIn")}
         </Link>
       </p>
@@ -124,19 +124,14 @@ export default function RegisterPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <button
-          type="button"
-          onClick={() => setRole(null)}
-          className="mb-4 flex cursor-pointer items-center gap-1 text-sm text-[--text-muted] transition-colors duration-200 hover:text-[--text]"
-        >
-          <ArrowLeft size={14} />
-          {role === "ARTISAN" ? t("artisan") : t("buyer")}
-        </button>
-        <h1 className="font-display text-2xl text-[--text]">
-          {t("createAccount")}
-        </h1>
-      </div>
+      <button
+        type="button"
+        onClick={() => setRole(null)}
+        className="flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all duration-200 hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+      >
+        <ArrowLeft size={14} />
+        {role === "ARTISAN" ? t("artisan") : t("buyer")}
+      </button>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-1">
@@ -186,7 +181,7 @@ export default function RegisterPage() {
 
       <p className="text-center text-sm text-[--text-muted]">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="cursor-pointer font-medium text-[--primary] underline underline-offset-2 transition-colors duration-200 hover:text-[#c4956a]">
+        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-[#4a9e8c]">
           {t("signIn")}
         </Link>
       </p>

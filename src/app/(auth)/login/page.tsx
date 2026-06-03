@@ -45,10 +45,6 @@ export default function LoginPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl text-[--text]">{t("loginTitle")}</h1>
-      </div>
-
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {form.formState.errors.root && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -100,9 +96,12 @@ export default function LoginPage() {
       </form>
 
       <p className="text-center text-sm text-[--text-muted]">
-        {t("dontHaveAccount")}{" "}
-        <Link href="/register" className="text-[--primary] underline">
-          {t("createOne")}
+        ¿No tienes cuenta?{" "}
+        <Link
+          href="/register"
+          className="font-medium underline underline-offset-2 transition-colors hover:text-[#c4956a]"
+        >
+          Regístrate aquí
         </Link>
       </p>
     </div>
