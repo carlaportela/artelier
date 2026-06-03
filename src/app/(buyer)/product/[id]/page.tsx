@@ -5,7 +5,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, ArrowLeft } from "lucide-react";
 
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
@@ -13,16 +13,25 @@ import PaletteAvatar from "~/components/PaletteAvatar";
 import { SealBadge } from "~/components/artisan/SealBadge";
 import { getProductBadge } from "~/lib/product-badges";
 import ImageCarousel from "./ImageCarousel";
+import { TypeBadge } from "./TypeBadge";
 
 type Props = { params: Promise<{ id: string }> };
 
 const fmt = (cents: number) =>
   (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
-const TYPE_LABELS: Record<string, string> = {
-  UNIQUE:    "Pieza única",
-  PERISHABLE: "Por tiempo limitado",
-  STANDARD:  "En stock",
+const TYPE_BADGE: Record<string, { label: string; className: string; tooltip: string } | null> = {
+  UNIQUE: {
+    label: "Pieza única",
+    className: "bg-[#4a9e8c]/15 text-[#4a9e8c]",
+    tooltip: "Solo existe una unidad de este producto. Una vez vendido, no estará disponible.",
+  },
+  PERISHABLE: {
+    label: "Por tiempo limitado",
+    className: "bg-[#c4956a]/15 text-[#c4956a]",
+    tooltip: "Este producto solo está disponible durante un período limitado.",
+  },
+  STANDARD: null,
 };
 
 // ─── SEO ─────────────────────────────────────────────────────────────────────
@@ -76,20 +85,30 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const isAuthenticated = !!session?.user;
   const badge = getProductBadge(product.status, product.expiresAt);
+  const typeBadge = TYPE_BADGE[product.type] ?? null;
   const nextParam = `/product/${id}`;
 
   return (
     <main className="min-h-screen bg-[--bg] px-4 py-6 md:py-10">
       <div className="mx-auto max-w-lg md:max-w-2xl">
 
-        {/* ── Artesana ── */}
+        {/* ── Flecha volver ── */}
+        <Link
+          href="/feed"
+          className="mb-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-colors hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+        >
+          <ArrowLeft size={16} />
+          Volver al catálogo
+        </Link>
+
+        {/* ── Artesana (arriba del carrusel) ── */}
         <div className="mb-4 flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-3">
           <PaletteAvatar
             src={product.artisan.image}
             name={product.artisan.name}
             className="h-12 w-12 shrink-0"
           />
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="font-display text-base font-semibold text-[--text]">
               {product.artisan.name ?? "Artesana"}
             </p>
@@ -102,7 +121,7 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
           <Link
             href={`/artisan/${product.artisan.id}`}
-            className="ml-auto shrink-0 text-xs text-[#3d5a4f] transition-colors hover:text-[#c4956a]"
+            className="shrink-0 rounded-full bg-[#c4956a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#d4a87a]"
           >
             Ver perfil
           </Link>
@@ -126,10 +145,14 @@ export default async function ProductDetailPage({ params }: Props) {
             </p>
           </div>
 
-          {/* Tipo de producto */}
-          <p className="text-xs text-[--text-muted]">
-            {TYPE_LABELS[product.type] ?? product.type}
-          </p>
+          {/* Badge de tipo con tooltip */}
+          {typeBadge && (
+            <TypeBadge
+              label={typeBadge.label}
+              className={typeBadge.className}
+              tooltip={typeBadge.tooltip}
+            />
+          )}
 
           {/* Descripción */}
           <p className="whitespace-pre-line text-sm leading-relaxed text-[--text-muted]">
@@ -159,7 +182,7 @@ export default async function ProductDetailPage({ params }: Props) {
               </button>
               <button
                 type="button"
-                className="flex-1 cursor-pointer rounded-full border border-[#c4956a] py-3 text-sm font-medium text-[#c4956a] transition-colors hover:bg-[#c4956a]/10"
+                className="flex-1 cursor-pointer rounded-full border border-[#3d5a4f] py-3 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
                 aria-label="Enviar mensaje a la artesana"
               >
                 Enviar mensaje
@@ -175,7 +198,7 @@ export default async function ProductDetailPage({ params }: Props) {
               </Link>
               <Link
                 href={`/register?next=${encodeURIComponent(nextParam)}`}
-                className="flex-1 rounded-full border border-[#c4956a] py-3 text-center text-sm font-medium text-[#c4956a] transition-colors hover:bg-[#c4956a]/10"
+                className="flex-1 rounded-full border border-[#3d5a4f] py-3 text-center text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
               >
                 Enviar mensaje
               </Link>
