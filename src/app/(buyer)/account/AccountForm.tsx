@@ -113,7 +113,7 @@ export default function AccountForm({ user }: AccountFormProps) {
                       className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
                     >
                       <RefreshCw size={13} className="shrink-0" />
-                      Ajustar foto
+                      Editar
                     </label>
                     <button
                       type="button"
@@ -121,7 +121,7 @@ export default function AccountForm({ user }: AccountFormProps) {
                       className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
                     >
                       <Trash2 size={13} className="shrink-0" />
-                      Eliminar foto
+                      Eliminar
                     </button>
                   </div>
                 </>
