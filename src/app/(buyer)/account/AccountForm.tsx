@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Info, Upload } from "lucide-react";
+import { Info, Pencil, Plus, RefreshCw, Trash2 } from "lucide-react";
 
 import { saveAccount } from "./actions";
 import CropModal from "~/components/CropModal";
@@ -31,6 +31,7 @@ export default function AccountForm({ user }: AccountFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
 
   async function handleCropConfirm(blob: Blob) {
     setCropFile(null);
@@ -74,37 +75,80 @@ export default function AccountForm({ user }: AccountFormProps) {
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
       {/* ── Foto de perfil ── */}
-      <div className="flex flex-col items-center gap-3 pb-2">
-        <div className="relative h-24 w-24 overflow-hidden rounded-full bg-[--surface]">
+      <div className="flex flex-col items-center gap-2 pb-2">
+        <div className="relative inline-block">
+          {/* Avatar */}
+          <div className="relative h-24 w-24 overflow-hidden rounded-full bg-[--surface]">
+            {imageUrl ? (
+              <Image src={imageUrl} alt="Foto de perfil" fill className="object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-[#c4956a]">
+                <span className="font-display text-3xl font-bold text-white">{initial}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Botón overlay: lápiz si tiene foto, + si no */}
           {imageUrl ? (
-            <Image src={imageUrl} alt="Foto de perfil" fill className="object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[#c4956a]">
-              <span className="font-display text-3xl font-bold text-white">{initial}</span>
+            <div className="absolute bottom-0 right-0">
+              <button
+                type="button"
+                aria-label="Editar foto de perfil"
+                onClick={() => setShowPhotoMenu((v) => !v)}
+                disabled={uploading}
+                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+              >
+                <Pencil size={13} />
+              </button>
+
+              {showPhotoMenu && (
+                <>
+                  {/* Capa transparente para cerrar al hacer clic fuera */}
+                  <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
+                  <div className="absolute bottom-8 right-0 z-20 w-36 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                    <label
+                      htmlFor="avatar-upload"
+                      onClick={() => setShowPhotoMenu(false)}
+                      className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                    >
+                      <RefreshCw size={13} className="shrink-0" />
+                      Ajustar foto
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => { setImageUrl(""); setShowPhotoMenu(false); }}
+                      className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
+                    >
+                      <Trash2 size={13} className="shrink-0" />
+                      Eliminar foto
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
+          ) : (
+            <label
+              htmlFor="avatar-upload"
+              className={`absolute bottom-0 right-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
+            >
+              <Plus size={15} />
+            </label>
           )}
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <label
-            htmlFor="avatar-upload"
-            className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploading ? "cursor-not-allowed opacity-50" : ""}`}
-          >
-            <Upload size={13} />
-            {uploading ? "Subiendo..." : imageUrl ? "Cambiar foto" : "Subir foto"}
-          </label>
-          <input
-            id="avatar-upload"
-            type="file"
-            accept="image/*"
-            className="sr-only"
-            disabled={uploading}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) { e.target.value = ""; setCropFile(file); }
-            }}
-          />
-          {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
-        </div>
+
+        <input
+          id="avatar-upload"
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          disabled={uploading}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) { e.target.value = ""; setCropFile(file); }
+          }}
+        />
+        {uploading && <p className="text-xs text-[--text-muted]">Subiendo...</p>}
+        {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
       </div>
 
       <div className="space-y-1">

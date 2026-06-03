@@ -201,7 +201,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               className="crop-thirds-guide pointer-events-none absolute inset-0"
               style={{ backgroundSize: `${cropW / 3}px ${cropH / 3}px` }}
             />
-            {/* Overlay con forma de paleta: cubre lo exterior con el fondo del modal */}
+            {/* Overlay circular: cubre la zona exterior con el fondo del modal */}
             {shape === "circle" && (
               <svg
                 viewBox="0 0 24 24"
@@ -212,21 +212,13 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
                 <defs>
                   <mask id={maskId}>
                     <rect width="24" height="24" fill="white" />
-                    <path
-                      d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                      fill="black"
-                    />
+                    <circle cx="12" cy="12" r="11.5" fill="black" />
                   </mask>
                 </defs>
                 {/* Zona exterior → color de fondo del modal */}
                 <rect width="24" height="24" fill="#f4f0e8" mask={`url(#${maskId})`} />
-                {/* Borde sutil de la paleta */}
-                <path
-                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                  fill="none"
-                  stroke="#ccc8bc"
-                  strokeWidth="0.3"
-                />
+                {/* Borde sutil del círculo */}
+                <circle cx="12" cy="12" r="11.5" fill="none" stroke="#ccc8bc" strokeWidth="0.3" />
               </svg>
             )}
           </div>
