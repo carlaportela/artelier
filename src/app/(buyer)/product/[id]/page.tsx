@@ -5,7 +5,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MapPin, ArrowLeft } from "lucide-react";
+import { MapPin } from "lucide-react";
+import BackButton from "~/components/BackButton";
 
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
@@ -93,13 +94,9 @@ export default async function ProductDetailPage({ params }: Props) {
       <div className="mx-auto max-w-lg md:max-w-2xl">
 
         {/* ── Flecha volver ── */}
-        <Link
-          href="/feed"
-          className="mb-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-colors hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
-        >
-          <ArrowLeft size={16} />
-          Volver al catálogo
-        </Link>
+        <div className="mb-2">
+          <BackButton />
+        </div>
 
         {/* ── Artesana (arriba del carrusel) ── */}
         <div className="mb-4 flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-3">

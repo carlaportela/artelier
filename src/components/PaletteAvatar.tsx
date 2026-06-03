@@ -13,6 +13,8 @@ interface Props {
   name: string | null;
   className?: string;
   fillColor?: string;
+  /** Sin borde ni sombra — para usar sobre banners */
+  plain?: boolean;
 }
 
 /**
@@ -27,6 +29,7 @@ export default function PaletteAvatar({
   name,
   className = "h-20 w-20",
   fillColor = "#94a49e",
+  plain = false,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const clipId = `palette-${uid}`;
@@ -36,6 +39,7 @@ export default function PaletteAvatar({
     <svg
       viewBox="0 0 24 24"
       className={`palette-avatar ${className}`}
+      style={plain ? { filter: "none" } : undefined}
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label={name ?? "Artesana"}
@@ -47,7 +51,7 @@ export default function PaletteAvatar({
       </defs>
 
       {/* Anillo color fondo app: separa el avatar del banner sin añadir color extra */}
-      <path d={PATH} fill="#f4f0e8" stroke="#f4f0e8" strokeWidth="1.4" />
+      {!plain && <path d={PATH} fill="#f4f0e8" stroke="#f4f0e8" strokeWidth="1.4" />}
 
       {src ? ( //Si existe src, muestra la foto recortada; si no, muestra la paleta con la inicial.
         /* Foto recortada con la forma de paleta, encima del anillo blanco */

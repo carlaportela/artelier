@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { getServerSession } from "~/server/auth/session";
 import ArtelierLogo from "~/components/ArtelierLogo";
-import UserMenu from "~/components/UserMenu"; //Se importa el componente para mostrar el menú de usuario en el header.
+import UserMenu from "~/components/UserMenu";
 
 //Función de componente para el header de la aplicación, que muestra el logo de Artelier, un enlace a la página de inicio y un menú de usuario o botón de inicio de sesión dependiendo del estado de autenticación del usuario.
 export default async function AppHeader() {
@@ -21,15 +21,20 @@ export default async function AppHeader() {
     <header className="sticky top-0 shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
       <div className="mx-auto grid h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl grid-cols-[1fr_auto_1fr] items-center px-4">
 
-        {/* Columna izquierda — vacía, misma anchura que la derecha para centrar el logo */}
-        <div />
+        {/* Izquierda — nombre de marca */}
+        <Link
+          href={homeHref}
+          className="font-display text-2xl font-bold text-[#3d5a4f] transition-colors hover:text-[#4a6b5e]"
+        >
+          Artelier
+        </Link>
 
-        {/* Columna central — logo siempre centrado */}
+        {/* Centro — logo */}
         <Link href={homeHref} aria-label="Artelier — inicio">
           <ArtelierLogo width={80} height={46} />
         </Link>
 
-        {/* Columna derecha — saludo + avatar con menú o botón Entrar */}
+        {/* Derecha — saludo + avatar con menú o botón Entrar */}
         <div className="flex items-center justify-end gap-3">
           {user ? (
             <>

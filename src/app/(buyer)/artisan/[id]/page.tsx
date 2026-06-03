@@ -8,6 +8,7 @@ import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
 import ArtisanHeader from "~/components/artisan/ArtisanHeader";
 import ArtisanProfileTabs from "~/components/artisan/ArtisanProfileTabs";
+import BackButton from "~/components/BackButton";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -84,7 +85,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[--bg]">
-      {isOwnProfile && (
+      {isOwnProfile ? (
         <div className="flex items-center justify-between px-4 pt-8 pb-4">
           <h1 className="font-display text-xl font-bold text-[--text]">Mi puesto de artesanía</h1>
           <Link
@@ -94,10 +95,15 @@ export default async function ArtisanPublicPage({ params }: Props) {
             Volver a mi perfil
           </Link>
         </div>
+      ) : (
+        <div className="px-4 py-3">
+          <BackButton />
+        </div>
       )}
       <ArtisanHeader
         artisan={artisan}
         isOwnProfile={isOwnProfile}
+        isAuthenticated={isAuthenticated}
         isFollowing={!!follow}
         canFollow={canFollow}
         followRedirectTo={followRedirectTo}
