@@ -126,14 +126,14 @@ export default function AccountForm({ user }: AccountFormProps) {
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
               <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
-                <label
-                  htmlFor="avatar-upload"
-                  onClick={() => setShowPhotoMenu(false)}
-                  className="flex cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                <button
+                  type="button"
+                  onClick={() => { fileInputRef.current?.click(); setShowPhotoMenu(false); }}
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
                 >
                   <Camera size={14} className="shrink-0" />
                   Cambiar foto
-                </label>
+                </button>
                 <button
                   type="button"
                   onClick={handleDeletePhoto}
