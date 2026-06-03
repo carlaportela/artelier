@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-05-28
+# last_updated: 2026-06-03
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-05-28
+last_updated: 2026-06-03
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -61,11 +61,11 @@ development_status:
   epic-1-retrospective: optional
 
   # ─── Épico 2: Catálogo y Publicación de Productos ─────────────────────────
-  epic-2: in-progress
+  epic-2: done
   2-1-publicar-un-producto-flujo-foto-primero: done
   2-2-editar-eliminar-productos-y-gestionar-sellos: done
   2-3-gestion-de-stock-y-pedidos-personalizados: done
-  2-4-retiro-automatico-de-productos-perecederos: review
+  2-4-retiro-automatico-de-productos-perecederos: done
   epic-2-retrospective: optional
 
   # ─── Épico 3: Descubrimiento y Navegación Pública ─────────────────────────
