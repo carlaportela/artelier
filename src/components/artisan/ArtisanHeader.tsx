@@ -30,11 +30,13 @@ interface ArtisanHeaderProps {
   isOwnProfile: boolean;
   isFollowing: boolean;
   canFollow: boolean;
+  /** URL a la que redirigir al pulsar "Seguir" (para visitantes sin cuenta). */
+  followRedirectTo?: string;
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
 }
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
-export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests }: ArtisanHeaderProps) {
+export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">
@@ -65,7 +67,11 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
 
           {/* FollowButton solo en perfil ajeno */}
           {!isOwnProfile && canFollow && (
-            <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
+            <FollowButton
+              artisanId={artisan.id}
+              initialIsFollowing={isFollowing}
+              redirectTo={followRedirectTo}
+            />
           )}
         </div>
 

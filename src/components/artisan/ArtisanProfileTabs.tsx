@@ -1,7 +1,10 @@
+//Página de perfil de la artesana público, con pestañas para mostrar sus productos y actualizaciones de proceso.
+
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { Product, ProcessUpdate } from "generated/prisma";
 import { getProductBadge } from "~/lib/product-badges";
@@ -55,51 +58,62 @@ export default function ArtisanProfileTabs({
             </p>
           ) : (
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className={`group overflow-hidden rounded-lg border border-[--border] bg-[--surface] transition-all duration-200 ${
-                    product.status === "ACTIVE" ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5" : ""
-                  }`}
-                >
-                  <div className="relative aspect-square w-full overflow-hidden">
-                    {product.imageUrls[0] ? (
-                      <Image
-                        src={product.imageUrls[0]}
-                        alt={product.name}
-                        fill
-                        className={`object-cover transition-transform duration-300 ${
-                          product.status === "ACTIVE" ? "group-hover:scale-105" : ""
-                        }`}
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-[--border]" />
-                    )}
-                    {/* Overlay oscuro permanente para no-activos */}
-                    {product.status !== "ACTIVE" && (
-                      <div className="pointer-events-none absolute inset-0 bg-black/50" />
-                    )}
-                    {/* Badge de estado */}
-                    {(() => {
-                      const badge = getProductBadge(product.status, product.expiresAt);
-                      return badge ? (
+              {products.map((product) => {
+                const isActive = product.status === "ACTIVE";
+                const badge = getProductBadge(product.status, product.expiresAt);
+                const cardClass = `group overflow-hidden rounded-lg border border-[--border] bg-[--surface] transition-all duration-200 ${
+                  isActive ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5" : ""
+                }`;
+                const inner = (
+                  <>
+                    <div className="relative aspect-square w-full overflow-hidden">
+                      {product.imageUrls[0] ? (
+                        <Image
+                          src={product.imageUrls[0]}
+                          alt={product.name}
+                          fill
+                          className={`object-cover transition-transform duration-300 ${
+                            isActive ? "group-hover:scale-105" : ""
+                          }`}
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-[--border]" />
+                      )}
+                      {/* Overlay oscuro permanente para no-activos */}
+                      {!isActive && (
+                        <div className="pointer-events-none absolute inset-0 bg-black/50" />
+                      )}
+                      {/* Badge de estado */}
+                      {badge && (
                         <span className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
                           {badge.label}
                         </span>
-                      ) : null;
-                    })()}
+                      )}
+                    </div>
+                    <div className="p-2">
+                      <p className={`truncate font-display text-base ${!isActive ? "text-[--text-muted]" : "text-[--text]"}`}>
+                        {product.name}
+                      </p>
+                      <p className="text-xs text-[#3d5a4f]">
+                        {(product.priceInCents / 100).toLocaleString("es-ES", {
+                          style: "currency",
+                          currency: "EUR",
+                        })}
+                      </p>
+                    </div>
+                  </>
+                );
+
+                return isActive ? (
+                  <Link key={product.id} href={`/product/${product.id}`} className={cardClass}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <div key={product.id} className={cardClass}>
+                    {inner}
                   </div>
-                  <div className="p-2">
-                    <p className={`truncate font-display text-base ${product.status !== "ACTIVE" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
-                    <p className="text-xs text-[#3d5a4f]">
-                      {(product.priceInCents / 100).toLocaleString("es-ES", {
-                        style: "currency",
-                        currency: "EUR",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

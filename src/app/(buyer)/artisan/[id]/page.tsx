@@ -11,6 +11,7 @@ import ArtisanProfileTabs from "~/components/artisan/ArtisanProfileTabs";
 
 type Props = { params: Promise<{ id: string }> };
 
+//Función para generar metadata dinámicamente según el artesano, útil para SEO y compartir en redes sociales.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const artisan = await db.user.findUnique({
@@ -20,6 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!artisan) return {};
 
+  //Open Graph metada para mejorar la apariencia al compartir el perfil del artesano en redes sociales.
   return {
     title: `${artisan.name ?? "Artesana"} — Artelier`,
     description: artisan.bio ?? undefined,
@@ -31,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+//Función principal que renderiza la página pública del artesano, mostrando su información, productos y actualizaciones.
 export default async function ArtisanPublicPage({ params }: Props) {
   const { id } = await params;
 
@@ -57,11 +60,18 @@ export default async function ArtisanPublicPage({ params }: Props) {
 
   if (!artisan) notFound();
 
+  const isAuthenticated = !!session?.user;
   const isOwnProfile = session?.user?.id === artisan.id;
   const isBuyer = session?.user?.role === "BUYER";
-  const canFollow = !isOwnProfile && isBuyer;
 
-  const follow = canFollow && session?.user?.id
+  // El botón "Seguir" se muestra a compradores autenticados Y a visitantes sin cuenta.
+  // Los visitantes son redirigidos al registro conservando el destino.
+  const canFollow = !isOwnProfile && (isBuyer || !isAuthenticated);
+  const followRedirectTo = !isAuthenticated
+    ? `/register?next=${encodeURIComponent(`/artisan/${id}`)}`
+    : undefined;
+
+  const follow = isBuyer && session?.user?.id
     ? await db.follow.findUnique({
         where: {
           followerId_followingId: {
@@ -90,6 +100,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
         isOwnProfile={isOwnProfile}
         isFollowing={!!follow}
         canFollow={canFollow}
+        followRedirectTo={followRedirectTo}
         sealRequests={artisan.sealRequests}
       />
 

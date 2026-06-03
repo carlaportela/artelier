@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { Palette, ShoppingBag, ArrowLeft } from "lucide-react";
@@ -77,6 +78,8 @@ function RoleSelector({
 
 export default function RegisterPage() {
   const t = useTranslations("auth");
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? undefined;
   const [role, setRole] = useState<"ARTISAN" | "BUYER" | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -93,7 +96,7 @@ export default function RegisterPage() {
 
   function onSubmit(data: RegisterInput) {
     startTransition(async () => {
-      const result = await registerUser(data);
+      const result = await registerUser(data, next);
       if (!result?.error) return;
 
       if (result.error.code === "EMAIL_EXISTS") {
