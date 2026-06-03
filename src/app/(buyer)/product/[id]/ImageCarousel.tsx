@@ -47,8 +47,8 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
               onClick={() => setSelected(i)}
               className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[--surface] transition-all duration-200 ${
                 i === selected
-                  ? "ring-2 ring-[#3d5a4f] ring-offset-1"
-                  : "opacity-60 hover:opacity-100"
+                  ? "cursor-default ring-2 ring-[#3d5a4f] ring-offset-1"
+                  : "cursor-pointer opacity-60 hover:opacity-100"
               }`}
               aria-label={`Ver foto ${i + 1}`}
             >
