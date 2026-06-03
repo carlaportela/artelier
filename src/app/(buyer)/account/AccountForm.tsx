@@ -91,49 +91,47 @@ export default function AccountForm({ user }: AccountFormProps) {
 
           {/* Botón overlay: lápiz si tiene foto, + si no */}
           {imageUrl ? (
-            <div className="absolute bottom-0 right-0">
-              <button
-                type="button"
-                aria-label="Editar foto de perfil"
-                onClick={() => setShowPhotoMenu((v) => !v)}
-                disabled={uploading}
-                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
-              >
-                <Pencil size={13} />
-              </button>
-
-              {showPhotoMenu && (
-                <>
-                  {/* Capa transparente para cerrar al hacer clic fuera */}
-                  <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
-                  <div className="absolute bottom-8 right-0 z-20 w-36 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
-                    <label
-                      htmlFor="avatar-upload"
-                      onClick={() => setShowPhotoMenu(false)}
-                      className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
-                    >
-                      <RefreshCw size={13} className="shrink-0" />
-                      Editar
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => { setImageUrl(""); setShowPhotoMenu(false); }}
-                      className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
-                    >
-                      <Trash2 size={13} className="shrink-0" />
-                      Eliminar
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+            <button
+              type="button"
+              aria-label="Editar foto de perfil"
+              onClick={() => setShowPhotoMenu((v) => !v)}
+              disabled={uploading}
+              className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+            >
+              <Pencil size={13} />
+            </button>
           ) : (
             <label
               htmlFor="avatar-upload"
-              className={`absolute bottom-0 right-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
+              className={`absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
             >
               <Plus size={15} />
             </label>
+          )}
+
+          {/* Menú editar/eliminar — aparece a la derecha del avatar */}
+          {showPhotoMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
+              <div className="absolute left-full top-1/2 z-20 ml-3 w-36 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                <label
+                  htmlFor="avatar-upload"
+                  onClick={() => setShowPhotoMenu(false)}
+                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                >
+                  <RefreshCw size={13} className="shrink-0" />
+                  Editar
+                </label>
+                <button
+                  type="button"
+                  onClick={() => { setImageUrl(""); setShowPhotoMenu(false); }}
+                  className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
+                >
+                  <Trash2 size={13} className="shrink-0" />
+                  Eliminar
+                </button>
+              </div>
+            </>
           )}
         </div>
 
