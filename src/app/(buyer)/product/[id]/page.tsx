@@ -4,7 +4,6 @@
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 
@@ -13,6 +12,7 @@ import { getServerSession } from "~/server/auth/session";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { SealBadge } from "~/components/artisan/SealBadge";
 import { getProductBadge } from "~/lib/product-badges";
+import ImageCarousel from "./ImageCarousel";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -82,51 +82,38 @@ export default async function ProductDetailPage({ params }: Props) {
     <main className="min-h-screen bg-[--bg] px-4 py-6 md:py-10">
       <div className="mx-auto max-w-lg md:max-w-2xl">
 
-        {/* ── Galería de imágenes ── */}
-        <div className="space-y-2">
-          {/* Imagen principal */}
-          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[--surface]">
-            {product.imageUrls[0] ? (
-              <Image
-                src={product.imageUrls[0]}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 672px"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center">
-                <span className="text-sm text-[--text-muted]">Sin imagen</span>
-              </div>
-            )}
-            {badge && (
-              <span className={`absolute bottom-3 left-3 rounded px-2 py-0.5 text-xs font-medium ${badge.className}`}>
-                {badge.label}
-              </span>
+        {/* ── Artesana ── */}
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-3">
+          <PaletteAvatar
+            src={product.artisan.image}
+            name={product.artisan.name}
+            className="h-12 w-12 shrink-0"
+          />
+          <div className="min-w-0">
+            <p className="font-display text-base font-semibold text-[--text]">
+              {product.artisan.name ?? "Artesana"}
+            </p>
+            {product.artisan.locality && (
+              <p className="flex items-center gap-1 text-xs text-[--text-muted]">
+                <MapPin size={10} />
+                {product.artisan.locality}
+              </p>
             )}
           </div>
-
-          {/* Miniaturas adicionales */}
-          {product.imageUrls.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-1">
-              {product.imageUrls.slice(1).map((url, i) => (
-                <div
-                  key={i}
-                  className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[--surface]"
-                >
-                  <Image
-                    src={url}
-                    alt={`${product.name} — foto ${i + 2}`}
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          <Link
+            href={`/artisan/${product.artisan.id}`}
+            className="ml-auto shrink-0 text-xs text-[#3d5a4f] transition-colors hover:text-[#c4956a]"
+          >
+            Ver perfil
+          </Link>
         </div>
+
+        {/* ── Carrusel de imágenes ── */}
+        <ImageCarousel
+          imageUrls={product.imageUrls}
+          name={product.name}
+          badge={badge}
+        />
 
         {/* ── Info del producto ── */}
         <div className="mt-5 space-y-3">
@@ -134,7 +121,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <h1 className="font-display text-2xl font-bold text-[--text]">
               {product.name}
             </h1>
-            <p className="shrink-0 font-display text-xl font-bold text-[#3d5a4f]">
+            <p className="shrink-0 text-xl font-bold text-[#3d5a4f]">
               {fmt(product.priceInCents)}
             </p>
           </div>
@@ -165,7 +152,6 @@ export default async function ProductDetailPage({ params }: Props) {
             <>
               <button
                 type="button"
-                onClick={undefined}
                 className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
                 aria-label="Comprar producto"
               >
@@ -196,30 +182,6 @@ export default async function ProductDetailPage({ params }: Props) {
             </>
           )}
         </div>
-
-        {/* ── Artesana ── */}
-        <Link
-          href={`/artisan/${product.artisan.id}`}
-          className="mt-6 flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-3 transition-colors hover:border-[#c4956a]/40"
-        >
-          <PaletteAvatar
-            src={product.artisan.image}
-            name={product.artisan.name}
-            className="h-12 w-12 shrink-0"
-          />
-          <div className="min-w-0">
-            <p className="font-display text-base font-semibold text-[--text]">
-              {product.artisan.name ?? "Artesana"}
-            </p>
-            {product.artisan.locality && (
-              <p className="flex items-center gap-1 text-xs text-[--text-muted]">
-                <MapPin size={10} />
-                {product.artisan.locality}
-              </p>
-            )}
-          </div>
-          <span className="ml-auto text-xs text-[#c4956a]">Ver perfil →</span>
-        </Link>
 
       </div>
     </main>

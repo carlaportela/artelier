@@ -91,7 +91,7 @@ export default function ArtisanProfileTabs({
                       )}
                     </div>
                     <div className="p-2">
-                      <p className={`truncate font-display text-base ${!isActive ? "text-[--text-muted]" : "text-[--text]"}`}>
+                      <p className={`truncate font-display text-base font-bold ${!isActive ? "text-[--text-muted]" : "text-[--text]"}`}>
                         {product.name}
                       </p>
                       <p className="text-xs text-[#3d5a4f]">

@@ -77,7 +77,7 @@ export default function ProductCard({ product }: PublicProductCardProps) {
 
         {/* Info */}
         <div className="p-2.5">
-          <p className="truncate font-display text-base text-[--text]">{product.name}</p>
+          <p className="truncate font-display text-base font-bold text-[--text]">{product.name}</p>
           <p className="mt-0.5 text-xs font-medium text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
         </div>
       </Link>
