@@ -79,12 +79,12 @@ export default function AccountForm({ user }: AccountFormProps) {
       <div className="flex flex-col items-center gap-2 pb-2">
         <div className="relative inline-block">
           {/* Avatar */}
-          <div className="relative h-24 w-24 overflow-hidden rounded-full bg-[--surface]">
+          <div className="relative h-40 w-40 overflow-hidden rounded-full bg-[--surface]">
             {imageUrl ? (
               <Image src={imageUrl} alt="Foto de perfil" fill className="object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center bg-[#c4956a]">
-                <span className="font-display text-3xl font-bold text-white">{initial}</span>
+                <span className="font-display text-5xl font-bold text-white">{initial}</span>
               </div>
             )}
           </div>
