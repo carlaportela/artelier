@@ -12,6 +12,7 @@ import { Grid3x3, Grid2x2, Rows3, LayoutList, Pencil, Trash2 } from "lucide-reac
 import { toast } from "sonner";
 
 import { ProductCard } from "./ProductCard";
+import { getProductBadge } from "~/lib/product-badges";
 import { deleteProduct } from "./[id]/actions";
 
 type View = "grid3" | "grid2" | "grid1" | "list";
@@ -22,6 +23,7 @@ type Product = {
   priceInCents: number;
   status: "ACTIVE" | "SOLD" | "EXPIRED";
   imageUrls: string[];
+  expiresAt: Date | null;
   seals: { seal: { id: string; name: string } }[];
 };
 
@@ -30,22 +32,14 @@ const fmt = (cents: number) =>
 
 // ── StatusPill ────────────────────────────────────────────────────────────────
 
-function StatusPill({ status }: { status: "ACTIVE" | "SOLD" | "EXPIRED" }) {
-  if (status === "ACTIVE")
-    return (
-      <span className="rounded bg-[#8f9e94] px-1.5 py-0.5 text-xs font-medium text-white">
-        En stock
-      </span>
-    );
-  if (status === "SOLD")
-    return (
-      <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
-        Vendido
-      </span>
-    );
+type Status = "ACTIVE" | "SOLD" | "EXPIRED";
+
+function StatusPill({ status, expiresAt }: { status: Status; expiresAt: Date | null }) {
+  const badge = getProductBadge(status, expiresAt, "solid");
+  if (!badge) return null;
   return (
-    <span className="rounded bg-amber-50 px-1.5 py-0.5 text-xs text-amber-700">
-      Caducado
+    <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+      {badge.label}
     </span>
   );
 }
@@ -76,7 +70,7 @@ function ProductListRow({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2 transition-colors hover:border-[#c4956a]/40">
+      <div className={`flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2 transition-colors ${product.status !== "EXPIRED" ? "hover:border-[#c4956a]/40" : "opacity-60"}`}>
         {/* Miniatura */}
         <Link
           href={`/studio/products/${product.id}`}
@@ -100,10 +94,10 @@ function ProductListRow({ product }: { product: Product }) {
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-[--text]">{product.name}</p>
+          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
           <div className="mt-0.5 flex items-center gap-2">
             <p className="text-xs text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
-            <StatusPill status={product.status} />
+            <StatusPill status={product.status} expiresAt={product.expiresAt} />
           </div>
         </div>
 

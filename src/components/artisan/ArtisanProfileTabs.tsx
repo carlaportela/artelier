@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Product, ProcessUpdate } from "generated/prisma";
+import { getProductBadge } from "~/lib/product-badges";
 
 interface ArtisanProfileTabsProps {
   products: Product[];
@@ -57,33 +58,40 @@ export default function ArtisanProfileTabs({
               {products.map((product) => (
                 <div
                   key={product.id}
-                  className="overflow-hidden rounded-lg bg-[--surface] border border-[--border]"
+                  className={`group overflow-hidden rounded-lg border border-[--border] bg-[--surface] transition-all duration-200 ${
+                    product.status === "ACTIVE" ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5" : ""
+                  }`}
                 >
-                  <div className="relative aspect-square w-full">
+                  <div className="relative aspect-square w-full overflow-hidden">
                     {product.imageUrls[0] ? (
                       <Image
                         src={product.imageUrls[0]}
                         alt={product.name}
                         fill
-                        className={`object-cover ${product.status === "SOLD" ? "opacity-70" : ""}`}
+                        className={`object-cover transition-transform duration-300 ${
+                          product.status === "ACTIVE" ? "group-hover:scale-105" : ""
+                        }`}
                       />
                     ) : (
                       <div className="h-full w-full bg-[--border]" />
                     )}
+                    {/* Overlay oscuro permanente para no-activos */}
+                    {product.status !== "ACTIVE" && (
+                      <div className="pointer-events-none absolute inset-0 bg-black/50" />
+                    )}
                     {/* Badge de estado */}
-                    <span
-                      className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${
-                        product.status === "SOLD"
-                          ? "bg-gray-900/65 text-white"
-                          : "bg-[#8f9e94]/90 text-white"
-                      }`}
-                    >
-                      {product.status === "SOLD" ? "Vendido" : "En stock"}
-                    </span>
+                    {(() => {
+                      const badge = getProductBadge(product.status, product.expiresAt);
+                      return badge ? (
+                        <span className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+                          {badge.label}
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
                   <div className="p-2">
-                    <p className="truncate font-display text-base text-[--text]">{product.name}</p>
-                    <p className="text-xs text-[--text-muted]">
+                    <p className={`truncate font-display text-base ${product.status !== "ACTIVE" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
+                    <p className="text-xs text-[#3d5a4f]">
                       {(product.priceInCents / 100).toLocaleString("es-ES", {
                         style: "currency",
                         currency: "EUR",

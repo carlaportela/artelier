@@ -64,8 +64,8 @@ development_status:
   epic-2: in-progress
   2-1-publicar-un-producto-flujo-foto-primero: done
   2-2-editar-eliminar-productos-y-gestionar-sellos: done
-  2-3-gestion-de-stock-y-pedidos-personalizados: in-progress
-  2-4-retiro-automatico-de-productos-perecederos: backlog
+  2-3-gestion-de-stock-y-pedidos-personalizados: done
+  2-4-retiro-automatico-de-productos-perecederos: review
   epic-2-retrospective: optional
 
   # ─── Épico 3: Descubrimiento y Navegación Pública ─────────────────────────

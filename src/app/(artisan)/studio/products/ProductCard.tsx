@@ -11,31 +11,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { SealBadge } from "~/components/artisan/SealBadge";
+import { getProductBadge } from "~/lib/product-badges";
 import { deleteProduct } from "./[id]/actions";
-
-// ─── StatusPill ──────────────────────────────────────────────────────────────
-
-function StatusPill({ status }: { status: "ACTIVE" | "SOLD" | "EXPIRED" }) {
-  if (status === "ACTIVE") {
-    return (
-      <span className="rounded bg-[#8f9e94] px-2 py-0.5 text-xs font-medium text-white">
-        En stock
-      </span>
-    );
-  }
-  if (status === "SOLD") {
-    return (
-      <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
-        Vendido
-      </span>
-    );
-  }
-  return (
-    <span className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700">
-      Caducado
-    </span>
-  );
-}
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
 
@@ -46,6 +23,7 @@ interface ProductCardProps {
     priceInCents: number;
     status: "ACTIVE" | "SOLD" | "EXPIRED";
     imageUrls: string[];
+    expiresAt: Date | null;
     seals: { seal: { id: string; name: string } }[];
   };
 }
@@ -79,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-colors hover:border-[#c4956a]/40">
+      <div className={`group relative overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-colors ${product.status !== "EXPIRED" ? "hover:border-[#c4956a]/40" : "opacity-75"}`}>
         {/* Imagen — Link que navega a editar al hacer clic en cualquier punto de la foto */}
         <Link href={`/studio/products/${product.id}`} className="relative block aspect-square" aria-label={`Editar ${product.name}`}>
           {product.imageUrls[0] ? (
@@ -96,17 +74,27 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {/* Overlay oscuro al pasar el ratón */}
-          <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-200 group-hover:bg-black/30" />
+          {/* Overlay: oscuro permanente si expirado, hover si no */}
+          <div className={`pointer-events-none absolute inset-0 transition-colors duration-200 ${
+            product.status === "EXPIRED"
+              ? "bg-black/45"
+              : "bg-black/0 group-hover:bg-black/30"
+          }`} />
 
-          {/* Sellos verificados */}
-          {product.seals.length > 0 && (
-            <div className="absolute bottom-2 left-2 flex flex-col gap-1">
-              {product.seals.map((ps) => (
-                <SealBadge key={ps.seal.id} name={ps.seal.name} />
-              ))}
-            </div>
-          )}
+          {/* Sellos + badge de estado — todos en el mismo contenedor bottom-left */}
+          <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
+            {product.seals.map((ps) => (
+              <SealBadge key={ps.seal.id} name={ps.seal.name} />
+            ))}
+            {(() => {
+              const badge = getProductBadge(product.status, product.expiresAt);
+              return badge ? (
+                <span className={`rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+                  {badge.label}
+                </span>
+              ) : null;
+            })()}
+          </div>
         </Link>
 
         {/* Botones de acción — fuera del Link, posicionados encima de la imagen con absolute */}
@@ -131,10 +119,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Info (clickable → editar producto) */}
         <Link href={`/studio/products/${product.id}`} className="block p-3">
-          <p className="truncate text-sm font-medium text-[--text]">{product.name}</p>
-          <div className="mt-1 flex items-center justify-between gap-2">
-            <p className="text-sm text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
-            <StatusPill status={product.status} />
+          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
+          <div className="mt-1">
+            <p className="text-xs text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
           </div>
         </Link>
       </div>

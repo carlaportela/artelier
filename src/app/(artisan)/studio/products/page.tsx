@@ -27,6 +27,7 @@ export default async function StudioProductsPage() {
       priceInCents: true,
       status: true,
       imageUrls: true,
+      expiresAt: true,
       seals: {
         select: {
           seal: { select: { id: true, name: true } },
