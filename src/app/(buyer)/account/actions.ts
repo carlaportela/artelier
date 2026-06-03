@@ -8,8 +8,13 @@ import { db } from "~/server/db";
 
 const accountSchema = z.object({
   name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
+  lastName: z.string().trim().optional(),
   locality: z.string().trim().min(2, "Introduce tu localidad"),
   image: z.string().optional(),
+  street: z.string().trim().optional(),
+  postalCode: z.string().trim().optional(),
+  city: z.string().trim().optional(),
+  province: z.string().trim().optional(),
 });
 
 export async function saveAccount(data: unknown) {
@@ -26,11 +31,20 @@ export async function saveAccount(data: unknown) {
     };
   }
 
-  const { name, locality, image } = parsed.data;
+  const { name, lastName, locality, image, street, postalCode, city, province } = parsed.data;
 
   await db.user.update({
     where: { id: session.user.id },
-    data: { name, locality, ...(image !== undefined && { image }) },
+    data: {
+      name,
+      lastName: lastName ?? null,
+      locality,
+      ...(image !== undefined && { image }),
+      street: street ?? null,
+      postalCode: postalCode ?? null,
+      city: city ?? null,
+      province: province ?? null,
+    },
   });
 
   revalidatePath("/account");

@@ -46,11 +46,9 @@ export default function DeleteAccountForm() {
         </button>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-            <Info size={13} className="mt-0.5 shrink-0 text-red-400" />
-            <p className="text-xs text-[--text-muted]">
-              Esta acción es irreversible. Tus datos se borrarán de forma permanente.
-            </p>
+          <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] py-2 pr-3">
+            <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
+            <p className="text-xs text-[--text-muted]">Esta acción es irreversible. Tus datos se borrarán de forma permanente.</p>
           </div>
 
           <div className="space-y-1.5">
