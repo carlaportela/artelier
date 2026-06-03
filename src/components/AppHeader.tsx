@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { getServerSession } from "~/server/auth/session";
+import { db } from "~/server/db";
 import ArtelierLogo from "~/components/ArtelierLogo";
 import UserMenu from "~/components/UserMenu";
 
@@ -11,6 +12,14 @@ export default async function AppHeader() {
   const session = await getServerSession();
   const user = session?.user;
   const profileHref = user?.role === "ARTISAN" ? "/studio/profile" : "/account";
+
+  // La imagen en el JWT puede estar desfasada si el usuario actualizó su perfil.
+  // Leemos el campo image directamente de la BD para mostrar siempre la versión actual.
+  let freshImage: string | null = user?.image ?? null;
+  if (user?.id) {
+    const row = await db.user.findUnique({ where: { id: user.id }, select: { image: true } });
+    freshImage = row?.image ?? null;
+  }
   const homeHref = user
     ? user.role === "ARTISAN"
       ? "/studio/profile"
@@ -43,7 +52,7 @@ export default async function AppHeader() {
               </span>
               <UserMenu
                 name={user.name ?? null}
-                image={user.image ?? null}
+                image={freshImage}
                 role={user.role}
                 profileHref={profileHref}
               />

@@ -13,10 +13,12 @@ interface Props {
   label: string;
   onConfirm: (blob: Blob) => void;
   onCancel: () => void;
+  /** Si se proporciona, muestra el botón "Eliminar foto" dentro del modal */
+  onDelete?: () => void;
 }
 
 //Función principal. Permite cargar la imagen, mostrar un recuadro de recorte con la relación de aspecto adecuada, y aplicar zoom y desplazamiento para encuadrar la imagen antes de confirmarla.
-export default function CropModal({ file, aspectRatio, shape, label, onConfirm, onCancel }: Props) {
+export default function CropModal({ file, aspectRatio, shape, label, onConfirm, onCancel, onDelete }: Props) {
 
   // ID único por instancia para evitar colisión de SVG mask si hay dos modales abiertos
   const uid = useId().replace(/:/g, "");
@@ -259,21 +261,32 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
           Puedes arrastrar o hacer zoom
         </p>
 
-        <div className="mt-4 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-          >
-            Aplicar
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
-          >
-            Cancelar
-          </button>
+        <div className="mt-4 flex items-center justify-between gap-2">
+          {onDelete ? (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="cursor-pointer rounded-full px-4 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
+            >
+              Eliminar foto
+            </button>
+          ) : <span />}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            >
+              Aplicar
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </div>
     </div>

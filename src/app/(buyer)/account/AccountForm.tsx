@@ -1,12 +1,12 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { Info, Pencil, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { Info, Pencil, Plus } from "lucide-react";
 
 import { saveAccount } from "./actions";
 import CropModal from "~/components/CropModal";
@@ -31,7 +31,7 @@ export default function AccountForm({ user }: AccountFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
-  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleCropConfirm(blob: Blob) {
     setCropFile(null);
@@ -89,12 +89,12 @@ export default function AccountForm({ user }: AccountFormProps) {
             )}
           </div>
 
-          {/* Botón overlay: lápiz si tiene foto, + si no */}
+          {/* Botón overlay: lápiz (abre selector directamente) o + */}
           {imageUrl ? (
             <button
               type="button"
               aria-label="Editar foto de perfil"
-              onClick={() => setShowPhotoMenu((v) => !v)}
+              onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
               className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
             >
@@ -108,37 +108,14 @@ export default function AccountForm({ user }: AccountFormProps) {
               <Plus size={15} />
             </label>
           )}
-
-          {/* Menú editar/eliminar — aparece a la derecha del avatar */}
-          {showPhotoMenu && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
-              <div className="absolute left-full top-1/2 z-20 ml-3 w-36 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
-                <label
-                  htmlFor="avatar-upload"
-                  onClick={() => setShowPhotoMenu(false)}
-                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
-                >
-                  <RefreshCw size={13} className="shrink-0" />
-                  Editar
-                </label>
-                <button
-                  type="button"
-                  onClick={() => { setImageUrl(""); setShowPhotoMenu(false); }}
-                  className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
-                >
-                  <Trash2 size={13} className="shrink-0" />
-                  Eliminar
-                </button>
-              </div>
-            </>
-          )}
         </div>
 
         <input
+          ref={fileInputRef}
           id="avatar-upload"
           type="file"
           accept="image/*"
+          aria-label="Subir foto de perfil"
           className="sr-only"
           disabled={uploading}
           onChange={(e) => {
@@ -205,6 +182,7 @@ export default function AccountForm({ user }: AccountFormProps) {
         label="tu foto de perfil"
         onConfirm={handleCropConfirm}
         onCancel={() => setCropFile(null)}
+        onDelete={imageUrl ? () => { setImageUrl(""); setCropFile(null); } : undefined}
       />
     )}
     </>

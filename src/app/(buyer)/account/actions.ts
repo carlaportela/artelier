@@ -34,6 +34,7 @@ export async function saveAccount(data: unknown) {
   });
 
   revalidatePath("/account");
+  revalidatePath("/", "layout"); // refresca AppHeader (imagen en nav)
 
   return { success: true } as const;
 }
