@@ -153,6 +153,7 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  lastName: 'lastName',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
@@ -161,6 +162,10 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   password: 'password',
   locality: 'locality',
+  street: 'street',
+  postalCode: 'postalCode',
+  city: 'city',
+  province: 'province',
   stripeAccountId: 'stripeAccountId',
   firstSaleCompleted: 'firstSaleCompleted',
   twoFactorSecret: 'twoFactorSecret',

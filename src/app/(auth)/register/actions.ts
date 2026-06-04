@@ -1,4 +1,6 @@
-"use server";
+//Funcionalidades relacionadas con el registro de usuarios. 
+
+"use server"; //Se ejecuta en el servidor.
 
 import { hash } from "bcryptjs";
 import { cookies } from "next/headers";
@@ -8,7 +10,8 @@ import { Prisma } from "generated/prisma";
 import { db } from "~/server/db";
 import { registerSchema } from "~/lib/validations/auth";
 
-export async function registerUser(data: unknown) {
+//Función para registrar un nuevo usuario. Valida los datos de entrada, verifica si el correo electrónico ya existe, crea una nueva sesión y redirige al usuario a la página correspondiente según su rol.
+export async function registerUser(data: unknown, next?: string) {
   const parsed = registerSchema.safeParse(data);
   if (!parsed.success) {
     return {
@@ -73,5 +76,7 @@ export async function registerUser(data: unknown) {
     path: "/",
   });
 
-  redirect(role === "ARTISAN" ? "/studio/profile" : "/feed");
+  // Redirigir a `next` si es una URL interna válida (prevenir open redirect)
+  const safeNext = next?.startsWith("/") && !next.startsWith("//") ? next : null;
+  redirect(safeNext ?? (role === "ARTISAN" ? "/studio/profile" : "/feed"));
 }

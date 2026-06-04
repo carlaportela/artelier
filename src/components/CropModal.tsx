@@ -13,10 +13,12 @@ interface Props {
   label: string;
   onConfirm: (blob: Blob) => void;
   onCancel: () => void;
+  /** Si se proporciona, muestra el botón "Eliminar foto" dentro del modal */
+  onDelete?: () => void;
 }
 
 //Función principal. Permite cargar la imagen, mostrar un recuadro de recorte con la relación de aspecto adecuada, y aplicar zoom y desplazamiento para encuadrar la imagen antes de confirmarla.
-export default function CropModal({ file, aspectRatio, shape, label, onConfirm, onCancel }: Props) {
+export default function CropModal({ file, aspectRatio, shape, label, onConfirm, onCancel, onDelete }: Props) {
 
   // ID único por instancia para evitar colisión de SVG mask si hay dos modales abiertos
   const uid = useId().replace(/:/g, "");
@@ -201,7 +203,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               className="crop-thirds-guide pointer-events-none absolute inset-0"
               style={{ backgroundSize: `${cropW / 3}px ${cropH / 3}px` }}
             />
-            {/* Overlay con forma de paleta: cubre lo exterior con el fondo del modal */}
+            {/* Overlay circular: cubre la zona exterior con el fondo del modal */}
             {shape === "circle" && (
               <svg
                 viewBox="0 0 24 24"
@@ -212,21 +214,13 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
                 <defs>
                   <mask id={maskId}>
                     <rect width="24" height="24" fill="white" />
-                    <path
-                      d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                      fill="black"
-                    />
+                    <circle cx="12" cy="12" r="11.5" fill="black" />
                   </mask>
                 </defs>
                 {/* Zona exterior → color de fondo del modal */}
                 <rect width="24" height="24" fill="#f4f0e8" mask={`url(#${maskId})`} />
-                {/* Borde sutil de la paleta */}
-                <path
-                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-                  fill="none"
-                  stroke="#ccc8bc"
-                  strokeWidth="0.3"
-                />
+                {/* Borde sutil del círculo */}
+                <circle cx="12" cy="12" r="11.5" fill="none" stroke="#ccc8bc" strokeWidth="0.3" />
               </svg>
             )}
           </div>
@@ -267,21 +261,32 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
           Puedes arrastrar o hacer zoom
         </p>
 
-        <div className="mt-4 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={handleConfirm}
-            className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-          >
-            Aplicar
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
-          >
-            Cancelar
-          </button>
+        <div className="mt-4 flex items-center justify-between gap-2">
+          {onDelete ? (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="cursor-pointer rounded-full px-4 py-2 text-sm text-red-600 transition-colors hover:text-red-700"
+            >
+              Eliminar foto
+            </button>
+          ) : <span />}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            >
+              Aplicar
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </div>
     </div>

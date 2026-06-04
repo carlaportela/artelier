@@ -13,9 +13,9 @@ export default async function SettingsPage() {
   if (!session?.user) redirect("/login");
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-8">
+    <main className="min-h-screen bg-[--bg] px-4 py-6 sm:px-8 sm:py-10 lg:px-12">
       <div className="mx-auto max-w-lg space-y-10">
-        <h1 className="font-display text-2xl font-bold text-[--text]">Configuración</h1>
+        <h1 className="font-display text-2xl font-bold text-[--text] sm:text-3xl">Configuración</h1>
         <ChangePasswordForm />
         <hr className="border-[--border]" />
         <ExportDataButton />

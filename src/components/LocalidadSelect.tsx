@@ -211,12 +211,8 @@ export default function LocalidadSelect({
                     : "text-[--text] hover:bg-[#ccc8bc]"
                 }`}
               >
-                <span className="text-sm font-medium">{item.municipio}</span>
-                <span
-                  className="text-xs text-[--text-muted]"
-                >
-                  {item.provincia}
-                </span>
+                <span className="text-sm font-medium">{item.municipio},</span>
+                <span className="text-xs text-[--text-muted]">{item.provincia}</span>
               </li>
             );
           })}

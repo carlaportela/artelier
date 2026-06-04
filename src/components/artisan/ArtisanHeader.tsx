@@ -4,9 +4,11 @@
 "use client";//Se renderiza en cliente.
 
 import Image from "next/image";
+import Link from "next/link";
 import { MapPin } from "lucide-react";
 import FollowButton from "~/components/artisan/FollowButton";
 import PaletteAvatar from "~/components/PaletteAvatar";
+import DefaultBanner from "~/components/artisan/DefaultBanner";
 
 //Clases de estilo para los diferentes tipos de sellos de perfil.
 const SEAL_CLASS: Record<string, string> = {
@@ -28,13 +30,16 @@ interface ArtisanHeaderProps {
     bio: string | null;
   };
   isOwnProfile: boolean;
+  isAuthenticated: boolean;
   isFollowing: boolean;
   canFollow: boolean;
+  /** URL a la que redirigir al pulsar "Seguir" (para visitantes sin cuenta). */
+  followRedirectTo?: string;
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
 }
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
-export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canFollow, sealRequests }: ArtisanHeaderProps) {
+export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, isFollowing, canFollow, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">
@@ -49,8 +54,8 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             priority
           />
         )}
-        {/* Fondo de textura si no hay imagen */}
-        {!artisan.bannerImage && <div className="banner-lino h-full w-full" />}
+        {/* Banner predeterminado si no hay imagen */}
+        {!artisan.bannerImage && <DefaultBanner />}
       </div>
 
       {/* ── Avatar + FollowButton ── */}
@@ -61,11 +66,30 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isFollowing, canF
             src={artisan.image}
             name={artisan.name}
             className="h-40 w-40"
+            plain
           />
 
-          {/* FollowButton solo en perfil ajeno */}
-          {!isOwnProfile && canFollow && (
-            <FollowButton artisanId={artisan.id} initialIsFollowing={isFollowing} />
+          {/* Botones solo en perfil ajeno */}
+          {!isOwnProfile && (
+            <div className="flex items-center gap-2">
+              {canFollow && (
+                <FollowButton
+                  artisanId={artisan.id}
+                  initialIsFollowing={isFollowing}
+                  redirectTo={followRedirectTo}
+                />
+              )}
+              <Link
+                href={
+                  isAuthenticated
+                    ? `/mensajes?artesana=${artisan.id}`
+                    : `/register?next=${encodeURIComponent(`/artisan/${artisan.id}`)}`
+                }
+                className="rounded-full border border-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+              >
+                Enviar mensaje
+              </Link>
+            </div>
           )}
         </div>
 

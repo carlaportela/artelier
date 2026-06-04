@@ -64,3 +64,10 @@
 - **W8 — `dragStart` en CropModal obsoleto tras pinch** — Estado `offset` capturado en `onPointerDown` puede ser stale si pinch dispara `setOffset` entre eventos. Efecto: salto sutil al pasar de pinch a drag. Solución: ref para offset.
 - **W9 — `@ts-ignore` en PaletteAvatar sobre `<image>` SVG** — Suprime error sin investigar; la solución correcta es tipar via `React.SVGProps<SVGImageElement>`.
 - **W10 — `isoToDisplay` sin guard en input malformado** — Destructuring sin validar; actualmente segura en call sites, pero frágil para futuros usos.
+
+## Deferred from: code review de 3-1-feed-publico-y-perfiles-indexables-por-seo (2026-06-04)
+
+- **W1 — Validación de campos de dirección (postalCode, province, etc.)** — Todos aceptan cualquier string; validación de formato español diferida a Epic 5 cuando se implemente el checkout real.
+- **W2 — HomeGrid: activeBtn no se resincroniza al redimensionar la ventana** — Cosmético, el botón activo puede no coincidir con el grid CSS si la ventana cambia de tamaño; aceptable para V1.
+- **W3 — handleReajustar: fetch CORS de Cloudinary puede fallar silenciosamente** — En entornos con política CORS restrictiva, cae al file picker; comportamiento de fallback aceptable.
+- **W4 — Tras registro diferido, la usuaria debe volver a pulsar "Comprar"/"Seguir"** — Limitación de diseño del flujo actual; intent-preservation requeriría estado en URL o sessionStorage.

@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-06-03
+# last_updated: 2026-06-04
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -69,8 +69,8 @@ development_status:
   epic-2-retrospective: optional
 
   # ─── Épico 3: Descubrimiento y Navegación Pública ─────────────────────────
-  epic-3: backlog
-  3-1-feed-publico-y-perfiles-indexables-por-seo: backlog
+  epic-3: in-progress
+  3-1-feed-publico-y-perfiles-indexables-por-seo: done
   3-2-feed-personalizado-con-scroll-infinito: backlog
   3-3-busqueda-y-filtros-por-localidad-categoria-y-sello: backlog
   3-4-paginas-legales-estaticas-lssi: backlog

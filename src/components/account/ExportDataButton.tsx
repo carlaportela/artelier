@@ -25,7 +25,7 @@ export default function ExportDataButton() {
         type="button"
         onClick={handleExport}
         disabled={status === "pending" || status === "done"}
-        className="cursor-pointer rounded-full border border-[--border] px-5 py-2 text-sm font-medium text-[--text] transition-colors hover:bg-black/[0.06] disabled:cursor-not-allowed disabled:opacity-60"
+        className="cursor-pointer rounded-full bg-[#8f9e94] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a0afa5] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "pending" ? "Enviando..." : t("exportData")}
       </button>
