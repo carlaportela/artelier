@@ -1,6 +1,6 @@
 # Story 3.1: Feed público y perfiles indexables por SEO
 
-Status: review
+Status: done
 
 ## Story
 
@@ -271,7 +271,36 @@ claude-sonnet-4-6
 - `src/app/(buyer)/artisan/[id]/page.tsx`
 - `src/app/(auth)/register/page.tsx`
 - `src/app/(auth)/register/actions.ts`
+- `src/components/BackButton.tsx` (P1)
+- `src/app/(buyer)/product/[id]/page.tsx` (P3, D3, D4)
+- `src/app/(buyer)/account/AccountForm.tsx` (P4, D1)
+- `src/app/(buyer)/product/[id]/ImageCarousel.tsx` (fix lint)
+
+**Nuevos:**
+- `src/app/HomeGrid.tsx`
+
+### Review Findings
+
+#### Decision Needed
+- [x] [Review][Decision] D1 — Eliminar foto sin confirmación: `handleDeletePhoto` elimina la foto inmediatamente y persiste en BD sin diálogo de confirmación. ¿Es intencionado o hay que añadir un confirm? → Resuelto: añadido `confirm()` nativo antes de eliminar.
+- [x] [Review][Decision] D2 — saveProfileImage inmediato antes del submit: la foto se guarda en BD al confirmar el recorte, sin esperar al submit del formulario. Si la usuaria cancela la edición, la foto ya está persistida pero el resto de cambios no. ¿Es comportamiento intencionado (como WhatsApp)? → Dejado como está (comportamiento intencionado).
+- [x] [Review][Decision] D3 — ARTISAN autenticada ve botones CTA muertos en `/product/[id]`: el bloque CTA solo distingue sesión/no-sesión, no el rol. Una artesana autenticada ve "Comprar" y "Enviar mensaje" como botones sin acción. → Resuelto: CTAs ocultos para usuarios con rol ARTISAN.
+- [x] [Review][Decision] D4 — Artesana viendo su propio producto ve enlace "Ver perfil" apuntando a su propio perfil público. → Resuelto: muestra "Ver tu perfil público" cuando la artesana es la propietaria del producto.
+
+#### Patches
+- [x] [Review][Patch] P1 — BackButton sin fallback: `router.back()` no hace nada si el usuario llega directamente desde Google/enlace compartido. Añadir `window.history.length <= 1` con fallback `router.push("/")` [src/components/BackButton.tsx] → Aplicado.
+- [x] [Review][Patch] P2 — Open redirect protocol-relative: `next?.startsWith("/")` no bloquea `//evil.com`. Fix: añadir `&& !next.startsWith("//")` [src/app/(auth)/register/actions.ts:80] → Aplicado.
+- [x] [Review][Patch] P3 — generateMetadata producto sin filtro de status: la query incluye productos SOLD/EXPIRED (solo filtra `deletedAt: null`), generando OG tags válidos para páginas que devuelven 404. Fix: añadir `status: "ACTIVE"` [src/app/(buyer)/product/[id]/page.tsx] → Aplicado.
+- [x] [Review][Patch] P4 — handleCropConfirm sin feedback en fallo silencioso: si el upload responde 200 pero sin `json.data?.url`, el spinner desaparece sin mensaje y la foto no se guarda. Añadir `else { setUploadError("...") }` [src/app/(buyer)/account/AccountForm.tsx] → Aplicado.
+
+#### Deferred
+- [x] [Review][Defer] W1 — Validación de campos de dirección (código postal, provincia aceptan cualquier string) — diferido, pendiente para Epic 5 checkout
+- [x] [Review][Defer] W2 — HomeGrid: `activeBtn` no se resincroniza al redimensionar la ventana — diferido, cosmético aceptable para V1
+- [x] [Review][Defer] W3 — handleReajustar: fetch CORS de Cloudinary puede fallar en entornos restringidos — diferido, fallback al file picker es aceptable
+- [x] [Review][Defer] W4 — Tras registro diferido, la usuaria debe volver a pulsar "Comprar"/"Seguir" — diferido, limitación de diseño del flujo actual
 
 ### Change Log
 
 - 2026-06-03: Implementación completa H3.1 — T1–T6 completados, todos los ACs satisfechos. Status → review.
+- 2026-06-04: Code review — 4 decision-needed, 4 patches, 4 deferred, 7 dismissed. Status → in-progress.
+- 2026-06-04: Revisión UX completa (HomeGrid responsive, auth pages, AppHeader, logout redirect). Patches P1–P4 aplicados. Decisions D1/D3/D4 resueltas, D2 dejado como está. Build ok. Status → done.

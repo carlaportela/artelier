@@ -40,7 +40,7 @@ const TYPE_BADGE: Record<string, { label: string; className: string; tooltip: st
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const product = await db.product.findFirst({
-    where: { id, deletedAt: null },
+    where: { id, deletedAt: null, status: "ACTIVE" },
     select: {
       name: true,
       description: true,
@@ -85,6 +85,8 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) notFound();
 
   const isAuthenticated = !!session?.user;
+  const isArtisan = session?.user?.role === "ARTISAN";
+  const isOwner = isArtisan && session?.user?.id === product.artisan.id;
   const badge = getProductBadge(product.status, product.expiresAt);
   const typeBadge = TYPE_BADGE[product.type] ?? null;
   const nextParam = `/product/${id}`;
@@ -120,7 +122,7 @@ export default async function ProductDetailPage({ params }: Props) {
             href={`/artisan/${product.artisan.id}`}
             className="shrink-0 rounded-full bg-[#c4956a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#d4a87a]"
           >
-            Ver perfil
+            {isOwner ? "Ver tu perfil público" : "Ver perfil"}
           </Link>
         </div>
 
@@ -166,42 +168,44 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
         </div>
 
-        {/* ── CTAs ── */}
-        <div className="mt-6 flex gap-3">
-          {isAuthenticated ? (
-            <>
-              <button
-                type="button"
-                className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-                aria-label="Comprar producto"
-              >
-                Comprar
-              </button>
-              <button
-                type="button"
-                className="flex-1 cursor-pointer rounded-full border border-[#3d5a4f] py-3 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
-                aria-label="Enviar mensaje a la artesana"
-              >
-                Enviar mensaje
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href={`/register?next=${encodeURIComponent(nextParam)}`}
-                className="flex-1 rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-              >
-                Comprar
-              </Link>
-              <Link
-                href={`/register?next=${encodeURIComponent(nextParam)}`}
-                className="flex-1 rounded-full border border-[#3d5a4f] py-3 text-center text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
-              >
-                Enviar mensaje
-              </Link>
-            </>
-          )}
-        </div>
+        {/* ── CTAs — ocultos para artesanas (no pueden comprar/mensajear en su propio catálogo) ── */}
+        {!isArtisan && (
+          <div className="mt-6 flex gap-3">
+            {isAuthenticated ? (
+              <>
+                <button
+                  type="button"
+                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                  aria-label="Comprar producto"
+                >
+                  Comprar
+                </button>
+                <button
+                  type="button"
+                  className="flex-1 cursor-pointer rounded-full border border-[#3d5a4f] py-3 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+                  aria-label="Enviar mensaje a la artesana"
+                >
+                  Enviar mensaje
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href={`/register?next=${encodeURIComponent(nextParam)}`}
+                  className="flex-1 rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                >
+                  Comprar
+                </Link>
+                <Link
+                  href={`/register?next=${encodeURIComponent(nextParam)}`}
+                  className="flex-1 rounded-full border border-[#3d5a4f] py-3 text-center text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+                >
+                  Enviar mensaje
+                </Link>
+              </>
+            )}
+          </div>
+        )}
 
       </div>
     </main>

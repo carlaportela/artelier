@@ -18,7 +18,7 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
       <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[--surface]">
         {imageUrls[selected] ? (
           <Image
-            src={imageUrls[selected]!}
+            src={imageUrls[selected] ?? ""}
             alt={name}
             fill
             className="object-cover"

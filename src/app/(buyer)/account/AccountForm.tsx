@@ -80,6 +80,8 @@ export default function AccountForm({ user }: AccountFormProps) {
         const url = json.data.url;
         setImageUrl(url);
         await saveProfileImage(url);
+      } else {
+        setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
       }
     } catch {
       setUploadError("Error al subir la imagen. Inténtalo de nuevo.");
@@ -103,6 +105,7 @@ export default function AccountForm({ user }: AccountFormProps) {
 
   async function handleDeletePhoto() {
     setShowPhotoMenu(false);
+    if (!confirm("¿Eliminar tu foto de perfil?")) return;
     setImageUrl("");
     await saveProfileImage(null);
   }

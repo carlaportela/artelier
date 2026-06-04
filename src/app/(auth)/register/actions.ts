@@ -77,6 +77,6 @@ export async function registerUser(data: unknown, next?: string) {
   });
 
   // Redirigir a `next` si es una URL interna válida (prevenir open redirect)
-  const safeNext = next?.startsWith("/") ? next : null;
+  const safeNext = next?.startsWith("/") && !next.startsWith("//") ? next : null;
   redirect(safeNext ?? (role === "ARTISAN" ? "/studio/profile" : "/feed"));
 }

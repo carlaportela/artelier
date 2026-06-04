@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -76,7 +76,7 @@ function RoleSelector({
   );
 }
 
-export default function RegisterPage() {
+function RegisterContent() {
   const t = useTranslations("auth");
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? undefined;
@@ -188,5 +188,13 @@ export default function RegisterPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterContent />
+    </Suspense>
   );
 }
