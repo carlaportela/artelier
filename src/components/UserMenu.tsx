@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { logoutUser } from "~/app/(auth)/logout/actions";
-import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, Settings } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, User2, Users, FileText, Shield, Cookie, Mail, Settings } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -65,7 +65,11 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
                 : "bg-[#c4956a] text-white"
             }`}
           >
-            <span className="translate-y-0.5">{name?.charAt(0).toUpperCase() ?? "?"}</span>
+            {name ? (
+              <span className="translate-y-0.5">{name.charAt(0).toUpperCase()}</span>
+            ) : (
+              <User2 size={16} />
+            )}
           </div>
         )}
       </button>

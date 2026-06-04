@@ -26,5 +26,5 @@ export async function logoutUser() {
   }
 
   cookieStore.delete(cookieName); //Eliminamos la cookie de sesión del navegador.
-  redirect("/login"); //Redirigimos a login.
+  redirect("/"); //Redirigimos al catálogo público.
 }

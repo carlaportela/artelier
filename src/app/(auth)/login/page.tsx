@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
@@ -44,8 +45,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <div className="space-y-4 sm:space-y-6">
+
+      {/* Volver al catálogo — arriba a la izquierda, solo envuelve el texto */}
+      <Link
+        href="/"
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+      >
+        <ArrowLeft size={14} />
+        Volver al catálogo
+      </Link>
+
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
         {form.formState.errors.root && (
           <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
             {form.formState.errors.root.message}
@@ -92,7 +103,11 @@ export default function LoginPage() {
           )}
         </div>
 
-        <Button type="submit" disabled={isPending} className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60">
+        <Button
+          type="submit"
+          disabled={isPending}
+          className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 sm:py-2.5 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {isPending ? "Iniciando sesión..." : t("login")}
         </Button>
       </form>

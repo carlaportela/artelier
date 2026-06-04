@@ -48,7 +48,7 @@ export default async function AppHeader() {
           {user ? (
             <>
               <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-[--text]">
-                ¡Hola {user.name?.split(" ")[0] ?? "artesana"}!
+                {user.name ? `¡Hola, ${user.name.split(" ")[0]}!` : "¡Hola!"}
               </span>
               <UserMenu
                 name={user.name ?? null}

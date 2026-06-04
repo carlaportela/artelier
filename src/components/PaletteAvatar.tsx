@@ -29,7 +29,7 @@ export default function PaletteAvatar({
   name,
   className = "h-20 w-20",
   fillColor = "#4a9e8c",
-  plain = false,
+  plain = true,
 }: Props) {
   const uid = useId().replace(/:/g, "");
   const clipId = `palette-${uid}`;
