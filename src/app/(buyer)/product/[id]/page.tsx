@@ -51,12 +51,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!product) return {};
 
+  const desc = (product.description ?? "").slice(0, 160);
   return {
     title: `${product.name} — ${product.artisan.name ?? "Artesana"} | Artelier`,
-    description: product.description.slice(0, 160),
+    description: desc,
     openGraph: {
       title: product.name,
-      description: product.description.slice(0, 160),
+      description: desc,
       images: product.imageUrls[0] ? [{ url: product.imageUrls[0] }] : [],
     },
   };
