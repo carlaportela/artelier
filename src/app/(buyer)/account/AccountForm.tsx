@@ -128,7 +128,7 @@ export default function AccountForm({ user }: AccountFormProps) {
 
   // ── Helpers de visualización ──────────────────────────────────────────────
 
-  const hasAddress = Boolean(user.street || user.city || user.postalCode || user.province);
+  const hasAddress = [user.street, user.city, user.postalCode, user.province].some(Boolean);
 
   // ── Render ────────────────────────────────────────────────────────────────
 
