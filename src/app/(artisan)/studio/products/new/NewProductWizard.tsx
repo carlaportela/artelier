@@ -20,22 +20,7 @@ import { Input } from "~/components/ui/input"; //Componente de input reutilizabl
 import { Label } from "~/components/ui/label"; //Componente de etiqueta reutilizable.
 import { createProduct } from "./actions"; //Función que llama a la API para crear un producto nuevo con los datos introducidos. 
 
-//Array para las categorías de productos.
-const CATEGORIES = [
-  "Joyería y bisutería",
-  "Cerámica y alfarería",
-  "Textil y costura",
-  "Madera",
-  "Papel y encuadernación",
-  "Pintura y dibujo",
-  "Fotografía",
-  "Alimentación",
-  "Perfumería y cosmética natural",
-  "Otros"
-] as const;
-
-//Si el producto pertenece a alguna de estas categorías, se fuerza el tipo "Perecedero" porque se asume que tienen fecha de caducidad o preferente de consumo.
-const PERISHABLE_CATEGORIES: readonly string[] = ["Alimentación", "Perfumería y cosmética natural"];
+import { CATEGORIES, PERISHABLE_CATEGORIES } from "~/lib/categories"; //Lista de categorías de productos y cuáles de ellas son perecederas, usada para mostrar opciones en el formulario y validar el tipo de producto.
 
 //Array de tipos de productos disponibles
 const PRODUCT_TYPES = [
