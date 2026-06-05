@@ -1,6 +1,6 @@
 # Story 3.3: Búsqueda y filtros por localidad, categoría y sello
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
