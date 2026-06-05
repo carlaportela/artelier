@@ -51,10 +51,10 @@ export default async function HomePage() {
           {/* ── Bienvenida ── */}
           <div className="mb-8 text-center">
             <h1 className="font-display text-3xl font-bold text-[--text] sm:text-4xl">
-              Artesanía hecha a mano
+              Tu mercado de artesanía local
             </h1>
             <p className="mt-2 text-sm text-[--text-muted]">
-              Descubre productos únicos de artesanas y artesanos locales
+              Descubre productos únicos de artesanía cerca de ti
             </p>
           </div>
 

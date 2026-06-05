@@ -67,7 +67,7 @@ export default async function SearchPage({ searchParams }: Props) {
                 ¿Qué te interesa descubrir?
             </h1>
             <p className="mt-2 mb-6 text-center text-sm text-[--text-muted]">
-                Encuentra productos de artesanas y artesanos cerca de ti
+                Establece los términos de búsqueda para encontrar productos que puedan interesarte
             </p>
             <Suspense fallback={<p className="py-20 text-center text-sm text-[--text-muted]">Cargando...</p>}>
                 <SearchClient
