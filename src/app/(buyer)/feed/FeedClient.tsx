@@ -44,13 +44,22 @@ export default function FeedClient({
         //Hace petición al servidor para obtener más productos, pasando el cursor como parámetro. Luego actualiza el estado de productos, el cursor y el indicador de si hay más productos o no. Finalmente, establece el estado de carga a false para indicar que ya se ha terminado de cargar.
         try {
         const res = await fetch(`/api/feed?cursor=${nextCursor}`);
+        if (!res.ok) {
+            throw new Error("Error al cargar más productos");
+        }
         const json = await res.json() as {
             data: { items: Product[]; nextCursor: string | null; hasMore: boolean };
         };
 
         //Operador de propagación (spread operator) para crear un nuevo array de productos que incluye los anteriores y los nuevos productos obtenidos del servidor en formato JSON (desempaqueta todos los elementos dentro del array, para no introducir un array dentro de un array)..
         //"=>" es una función flecha que se utiliza para definir una función anónima de manera más concisa. En este caso se utiliza para que la función que se pasa a setProducts reciba el estado anterior (prev) y retorne un nuevo array que combine el estado anterior con los nuevos productos obtenidos del servidor.
-        setProducts((prev) => [...prev, ...json.data.items]);
+        setProducts((prev) => [
+            ...prev, 
+            ...json.data.items.map((item) => ({
+                ...item,
+                expiresAt: item.expiresAt ? new Date(item.expiresAt) : null, //Convierte la fecha que recibe del JSON en formato string a Date que el tipo de dato que espera el producto. Si expiresAt es null, se mantiene como null.
+            })),
+        ]);
         
         /*Forma larga (función normal):
             setProducts(function(prev) {

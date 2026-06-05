@@ -16,7 +16,28 @@ export default async function FeedPage() {
     if (!session?.user) redirect("/");
     if (session.user.role === "ARTISAN") redirect("/studio/products");
 
-    //Consulta los productos de los artesanos que sigue el usuario y obtiene 20 productos para mostrar en la primera carga en orden descendente por fecha de creación.
+    //Cuenta cuantos artesanos sigue el usuario, sino sigue a ninguno muestra un mensaje invitándolo a descubrir artesanos y si sigue a alguno pero no tiene productos publicados, muestra el mensaje correspondiente.
+    const followCount = await db.follow.count({
+        where: { followerId: session.user.id },
+    });
+
+    if (followCount === 0) {
+        return (
+        <main className="px-4 py-8">
+            <div className="flex flex-col items-center gap-4 py-20 text-center">
+            <p className="text-[--text]">Todavía no sigues a ninguna artesana o artesano</p>
+            <Link
+                href="/search"
+                className="rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            >
+                Descubrir cerca de mí
+            </Link>
+            </div>
+        </main>
+        );
+    }
+
+    //Si se sigue a algún usuario consulta los productos de los artesanos que sigue el usuario y obtiene 20 productos para mostrar en la primera carga en orden descendente por fecha de creación.
     const take = 20;
     const products = await db.product.findMany({
         take: take + 1,
@@ -45,27 +66,6 @@ export default async function FeedPage() {
     const hasMore = products.length > take;
     const initialProducts = hasMore ? products.slice(0, take) : products;
     const initialNextCursor = hasMore ? initialProducts[initialProducts.length - 1]?.id : null;
-
-    //Cuenta cuantos artesanos sigue el usuario, sino sigue a ninguno muestra un mensaje invitándolo a descubrir artesanos y si sigue a alguno pero no tiene productos publicados, muestra el mensaje correspondiente.
-    const followCount = await db.follow.count({
-        where: { followerId: session.user.id },
-    });
-
-    if (followCount === 0) {
-        return (
-        <main className="px-4 py-8">
-            <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <p className="text-[--text]">Todavía no sigues a ninguna artesana o artesano</p>
-            <Link
-                href="/search"
-                className="rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-            >
-                Descubrir cerca de mí
-            </Link>
-            </div>
-        </main>
-        );
-    }
 
     if (initialProducts.length === 0) {
         return (

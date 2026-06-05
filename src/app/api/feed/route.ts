@@ -20,35 +20,43 @@ export async function GET(req: Request) {
     const cursor = searchParams.get("cursor") ?? undefined; //Si no hay cursor en la URL devuelve null y el ?? undefined lo convierte en undefined que es lo que Prisma espera si no hay cursor.
     const take = 20; //Cantidad de productos a obtener por página.
 
-    const products = await db.product.findMany({
-        take: take + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        skip: cursor ? 1 : 0,
-        orderBy: { createdAt: "desc" },
-        where: {
-        deletedAt: null,
-        status: "ACTIVE",
-        artisan: {
-            followers: {
-            some: { followerId: session.user.id },
+    //Envolvemos la consulta en un bloque try-catch para manejar posibles errores en el cursor (si el cursor no es válido o no existe en la base de datos, se devuelve un error de cursor inválido).
+    try {
+        const products = await db.product.findMany({
+            take: take + 1,
+            cursor: cursor ? { id: cursor } : undefined,
+            skip: cursor ? 1 : 0,
+            orderBy: { createdAt: "desc" },
+            where: {
+            deletedAt: null,
+            status: "ACTIVE",
+            artisan: {
+                followers: {
+                some: { followerId: session.user.id },
+                },
             },
-        },
-        },
-        select: {
-        id: true,
-        name: true,
-        priceInCents: true,
-        status: true,
-        imageUrls: true,
-        expiresAt: true,
-        artisan: { select: { name: true, image: true } },
-        },
-    });
+            },
+            select: {
+            id: true,
+            name: true,
+            priceInCents: true,
+            status: true,
+            imageUrls: true,
+            expiresAt: true,
+            artisan: { select: { name: true, image: true } },
+            },
+        });
 
-    const hasMore = products.length > take; //Se se obtienen más productos de los que se necesitan, significa que hay más productos disponibles para la paginación (devuelve true).
-    const items = hasMore ? products.slice(0, take) : products; //Si hay más productos disponibles, se devuelve solo la cantidad solicitada, sino se devuelven todos los productos obtenidos.
-    const nextCursor = hasMore ? items[items.length - 1]?.id : null; //Si hay más productos disponibles, se establece el cursor para la siguiente paginación.
+        const hasMore = products.length > take; //Se se obtienen más productos de los que se necesitan, significa que hay más productos disponibles para la paginación (devuelve true).
+        const items = hasMore ? products.slice(0, take) : products; //Si hay más productos disponibles, se devuelve solo la cantidad solicitada, sino se devuelven todos los productos obtenidos.
+        const nextCursor = hasMore ? items[items.length - 1]?.id : null; //Si hay más productos disponibles, se establece el cursor para la siguiente paginación.
 
-    //Se devuelve la respuesta en formato JSON: productos, cursor para la siguiente paginación y si hay más prductos disponibles (true o false).
-    return NextResponse.json({ data: { items, nextCursor, hasMore } });
+        //Se devuelve la respuesta en formato JSON: productos, cursor para la siguiente paginación y si hay más prductos disponibles (true o false).
+        return NextResponse.json({ data: { items, nextCursor, hasMore } });
+    } catch {
+        return NextResponse.json(
+            { error: { code: "INVALID_CURSOR" } },
+            { status: 400 }
+        );
+    }
 }
