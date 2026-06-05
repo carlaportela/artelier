@@ -245,12 +245,27 @@ claude-sonnet-4-6
 
 **Eliminados:**
 - `src/app/feed/page.tsx` (placeholder en conflicto con la nueva ruta)
-- `src/app/(buyer)/feed/FeedClient.tsx`
 
-**Actualizados:**
-- `src/app/(buyer)/feed/page.tsx`
+### Review Findings
+
+#### Decision Needed
+- [x] [Review][Decision] D1 — AC4: CTA del empty state apunta a `/search` en lugar de `/` — decisión de producto confirmada, `/search` se implementará en H3.3
+- [x] [Review][Decision] D2 — AC5: texto "Las artesanas y artesanos..." en lugar de "Las artesanas..." — cambio inclusivo confirmado
+
+#### Patches
+- [x] [Review][Patch] P1 — `loadMore` no comprueba `res.ok` antes de parsear — crash silencioso en errores HTTP. Fix: `if (!res.ok) throw new Error(...)` [FeedClient.tsx]
+- [x] [Review][Patch] P2 — `expiresAt` tipado como `Date` pero llega como `string` tras JSON. Fix: conversión `new Date(item.expiresAt as unknown as string)` [FeedClient.tsx]
+- [x] [Review][Patch] P3 — `followCount` consultado después de productos — ineficiente. Fix: mover `followCount` antes de la query de productos [page.tsx]
+- [x] [Review][Patch] P4 — Sin try/catch en query Prisma del endpoint para cursor inválido. Fix: envolver en try/catch con 400 [route.ts]
+
+#### Deferred
+- [x] [Review][Defer] W1 — API devuelve 401 para artesanas (debería ser 403) — patrón de toda la app, diferido
+- [x] [Review][Defer] W2 — Sin aria-live en estado de carga — accesibilidad, polish futuro
+- [x] [Review][Defer] W3 — Race condition teórica en doble click — prevenida por disabled={isLoading}
+- [x] [Review][Defer] W4 — Cursor sin validación de ownership — Prisma usa queries parametrizadas, riesgo bajo
 
 ### Change Log
 
 - 2026-06-04: Historia creada. Decisión de producto: botón "Cargar más" en lugar de scroll infinito automático.
 - 2026-06-05: Implementación completa — T1, T2, T3 completados. Build ok. Status → done.
+- 2026-06-05: Code review — 2 decisions confirmadas, 4 patches aplicados, 4 diferidos. Build ok.
