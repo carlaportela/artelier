@@ -1,4 +1,4 @@
-//Endpoiint del feed de productos de compradores, realiza peticiones asíncronas a la base de datos para obtener los productos con paginación basada en cursor, que devuelve los productos activos de los artesanos que el comprador sigue, ordenados por fecha de creación descendente. Si el usuario no está autenticado o no tiene el rol de "BUYER", devuelve un error de autorización.
+//Endpoint del feed de productos de compradores, realiza peticiones asíncronas a la base de datos para obtener los productos con paginación basada en cursor, que devuelve los productos activos de los artesanos que el comprador sigue, ordenados por fecha de creación descendente. Si el usuario no está autenticado o no tiene el rol de "BUYER", devuelve un error de autorización.
 //Cuando se hace una petición GET al servidor, se obtienen los datos en formato JSON, incluyendo los productos, el cursor para la siguiente paginación y un indicador de si hay más productos disponibles.
 import { NextResponse } from "next/server";
 import { getServerSession } from "~/server/auth/session";
@@ -54,10 +54,23 @@ export async function GET(req: Request) {
 
         //Se devuelve la respuesta en formato JSON: productos, cursor para la siguiente paginación y si hay más prductos disponibles (true o false).
         return NextResponse.json({ data: { items, nextCursor, hasMore } });
-    } catch {
-        return NextResponse.json(
-            { error: { code: "INVALID_CURSOR" } },
-            { status: 400 }
-        );
-    }
+        } catch (error) {
+            const isInvalidCursor =
+                typeof error === "object" &&
+                error !== null &&
+                "code" in error &&
+                (error as { code: string }).code === "P2025";
+
+            if (isInvalidCursor) {
+                return NextResponse.json(
+                    { error: { code: "INVALID_CURSOR" } },
+                    { status: 400 }
+                );
+            }
+            console.error("[feed] Error inesperado:", error);
+            return NextResponse.json(
+                { error: { code: "INTERNAL_ERROR" } },
+                { status: 500 }
+            );
+        }
 }
