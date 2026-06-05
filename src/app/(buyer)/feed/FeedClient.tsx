@@ -29,7 +29,13 @@ export default function FeedClient({
     initialNextCursor,
     initialHasMore,
     }: FeedClientProps) {
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+    //Convertimos el expiresAt que recibimos del servidor en formato string a un objeto Date
+    const [products, setProducts] = useState<Product[]>(
+        initialProducts.map((item) => ({
+            ...item,
+            expiresAt: item.expiresAt ? new Date(item.expiresAt as unknown as string) : null,
+        }))
+    );
     const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
     const [hasMore, setHasMore] = useState(initialHasMore);
     const [isLoading, setIsLoading] = useState(false);

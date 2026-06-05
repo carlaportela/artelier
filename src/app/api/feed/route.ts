@@ -18,7 +18,8 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url); //req.url es la URL completa de la petición y searchParams la parsea para obtener los parámetros de búsqueda (en este caso el cursor de la paginación)
     const cursor = searchParams.get("cursor") ?? undefined; //Si no hay cursor en la URL devuelve null y el ?? undefined lo convierte en undefined que es lo que Prisma espera si no hay cursor.
-    const take = 20; //Cantidad de productos a obtener por página.
+    const rawTake = parseInt(searchParams.get("take") ?? "20", 10); //Obtenemos el parámetro "take" de la URL, que indica cuantos productos se deben devolver en la respuesta. Si no se especifica, se establece un valor predterminado de 20 y se convierte a un número entero con parseInt. El segundo argumento (10) indica que el número está en base 10.
+    const take = Number.isNaN(rawTake) || rawTake < 1 ? 20 : Math.min(rawTake, 20); //Acotamos el take a un máximo de 20 para evitar que el cliente pida demasiados productos.
 
     //Envolvemos la consulta en un bloque try-catch para manejar posibles errores en el cursor (si el cursor no es válido o no existe en la base de datos, se devuelve un error de cursor inválido).
     try {
