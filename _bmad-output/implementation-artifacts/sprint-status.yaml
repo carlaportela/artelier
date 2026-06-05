@@ -72,7 +72,7 @@ development_status:
   epic-3: in-progress
   3-1-feed-publico-y-perfiles-indexables-por-seo: done
   3-2-feed-personalizado-con-scroll-infinito: done
-  3-3-busqueda-y-filtros-por-localidad-categoria-y-sello: ready-for-dev
+  3-3-busqueda-y-filtros-por-localidad-categoria-y-sello: done
   3-4-paginas-legales-estaticas-lssi: backlog
   epic-3-retrospective: optional
 
