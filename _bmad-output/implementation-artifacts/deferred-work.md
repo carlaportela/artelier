@@ -1,5 +1,16 @@
 # Deferred Work
 
+## Deferred from: code review of 3-3-busqueda-y-filtros-por-localidad-categoria-y-sello (2026-06-05)
+
+- Stale closure en debounce de búsqueda — mitigado por remount via key prop; revisar si se añaden filtros que no cambien el key
+- Cast `expiresAt as unknown as string` — workaround pre-existente para serialización Next.js de Date; documentar como patrón conocido
+- Localidad en formato libre no coincide con formato "Municipio, Provincia" de la BD — considerar validación estricta en LocalidadSelect
+- Prop `seals` no se refresca en paginación cliente — bajo riesgo ahora; revisar si el catálogo de sellos crece dinámicamente
+- Chips de sello sin `disabled` al estar seleccionados — hacer consistente con comportamiento de categoría en futura historia de polish
+- `sealId` sin validación de formato UUID — retorna INTERNAL_ERROR en vez de 400; añadir validación en historia futura
+- Chips de filtro activo como `<span>` — accesibilidad; convertir a botón completo en historia de accesibilidad
+- Al cambiar de pestaña se preserva el texto escrito aunque no esté comprometido en URL — pulido UX futuro
+
 ## Deferred from: code review of 0-1-inicializacion-del-proyecto-t3 (2026-05-19)
 
 - `authorize()` retorna null — stub intencional para Historia 1.2; deferred a esa historia

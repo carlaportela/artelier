@@ -57,6 +57,7 @@ export default function SearchClient({
     const [nextCursor, setNextCursor] = useState<string | null>(initialNextCursor);
     const [hasMore, setHasMore] = useState(initialHasMore);
     const [isLoading, setIsLoading] = useState(false);
+    const [loadError, setLoadError] = useState(false);
     const [inputQ, setInputQ] = useState(currentQ ?? "");
     const [inputArtisanQ, setInputArtisanQ] = useState(currentArtisanQ ?? "");
 
@@ -109,6 +110,7 @@ export default function SearchClient({
     async function loadMore() {
         if (!nextCursor || isLoading) return;
         setIsLoading(true);
+        setLoadError(false);
         try {
             const params = new URLSearchParams();
             params.set("cursor", nextCursor);
@@ -134,6 +136,8 @@ export default function SearchClient({
             ]);
             setNextCursor(json.data.nextCursor);
             setHasMore(json.data.hasMore);
+        } catch {
+            setLoadError(true);
         } finally {
             setIsLoading(false);
         }
@@ -143,9 +147,9 @@ export default function SearchClient({
         <div className="space-y-6">
 
             {/* Chips de filtros activos */}
-            {(currentQ ?? currentArtisanQ ?? currentCategory ?? currentLocality ?? currentSealId) && (
+            {(currentQ ?? currentArtisanQ ?? currentCategory ?? currentLocality ?? currentSealId) && ( //Si hay algún filtro activo, se muestra el botón de "Limpiar filtros" y los chips de los filtros activos para que la usuaria pueda ver qué filtros tiene aplicados y quitarlos fácilmente si lo desea.
                 <div className="flex flex-wrap gap-2">
-                    {currentQ && (
+                    {currentQ && ( 
                         <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
                             {currentQ}
                             <button type="button" onClick={() => applyFilter("q", null)} className="cursor-pointer leading-none">×</button>
@@ -275,13 +279,15 @@ export default function SearchClient({
             {products.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 py-20 text-center">
                     <p className="text-sm text-[--text-muted]">No existen productos con estos términos de búsqueda</p>
-                    <button
-                        type="button"
-                        onClick={() => router.push("/search")}
-                        className="cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-                    >
-                        Limpiar filtros
-                    </button>
+                    {(currentQ ?? currentArtisanQ ?? currentCategory ?? currentLocality ?? currentSealId) && (
+                        <button
+                            type="button"
+                            onClick={() => router.push("/search")}
+                            className="cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                        >
+                            Limpiar filtros
+                        </button>
+                    )}
                 </div>
             ) : (
                 <div className="space-y-8">
@@ -292,7 +298,7 @@ export default function SearchClient({
                     </div>
 
                     {hasMore && (
-                        <div className="flex justify-center">
+                        <div className="flex flex-col items-center gap-2">
                             <button
                                 type="button"
                                 onClick={loadMore}
@@ -301,6 +307,9 @@ export default function SearchClient({
                             >
                                 {isLoading ? "Cargando..." : "Cargar más"}
                             </button>
+                            {loadError && (
+                                <p className="text-xs text-red-600">No se pudieron cargar más productos. Inténtalo de nuevo.</p>
+                            )}
                         </div>
                     )}
                 </div>

@@ -21,14 +21,18 @@ export default async function SearchPage({ searchParams }: Props) {
     //Desestructuración de los parámteros de búsqueda obtenidos de la URL.
     const { q, artisanQ, category, locality, sealId } = await searchParams;
 
+    //Validación de los parámetros de búsqueda para evitar consultas ineficientes a la base de datos. Si el término de búsqueda es demasiado largo, se asigna undefined para que no se aplique ese filtro en la consulta.
+    const safeQ = q && q.length <= 100 ? q : undefined;
+    const safeArtisanQ = artisanQ && artisanQ.length <= 100 ? artisanQ : undefined;
+
     const take = 20;
 
     //Construcción de la cláusula WHERE para la consulta de la base de datos.
     const where = {
         deletedAt: null,
         status: "ACTIVE" as const,
-        ...(q ? { name: { contains: q, mode: "insensitive" as const } } : {}),
-        ...(artisanQ ? { artisan: { name: { contains: artisanQ, mode: "insensitive" as const } } } : {}),
+        ...(safeQ ? { name: { contains: safeQ, mode: "insensitive" as const } } : {}),
+        ...(safeArtisanQ ? { artisan: { name: { contains: safeArtisanQ, mode: "insensitive" as const } } } : {}),
         ...(category ? { category } : {}),
         ...(locality ? { locality } : {}),
         ...(sealId ? { seals: { some: { sealId } } } : {}),
@@ -76,8 +80,8 @@ export default async function SearchPage({ searchParams }: Props) {
                     initialNextCursor={initialNextCursor ?? null}
                     initialHasMore={hasMore}
                     seals={seals}
-                    currentQ={q ?? null}
-                    currentArtisanQ={artisanQ ?? null}
+                    currentQ={safeQ ?? null}
+                    currentArtisanQ={safeArtisanQ ?? null}
                     currentCategory={category ?? null}
                     currentLocality={locality ?? null}
                     currentSealId={sealId ?? null}

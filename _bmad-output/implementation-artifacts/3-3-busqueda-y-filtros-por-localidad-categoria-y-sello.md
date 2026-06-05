@@ -279,6 +279,24 @@ import { Suspense } from "react";
 - En el catch del endpoint: distinguir cursor inválido (duck typing `"code" in error && error.code === "P2025"` → 400) de error genérico (→ 500 + `console.error`).
 - El `take` del query param: `parseInt` con `Math.min(rawTake, 20)` para acotar.
 
+### Review Findings
+
+- [ ] [Review][Decision] AC4 — búsqueda por texto dividida en dos pestañas separadas (AND) en lugar de un único campo con OR — la spec original pide un solo buscador que busca en producto Y artesano simultáneamente; la implementación actual requiere elegir pestaña; ¿actualizar spec para reflejar el diseño actual o revertir a OR?
+- [ ] [Review][Decision] AC3 — filtro por sello consulta `ProductSeal` directamente sin verificar `SealRequest.status = APPROVED`; si seals solo se escriben en `ProductSeal` tras aprobación, el filtro es correcto; si no, podría mostrar sellos no aprobados — verificar flujo de asignación en H2.2
+- [ ] [Review][Patch] `loadMore` no tiene bloque catch — errores silenciosos, el usuario no recibe feedback si falla la carga [SearchClient.tsx ~línea 109]
+- [ ] [Review][Patch] `category` en API no se valida contra la constante CATEGORIES — cualquier string llega a Prisma [route.ts ~línea 26]
+- [ ] [Review][Patch] Empty state muestra "Limpiar filtros" aunque no haya filtros activos — CTA engañoso en DB vacía [SearchClient.tsx ~línea 275]
+- [ ] [Review][Patch] Sin límite de longitud en `q` y `artisanQ` antes de llegar a Prisma — strings muy largos alcanzan Postgres [route.ts línea 13, page.tsx línea 12]
+- [ ] [Review][Patch] Archivo vacío con espacio en la ruta `" src/app/(buyer)/search/page.tsx"` (con espacio inicial) — artefacto de PowerShell que debe eliminarse del repo
+- [x] [Review][Defer] Stale closure en debounce — `searchParams` capturado en creación del efecto, no al disparar setTimeout; mitigado por remount via key prop [SearchClient.tsx línea 78] — deferred, mitigado por key prop
+- [x] [Review][Defer] Cast `expiresAt as unknown as string` — workaround pre-existente de H3.2 para serialización Next.js [SearchClient.tsx líneas 33, 101] — deferred, pre-existing
+- [x] [Review][Defer] Localidad en formato libre no coincide con formato "Municipio, Provincia" almacenado en BD — comportamiento pre-existente de LocalidadSelect [SearchClient.tsx] — deferred, pre-existing
+- [x] [Review][Defer] Prop `seals` no se refresca en paginación cliente — nombres de sello pueden quedar desactualizados [SearchClient.tsx línea 174] — deferred, riesgo muy bajo
+- [x] [Review][Defer] Chips de sello no tienen `disabled` al estar seleccionados — asimetría intencional respecto a chips de categoría [SearchClient.tsx línea 255] — deferred, diseño intencional
+- [x] [Review][Defer] `sealId` sin validación de formato UUID — Prisma lanzaría error capturado por catch [route.ts línea 29] — deferred, cubierto por catch
+- [x] [Review][Defer] Chips de filtro activo como `<span>` — solo el botón × es interactivo por teclado [SearchClient.tsx línea 144] — deferred, accesibilidad para historia futura
+- [x] [Review][Defer] Al cambiar de pestaña se preserva el texto escrito aunque no esté comprometido en URL [SearchClient.tsx] — deferred, pulido UX futuro
+
 ## Dev Agent Record
 
 ### Agent Model Used

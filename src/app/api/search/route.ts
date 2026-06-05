@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
+import { CATEGORIES } from "~/lib/categories";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url); //Extraemos los parámetros de búsqueda de la URL.
@@ -17,6 +18,17 @@ export async function GET(req: Request) {
     //Validamos el parametro take para la paginación, sino se proporciona o es inválido se asigna un valor por defecto de 20.
     const rawTake = parseInt(searchParams.get("take") ?? "20", 10);
     const take = Number.isNaN(rawTake) || rawTake < 1 ? 20 : Math.min(rawTake, 20);
+
+    //Validamos que los parámetros de búsqueda no sean demasiado largos o inválidos para evitar consultas ineficientes a la base de datos.
+    if (q && q.length > 100) {
+        return NextResponse.json({ error: { code: "QUERY_TOO_LONG" } }, { status: 400 });
+    }
+    if (artisanQ && artisanQ.length > 100) {
+        return NextResponse.json({ error: { code: "QUERY_TOO_LONG" } }, { status: 400 });
+    }
+    if (category && !(CATEGORIES as readonly string[]).includes(category)) {
+        return NextResponse.json({ error: { code: "INVALID_CATEGORY" } }, { status: 400 });
+    }
 
     //Se contruye el where de la consulta a la base de datos dinámicamente con los filtros proporcionados.
     const where = {
