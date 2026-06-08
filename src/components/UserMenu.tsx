@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { logoutUser } from "~/app/(auth)/logout/actions";
-import { LogOut, Package, TrendingUp, User, User2, Users, FileText, Shield, Cookie, Mail, Settings } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, User2, Users, FileText, Shield, Cookie, Mail, Settings, ScrollText } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -108,8 +108,9 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
             { href: "/quienes-somos", label: "Quiénes somos", Icon: Users     },
             { href: "/aviso-legal",   label: "Aviso legal",   Icon: FileText  },
             { href: "/privacidad",    label: "Privacidad",    Icon: Shield    },
-            { href: "/cookies",       label: "Cookies",       Icon: Cookie    },
-            { href: "/contacto",      label: "Contacto",      Icon: Mail      },
+            { href: "/cookies",       label: "Cookies",            Icon: Cookie      },
+            { href: "/condiciones",   label: "Condiciones de uso", Icon: ScrollText  },
+            { href: "/contacto",      label: "Contacto",           Icon: Mail        },
           ].map(({ href, label, Icon }) => (
             <Link
               key={href}

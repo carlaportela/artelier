@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import AppHeader from "~/components/AppHeader";
+import AppFooter from "~/components/AppFooter";
 import HomeGrid from "~/app/HomeGrid";
 
 export const metadata: Metadata = {
@@ -43,9 +44,9 @@ export default async function HomePage() {
   });
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col bg-[--bg]">
       <AppHeader />
-      <main className="min-h-screen bg-[--bg] px-4 py-8">
+      <main className="flex-1 px-4 py-8">
         <div className="mx-auto max-w-lg md:max-w-2xl lg:max-w-4xl">
 
           {/* ── Bienvenida ── */}
@@ -67,6 +68,7 @@ export default async function HomePage() {
           )}
         </div>
       </main>
-    </>
+      <AppFooter />
+    </div>
   );
 }

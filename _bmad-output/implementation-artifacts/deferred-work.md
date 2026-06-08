@@ -1,5 +1,12 @@
 # Deferred Work
 
+## Deferred from: code review of 3-4-paginas-legales-estaticas-lssi (2026-06-08)
+
+- Artisan studio sin AppFooter — decisión de diseño intencional (usa ArtisanBottomNav); AC1 de H3.4 no aplica al área de artesana por diseño
+- Home pública (`src/app/page.tsx`) incluye AppHeader/AppFooter manualmente — no puede moverse al grupo `(public)/` sin romper routing; patrón correcto para páginas en el root
+- `(buyer)/layout.tsx` sin `bg-[--bg]` en el div contenedor — inconsistencia visual pre-existente; revisar en historia de polish visual
+- Contenido placeholder `[PLACEHOLDER]` en páginas legales — intencional hasta tener datos legales reales del titular; rellenar antes de producción
+
 ## Deferred from: code review of 3-3-busqueda-y-filtros-por-localidad-categoria-y-sello (2026-06-05)
 
 - Stale closure en debounce de búsqueda — mitigado por remount via key prop; revisar si se añaden filtros que no cambien el key
