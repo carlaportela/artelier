@@ -5,11 +5,12 @@ import Link from "next/link";
 import ArtelierLogo from "~/components/ArtelierLogo";
 
 const LEGAL_LINKS = [
-  { href: "/quienes-somos", label: "Quiénes somos" },
-  { href: "/aviso-legal",   label: "Aviso legal"   },
-  { href: "/privacidad",    label: "Privacidad"    },
-  { href: "/cookies",       label: "Cookies"       },
-  { href: "/contacto",      label: "Contacto"      },
+  { href: "/quienes-somos",  label: "Quiénes somos"     },
+  { href: "/aviso-legal",    label: "Aviso legal"        },
+  { href: "/privacidad",     label: "Privacidad"         },
+  { href: "/cookies",        label: "Cookies"            },
+  { href: "/condiciones",    label: "Condiciones de uso" },
+  { href: "/contacto",       label: "Contacto"           },
 ] as const;
 
 export default function AppFooter() {

@@ -1,6 +1,7 @@
 import AppHeader from "~/components/AppHeader";
 import AppFooter from "~/components/AppFooter";
 
+//SSR (Server Side Renderind): esta instrucción indica que esta página se renderiza en el servidor en cada visita (Nunca es estática) y se hereda hacia abajo (Todas las páginas de buyer quedan afectadas).
 export const dynamic = "force-dynamic";
 
 export default function BuyerLayout({ children }: { children: React.ReactNode }) {
