@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Props {
   artisanId: string;
@@ -18,16 +19,23 @@ export default function SendMessageButton({
 
   async function handleClick() {
     setLoading(true);
-    const res = await fetch("/api/conversations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ artisanId }),
-    });
-    if (res.ok) {
-      const json = (await res.json()) as { data: { conversationId: string } };
-      router.push(`/messages/${json.data.conversationId}`);
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ artisanId }),
+      });
+      if (res.ok) {
+        const json = (await res.json()) as { data: { conversationId: string } };
+        router.push(`/messages/${json.data.conversationId}`);
+      } else {
+        toast.error("No se pudo abrir el mensaje. Inténtalo de nuevo.");
+      }
+    } catch {
+      toast.error("No se pudo abrir el mensaje. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (

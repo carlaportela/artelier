@@ -14,7 +14,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  //Se obtiene el id del susuario autenticado.
+  //Solo las compradoras pueden iniciar conversaciones.
+  if (session.user.role !== "BUYER") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  //Se obtiene el id del usuario autenticado.
   const userId = session.user.id;
 
   //Se obtiene el id de la artesana con la que se quiere iniciar la conversación; si no existe, se devuelve el error.
