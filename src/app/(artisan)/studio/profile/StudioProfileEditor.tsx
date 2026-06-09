@@ -5,7 +5,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { Pencil, Plus, Loader2, MapPin } from "lucide-react";
+import { Pencil, Plus, Loader2, MapPin, ScanSearch, Camera, Trash2 } from "lucide-react";
 
 import { saveProfile } from "./actions";
 import PaletteAvatar from "~/components/PaletteAvatar";
@@ -32,13 +32,14 @@ interface Props {
 }
 
 export default function StudioProfileEditor({ user, sealRequests }: Props) {
-  const [avatarUrl, setAvatarUrl] = useState(user.image ?? "");
-  const [bannerUrl, setBannerUrl] = useState(user.bannerImage ?? "");
+  const [avatarUrl, setAvatarUrl]         = useState(user.image ?? "");
+  const [bannerUrl, setBannerUrl]         = useState(user.bannerImage ?? "");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [cropState, setCropState] = useState<{ file: File; type: "avatar" | "banner" } | null>(null);
-  const [optionsOpen, setOptionsOpen] = useState<"avatar" | "banner" | null>(null);
+  const [uploadError, setUploadError]     = useState<string | null>(null);
+  const [cropState, setCropState]         = useState<{ file: File; type: "avatar" | "banner" } | null>(null);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
+  const [showBannerMenu, setShowBannerMenu] = useState(false);
 
   const avatarRef = useRef<HTMLInputElement>(null);
   const bannerRef = useRef<HTMLInputElement>(null);
@@ -61,7 +62,6 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         const nextBanner = type === "banner" ? newUrl : bannerUrl;
         if (type === "avatar") setAvatarUrl(newUrl);
         else setBannerUrl(newUrl);
-        // Guardamos con los datos de texto actuales del servidor (las imágenes se guardan por separado)
         await saveProfile({
           name: user.name ?? "",
           bio: user.bio ?? "",
@@ -70,18 +70,15 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           bannerImage: nextBanner,
         });
       } else {
-        const msg = json.error?.message ?? "Error al subir la imagen";
-        console.error("[upload]", json.error);
-        setUploadError(msg);
+        setUploadError(json.error?.message ?? "Error al subir la imagen");
       }
-    } catch (err) {
-      console.error("[upload] red error:", err);
+    } catch {
       setUploadError("Error de conexión al subir la imagen");
     }
     setUploading(false);
   }
 
-  // ── Eliminar imagen ─────────────────────────────────────────────────────
+  // ── Eliminar imagen ──────────────────────────────────────────────────────
 
   async function handleDelete(type: "avatar" | "banner") {
     const prevAvatar = avatarUrl;
@@ -105,6 +102,24 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
     }
   }
 
+  // ── Reajustar: reabre el CropModal con la imagen actual ──────────────────
+
+  async function handleReajustar(type: "avatar" | "banner") {
+    const url = type === "avatar" ? avatarUrl : bannerUrl;
+    if (!url) return;
+    if (type === "avatar") setShowAvatarMenu(false);
+    else setShowBannerMenu(false);
+    try {
+      const res  = await fetch(url);
+      const blob = await res.blob();
+      const file = new File([blob], `${type}.jpg`, { type: blob.type || "image/jpeg" });
+      setCropState({ file, type });
+    } catch {
+      if (type === "avatar") avatarRef.current?.click();
+      else bannerRef.current?.click();
+    }
+  }
+
   return (
     <>
     <div>
@@ -115,15 +130,39 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         ) : (
           <div className="banner-lino h-full w-full" />
         )}
-        <button
-          type="button"
-          onClick={() => setOptionsOpen("banner")}
-          disabled={uploadingBanner}
-          aria-label="Editar portada"
-          className="absolute right-4 top-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
-        >
-          {uploadingBanner ? <Loader2 size={14} className="animate-spin" /> : bannerUrl ? <Pencil size={14} /> : <Plus size={14} />}
-        </button>
+
+        <div className="absolute right-4 top-3">
+          <button
+            type="button"
+            onClick={() => bannerUrl ? setShowBannerMenu(v => !v) : bannerRef.current?.click()}
+            disabled={uploadingBanner}
+            aria-label="Editar portada"
+            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+          >
+            {uploadingBanner ? <Loader2 size={14} className="animate-spin" /> : bannerUrl ? <Pencil size={14} /> : <Plus size={14} />}
+          </button>
+
+          {showBannerMenu && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowBannerMenu(false)} />
+              <div className="absolute right-0 top-full z-20 mt-2 w-40 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                <button type="button" onClick={() => void handleReajustar("banner")}
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                  <ScanSearch size={14} className="shrink-0" /> Reajustar
+                </button>
+                <button type="button" onClick={() => { bannerRef.current?.click(); setShowBannerMenu(false); }}
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                  <Camera size={14} className="shrink-0" /> Cambiar
+                </button>
+                <button type="button" onClick={() => { void handleDelete("banner"); setShowBannerMenu(false); }}
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition-colors hover:text-red-700">
+                  <Trash2 size={14} className="shrink-0" /> Eliminar
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
         <input ref={bannerRef} type="file" accept="image/*" aria-label="Subir imagen de portada"
           className="sr-only" disabled={uploadingBanner}
           onChange={(e) => {
@@ -138,15 +177,37 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         <div className="relative -mt-[79px] flex items-end justify-start">
           <div className="relative">
             <PaletteAvatar src={avatarUrl ?? null} name={user.name ?? ""} className="h-40 w-40" />
+
             <button
               type="button"
-              onClick={() => setOptionsOpen("avatar")}
+              onClick={() => avatarUrl ? setShowAvatarMenu(v => !v) : avatarRef.current?.click()}
               disabled={uploadingAvatar}
               aria-label="Editar imagen de perfil"
-              className="absolute bottom-10 right-5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+              className="absolute bottom-5 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
             >
               {uploadingAvatar ? <Loader2 size={14} className="animate-spin" /> : avatarUrl ? <Pencil size={14} /> : <Plus size={14} />}
             </button>
+
+            {showAvatarMenu && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowAvatarMenu(false)} />
+                <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                  <button type="button" onClick={() => void handleReajustar("avatar")}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                    <ScanSearch size={14} className="shrink-0" /> Reajustar
+                  </button>
+                  <button type="button" onClick={() => { avatarRef.current?.click(); setShowAvatarMenu(false); }}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                    <Camera size={14} className="shrink-0" /> Cambiar
+                  </button>
+                  <button type="button" onClick={() => { void handleDelete("avatar"); setShowAvatarMenu(false); }}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition-colors hover:text-red-700">
+                    <Trash2 size={14} className="shrink-0" /> Eliminar
+                  </button>
+                </div>
+              </>
+            )}
+
             <input ref={avatarRef} type="file" accept="image/*" aria-label="Subir imagen de perfil"
               className="sr-only" disabled={uploadingAvatar}
               onChange={(e) => {
@@ -185,52 +246,6 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
       </div>
     </div>
 
-    {/* ── Modal de opciones de imagen ── */}
-    {optionsOpen && (
-      <div
-        className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 sm:items-center"
-        onClick={() => setOptionsOpen(null)}
-      >
-        <div
-          className="w-full max-w-sm rounded-2xl bg-[#f4f0e8] p-6 shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <h2 className="mb-4 font-display text-base font-bold text-[--text]">
-            {optionsOpen === "avatar" ? "Imagen de perfil" : "Imagen de portada"}
-          </h2>
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                if (optionsOpen === "avatar") avatarRef.current?.click();
-                else bannerRef.current?.click();
-                setOptionsOpen(null);
-              }}
-              className="w-full cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-            >
-              Seleccionar nueva
-            </button>
-            {(optionsOpen === "avatar" ? avatarUrl : bannerUrl) && (
-              <button
-                type="button"
-                onClick={() => { void handleDelete(optionsOpen); setOptionsOpen(null); }}
-                className="w-full cursor-pointer rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600"
-              >
-                Eliminar actual
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setOptionsOpen(null)}
-              className="w-full cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
-
     {cropState && (
       <CropModal
         file={cropState.file}
@@ -238,8 +253,7 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
         shape={cropState.type === "banner" ? "rect" : "circle"}
         label={cropState.type === "banner" ? "tu imagen de portada" : "tu imagen de perfil"}
         onConfirm={(blob) => {
-          const ext = "jpeg";
-          const file = new File([blob], `${cropState.type}.${ext}`, { type: "image/jpeg" });
+          const file = new File([blob], `${cropState.type}.jpeg`, { type: "image/jpeg" });
           void handleUpload(file, cropState.type);
           setCropState(null);
         }}

@@ -1,29 +1,36 @@
-//Avatar con forma de paleta de pintor, que muestra la foto recortada o la inicial del nombre si no hay foto. Incluye un borde alrededor para separarlo visualmente del banner.
+// Avatar con forma de galleta (cookie) — círculo interior + 10 bumps exteriores.
+// Muestra la foto de perfil recortada con esa forma, o la inicial del nombre sobre fondo de color.
 
-"use client";//Se renderiza en cliente
+"use client";
 
 import { useId } from "react";
 
-//Variable con el path del SVG de la paleta, reutilizado para el clipPath, el fondo de color y el borde. Permite que la sombra siga la forma exacta de la plaeta.
-const PATH =
-  "M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z";
+// ─── Parámetros de la forma (viewBox 24×24) ───────────────────────────────────
+// Círculo interior: r=9.0 | 10 bumps de r=3.0 a R=9.0 del centro, cada 36°
+// BUMP_R=3.0 garantiza que bumps adyacentes se solapen (sin costuras visibles)
+const COOKIE_R = 9.0;
+const BUMP_R   = 3.0;
+const BUMPS = Array.from({ length: 10 }, (_, i) => {
+  const a = (i * 2 * Math.PI) / 10;
+  return {
+    cx: parseFloat((12 + COOKIE_R * Math.cos(a)).toFixed(2)),
+    cy: parseFloat((12 + COOKIE_R * Math.sin(a)).toFixed(2)),
+  };
+});
+
+// Versión ampliada para el anillo de separación (plain={false}, sobre banners)
+const RING_R      = 9.7;
+const RING_BUMP_R = 3.7;
 
 interface Props {
   src: string | null;
   name: string | null;
   className?: string;
   fillColor?: string;
-  /** Sin borde ni sombra — para usar sobre banners */
+  /** Sin anillo — usar en superficies planas; activar con false solo sobre banners */
   plain?: boolean;
 }
 
-/**
- * Avatar con forma de paleta de pintor.
- * - Anillo blanco alrededor de la silueta para separarlo visualmente del banner.
- * - Sombra drop-shadow que sigue la forma irregular exacta.
- * - Con foto: recorta la imagen con la forma de paleta.
- * - Sin foto: muestra la paleta rellena con la inicial del nombre.
- */
 export default function PaletteAvatar({
   src,
   name,
@@ -31,32 +38,40 @@ export default function PaletteAvatar({
   fillColor = "#4a9e8c",
   plain = true,
 }: Props) {
-  const uid = useId().replace(/:/g, "");
-  const clipId = `palette-${uid}`;
+  const uid    = useId().replace(/:/g, "");
+  const clipId = `cookie-${uid}`;
   const initial = name?.charAt(0).toUpperCase() ?? "A";
 
   return (
     <svg
       viewBox="0 0 24 24"
-      className={`palette-avatar ${className}`}
-      style={plain ? { filter: "none" } : undefined}
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label={name ?? "Artesana"}
+      aria-label={name ?? "Avatar"}
     >
       <defs>
         <clipPath id={clipId}>
-          <path d={PATH} />
+          <circle cx="12" cy="12" r={COOKIE_R} />
+          {BUMPS.map((b, i) => (
+            <circle key={i} cx={b.cx} cy={b.cy} r={BUMP_R} />
+          ))}
         </clipPath>
       </defs>
 
-      {/* Anillo color fondo app: separa el avatar del banner sin añadir color extra */}
-      {!plain && <path d={PATH} fill="#f4f0e8" stroke="#f4f0e8" strokeWidth="1.4" />}
+      {/* Anillo en el color de fondo de la app para separar el avatar del banner */}
+      {!plain && (
+        <>
+          <circle cx="12" cy="12" r={RING_R} fill="#f4f0e8" />
+          {BUMPS.map((b, i) => (
+            <circle key={i} cx={b.cx} cy={b.cy} r={RING_BUMP_R} fill="#f4f0e8" />
+          ))}
+        </>
+      )}
 
-      {src ? ( //Si existe src, muestra la foto recortada; si no, muestra la paleta con la inicial.
-        /* Foto recortada con la forma de paleta, encima del anillo blanco */
+      {src ? (
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore — <image> SVG válido; @types/react no cubre todos sus atributos
+        // @ts-ignore — <image> SVG válido; @types/react no lo cubre completamente
         <image
           href={src}
           x="0"
@@ -67,12 +82,11 @@ export default function PaletteAvatar({
           preserveAspectRatio="xMidYMid slice"
         />
       ) : (
-        /* Paleta rellena con inicial, encima del anillo blanco */
-        <>
-          <path d={PATH} fill={fillColor} />
+        <g clipPath={`url(#${clipId})`}>
+          <rect width="24" height="24" fill={fillColor} />
           <text
             x="12"
-            y="11"
+            y="12"
             textAnchor="middle"
             dominantBaseline="middle"
             fill="white"
@@ -81,7 +95,7 @@ export default function PaletteAvatar({
           >
             {initial}
           </text>
-        </>
+        </g>
       )}
     </svg>
   );
