@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { Info, Pencil, Plus, ScanSearch, Camera, Trash2 } from "lucide-react";
+import PaletteAvatar from "~/components/PaletteAvatar";
 
 import { saveAccount, saveProfileImage } from "./actions";
 import CropModal from "~/components/CropModal";
@@ -38,7 +38,6 @@ interface AccountFormProps {
 
 export default function AccountForm({ user }: AccountFormProps) {
   const email = user.email;
-  const initial = user.name?.charAt(0).toUpperCase() ?? "A";
   const t = useTranslations("account");
   const [isPending, startTransition] = useTransition();
   const [editing, setEditing] = useState(false);
@@ -139,15 +138,12 @@ export default function AccountForm({ user }: AccountFormProps) {
       {/* ── Foto de perfil ── */}
       <div className="flex flex-col items-center gap-2">
         <div className="relative inline-block">
-          <div className="relative h-40 w-40 overflow-hidden rounded-full bg-[--surface]">
-            {imageUrl ? (
-              <Image src={imageUrl} alt="Foto de perfil" fill className="object-cover" />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-[#c4956a]">
-                <span className="font-display text-5xl font-bold text-white">{initial}</span>
-              </div>
-            )}
-          </div>
+          <PaletteAvatar
+            src={imageUrl || null}
+            name={user.name}
+            className="h-40 w-40"
+            fillColor="#c4956a"
+          />
 
           {imageUrl ? (
             <button

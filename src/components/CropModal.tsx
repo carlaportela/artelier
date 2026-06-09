@@ -3,6 +3,17 @@
 
 import { useRef, useState, useEffect, useCallback, useId } from "react";
 
+// Parámetros de la forma galleta (viewBox 24×24) — deben coincidir con PaletteAvatar
+const COOKIE_R = 9.0;
+const BUMP_R   = 3.0;
+const CROP_BUMPS = Array.from({ length: 10 }, (_, i) => {
+  const a = (i * 2 * Math.PI) / 10;
+  return {
+    cx: parseFloat((12 + COOKIE_R * Math.cos(a)).toFixed(2)),
+    cy: parseFloat((12 + COOKIE_R * Math.sin(a)).toFixed(2)),
+  };
+});
+
 //Argumentos que recibe el componente.
 interface Props {
   file: File;
@@ -203,7 +214,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               className="crop-thirds-guide pointer-events-none absolute inset-0"
               style={{ backgroundSize: `${cropW / 3}px ${cropH / 3}px` }}
             />
-            {/* Overlay circular: cubre la zona exterior con el fondo del modal */}
+            {/* Overlay galleta: cubre la zona exterior con el fondo del modal */}
             {shape === "circle" && (
               <svg
                 viewBox="0 0 24 24"
@@ -214,13 +225,15 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
                 <defs>
                   <mask id={maskId}>
                     <rect width="24" height="24" fill="white" />
-                    <circle cx="12" cy="12" r="11.5" fill="black" />
+                    {/* Forma galleta = negro = se ve la foto; exterior = blanco = se ve el fondo */}
+                    <circle cx="12" cy="12" r={COOKIE_R} fill="black" />
+                    {CROP_BUMPS.map((b, i) => (
+                      <circle key={i} cx={b.cx} cy={b.cy} r={BUMP_R} fill="black" />
+                    ))}
                   </mask>
                 </defs>
-                {/* Zona exterior → color de fondo del modal */}
+                {/* Zona exterior → color de fondo del modal; el contraste define el borde */}
                 <rect width="24" height="24" fill="#f4f0e8" mask={`url(#${maskId})`} />
-                {/* Borde sutil del círculo */}
-                <circle cx="12" cy="12" r="11.5" fill="none" stroke="#ccc8bc" strokeWidth="0.3" />
               </svg>
             )}
           </div>

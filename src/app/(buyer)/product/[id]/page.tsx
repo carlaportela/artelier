@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import BackButton from "~/components/BackButton";
+import SendMessageButton from "~/components/SendMessageButton";
 
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
@@ -181,13 +182,7 @@ export default async function ProductDetailPage({ params }: Props) {
                 >
                   Comprar
                 </button>
-                <button
-                  type="button"
-                  className="flex-1 cursor-pointer rounded-full border border-[#3d5a4f] py-3 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
-                  aria-label="Enviar mensaje a la artesana"
-                >
-                  Enviar mensaje
-                </button>
+                <SendMessageButton artisanId={product.artisan.id} />
               </>
             ) : (
               <>

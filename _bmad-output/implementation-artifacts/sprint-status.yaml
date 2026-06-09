@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-06-08
+# last_updated: 2026-06-09
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-06-08
+last_updated: 2026-06-09
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -77,8 +77,8 @@ development_status:
   epic-3-retrospective: optional
 
   # ─── Épico 4: Mensajería ──────────────────────────────────────────────────
-  epic-4: backlog
-  4-1-iniciar-y-gestionar-conversaciones: backlog
+  epic-4: in-progress
+  4-1-iniciar-y-gestionar-conversaciones: ready-for-dev
   4-2-enviar-y-recibir-mensajes-con-polling: backlog
   4-3-adjuntar-imagenes-y-ver-historial-completo: backlog
   epic-4-retrospective: optional

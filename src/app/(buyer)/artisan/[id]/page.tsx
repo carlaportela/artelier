@@ -106,6 +106,7 @@ export default async function ArtisanPublicPage({ params }: Props) {
         isAuthenticated={isAuthenticated}
         isFollowing={!!follow}
         canFollow={canFollow}
+        isBuyer={isBuyer}
         followRedirectTo={followRedirectTo}
         sealRequests={artisan.sealRequests}
       />
