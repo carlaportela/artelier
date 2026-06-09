@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import PaletteAvatar from "~/components/PaletteAvatar";
 
 import {
   Dialog,
@@ -78,18 +79,12 @@ function OrderCard({
     <div className="rounded-xl border border-[#ccc8bc]/60 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          {order.buyer.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={order.buyer.image}
-              alt={order.buyer.name ?? "Compradora"}
-              className="h-8 w-8 rounded-full object-cover"
-            />
-          ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#3d5a4f]/10 text-xs font-medium text-[#3d5a4f]">
-              {(order.buyer.name ?? "?")[0]?.toUpperCase()}
-            </div>
-          )}
+          <PaletteAvatar
+            src={order.buyer.image}
+            name={order.buyer.name}
+            className="h-8 w-8 shrink-0"
+            fillColor="#c4956a"
+          />
           <div>
             <p className="text-sm font-medium text-[--text]">{order.buyer.name ?? "Compradora"}</p>
             <p className="text-xs text-[--text-muted]">{formatDate(order.createdAt)}</p>

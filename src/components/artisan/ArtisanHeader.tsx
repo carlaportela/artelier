@@ -4,11 +4,11 @@
 "use client";//Se renderiza en cliente.
 
 import Image from "next/image";
-import Link from "next/link";
 import { MapPin } from "lucide-react";
 import FollowButton from "~/components/artisan/FollowButton";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import DefaultBanner from "~/components/artisan/DefaultBanner";
+import SendMessageButton from "~/components/SendMessageButton";
 
 //Clases de estilo para los diferentes tipos de sellos de perfil.
 const SEAL_CLASS: Record<string, string> = {
@@ -33,13 +33,15 @@ interface ArtisanHeaderProps {
   isAuthenticated: boolean;
   isFollowing: boolean;
   canFollow: boolean;
+  /** true solo cuando la visitante es compradora autenticada — muestra el botón "Enviar mensaje". */
+  isBuyer?: boolean;
   /** URL a la que redirigir al pulsar "Seguir" (para visitantes sin cuenta). */
   followRedirectTo?: string;
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
 }
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
-export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, isFollowing, canFollow, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
+export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, isFollowing, canFollow, isBuyer, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">
@@ -69,8 +71,8 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, 
             plain
           />
 
-          {/* Botones solo en perfil ajeno */}
-          {!isOwnProfile && (
+          {/* Botones solo en perfil ajeno y cuando hay algo que mostrar */}
+          {!isOwnProfile && (canFollow || isBuyer) && (
             <div className="flex items-center gap-2">
               {canFollow && (
                 <FollowButton
@@ -79,16 +81,12 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, 
                   redirectTo={followRedirectTo}
                 />
               )}
-              <Link
-                href={
-                  isAuthenticated
-                    ? `/mensajes?artesana=${artisan.id}`
-                    : `/register?next=${encodeURIComponent(`/artisan/${artisan.id}`)}`
-                }
-                className="rounded-full border border-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
-              >
-                Enviar mensaje
-              </Link>
+              {isBuyer && (
+                <SendMessageButton
+                  artisanId={artisan.id}
+                  className="px-4 py-1.5"
+                />
+              )}
             </div>
           )}
         </div>

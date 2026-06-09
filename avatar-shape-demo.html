@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Artelier — Demo formas de avatar</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5efe3;
+      padding: 48px 40px;
+      color: #3d3830;
+    }
+    h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #3d5a4f;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #b89f85;
+      margin-bottom: 48px;
+    }
+    .section { margin-bottom: 56px; }
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #b89f85;
+      margin-bottom: 24px;
+    }
+    .row { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+    .card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .card-label { font-size: 11px; color: #999; text-align: center; max-width: 120px; line-height: 1.4; }
+    .card-label strong { display: block; font-size: 13px; color: #3d3830; font-weight: 700; margin-bottom: 2px; }
+    .sizes-row { display: flex; gap: 20px; align-items: flex-end; }
+
+    /* Lista de conversaciones */
+    .conv-list {
+      max-width: 360px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid #e2d9cc;
+      background: white;
+    }
+    .conv-header {
+      padding: 14px 16px;
+      background: #3d5a4f;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .conv-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0ebe2;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .conv-item:hover { background: #faf7f2; }
+    .conv-item:last-child { border-bottom: none; }
+    .conv-info { flex: 1; min-width: 0; }
+    .conv-top { display: flex; justify-content: space-between; align-items: center; }
+    .conv-name { font-size: 13px; font-weight: 600; color: #3d3830; }
+    .conv-time { font-size: 11px; color: #bbb; }
+    .conv-bottom { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+    .unread-dot { width: 7px; height: 7px; border-radius: 50%; background: #3d5a4f; flex-shrink: 0; }
+    .conv-msg { font-size: 12px; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* comparación lado a lado */
+    .compare { display: flex; gap: 32px; flex-wrap: wrap; }
+
+    .note {
+      font-size: 12px;
+      color: #7a6e5f;
+      line-height: 1.6;
+      max-width: 680px;
+      margin-bottom: 24px;
+      background: #fff;
+      border-left: 3px solid #c4956a;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Artelier — Formas de avatar</h1>
+<p class="subtitle">Demo interactiva para elegir la forma de foto de perfil</p>
+
+<!-- Defs SVG globales -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs id="defs"></defs>
+</svg>
+
+<!-- SECCIÓN 1: las formas -->
+<div class="section">
+  <p class="section-title">Las opciones</p>
+  <div class="row" id="shapes-row"></div>
+</div>
+
+<!-- SECCIÓN 2: tamaños -->
+<div class="section">
+  <p class="section-title">A distintos tamaños (mismo shape: Galleta)</p>
+  <div class="row" id="sizes-row"></div>
+</div>
+
+<!-- SECCIÓN 3: en contexto -->
+<div class="section">
+  <p class="section-title">En contexto — Lista de conversaciones</p>
+  <p class="note">Cómo se ve la misma lista de conversaciones con cada forma. El shape se aplica igual a fotos reales y a avatares de iniciales.</p>
+  <div class="compare" id="compare-row"></div>
+</div>
+
+<script>
+// ─── Generador de masks ───────────────────────────────────────────────────────
+
+function makeMask(id, type) {
+  let content = '';
+  const cx = 50, cy = 50;
+
+  if (type === 'circle') {
+    content = `<circle cx="50" cy="50" r="46" fill="white"/>`;
+
+  } else if (type === 'galleta') {
+    // Bumps hacia fuera — 10 bumps, más redondos, aspecto "galleta de mantequilla"
+    const R = 36, r = 10, n = 10;
+    content = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="white"/>`;
+    for (let i = 0; i < n; i++) {
+      const a = (i * 2 * Math.PI) / n;
+      content += `<circle cx="${(cx + R * Math.cos(a)).toFixed(2)}" cy="${(cy + R * Math.sin(a)).toFixed(2)}" r="${r}" fill="white"/>`;
+    }
+
+  } else if (type === 'sello') {
+    // Bumps hacia dentro — 16 perforaciones, aspecto sello de correos
+    const R = 45, r = 6, n = 16;
+    content = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="white"/>`;
+    for (let i = 0; i < n; i++) {
+      const a = (i * 2 * Math.PI) / n;
+      content += `<circle cx="${(cx + R * Math.cos(a)).toFixed(2)}" cy="${(cy + R * Math.sin(a)).toFixed(2)}" r="${r}" fill="black"/>`;
+    }
+
+  } else if (type === 'flor') {
+    // Bumps hacia fuera — 14 bumps finos, aspecto "flor / sello artesanal"
+    const R = 37, r = 8, n = 14;
+    content = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="white"/>`;
+    for (let i = 0; i < n; i++) {
+      const a = (i * 2 * Math.PI) / n;
+      content += `<circle cx="${(cx + R * Math.cos(a)).toFixed(2)}" cy="${(cy + R * Math.sin(a)).toFixed(2)}" r="${r}" fill="white"/>`;
+    }
+  }
+
+  return `<mask id="${id}">${content}</mask>`;
+}
+
+// Insertar todos los masks
+const defs = document.getElementById('defs');
+defs.innerHTML = [
+  makeMask('m-circle',  'circle'),
+  makeMask('m-galleta', 'galleta'),
+  makeMask('m-sello',   'sello'),
+  makeMask('m-flor',    'flor'),
+].join('');
+
+// ─── Builder de avatar SVG ────────────────────────────────────────────────────
+
+function avatarSVG(maskId, initials, bg, size) {
+  return `
+    <svg width="${size}" height="${size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <g mask="url(#${maskId})">
+        <rect width="100" height="100" fill="${bg}"/>
+        <text x="50" y="54" text-anchor="middle" dominant-baseline="middle"
+          font-family="Georgia, serif" font-size="30" font-weight="600" fill="rgba(255,255,255,0.9)">
+          ${initials}
+        </text>
+      </g>
+    </svg>`;
+}
+
+// ─── SECCIÓN 1: Las opciones ──────────────────────────────────────────────────
+
+const shapes = [
+  {
+    id: 'm-circle',
+    name: 'Círculo',
+    note: 'Actual (compradora)',
+    bg: '#c4956a',
+    initials: 'MC',
+    size: 96
+  },
+  {
+    id: 'm-galleta',
+    name: '🍪 Galleta',
+    note: '10 bumps grandes hacia fuera',
+    bg: '#3d5a4f',
+    initials: 'LV',
+    size: 96
+  },
+  {
+    id: 'm-flor',
+    name: '🌸 Sello floral',
+    note: '14 bumps finos hacia fuera',
+    bg: '#7a6e5f',
+    initials: 'AF',
+    size: 96
+  },
+  {
+    id: 'm-sello',
+    name: '📮 Sello correos',
+    note: '16 perforaciones hacia dentro',
+    bg: '#3d5a4f',
+    initials: 'MS',
+    size: 96
+  },
+];
+
+const shapesRow = document.getElementById('shapes-row');
+shapes.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    ${avatarSVG(s.id, s.initials, s.bg, s.size)}
+    <div class="card-label"><strong>${s.name}</strong>${s.note}</div>`;
+  shapesRow.appendChild(card);
+});
+
+// ─── SECCIÓN 2: Tamaños ───────────────────────────────────────────────────────
+
+const sizesRow = document.getElementById('sizes-row');
+[
+  { size: 36, label: 'Feed / lista' },
+  { size: 48, label: 'Mensajes' },
+  { size: 64, label: 'Perfil pequeño' },
+  { size: 96, label: 'Perfil grande' },
+  { size: 120, label: 'Portada perfil' },
+].forEach(({ size, label }) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    ${avatarSVG('m-galleta', 'MS', '#3d5a4f', size)}
+    <div class="card-label"><strong>${size}px</strong>${label}</div>`;
+  sizesRow.appendChild(card);
+});
+
+// ─── SECCIÓN 3: En contexto ───────────────────────────────────────────────────
+
+const convData = [
+  { initials: 'MS', bg: '#3d5a4f', name: 'Marta Sousa',  msg: 'Hola! ¿Tienes disponibilidad para un encargo de cerámica?', time: 'hace 2 min', unread: true },
+  { initials: 'LV', bg: '#c4956a', name: 'Lucía Vidal',   msg: 'Perfecto, te confirmo el envío esta semana', time: 'ayer', unread: false },
+  { initials: 'AF', bg: '#7a6e5f', name: 'Ana Ferreira',  msg: '¿Los pendientes están hechos en plata de ley?', time: 'hace 3 días', unread: false },
+];
+
+function convItem(maskId, d) {
+  return `
+    <div class="conv-item">
+      ${avatarSVG(maskId, d.initials, d.bg, 44)}
+      <div class="conv-info">
+        <div class="conv-top">
+          <span class="conv-name">${d.name}</span>
+          <span class="conv-time">${d.time}</span>
+        </div>
+        <div class="conv-bottom">
+          ${d.unread ? '<span class="unread-dot"></span>' : ''}
+          <span class="conv-msg">${d.msg}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function makeList(maskId, title) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div class="conv-list">
+      <div class="conv-header">${title}</div>
+      ${convData.map(d => convItem(maskId, d)).join('')}
+    </div>`;
+  return wrapper;
+}
+
+const compareRow = document.getElementById('compare-row');
+compareRow.appendChild(makeList('m-circle',  'Círculo (actual)'));
+compareRow.appendChild(makeList('m-galleta', 'Galleta (10 bumps)'));
+compareRow.appendChild(makeList('m-flor',    'Sello floral (14 bumps)'));
+compareRow.appendChild(makeList('m-sello',   'Sello correos'));
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+//Página de conversación individual, donde el comprador puede ver el historial de mensajes con una artesana específica y enviar nuevos mensajes.
+
+import { redirect, notFound } from "next/navigation";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+
+import { getServerSession } from "~/server/auth/session";
+import { db } from "~/server/db";
+import PaletteAvatar from "~/components/PaletteAvatar";
+import ConversationReadMarker from "~/components/ConversationReadMarker";
+
+type Props = { params: Promise<{ conversationId: string }> };
+
+//Función que representa la página de conversación individual.
+export default async function ConversationPage({ params }: Props) {
+
+  //Se obtiene el id de la conversación de los parámteros de la ruta.
+  const { conversationId } = await params;
+
+  //Se comprueba que el usuario esté autenticado sino se redirige a la página de login.
+  const session = await getServerSession();
+  if (!session?.user) redirect("/login");
+
+  //Se obtiene el id del usuario autenticado.
+  const userId = session.user.id;
+
+  //Se obtiene la conversación con la información del otro usuario para el encabezado.
+  const conversation = await db.conversation.findUnique({
+    where: { id: conversationId, deletedAt: null },
+    include: {
+      buyer: { select: { id: true, name: true, image: true } },
+      artisan: { select: { id: true, name: true, image: true } },
+    },
+  });
+
+  if (
+    !conversation ||
+    (conversation.buyerId !== userId && conversation.artisanId !== userId)
+  ) {
+    notFound();
+  }
+
+  //Se determina cuál es el otro usuario de la conversación para mostrar su información en el encabrzado.
+  const otherUser =
+    conversation.buyerId === userId ? conversation.artisan : conversation.buyer;
+
+  //Se determina el enlace al perfil del otro usuario (solo si se trata de un artesano) para mostrarlo en el encabezado.
+  const otherProfileHref =
+    conversation.artisanId !== userId
+      ? `/artisan/${otherUser.id}`
+      : undefined;
+
+  return (
+    <main className="flex min-h-screen flex-col bg-[--bg]">
+      <ConversationReadMarker conversationId={conversationId} />
+
+      {/* Encabezado */}
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
+        <Link href="/messages" className="text-[--text-muted] transition-colors hover:text-[--text]">
+          <ChevronLeft size={22} />
+        </Link>
+        {otherProfileHref ? (
+          <Link href={otherProfileHref} className="flex items-center gap-2">
+            <PaletteAvatar
+              src={otherUser.image}
+              name={otherUser.name}
+              className="h-9 w-9 shrink-0"
+              fillColor="#4a9e8c"
+            />
+            <span className="font-medium text-[--text]">{otherUser.name ?? "Artesana"}</span>
+          </Link>
+        ) : (
+          <div className="flex items-center gap-2">
+            <PaletteAvatar
+              src={otherUser.image}
+              name={otherUser.name}
+              className="h-9 w-9 shrink-0"
+              fillColor="#c4956a"
+            />
+            <span className="font-medium text-[--text]">{otherUser.name ?? "Compradora"}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Área de mensajes — TODO H4.2: mensajes y polling */}
+      <div className="flex-1 px-4 py-6">
+        <p className="text-center text-xs text-[--text-muted]">
+          El historial de mensajes aparecerá aquí
+        </p>
+      </div>
+
+      {/* Input de respuesta — TODO H4.2: envío de mensajes */}
+      <div className="sticky bottom-0 border-t border-[--border] bg-[--bg] px-4 py-3">
+        <input
+          type="text"
+          disabled
+          placeholder="Responder..."
+          className="w-full rounded-full border border-[--border] bg-[--surface] px-4 py-2.5 text-sm text-[--text] placeholder:text-[--text-muted] disabled:opacity-60"
+        />
+      </div>
+    </main>
+  );
+}
