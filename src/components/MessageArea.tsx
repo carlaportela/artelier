@@ -5,7 +5,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
-import PaletteAvatar from "~/components/PaletteAvatar";
 
 //se define el objeto MessageWIthSender con los atributos que contiene de cada mensaje de los participantes.
 export type MessageWithSender = {
@@ -182,7 +181,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
   return (
     <>
       {/* Lista de mensajes */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-4">
         {messages.length === 0 && (
           <p className="text-center text-xs text-[--text-muted]">
             Escribe el primer mensaje para iniciar la conversación
@@ -192,15 +191,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
           {messages.map((msg) => {
             const isOwn = msg.senderId === userId;
             return (
-              <li key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"} items-end gap-2`}>
-                {!isOwn && (
-                  <PaletteAvatar
-                    src={msg.sender.image}
-                    name={msg.sender.name}
-                    className="h-7 w-7 shrink-0"
-                    fillColor="#4a9e8c"
-                  />
-                )}
+              <li key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
                 <div className={`flex flex-col gap-1 ${isOwn ? "items-end" : "items-start"}`}>
                   {msg.status === "error" ? (
                     <div className="flex items-center gap-2">
@@ -220,7 +211,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
                       className={`max-w-[75vw] rounded-2xl px-4 py-2 text-sm md:max-w-sm ${
                         isOwn
                           ? "rounded-br-sm bg-[#3d5a4f] text-white"
-                          : "rounded-bl-sm bg-[--surface] text-[--text]"
+                          : "rounded-bl-sm bg-[#3d5a4f]/55 text-white"
                       } ${msg.status === "sending" ? "opacity-60" : ""}`}
                     >
                       {msg.content}
@@ -241,13 +232,13 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
       </div>
 
       {/* Input de envío */}
-      <div className="sticky bottom-0 border-t border-[--border] bg-[--bg] px-4 py-3">
+      <div className="shrink-0 border-t border-[--border] bg-[--bg] px-4 py-3">
         <form onSubmit={handleSubmit} className="flex items-end gap-2">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Escribe un mensaje... (Enter para enviar)"
+            placeholder="Escribe un mensaje..."
             rows={1}
             disabled={sending}
             className="flex-1 resize-none rounded-2xl border border-[--border] bg-[--surface] px-4 py-2.5 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-1 focus:ring-[#3d5a4f] disabled:opacity-60"

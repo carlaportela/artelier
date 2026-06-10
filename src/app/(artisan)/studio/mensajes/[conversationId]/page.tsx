@@ -47,12 +47,12 @@ export default async function MensajeConversacionPage({ params }: Props) {
   ).reverse();
 
   return (
-    <main className="flex min-h-screen flex-col bg-[--bg]">
+    <main className="flex h-[calc(100vh-3.5rem-6rem)] flex-col bg-[--bg]">
       <ConversationReadMarker conversationId={conversationId} />
 
       {/* Encabezado */}
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/studio/mensajes" className="text-[--text-muted] transition-colors hover:text-[--text]">
+        <Link href="/studio/mensajes" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
           <ChevronLeft size={22} />
         </Link>
         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default async function MensajeConversacionPage({ params }: Props) {
             className="h-9 w-9 shrink-0"
             fillColor="#c4956a"
           />
-          <span className="font-medium text-[--text]">{otherUser.name ?? "Compradora"}</span>
+          <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
         </div>
       </div>
 

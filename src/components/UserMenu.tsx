@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { logoutUser } from "~/app/(auth)/logout/actions";
 import PaletteAvatar from "~/components/PaletteAvatar";
-import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, Settings, ScrollText } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, Settings, ScrollText, MessageCircle } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -81,6 +81,10 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
               <Link href={profileHref} onClick={close} className={linkClass}>
                 <User size={14} className={iconClass} />
                 Mi cuenta
+              </Link>
+              <Link href="/messages" onClick={close} className={linkClass}>
+                <MessageCircle size={14} className={iconClass} />
+                Mensajes
               </Link>
               <Link href="/account/settings" onClick={close} className={linkClass}>
                 <Settings size={14} className={iconClass} />

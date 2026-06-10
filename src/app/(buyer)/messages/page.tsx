@@ -58,7 +58,7 @@ export default async function MessagesPage() {
 
   return (
     <main className="min-h-screen bg-[--bg]">
-      <div className="mx-auto max-w-lg px-4 py-6">
+      <div className="px-4 py-6">
         <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Mensajes</h1>
 
         {convList.length === 0 ? (
@@ -71,12 +71,12 @@ export default async function MessagesPage() {
             </p>
           </div>
         ) : (
-          <ul className="flex flex-col divide-y divide-[--border]">
+          <ul className="flex flex-col">
             {convList.map((conv) => (
               <li key={conv.id}>
                 <Link
                   href={`/messages/${conv.id}`}
-                  className="flex items-center gap-3 py-4 transition-colors hover:bg-[--surface] -mx-4 px-4 rounded-xl"
+                  className="-mx-4 flex items-center gap-3 rounded-xl px-4 py-4 transition-colors hover:bg-black/5"
                 >
                   <PaletteAvatar
                     src={conv.otherUser.image}
@@ -86,7 +86,7 @@ export default async function MessagesPage() {
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="truncate text-sm font-medium text-[--text]">
+                      <span className="font-display truncate text-base font-bold text-[--text]">
                         {conv.otherUser.name ?? "Artesana"}
                       </span>
                       {conv.lastMessage && (
