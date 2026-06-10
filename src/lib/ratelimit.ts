@@ -1,3 +1,5 @@
+//Limitador de número de peticiones para evitar abuso
+
 import { Ratelimit, type Duration } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
@@ -33,6 +35,7 @@ function createLimiter(requests: number, window: Duration): RateLimiter {
   });
 }
 
+//Limites de peticiones de autenticación, mensajes, checkout y disputas.
 export const authLimiter = createLimiter(10, "60 s");
 export const messageLimiter = createLimiter(30, "60 s");
 export const checkoutLimiter = createLimiter(5, "60 s");

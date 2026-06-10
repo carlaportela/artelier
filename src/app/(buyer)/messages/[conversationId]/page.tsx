@@ -8,6 +8,7 @@ import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import ConversationReadMarker from "~/components/ConversationReadMarker";
+import MessageArea from "~/components/MessageArea";
 
 type Props = { params: Promise<{ conversationId: string }> };
 
@@ -44,11 +45,24 @@ export default async function ConversationPage({ params }: Props) {
   const otherUser =
     conversation.buyerId === userId ? conversation.artisan : conversation.buyer;
 
+  const currentUser =
+    conversation.buyerId === userId ? conversation.buyer : conversation.artisan;
+
   //Se determina el enlace al perfil del otro usuario (solo si se trata de un artesano) para mostrarlo en el encabezado.
   const otherProfileHref =
     conversation.artisanId !== userId
       ? `/artisan/${otherUser.id}`
       : undefined;
+
+  //Últimos 30 mensajes en orden cronológico para la carga inicial.
+  const initialMessages = (
+    await db.message.findMany({
+      where: { conversationId, deletedAt: null },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+      include: { sender: { select: { id: true, name: true, image: true } } },
+    })
+  ).reverse();
 
   return (
     <main className="flex min-h-screen flex-col bg-[--bg]">
@@ -82,22 +96,12 @@ export default async function ConversationPage({ params }: Props) {
         )}
       </div>
 
-      {/* Área de mensajes — TODO H4.2: mensajes y polling */}
-      <div className="flex-1 px-4 py-6">
-        <p className="text-center text-xs text-[--text-muted]">
-          El historial de mensajes aparecerá aquí
-        </p>
-      </div>
-
-      {/* Input de respuesta — TODO H4.2: envío de mensajes */}
-      <div className="sticky bottom-0 border-t border-[--border] bg-[--bg] px-4 py-3">
-        <input
-          type="text"
-          disabled
-          placeholder="Responder..."
-          className="w-full rounded-full border border-[--border] bg-[--surface] px-4 py-2.5 text-sm text-[--text] placeholder:text-[--text-muted] disabled:opacity-60"
-        />
-      </div>
+      <MessageArea
+        conversationId={conversationId}
+        userId={userId}
+        currentUser={currentUser}
+        initialMessages={initialMessages}
+      />
     </main>
   );
 }
