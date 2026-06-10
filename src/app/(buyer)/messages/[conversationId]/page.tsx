@@ -5,9 +5,10 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 import { getServerSession } from "~/server/auth/session";
-import { db } from "~/server/db";
+import { getConversationWithMessages } from "~/server/queries/conversations";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import ConversationReadMarker from "~/components/ConversationReadMarker";
+import MessageArea from "~/components/MessageArea";
 
 type Props = { params: Promise<{ conversationId: string }> };
 
@@ -24,14 +25,8 @@ export default async function ConversationPage({ params }: Props) {
   //Se obtiene el id del usuario autenticado.
   const userId = session.user.id;
 
-  //Se obtiene la conversación con la información del otro usuario para el encabezado.
-  const conversation = await db.conversation.findUnique({
-    where: { id: conversationId, deletedAt: null },
-    include: {
-      buyer: { select: { id: true, name: true, image: true } },
-      artisan: { select: { id: true, name: true, image: true } },
-    },
-  });
+  //Se obtiene la conversación y los últimos 30 mensajes en paralelo.
+  const { conversation, initialMessages } = await getConversationWithMessages(conversationId);
 
   if (
     !conversation ||
@@ -40,9 +35,12 @@ export default async function ConversationPage({ params }: Props) {
     notFound();
   }
 
-  //Se determina cuál es el otro usuario de la conversación para mostrar su información en el encabrzado.
+  //Se determina cuál es el otro usuario de la conversación para mostrar su información en el encabezado.
   const otherUser =
     conversation.buyerId === userId ? conversation.artisan : conversation.buyer;
+
+  const currentUser =
+    conversation.buyerId === userId ? conversation.buyer : conversation.artisan;
 
   //Se determina el enlace al perfil del otro usuario (solo si se trata de un artesano) para mostrarlo en el encabezado.
   const otherProfileHref =
@@ -51,12 +49,13 @@ export default async function ConversationPage({ params }: Props) {
       : undefined;
 
   return (
-    <main className="flex min-h-screen flex-col bg-[--bg]">
+    <main className="flex h-[calc(100dvh-3.5rem)] flex-col bg-[--bg]">
+      <div className="mx-auto flex h-full w-full min-h-0 max-w-lg flex-col md:max-w-2xl lg:max-w-4xl">
       <ConversationReadMarker conversationId={conversationId} />
 
       {/* Encabezado */}
-      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/messages" className="text-[--text-muted] transition-colors hover:text-[--text]">
+      <div className="flex shrink-0 items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
+        <Link href="/messages" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
           <ChevronLeft size={22} />
         </Link>
         {otherProfileHref ? (
@@ -67,7 +66,7 @@ export default async function ConversationPage({ params }: Props) {
               className="h-9 w-9 shrink-0"
               fillColor="#4a9e8c"
             />
-            <span className="font-medium text-[--text]">{otherUser.name ?? "Artesana"}</span>
+            <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Artesana"}</span>
           </Link>
         ) : (
           <div className="flex items-center gap-2">
@@ -77,26 +76,17 @@ export default async function ConversationPage({ params }: Props) {
               className="h-9 w-9 shrink-0"
               fillColor="#c4956a"
             />
-            <span className="font-medium text-[--text]">{otherUser.name ?? "Compradora"}</span>
+            <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
           </div>
         )}
       </div>
 
-      {/* Área de mensajes — TODO H4.2: mensajes y polling */}
-      <div className="flex-1 px-4 py-6">
-        <p className="text-center text-xs text-[--text-muted]">
-          El historial de mensajes aparecerá aquí
-        </p>
-      </div>
-
-      {/* Input de respuesta — TODO H4.2: envío de mensajes */}
-      <div className="sticky bottom-0 border-t border-[--border] bg-[--bg] px-4 py-3">
-        <input
-          type="text"
-          disabled
-          placeholder="Responder..."
-          className="w-full rounded-full border border-[--border] bg-[--surface] px-4 py-2.5 text-sm text-[--text] placeholder:text-[--text-muted] disabled:opacity-60"
-        />
+      <MessageArea
+        conversationId={conversationId}
+        userId={userId}
+        currentUser={currentUser}
+        initialMessages={initialMessages}
+      />
       </div>
     </main>
   );
