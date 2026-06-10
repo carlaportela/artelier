@@ -1,6 +1,6 @@
 # Historia 4.1: Iniciar y gestionar conversaciones
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -322,13 +322,29 @@ import PaletteAvatar from "~/components/PaletteAvatar";
 ## Dev Agent Record
 
 ### Completion Notes
-(Rellenar al finalizar la historia)
+- Todos los ACs implementados y verificados con typecheck + build
+- `params` como Promise es correcto para Next.js 15 — sugerencia de Sourcery ignorada
+- `SendMessageButton` usa `toast` de sonner para errores (evita wrapper div que rompía flex-1)
+- API `POST /api/conversations` restringida a rol BUYER (fix de seguridad post code review)
+- Fix visual incluido en el mismo PR: BUMP_R 2.4→3.0 elimina costuras entre bumps del avatar galleta
 
 ### Debug Log
-(Rellenar si se producen errores durante la implementación)
+Sin errores durante la implementación.
 
 ## File List
-(Rellenar con los archivos creados/modificados al finalizar)
+- `src/middleware.ts` — añadida protección de /messages
+- `src/app/api/conversations/route.ts` — nuevo: POST findOrCreate + GET lista
+- `src/app/api/conversations/[conversationId]/read/route.ts` — nuevo: PATCH marcar como leída
+- `src/components/SendMessageButton.tsx` — nuevo: botón cliente con manejo de errores
+- `src/components/ConversationReadMarker.tsx` — nuevo: marca mensajes como leídos al abrir
+- `src/app/(buyer)/messages/page.tsx` — nuevo: lista de conversaciones
+- `src/app/(buyer)/messages/[conversationId]/page.tsx` — nuevo: vista básica de conversación
+- `src/app/(buyer)/product/[id]/page.tsx` — actualizado: botón funcional
+- `src/components/artisan/ArtisanHeader.tsx` — actualizado: SendMessageButton solo para compradoras
+- `src/app/(buyer)/artisan/[id]/page.tsx` — actualizado: prop isBuyer pasada a ArtisanHeader
+- `src/components/PaletteAvatar.tsx` — fix visual: COOKIE_R=9.0, BUMP_R=3.0
+- `src/components/CropModal.tsx` — fix visual: mismos parámetros que PaletteAvatar
+- `src/app/(artisan)/studio/profile/StudioProfileEditor.tsx` — fix visual: lápiz a la derecha
 
 ## Change Log
-(Rellenar al finalizar la historia)
+- 2026-06-09: Historia completada e integrada en main via squash merge
