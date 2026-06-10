@@ -39,15 +39,19 @@ export async function GET(req: NextRequest, { params }: Params) {
   const conversation = await getParticipantOrError(conversationId, userId);
   if (!conversation) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const since = req.nextUrl.searchParams.get("since");
+  const sinceRaw = req.nextUrl.searchParams.get("since");
+  const sinceDate = sinceRaw ? new Date(sinceRaw) : null;
+  if (sinceDate && Number.isNaN(sinceDate.getTime())) {
+    return NextResponse.json({ error: "Parámetro since inválido" }, { status: 400 });
+  }
 
   //Si existe el parametro since se cargan mensajes nuevos desde ese timestamp (polling), sino, se cargan los últimos 30 mensajes (carga inicial de cliente)
-  const messages = since
+  const messages = sinceDate
     ? await db.message.findMany({
         where: {
           conversationId,
           deletedAt: null,
-          createdAt: { gt: new Date(since) },
+          createdAt: { gt: sinceDate },
         },
         orderBy: { createdAt: "asc" },
         include: { sender: { select: { id: true, name: true, image: true } } },
