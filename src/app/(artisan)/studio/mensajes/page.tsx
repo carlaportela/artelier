@@ -8,18 +8,9 @@ import { MessageCircle } from "lucide-react";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
+import { timeAgo } from "~/lib/date";
 
 export const metadata: Metadata = { title: "Mensajes — Artelier" };
-
-function timeAgo(date: Date): string {
-  const diff = Date.now() - date.getTime();
-  const minutes = Math.floor(diff / 60_000);
-  if (minutes < 60) return minutes <= 1 ? "ahora" : `hace ${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `hace ${hours}h`;
-  const days = Math.floor(hours / 24);
-  return days === 1 ? "ayer" : `hace ${days} días`;
-}
 
 export default async function MensajesPage() {
   const session = await getServerSession();

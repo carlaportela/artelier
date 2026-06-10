@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
+import { formatTime } from "~/lib/date";
 
 //se define el objeto MessageWIthSender con los atributos que contiene de cada mensaje de los participantes.
 export type MessageWithSender = {
@@ -22,16 +23,6 @@ interface Props {
   userId: string;
   currentUser: { id: string; name: string | null; image: string | null };
   initialMessages: MessageWithSender[];
-}
-
-//Función para formatear fecha y hora.
-function formatTime(date: Date | string): string {
-  return new Intl.DateTimeFormat("es-ES", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(date));
 }
 
 //Función principal del componente de enviar mensajes entre artesano y comprador

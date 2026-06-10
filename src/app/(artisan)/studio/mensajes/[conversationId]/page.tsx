@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
 import { getServerSession } from "~/server/auth/session";
-import { db } from "~/server/db";
+import { getConversationWithMessages } from "~/server/queries/conversations";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import ConversationReadMarker from "~/components/ConversationReadMarker";
 import MessageArea from "~/components/MessageArea";
@@ -21,13 +21,8 @@ export default async function MensajeConversacionPage({ params }: Props) {
 
   const userId = session.user.id;
 
-  const conversation = await db.conversation.findUnique({
-    where: { id: conversationId, deletedAt: null },
-    include: {
-      buyer: { select: { id: true, name: true, image: true } },
-      artisan: { select: { id: true, name: true, image: true } },
-    },
-  });
+  //Se obtiene la conversación y los últimos 30 mensajes en paralelo.
+  const { conversation, initialMessages } = await getConversationWithMessages(conversationId);
 
   if (conversation?.artisanId !== userId) {
     notFound();
@@ -35,16 +30,6 @@ export default async function MensajeConversacionPage({ params }: Props) {
 
   const otherUser = conversation.buyer;
   const currentUser = conversation.artisan;
-
-  //Últimos 30 mensajes en orden cronológico para la carga inicial.
-  const initialMessages = (
-    await db.message.findMany({
-      where: { conversationId, deletedAt: null },
-      orderBy: { createdAt: "desc" },
-      take: 30,
-      include: { sender: { select: { id: true, name: true, image: true } } },
-    })
-  ).reverse();
 
   return (
     <main className="flex h-[calc(100vh-3.5rem-6rem)] flex-col bg-[--bg]">
