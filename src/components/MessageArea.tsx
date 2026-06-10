@@ -48,14 +48,14 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
     //Se establece el intervalo de tiempo en el que se va a volver a realizar la comprobación de nuevos mensajes.
     let intervalId: ReturnType<typeof setInterval> | null = null;
 
-    //Función para cargar nuevos mensajes. COmprueba si hay mensajes nuevos; si no los hay no hace nada, sino comprueba mediante la API en la base de datos los mensajes nuevos estableciendo el parámetro since en el último createdAt. Si no hay respuesta no hace nada, sino guarda el objeto MessageWithSender en el array de objetos y lo añade al array de mensajes con los mensajes previos.
+    //Función para cargar nuevos mensajes. Si hay mensajes, solicita solo los nuevos desde el último (parámetro since). Si la conversación está vacía, hace una petición sin since para recibir el primer mensaje entrante.
     async function poll() {
       const last = messagesRef.current.at(-1);
-      if (!last) return;
+      const query = last
+        ? `?since=${encodeURIComponent(new Date(last.createdAt).toISOString())}`
+        : "";
       try {
-        const res = await fetch(
-          `/api/messages/${conversationId}?since=${encodeURIComponent(new Date(last.createdAt).toISOString())}`,
-        );
+        const res = await fetch(`/api/messages/${conversationId}${query}`);
         if (!res.ok) return;
         const { data } = (await res.json()) as { data: MessageWithSender[] };
         if (data.length > 0) {
