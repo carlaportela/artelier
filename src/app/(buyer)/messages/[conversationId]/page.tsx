@@ -2,13 +2,12 @@
 
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-
 import { getServerSession } from "~/server/auth/session";
 import { getConversationWithMessages } from "~/server/queries/conversations";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import ConversationReadMarker from "~/components/ConversationReadMarker";
 import MessageArea from "~/components/MessageArea";
+import BackButton from "~/components/BackButton";
 
 type Props = { params: Promise<{ conversationId: string }> };
 
@@ -49,36 +48,29 @@ export default async function ConversationPage({ params }: Props) {
       : undefined;
 
   return (
-    <main className="flex h-[calc(100dvh-3.5rem)] flex-col bg-[--bg]">
+    <main className="fixed inset-x-0 bottom-0 top-14 flex flex-col bg-[--bg]">
       <div className="mx-auto flex h-full w-full min-h-0 max-w-lg flex-col md:max-w-2xl lg:max-w-4xl">
       <ConversationReadMarker conversationId={conversationId} />
 
-      {/* Encabezado */}
+      {/* Encabezado: en móvil fila simple a la izquierda; en md+ tres columnas con el perfil centrado */}
       <div className="flex shrink-0 items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/messages" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
-          <ChevronLeft size={22} />
-        </Link>
-        {otherProfileHref ? (
-          <Link href={otherProfileHref} className="flex items-center gap-2">
-            <PaletteAvatar
-              src={otherUser.image}
-              name={otherUser.name}
-              className="h-9 w-9 shrink-0"
-              fillColor="#4a9e8c"
-            />
-            <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Artesana"}</span>
-          </Link>
-        ) : (
-          <div className="flex items-center gap-2">
-            <PaletteAvatar
-              src={otherUser.image}
-              name={otherUser.name}
-              className="h-9 w-9 shrink-0"
-              fillColor="#c4956a"
-            />
-            <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
-          </div>
-        )}
+        <div className="md:flex-1">
+          <BackButton href="/messages" label="Volver a mensajes" />
+        </div>
+        <div className="flex md:flex-1 md:justify-center">
+          {otherProfileHref ? (
+            <Link href={otherProfileHref} className="flex items-center gap-2">
+              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#4a9e8c" />
+              <span className="font-display mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Artesana"}</span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#c4956a" />
+              <span className="font-display mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
+            </div>
+          )}
+        </div>
+        <div className="hidden md:block md:flex-1" />
       </div>
 
       <MessageArea

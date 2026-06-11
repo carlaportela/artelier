@@ -99,7 +99,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* ── Flecha volver ── */}
         <div className="mb-2">
-          <BackButton />
+          <BackButton label="Volver al catálogo" />
         </div>
 
         {/* ── Artesana (arriba del carrusel) ── */}

@@ -121,7 +121,6 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
       const { data, hasMore: more } = (await res.json()) as { data: MessageWithSender[]; hasMore: boolean };
       if (data.length === 0) { setHasMore(false); return; }
 
-      //Guardamos la altura actual del contenedor antes de insertar para restaurar el scroll después
       const container = scrollContainerRef.current;
       const prevScrollHeight = container?.scrollHeight ?? 0;
 
