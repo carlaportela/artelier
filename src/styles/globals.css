@@ -205,3 +205,16 @@
       repeating-linear-gradient(90deg,  transparent, transparent 3px, rgba(160,140,110,0.13) 3px, rgba(160,140,110,0.13) 4px);
   }
 }
+
+/* ─── Scrollbar personalizada ─────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg); }
+::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+::-webkit-scrollbar-button { display: none; height: 0; width: 0; }
+::-webkit-scrollbar-button:vertical:start:decrement,
+::-webkit-scrollbar-button:vertical:end:increment,
+::-webkit-scrollbar-button:horizontal:start:decrement,
+::-webkit-scrollbar-button:horizontal:end:increment { display: none; height: 0; width: 0; }
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg); }

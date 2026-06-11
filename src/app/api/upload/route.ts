@@ -6,16 +6,17 @@ import { getServerSession } from "~/server/auth/session";
 import { cloudinary } from "~/lib/cloudinary";
 import { env } from "~/env";
 
-const ALLOWED_TYPES = ["avatar", "banner", "process", "product"] as const;
+const ALLOWED_TYPES = ["avatar", "banner", "process", "product", "message"] as const;
 type UploadType = (typeof ALLOWED_TYPES)[number];
 
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
 
 const FOLDER_MAP: Record<UploadType, string> = {
-  avatar: "artelier/avatars",
-  banner: "artelier/banners",
-  process: "artelier/process",
-  product: "artelier/products",
+  avatar:   "artelier/avatars",
+  banner:   "artelier/banners",
+  process:  "artelier/process",
+  product:  "artelier/products",
+  message:  "artelier/messages",
 };
 
 const TRANSFORMATION_MAP: Record<UploadType, object[]> = {
@@ -23,6 +24,7 @@ const TRANSFORMATION_MAP: Record<UploadType, object[]> = {
   banner:  [{ width: 1200, height: 300, crop: "fill",  quality: "auto", fetch_format: "auto" }],
   process: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
   product: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
+  message: [{ width: 1200,              crop: "limit", quality: "auto", fetch_format: "auto" }],
 };
 
 export async function POST(req: Request) {
@@ -59,13 +61,6 @@ export async function POST(req: Request) {
     );
   }
 
-  if (file.size > 20 * 1024 * 1024) {
-    return NextResponse.json(
-      { error: { code: "FILE_TOO_LARGE", message: "El archivo no puede superar 20 MB" } },
-      { status: 413 },
-    );
-  }
-
   if (!typeParam || !(ALLOWED_TYPES as readonly string[]).includes(typeParam)) {
     return NextResponse.json(
       { error: { code: "INVALID_TYPE", message: `Tipo de upload no válido: ${typeParam ?? "none"}` } },
@@ -73,6 +68,15 @@ export async function POST(req: Request) {
     );
   }
   const uploadType = typeParam as UploadType;
+
+  const maxSize = uploadType === "message" ? 10 * 1024 * 1024 : 20 * 1024 * 1024;
+  const maxLabel = uploadType === "message" ? "10 MB" : "20 MB";
+  if (file.size > maxSize) {
+    return NextResponse.json(
+      { error: { code: "FILE_TOO_LARGE", message: `El archivo no puede superar ${maxLabel}` } },
+      { status: 413 },
+    );
+  }
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
