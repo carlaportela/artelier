@@ -220,6 +220,8 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
   async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!e.target) return;
+    // Capturar el texto antes de limpiar, para enviarlo junto a la imagen
+    const pendingText = input.trim();
     // Limpiar el input para que el mismo archivo pueda seleccionarse de nuevo si fuera necesario
     e.target.value = "";
     if (!file) return;
@@ -244,7 +246,8 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
         return;
       }
       const { data } = (await res.json()) as { data: { url: string } };
-      void sendMessage("", data.url);
+      if (pendingText) setInput("");
+      void sendMessage(pendingText, data.url);
     } catch {
       toast.error("No se pudo subir la imagen. Inténtalo de nuevo.");
     } finally {
@@ -351,26 +354,27 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
           className="hidden"
           onChange={(e) => void handleImageSelect(e)}
         />
-        <form onSubmit={handleSubmit} className="flex items-end gap-2">
-          {/* Botón para adjuntar imagen */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={uploadingImage || sending}
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text] disabled:cursor-not-allowed disabled:opacity-40"
-            aria-label="Adjuntar imagen"
-          >
-            {uploadingImage ? <Loader2 size={16} className="animate-spin" /> : <Paperclip size={16} />}
-          </button>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Escribe un mensaje..."
-            rows={1}
-            disabled={sending || uploadingImage}
-            className="flex-1 resize-none rounded-2xl border border-[--border] bg-[--surface] px-4 py-2.5 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-1 focus:ring-[#3d5a4f] disabled:opacity-60"
-          />
+        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <div className="relative h-10 flex-1">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Escribe un mensaje..."
+              rows={1}
+              disabled={sending || uploadingImage}
+              className="h-full w-full resize-none overflow-hidden rounded-2xl border border-[--border] bg-[--surface] py-2.5 pl-4 pr-10 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-1 focus:ring-[#3d5a4f] disabled:opacity-60"
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingImage || sending}
+              className="absolute inset-y-0 right-2 my-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text] disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="Adjuntar imagen"
+            >
+              {uploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Paperclip size={14} />}
+            </button>
+          </div>
           <button
             type="submit"
             disabled={!input.trim() || sending || uploadingImage}
