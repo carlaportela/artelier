@@ -46,11 +46,13 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
 
   //Referencia al contenedor de scroll para preservar la posición al cargar mensajes anteriores
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isPrepending = useRef(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  //Scroll automático al último mensaje cuando llegan mensajes nuevos (no al cargar anteriores)
+  //Scroll automático al último mensaje solo cuando se añaden mensajes nuevos, no al precargar anteriores
   useEffect(() => {
+    if (isPrepending.current) { isPrepending.current = false; return; }
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
@@ -117,13 +119,17 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
       const res = await fetch(
         `/api/messages/${conversationId}?before=${encodeURIComponent(new Date(oldest.createdAt).toISOString())}`,
       );
-      if (!res.ok) return;
+      if (!res.ok) {
+        toast.error("No se pudieron cargar los mensajes anteriores.");
+        return;
+      }
       const { data, hasMore: more } = (await res.json()) as { data: MessageWithSender[]; hasMore: boolean };
       if (data.length === 0) { setHasMore(false); return; }
 
       const container = scrollContainerRef.current;
       const prevScrollHeight = container?.scrollHeight ?? 0;
 
+      isPrepending.current = true;
       setMessages((prev) => [...data, ...prev]);
       setHasMore(more);
 

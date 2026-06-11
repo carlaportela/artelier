@@ -116,7 +116,7 @@ const res = await fetch("/api/upload", { method: "POST", body: formData });
 const { data } = await res.json() as { data: { url: string; publicId: string } };
 ```
 
-### Limite de tamaño diferenciado por tipo
+### Límite de tamaño diferenciado por tipo
 
 Actualmente el límite es 20 MB para todos. Para mensajes, reducir a 10 MB. Implementar dentro del handler POST, después de validar el tipo:
 
