@@ -41,7 +41,7 @@ interface ArtisanHeaderProps {
 }
 
 //Función del componente que renderiza el encabezado del perfil del artesano.
-export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated, isFollowing, canFollow, isBuyer, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
+export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: _isAuthenticated, isFollowing, canFollow, isBuyer, followRedirectTo, sealRequests }: ArtisanHeaderProps) {
 
   return (
     <div className="relative">

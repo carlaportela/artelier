@@ -45,27 +45,40 @@ export async function GET(req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "Parámetro since inválido" }, { status: 400 });
   }
 
-  //Si existe el parametro since se cargan mensajes nuevos desde ese timestamp (polling), sino, se cargan los últimos 30 mensajes (carga inicial de cliente)
-  const messages = sinceDate
-    ? await db.message.findMany({
-        where: {
-          conversationId,
-          deletedAt: null,
-          createdAt: { gt: sinceDate },
-        },
-        orderBy: { createdAt: "asc" },
-        include: { sender: { select: { id: true, name: true, image: true } } },
-      })
-    : (
-        await db.message.findMany({
-          where: { conversationId, deletedAt: null },
-          orderBy: { createdAt: "desc" },
-          take: 30,
-          include: { sender: { select: { id: true, name: true, image: true } } },
-        })
-      ).reverse();
+  const beforeRaw = req.nextUrl.searchParams.get("before");
+  const beforeDate = beforeRaw ? new Date(beforeRaw) : null;
+  if (beforeDate && Number.isNaN(beforeDate.getTime())) {
+    return NextResponse.json({ error: "Parámetro before inválido" }, { status: 400 });
+  }
 
-  return NextResponse.json({ data: messages });
+  //Si existe ?since: polling — mensajes nuevos. Si ?before: historial hacia atrás. Si ninguno: carga inicial (últimos 30).
+  if (sinceDate) {
+    const messages = await db.message.findMany({
+      where: { conversationId, deletedAt: null, createdAt: { gt: sinceDate } },
+      orderBy: { createdAt: "asc" },
+      include: { sender: { select: { id: true, name: true, image: true } } },
+    });
+    return NextResponse.json({ data: messages });
+  }
+
+  if (beforeDate) {
+    const messages = await db.message.findMany({
+      where: { conversationId, deletedAt: null, createdAt: { lt: beforeDate } },
+      orderBy: { createdAt: "desc" },
+      take: 30,
+      include: { sender: { select: { id: true, name: true, image: true } } },
+    });
+    return NextResponse.json({ data: messages.reverse(), hasMore: messages.length === 30 });
+  }
+
+  // Carga inicial: últimos 30 mensajes en orden cronológico
+  const messages = await db.message.findMany({
+    where: { conversationId, deletedAt: null },
+    orderBy: { createdAt: "desc" },
+    take: 30,
+    include: { sender: { select: { id: true, name: true, image: true } } },
+  });
+  return NextResponse.json({ data: messages.reverse() });
 }
 
 // POST /api/messages/[conversationId]
@@ -88,15 +101,17 @@ export async function POST(req: NextRequest, { params }: Params) {
   const conversation = await getParticipantOrError(conversationId, userId);
   if (!conversation) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const body = (await req.json()) as { content?: unknown };
-  if (!body.content || typeof body.content !== "string" || !body.content.trim()) {
-    return NextResponse.json({ error: "content required" }, { status: 400 });
+  const body = (await req.json()) as { content?: unknown; imageUrl?: unknown };
+  const content = typeof body.content === "string" ? body.content.trim() : "";
+  const imageUrl = typeof body.imageUrl === "string" && body.imageUrl ? body.imageUrl : null;
+
+  if (!content && !imageUrl) {
+    return NextResponse.json({ error: "Se requiere content o imageUrl" }, { status: 400 });
   }
-  const content = body.content.trim();
 
   const [message] = await Promise.all([
     db.message.create({
-      data: { conversationId, senderId: userId, content },
+      data: { conversationId, senderId: userId, content, ...(imageUrl ? { imageUrl } : {}) },
       include: { sender: { select: { id: true, name: true, image: true } } },
     }),
     db.conversation.update({
