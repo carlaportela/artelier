@@ -1,6 +1,6 @@
-﻿//Este componente implementa el flujo de publicación de un nuevo producto. Se divide en dos pasos: primero se suben las fotos y luego se completan los detalles del producto.
+﻿"use client"; 
 
-"use client"; //Este archivo se ejecuta en el cliente.
+//Este componente implementa el flujo de publicación de un nuevo producto. Se divide en dos pasos: primero se suben las fotos y luego se completan los detalles del producto.
 
 import { useState, useRef, useEffect, useId } from "react"; //Función de React para maneja el estado local como detalles del producto, imágenes subidas...
 import { useRouter } from "next/navigation"; //Función para programáticamente navegar a otras páginas después de publicar el producto.

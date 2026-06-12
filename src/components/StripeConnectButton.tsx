@@ -1,0 +1,35 @@
+"use client";
+
+//Componente de botón para iniciar el onboarding con STripe de la artesana.
+//Se renderiza en cliente con los hooks de React useState para el estado de carga y useRouter para redirigir.
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+//Función principal del componente.
+export default function StripeConnectButton() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  //Función que gestiona la conexión mediante el endpoint de la API de Stripe
+  async function handleConnect() {
+    //Modifica el estado a cargando.
+    setLoading(true);
+
+    //Llamada a la API.
+    const res = await fetch("/api/artisan/stripe-connect", { method: "POST" });
+
+    //Recibe la respuesta de la API en formato JSON y establecemos un type assertion (la forma que va a tener el JSON, que contendra un atributo url de tipo string).
+    const { data } = (await res.json()) as { data: { url: string } };
+
+    //Redirige a la URL obtenida en los datos de respuesta en JSON.
+    router.push(data.url);
+  }
+
+  //Devuelve el botón que al clicarse llama a la API de Stripe y que muestra Conectar con cuenta bancaria y cargando si se encuentra mientras se ejecuta la conexión con la API
+  return (
+    <button onClick={handleConnect} disabled={loading}>
+      {loading ? "Cargando..." : "Conectar cuenta bancaria"}
+    </button>
+  );
+}
