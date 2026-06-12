@@ -16,20 +16,30 @@ export default function StripeConnectButton() {
     //Modifica el estado a cargando.
     setLoading(true);
 
-    //Llamada a la API.
-    const res = await fetch("/api/artisan/stripe-connect", { method: "POST" });
+    try {
+      //Llamada a la API, si no responde se lanza el error correspondiente.
+      const res = await fetch("/api/artisan/stripe-connect", {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Error al conectar con Stripe");
 
-    //Recibe la respuesta de la API en formato JSON y establecemos un type assertion (la forma que va a tener el JSON, que contendra un atributo url de tipo string).
-    const { data } = (await res.json()) as { data: { url: string } };
+      //Recibe la respuesta de la API en formato JSON y establecemos un type assertion (la forma que va a tener el JSON, que contendra un atributo url de tipo string).
+      const { data } = (await res.json()) as { data: { url: string } };
 
-    //Redirige a la URL obtenida en los datos de respuesta en JSON.
-    router.push(data.url);
+      //Redirige a la URL obtenida en los datos de respuesta en JSON.
+      router.push(data.url);
+    } catch {
+      setLoading(false);
+    }
   }
 
   //Devuelve el botón que al clicarse llama a la API de Stripe y que muestra Conectar con cuenta bancaria y cargando si se encuentra mientras se ejecuta la conexión con la API
   return (
-    <button onClick={handleConnect} disabled={loading} className="cursor-pointer rounded-full bg-[#3d5a4f] mt-3 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
->
+    <button
+      onClick={handleConnect}
+      disabled={loading}
+      className="mt-3 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+    >
       {loading ? "Cargando..." : "Conectar cuenta bancaria"}
     </button>
   );

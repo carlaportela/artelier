@@ -1,9 +1,11 @@
-//Página a la que llama Stripe cuando el enlace de onboarding ha expirado para generasr un nuevo enlace y redirigir a la artesana sin que ella note nada.
+//Página a la que llama Stripe cuando el enlace de onboarding ha expirado para generar un nuevo enlace y redirigir a la artesana sin que ella note nada.
 
 import { redirect } from "next/navigation";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
+import { env } from "~/env";
+
 
 //Función principal
 export default async function StripeRefreshPage() {
@@ -23,9 +25,9 @@ export default async function StripeRefreshPage() {
   //Si tiene cuenta genera un nuevo AccountLink con la cuenta existente
   const accountId = user.stripeAccountId;
   const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
+    env.NEXTAUTH_URL ??
+    (env.VERCEL_URL
+      ? `https://${env.VERCEL_URL}`
       : "http://localhost:3000");
 
   //comprueba que stripe no es null sino redirigimos a la artesana.

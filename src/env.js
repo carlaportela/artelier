@@ -16,6 +16,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    NEXTAUTH_URL: z.string().url().optional(),
 
     // Cloudinary
     CLOUDINARY_CLOUD_NAME: z.string().optional(),
@@ -32,6 +33,10 @@ export const env = createEnv({
 
     // Vercel Cron
     CRON_SECRET: z.string().optional(),
+
+    // Vercel
+    VERCEL_URL: z.string().optional(),
+
   },
 
   client: {
@@ -53,6 +58,8 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     CRON_SECRET: process.env.CRON_SECRET,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    VERCEL_URL: process.env.VERCEL_URL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

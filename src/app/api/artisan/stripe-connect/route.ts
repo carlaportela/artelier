@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
+import { env } from "~/env";
+
 
 export async function POST() {
   //Se comprueba que el usuario esté autenticado, sino se devuelve el mensaje de error correspondiente.
@@ -73,9 +75,9 @@ export async function POST() {
 
   //Se genera AccountLink para redirigir a la artesana al onboarding de Stripe
   const base =
-    process.env.NEXTAUTH_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
+    env.NEXTAUTH_URL ??
+    (env.VERCEL_URL
+      ? `https://${env.VERCEL_URL}`
       : "http://localhost:3000");
 
   const link = await stripe.accountLinks.create({
