@@ -28,7 +28,8 @@ export default function StripeConnectButton() {
 
   //Devuelve el botón que al clicarse llama a la API de Stripe y que muestra Conectar con cuenta bancaria y cargando si se encuentra mientras se ejecuta la conexión con la API
   return (
-    <button onClick={handleConnect} disabled={loading}>
+    <button onClick={handleConnect} disabled={loading} className="cursor-pointer rounded-full bg-[#3d5a4f] mt-3 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+>
       {loading ? "Cargando..." : "Conectar cuenta bancaria"}
     </button>
   );
