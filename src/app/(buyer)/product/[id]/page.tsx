@@ -19,14 +19,19 @@ import { TypeBadge } from "./TypeBadge";
 
 type Props = { params: Promise<{ id: string }> };
 
+//Se define el precio de cada producto a euros mediante esta función que transforma de centimos (precio guardado en base de datos a euros).
 const fmt = (cents: number) =>
   (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
-const TYPE_BADGE: Record<string, { label: string; className: string; tooltip: string } | null> = {
+const TYPE_BADGE: Record<
+  string,
+  { label: string; className: string; tooltip: string } | null
+> = {
   UNIQUE: {
     label: "Pieza única",
     className: "bg-[#4a9e8c]/15 text-[#4a9e8c]",
-    tooltip: "Solo existe una unidad de este producto. Una vez vendido, no estará disponible.",
+    tooltip:
+      "Solo existe una unidad de este producto. Una vez vendido, no estará disponible.",
   },
   PERISHABLE: {
     label: "Por tiempo limitado",
@@ -96,7 +101,6 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-[--bg] px-4 py-6 md:py-10">
       <div className="mx-auto max-w-lg md:max-w-2xl">
-
         {/* ── Flecha volver ── */}
         <div className="mb-2">
           <BackButton label="Volver al catálogo" />
@@ -156,7 +160,7 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
 
           {/* Descripción */}
-          <p className="whitespace-pre-line text-sm leading-relaxed text-[--text-muted]">
+          <p className="text-sm leading-relaxed whitespace-pre-line text-[--text-muted]">
             {product.description}
           </p>
 
@@ -170,21 +174,23 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
         </div>
 
-        {/* ── CTAs — ocultos para artesanas (no pueden comprar/mensajear en su propio catálogo) ── */}
+        {/* ── CTAs (es una llamada a la acción, un elemento visual o textual como un botón o enlace, diseñado para guiar al usuario hacia una acción específica — ocultos para artesanas (no pueden comprar/mensajear en su propio catálogo) ── */}
         {!isArtisan && (
           <div className="mt-6 flex gap-3">
-            {isAuthenticated ? (
+            {isAuthenticated ? ( //Si no se rol artesana y es un usuario autenticado, se muestra el botón para comprar el producto.
               <>
-                <button
-                  type="button"
-                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                <Link
+                  href={`/checkout?productId=${product.id}`}
+                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
                   aria-label="Comprar producto"
                 >
                   Comprar
-                </button>
+                </Link>
+
                 <SendMessageButton artisanId={product.artisan.id} />
               </>
             ) : (
+              //Sino se tiene el rol de artesana y no es un usuario autenticado, se muestra un botón de comprar que apunta hacia la página de registro pasando por GET el parámetro next con la dirección de la paágina del producto para que una vez que el usuario se registre o inicie sesión, pueda retorna a la página del producto para finalizar la compra.
               <>
                 <Link
                   href={`/register?next=${encodeURIComponent(nextParam)}`}
@@ -202,7 +208,6 @@ export default async function ProductDetailPage({ params }: Props) {
             )}
           </div>
         )}
-
       </div>
     </main>
   );
