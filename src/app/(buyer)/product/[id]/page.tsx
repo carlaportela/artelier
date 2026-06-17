@@ -175,13 +175,13 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="mt-6 flex gap-3">
             {isAuthenticated ? (
               <>
-                <button
-                  type="button"
-                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                <Link
+                  href={`/checkout?productId=${product.id}`}
+                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
                   aria-label="Comprar producto"
                 >
                   Comprar
-                </button>
+                </Link>
                 <SendMessageButton artisanId={product.artisan.id} />
               </>
             ) : (
