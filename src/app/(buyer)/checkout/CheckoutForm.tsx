@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 //Se importan tipos de métodos de envío y funcionalidad para calcular comisiones.
 import { calcFees, type ShippingMethod } from "~/lib/fees";
+import { toast } from "sonner";
 
 
 //Se define el tipo Producto
@@ -68,6 +69,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
       router.push(data.url); //Redirige a la URL de Stripe Checkout que devolvió el endpoint Para finalizar el pago.
     } catch {
       setLoading(false);
+      toast.error("No pudimos procesar tu pago. Inténtalo de nuevo.");
     }
   }
 

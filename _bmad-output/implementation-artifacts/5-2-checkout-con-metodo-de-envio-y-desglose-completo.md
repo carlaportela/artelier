@@ -89,7 +89,7 @@ Plataforma se queda: application_fee_amount
 
 ### Consideraciones UX
 - Guardias amigables: mostrar error con Link de vuelta al feed, no dejar usuario colgado
-- Fee preview: calculateo antes de enviar, mostrar al usuario exactamente qué va a pagar
+- Fee preview: calcular antes de enviar, mostrar al usuario exactamente qué va a pagar
 - Loading state: botón deshabilitado durante POST, muestra "Procesando..."
 
 ## Status

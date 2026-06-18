@@ -62,6 +62,14 @@ export async function POST(req: Request) {
     shippingMethod: ShippingMethod;
   };
 
+  //Se valida que el cuerpo de la petición contiene los campos requeridos y con valores válidos.
+  if (!productId || !["PLATFORM", "ARTISAN_OWN", "PICKUP"].includes(shippingMethod)) {
+    return NextResponse.json(
+      { error: { code: "BAD_REQUEST", message: "Datos inválidos en la petición" } },
+      { status: 400 },
+    );
+  }
+
   //Se realiza la consulta a la base de datos para verificar que el producto existe y esta disponible (estado activo y no se ha borrado), que la artesana cuenta con una cuenta de Stripe verificada.
   const product = await db.product.findFirst({
     where: { id: productId, status: "ACTIVE", deletedAt: null },

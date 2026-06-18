@@ -10,9 +10,9 @@ import CheckoutForm from "./CheckoutForm"; //Para el componente de formulario de
 export default async function CheckoutPage({
   searchParams, //Prop de Next.js que pasa automáticamente a los Server Components de la página, para los parámetros GET de a URL.
 }: {
-  searchParams: Promise<{ productId?: string }>; //El id del producto se pasa por GETen la url
+  searchParams: { productId?: string }; //El id del producto se pasa por GETen la url
 }) {
-  const { productId } = await searchParams;
+  const { productId } = searchParams;
 
   //Se obtiene la información de sesión y si el usuario no está autenticado se redirige a iniciar sesión.
   const session = await getServerSession();
