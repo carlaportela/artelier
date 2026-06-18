@@ -1,4 +1,4 @@
-//Endpoint de la API de CLoudinary para subir imágenes. Se espera un formulario con un campo "file" que contenga la imagen a subir, y un campo "type" que indique el tipo de imagen (avatar, banner, process o product). Solo se permiten imágenes JPEG, PNG, WebP o GIF de hasta 20 MB. El endpoint devuelve la URL segura y el public ID de la imagen subida, o un error si algo sale mal.
+//Endpoint de la API de Cloudinary para subir imágenes. Se espera un formulario con un campo "file" que contenga la imagen a subir, y un campo "type" que indique el tipo de imagen (avatar, banner, process o product). Solo se permiten imágenes JPEG, PNG, WebP o GIF de hasta 20 MB. El endpoint devuelve la URL segura y el public ID de la imagen subida, o un error si algo sale mal.
 
 import { NextResponse } from "next/server"; //Importa la librería para construir y enviar la respuesta de la API en formato JSON.
 import { getServerSession } from "~/server/auth/session"; //Importa la librería para validar que el usuario esté autenticado.

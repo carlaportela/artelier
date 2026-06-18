@@ -5,5 +5,5 @@ import { env } from "~/env"; //Importa el módulo src/env.js que valida las vari
 
 //Función para exportar el cliente de Stripe. Exporta null si no existen las credenciales de Stripe o una nueva instancia de Stripe con las credenciales.
 export const stripe: Stripe | null = env.STRIPE_SECRET_KEY
-  ? new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: "2026-05-27.dahlia" })
+  ? new Stripe(env.STRIPE_SECRET_KEY)
   : null;
