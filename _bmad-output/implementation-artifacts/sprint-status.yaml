@@ -77,15 +77,15 @@ development_status:
   epic-3-retrospective: optional
 
   # ─── Épico 4: Mensajería ──────────────────────────────────────────────────
-  epic-4: in-progress
+  epic-4: done
   4-1-iniciar-y-gestionar-conversaciones: done
   4-2-enviar-y-recibir-mensajes-con-polling: done
-  4-3-adjuntar-imagenes-y-ver-historial-completo: ready-for-dev
+  4-3-adjuntar-imagenes-y-ver-historial-completo: done
   epic-4-retrospective: optional
 
   # ─── Épico 5: Pagos y Checkout ────────────────────────────────────────────
-  epic-5: backlog
-  5-1-onboarding-de-artesana-en-stripe-connect: backlog
+  epic-5: in-progress
+  5-1-onboarding-de-artesana-en-stripe-connect: ready-for-dev
   5-2-checkout-con-metodo-de-envio-y-desglose-completo: backlog
   5-3-webhooks-de-stripe-e-idempotencia-de-pagos: backlog
   5-4-confirmacion-de-envio-cancelaciones-y-penalizaciones: backlog
