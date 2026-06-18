@@ -46,7 +46,7 @@ export async function POST(req: Request) {
   }
 
   //Se limita la cantidad de peticiones para evitar abuso del endpoint de polling.
-  const ip = (await headers()).get("x-forwarded-for") ?? "anonymous"; //x-forwarded-for es la cabecera estándar que los proxies y Vercel añaden con la IP real del cliente. Si no existe (en local normalmente no existe), usamos "anonymous" como fallback.
+  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anonymous"; //x-forwarded-for es la cabecera estándar que los proxies y Vercel añaden con la IP real del cliente. Si no existe (en local normalmente no existe), usamos "anonymous" como fallback. Para evitar error en múltiples IP tomamos la primera con split
   const { success } = await checkoutLimiter.limit(ip); //Se aplica el limiter a la ip obtenida, no globalmente.
   if (!success) {
     //Si se supera el límite de peticiones, se lanza el error correspondiente.
