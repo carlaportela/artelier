@@ -5,11 +5,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
-<<<<<<< HEAD
 import { getBaseUrl } from "~/lib/stripe-url";
-=======
-import { env } from "~/env";
->>>>>>> main
 
 
 export async function POST() {
