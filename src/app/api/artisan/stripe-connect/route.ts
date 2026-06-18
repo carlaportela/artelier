@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
-import { env } from "~/env";
+import { getBaseUrl } from "~/lib/stripe-url";
 
 
 export async function POST() {
@@ -74,11 +74,7 @@ export async function POST() {
   }
 
   //Se genera AccountLink para redirigir a la artesana al onboarding de Stripe
-  const base =
-    env.NEXTAUTH_URL ??
-    (env.VERCEL_URL
-      ? `https://${env.VERCEL_URL}`
-      : "http://localhost:3000");
+  const base = getBaseUrl(); //Obtenemos la base URL del helper.
 
   const link = await stripe.accountLinks.create({
     account: accountId,

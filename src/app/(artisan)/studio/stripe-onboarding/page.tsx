@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
+import StripeConnectButton from "~/components/StripeConnectButton";
 
 //Función principal que renderiza la página.
 export default async function StripeOnboardingPage() {
@@ -22,7 +23,7 @@ export default async function StripeOnboardingPage() {
     return (
       <main className="flex flex-col items-center gap-4 p-8">
         <p>El proceso está pendiente. Vuelve a intentarlo.</p>
-        {/* aquí pondremos el botón más adelante */}
+        <StripeConnectButton />
       </main>
     );
   }
