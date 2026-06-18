@@ -78,15 +78,7 @@ export async function POST() {
   }
 
   //Se genera AccountLink para redirigir a la artesana al onboarding de Stripe
-<<<<<<< HEAD
   const base = getBaseUrl(); //Obtenemos la base URL del helper.
-=======
-  const base =
-    env.NEXTAUTH_URL ??
-    (env.VERCEL_URL
-      ? `https://${env.VERCEL_URL}`
-      : "http://localhost:3000");
->>>>>>> main
 
   const link = await stripe.accountLinks.create({
     account: accountId,
