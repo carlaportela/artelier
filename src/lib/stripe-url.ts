@@ -1,8 +1,10 @@
-//Helper con la url de base de Stripe.
-
 import { env } from "~/env";
 
-//Función que devuelve la URL de base.
+/**
+ * Helper function to build base URL consistently across the app.
+ * Used for Stripe redirects (checkout success/cancel, onboarding refresh).
+ * Fallback chain: NEXTAUTH_URL → VERCEL_URL → localhost:3000
+ */
 export function getBaseUrl(): string {
   return (
     env.NEXTAUTH_URL ??

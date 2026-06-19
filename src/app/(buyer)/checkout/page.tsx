@@ -29,7 +29,7 @@ export default async function CheckoutPage({
       name: true,
       priceInCents: true,
       type: true,
-      artisan: { select: { stripeAccountId: true } },
+      artisan: { select: { stripeAccountId: true} },
     },
   });
 
@@ -49,5 +49,5 @@ export default async function CheckoutPage({
   }
 
   //Sino se muestra el formulario para finalizar compra (Usuario autenticado y producto disponible con cuenta de Stripe de artesano asociada).
-  return <CheckoutForm product={product} />;
+  return <CheckoutForm product = {product} />;
 }

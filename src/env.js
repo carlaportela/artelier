@@ -15,6 +15,8 @@ export const env = createEnv({
     // Stripe Connect Express
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+    // PATCH 8: STRIPE_WEBHOOK_SECRET requerido en producción para webhook signature verification
+    // Durante build en dev, se puede skipear con SKIP_ENV_VALIDATION
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
     NEXTAUTH_URL: z.string().url().optional(),
 
