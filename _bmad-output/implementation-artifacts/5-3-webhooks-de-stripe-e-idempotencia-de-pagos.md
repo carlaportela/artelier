@@ -52,7 +52,7 @@ para garantizar que ningún pago se procese dos veces aunque Stripe reenvíe el 
 - **Y** el error queda registrado en Sentry con contexto del evento
 
 **AC6 — Rate limiting no se aplica a webhooks**
-- **Dado** que Stripe envía múltiples eventos rapidamente
+- **Dado** que Stripe envía múltiples eventos rápidamente
 - **Cuando** llegan a `POST /api/webhooks/stripe`
 - **Entonces** el rate limiting NO se aplica (este endpoint está exento)
 - **Y** se procesan todos los eventos
@@ -378,7 +378,7 @@ model User {
 
 ```
 STRIPE_SECRET_KEY           ← ya existe en .env (H5.1)
-STRIPE_WEBHOOK_SECRET       ← NUEVA — configurar en Vercel dashboard para produción, en .env.local para dev
+STRIPE_WEBHOOK_SECRET       ← NUEVA — configurar en Vercel dashboard para producción, en .env.local para dev
 STRIPE_API_VERSION          ← ya existe en src/lib/stripe.ts (2026-05-27.dahlia)
 NEXTAUTH_URL                ← ya existe (H5.2)
 SENTRY_DSN                  ← ya existe (H0 setup)

@@ -6,13 +6,13 @@ import { stripe } from "~/lib/stripe";
 import { db } from "~/server/db";
 import { type ShippingMethod } from "~/lib/fees";
 import { sendOrderConfirmation, sendNewSale } from "~/lib/resend";
+import { validateCheckoutFees } from "~/lib/fees";
 
 // TODO H6.1: Uncomment when Sentry is installed
 // import * as Sentry from "@sentry/nextjs";
 
 // Helper function for Sentry integration (H6.1: will use actual Sentry when installed)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function captureException(error: any, context?: Record<string, unknown>) {
+function captureException(error: unknown, context?: Record<string, unknown>) {
   console.error("Sentry capture:", { error, context });
   // TODO H6.1: Replace with actual Sentry.captureException(error, { contexts: { webhook: context } })
 }
@@ -94,7 +94,6 @@ export async function POST(req: Request) {
       }
 
       //Se comprueba que los campos de metadata necesarios existen
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if (
         !metadata.buyerId ||
         !metadata.productId ||
@@ -113,7 +112,7 @@ export async function POST(req: Request) {
       //Se extraen los datos de metadata (mediante parseInt convertimos string en número entero)
       const productId = metadata.productId;
       const buyerId = metadata.buyerId;
-      const shippingMethod = metadata.shippingMethod;
+      const shippingMethod = metadata.shippingMethod as ShippingMethod;
 
       //PATCH 10: Validar que parseInt no devuelve NaN
       const priceInCents = parseInt(metadata.priceInCents, 10);
@@ -139,7 +138,8 @@ export async function POST(req: Request) {
         "ARTISAN_OWN",
         "PICKUP",
       ] as const;
-      if (!validShippingMethods.includes(shippingMethod as never)) {
+
+      if (!validShippingMethods.includes(shippingMethod)) {
         return NextResponse.json(
           { error: "Invalid shipping method" },
           { status: 400 },
@@ -157,18 +157,26 @@ export async function POST(req: Request) {
           id: true,
           type: true,
           status: true,
+          priceInCents: true,
           artisanId: true,
           artisan: { select: { stripeAccountId: true } },
         },
       });
 
       //Si no existe el producto o no hay una cuenta de stripe configurada, mandamos respuesta a Stripe con error y código.
-      if (
-        product === null ||
-        !product.artisan?.stripeAccountId
-      ) {
+      if (!product?.artisan?.stripeAccountId) {
         return NextResponse.json(
           { error: "Producto o artesano no disponible" },
+          { status: 409 },
+        );
+      }
+
+      //Se validan las comisiones
+      if (
+        !validateCheckoutFees(product.priceInCents, shippingMethod, metadata)
+      ) {
+        return NextResponse.json(
+          { error: "Checkout fee metadata does not match expected values" },
           { status: 409 },
         );
       }
@@ -209,7 +217,7 @@ export async function POST(req: Request) {
             artisanId: activeProduct.artisanId,
             productId,
             status: "CONFIRMED",
-            shippingMethod: shippingMethod as ShippingMethod,
+            shippingMethod: shippingMethod,
             priceInCents,
             platformFeeInCents,
             stripeFeeInCents,
@@ -267,6 +275,9 @@ export async function POST(req: Request) {
       // Devolver 200 OK a Stripe igual (el webhook se procesó)
       return NextResponse.json({ received: true }, { status: 200 });
     }
+
+    //Para cualquier otro evento tipo: payment_intent.created, charge.refunded, etc.
+    return NextResponse.json({ received: true }, { status: 200 });
   } catch (error) {
     console.error("Error en webhook de Stripe:", error);
 
@@ -285,6 +296,16 @@ export async function POST(req: Request) {
 
     } */
 
+    // Cuando ocurre un error de negocio (ej: PRODUCT_NO_LONGER_ACTIVE), el código lanza una excepción que es capturada por el catch externo y devuelve error 500. Stripe ve 500 → "Reintenta, probablemente es un error temporal" Pero PRODUCT_NO_LONGER_ACTIVE es permanente — el producto nunca volverá a estar disponible.
+    if (
+      error instanceof Error &&
+      error.message === "PRODUCT_NO_LONGER_ACTIVE"
+    ) {
+      return NextResponse.json(
+        { error: "PRODUCT_NO_LONGER_ACTIVE" },
+        { status: 409 },
+      );
+    }
     return NextResponse.json({ error: "Error interno" }, { status: 500 });
   }
 }

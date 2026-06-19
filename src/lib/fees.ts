@@ -27,7 +27,6 @@ export function validateCheckoutFees(
   const expectedFees = calcFees(productPriceInCents, shipping);
 
   const metadataTotal = parseInt(String(metadata.totalInCents), 10);
-  const metadataPlatformFee = parseInt(String(metadata.platformFeeInCents), 10);
   const metadataStripeFee = parseInt(String(metadata.stripeFeeInCents), 10);
 
   // Permitir diferencia de 1 céntimo por redondeos

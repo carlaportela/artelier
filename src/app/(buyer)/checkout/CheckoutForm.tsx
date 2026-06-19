@@ -33,6 +33,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
   const [shippingWarningAccepted, setShippingWarningAccepted] = useState(false);
   const [legalAccepted, setLegalAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   //Se muestran las comisiones por realizar la compra y que se cobraran al comprador.
   const fees = calcFees(product.priceInCents, shipping);
@@ -52,6 +53,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
 
   //Función para manejar el pago que se ejecuta cuando el comprador pincha en el botón de Finalizar compra.
   async function handlePay() {
+    setError(null);
     setLoading(true);
     //Se intenta llamar al endopoint de la API de Stripe. Si no hay respuesta de éxito se muestra el error correspondiente, sino se redirige a la URL de Stripe para realizar el pago.
     try {
@@ -63,10 +65,11 @@ export default function CheckoutForm({ product }: { product: Product }) {
           shippingMethod: shipping,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error("No se pudo crear la sesión de pago");
       const { data } = (await res.json()) as { data: { url: string } }; //Desestructuración del campo data de la respuesta del endpoint de la API de Stripe. Mediante el type assertion indicamos que el acampo data va a ser de tipo string.
       router.push(data.url); //Redirige a la URL de Stripe Checkout que devolvió el endpoint Para finalizar el pago.
     } catch {
+      setError("No se ha podido iniciar el pago. Revisa tu conexión e inténtalo de nuevo.");
       setLoading(false);
     }
   }
@@ -174,6 +177,13 @@ export default function CheckoutForm({ product }: { product: Product }) {
             (Art. 103 Directiva 2011/83/UE).
           </span>
         </label>
+      )}
+
+      {/* Mensaje de error */}
+      {error && (
+        <p className="mb-4 text-sm text-red-600">
+          {error}
+        </p>
       )}
 
       {/* Botón de pago */}
