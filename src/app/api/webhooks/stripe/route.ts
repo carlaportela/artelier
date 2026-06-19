@@ -5,7 +5,9 @@ import { NextResponse } from "next/server";
 import { stripe } from "~/lib/stripe";
 import { db } from "~/server/db";
 import { type ShippingMethod } from "~/lib/fees";
-import { count } from "console";
+import { sendOrderConfirmation, sendNewSale } from "~/lib/resend";
+
+
 
 export async function POST(req: Request) {
   //Obtiene el secret del webhook de Stripe en env.
@@ -94,8 +96,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ received: true }, { status: 200 });
     }
 
-    //Se comprueba que los datos de matadata son válidos.
-    // Validar que metadata existe
+    //Se comprueba que los datos de metadata son válidos y existen.
     if (
       metadata === null ||
       !metadata.buyerId ||
@@ -141,51 +142,71 @@ export async function POST(req: Request) {
       );
     }
 
-    //Empleamos transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
-    await db.$transaction(async (tx) => { //tx es como db pero dentro de la transacción. No se usa db sino await tx
+    //Se emplea transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
+    const order = await db.$transaction(async (tx) => {
+      //tx es como db pero dentro de la transacción. No se usa db sino await tx
 
-        //1. Se crea el pedido (guardamos el pedido creado en una variable)
-        const order = await tx.order.create({
-            data: {
-                buyerId,
-                artisanId: product.artisanId,
-                productId,
-                status: "CONFIRMED",
-                shippingMethod: shippingMethod as ShippingMethod,
-                priceInCents,
-                platformFeeInCents,
-                stripeFeeInCents,
-                totalInCents,
-                stripePaymentIntentId: paymentIntentId,
-                stripeEventId,
-            },
+      //1. Se crea el pedido (guardamos el pedido creado en una variable)
+      const orderCreated = await tx.order.create({
+        data: {
+          buyerId,
+          artisanId: product.artisanId,
+          productId,
+          status: "CONFIRMED",
+          shippingMethod: shippingMethod as ShippingMethod,
+          priceInCents,
+          platformFeeInCents,
+          stripeFeeInCents,
+          totalInCents,
+          stripePaymentIntentId: paymentIntentId,
+          stripeEventId,
+        },
+      });
+
+      //2. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
+
+      if (product.type !== "PERISHABLE") {
+        await tx.product.update({
+          where: { id: productId },
+          data: { status: "SOLD" },
         });
+      }
 
-        //2. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
-        
-        if(product.type !== "PERISHABLE") {
-            await tx.product.update({
-                where: { id: productId },
-                data: { status: "SOLD" },
-            });
-        }
+      //3. Se marca primera venta como completada
 
-        //3. Se marca primera venta como completada
+      //Se comprueba si existen pedidos anteriores al que acabamos de crear (id de pedido diferente al que acabamos de crear)
+      const previousOrders = await tx.order.findFirst({
+        where: {
+          artisanId: product.artisanId,
+          status: "CONFIRMED",
+          NOT: { id: orderCreated.id },
+        },
+      });
 
-        //Se comprueba si existen pedidos anteriores al que acabamos de crear (id de pedido diferente al que acabamos de crear)
-        const previousOrders = await tx.order.findFirst({
-            where: {
-                artisanId : product.artisanId, status : "CONFIRMED", NOT: { id: order.id} 
-            },
+      //Si no existen pedidos previos marcamos en el user primera venta completada
+      if (previousOrders === null) {
+        await tx.user.update({
+          where: { id: product.artisanId },
+          data: { firstSaleCompleted: true },
         });
+      }
 
-        //Si no existen pedidos previos marcamos en el user primera venta completada
-        if(previousOrders === null){
-            await tx.user.update({
-                where: {id: product.artisanId},
-                data: {firstSaleCompleted: true}
-            })
-        }
-    })
+      //Se devuelve el order creado.
+      return orderCreated;
+    });
+
+    //Se notifica al comprador y al artesano de la venta completada.
+    // T4: Enviar emails (fire-and-forget, no rompen el webhook si fallan)
+    try {
+      await sendOrderConfirmation(order);
+      await sendNewSale(order);
+    } catch (error) {
+      // Loguear el error pero no romper el webhook
+      console.error("Error enviando emails de notificación de venta completada:", error);
+      // En producción usarías: captureException(error);
+    }
+
+    // Devolver 200 OK a Stripe igual (el webhook se procesó)
+    return NextResponse.json({ received: true }, { status: 200 });
   }
 }
