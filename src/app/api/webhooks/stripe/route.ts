@@ -70,10 +70,7 @@ export async function POST(req: Request) {
     //Se extraen los datos del evento (pago completado) e idempotencia (cuando se recibe un evento de pago completado, se comprueba si el id del evento existe previamente; si existe no se hace nada y si es un nuevo evento se crea un nuevo pedidos) para evitar pedidos duplicados procedentes del mismo evento.
     const stripeEventId = event.id;
     const paymentIntentId = event.data.object.id;
-    const metadata = (event.data.object.metadata ?? {}) as Record<
-      string,
-      string
-    >; //Ponemos un type assertion para indicar que metadata se trata de un objeto (Record) con clave string y valor string. Si el objeto es undefined usa el objeto vacio
+    const metadata = (event.data.object.metadata ?? {}) as Record<string,string>; //Ponemos un type assertion para indicar que metadata se trata de un objeto (Record) con clave string y valor string. Si el objeto es undefined usa el objeto vacio
 
     const existingOrder = await db.order.findFirst({
       where: { stripeEventId },
@@ -112,5 +109,27 @@ export async function POST(req: Request) {
     const platformFeeInCents = parseInt(metadata.platformFeeInCents, 10);
     const stripeFeeInCents = parseInt(metadata.stripeFeeInCents, 10);
     const totalInCents = parseInt(metadata.totalInCents, 10);
+
+    //Comprobamos que el producto existe, está active y no está borrado.
+    const product = await db.product.findFirst({
+        where: {
+            id : productId, 
+            status :"ACTIVE",
+            deletedAt : null
+        },
+        select: {
+            id:true,
+            status: true,
+            artisanId: true,
+            artisan: { select: {stripeAccountId: true}
+            },
+
+        }
+    });
+    if(product === null || product.artisan.stripeAccountId === null){
+        return NextResponse.json({ error: "Producto o artesano no disponible"}, {status: 409},);
+    }
+
+    
   }
 }
