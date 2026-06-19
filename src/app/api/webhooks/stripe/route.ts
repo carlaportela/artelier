@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     let event;
     try {
       event = stripe.webhooks.constructEvent(body, signature, secret);
-    } catch (error) {
+    } catch {
       // Si la firma es inválida → error
       return NextResponse.json(
         { error: "Firma de Stripe inválida" },
@@ -96,8 +96,8 @@ export async function POST(req: Request) {
       }
 
       //Se comprueba que los datos de metadata son válidos y existen.
-      if (
-        metadata === null ||
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+      if ( metadata === null ||
         !metadata.buyerId ||
         !metadata.productId ||
         !metadata.priceInCents ||
@@ -137,6 +137,7 @@ export async function POST(req: Request) {
       });
 
       //Si no existe el producto o no hay una cuenta de stripe configurada, mandamos respuesta a Stripe con error y código.
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
       if (product === null || product.artisan.stripeAccountId === null) {
         return NextResponse.json(
           { error: "Producto o artesano no disponible" },

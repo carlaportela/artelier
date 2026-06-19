@@ -6,7 +6,7 @@ import { db } from "~/server/db"; //Para realizar las consultas a la base de dat
 import { stripe } from "~/lib/stripe"; //Para realizar el pago y comprobar si esta configurada la cuenta de Stripe de la artesana.
 import { checkoutLimiter } from "~/lib/ratelimit"; //Para limitar el número de peticiones.
 import { headers } from "next/headers"; //Función de Next.js que permite leer las cabeceras HTTP de la petición entrante dentro de Server Components y Route Handlers. En el contexto del rate limiting lo usamos para obtener la IP del cliente
-import { calcFees, type ShippingMethod } from "~/lib/fees"; //Se importa la funcionalidad para calcular comisiones y tipos de envío.
+import { calcFees} from "~/lib/fees"; //Se importa la funcionalidad para calcular comisiones y tipos de envío.
 
 //El parámetro req es necesario para leer el cuerpo de la petición que envía CHeckoutForm.
 export async function POST(req: Request) {
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
   }
 
   //Se calculan las comisiones para esta compra.
-  const fees = calcFees(product.priceInCents, shippingMethod as ShippingMethod);
+  const fees = calcFees(product.priceInCents, shippingMethod);
   const applicationFee = fees.shippingCost + fees.insuranceFee + fees.stripeFee;
 
   //Se crea la sesión de pago en Stripe y se devuelve la URL para redirigir a la compradora.
