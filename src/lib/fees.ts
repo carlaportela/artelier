@@ -17,3 +17,23 @@ export function calcFees(priceInCents: number, shipping: ShippingMethod) {
   const total = subtotal + insuranceFee + stripeFee;
   return { shippingCost, insuranceFee, stripeFee, total };
 }
+
+// PATCH 6: T6.1-6.2 Validación cruzada de fees para detectar manipulación
+export function validateCheckoutFees(
+  productPriceInCents: number,
+  shipping: ShippingMethod,
+  metadata: Record<string, unknown>,
+): boolean {
+  const expectedFees = calcFees(productPriceInCents, shipping);
+
+  const metadataTotal = parseInt(String(metadata.totalInCents), 10);
+  const metadataPlatformFee = parseInt(String(metadata.platformFeeInCents), 10);
+  const metadataStripeFee = parseInt(String(metadata.stripeFeeInCents), 10);
+
+  // Permitir diferencia de 1 céntimo por redondeos
+  const totalMatch = Math.abs(expectedFees.total - metadataTotal) <= 1;
+  const stripeFeeMatch =
+    Math.abs(expectedFees.stripeFee - metadataStripeFee) <= 1;
+
+  return totalMatch && stripeFeeMatch;
+}

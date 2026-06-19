@@ -434,6 +434,34 @@ src/env.ts o env.js           ← agregar STRIPE_WEBHOOK_SECRET a validación
 - **H6.2** — Timeline de estados: lee Order.status
 - **H6.3** — Aceptación y liberación de pago: consulta Order.status
 
+### Review Findings
+
+#### Patch (Actionable Issues — Fix Before Merge)
+
+- [ ] [Review][Patch] Race condition en idempotencia — T2.2 busca Order antes de transacción; dos webhooks concurrentes pueden pasar la búsqueda antes de que cualquiera cree el Order [src/app/api/webhooks/stripe/route.ts:81-96, 149-199]
+- [ ] [Review][Patch] firstSaleCompleted logic incorrecto — busca `status: CONFIRMED` pero debería ser `ACCEPTED`; FR49 se marca en TODA orden no solo primera completada [src/app/api/webhooks/stripe/route.ts:184]
+- [ ] [Review][Patch] Product status regresión después de fetch — si status cambia entre validación (124) y creación (170), webhook falla con 409 en retry legítimo [src/app/api/webhooks/stripe/route.ts:124-176]
+- [ ] [Review][Patch] Metadata type safety incompleta — `?? {}` + type assertion oculta cuando metadata falta completamente [src/app/api/webhooks/stripe/route.ts:77, 76]
+- [ ] [Review][Patch] shippingMethod sin validación enum — sin validación de valores válidos ("PLATFORM"|"ARTISAN_OWN"|"PICKUP"); cast `as ShippingMethod` sin validación [src/app/api/webhooks/stripe/route.ts:117, 159]
+- [ ] [Review][Patch] Fee validation missing — AC7 requiere `validateCheckoutFees(product, shippingMethod, metadata)` para detectar manipulación; no implementado [src/app/api/webhooks/stripe/route.ts]
+- [ ] [Review][Patch] Email failures + Sentry — AC4.3 y AC5 requieren `Sentry.captureException(error)` para seguimiento; solo `console.error` [src/app/api/webhooks/stripe/route.ts:208, 219]
+- [ ] [Review][Patch] STRIPE_WEBHOOK_SECRET validation — Sentry integration falta; debe importarse y llamarse para errores [src/lib/resend.ts, src/app/api/webhooks/stripe/route.ts]
+- [ ] [Review][Patch] Artisan null check unsafe — `product.artisan.stripeAccountId` puede throw si `product.artisan` es null; usar optional chaining [src/app/api/webhooks/stripe/route.ts:141]
+- [ ] [Review][Patch] parseInt sin guard — puede devolver `NaN` si metadata.priceInCents no-numérica; se almacena NaN en BD [src/app/api/webhooks/stripe/route.ts:118-121]
+
+#### Deferred (Pre-existing, Not Caused by This Change)
+
+- [x] [Review][Defer] STRIPE_WEBHOOK_SECRET no requerido en env schema — debe ser `required` en `src/env.js` para fail-fast; actualmente optional — deferred, env schema change
+
+#### Dismissed (6 items dismissed as noise or pre-existing)
+
+- Metadata null-check dead code
+- parseInt radix (correcto)
+- Transaction concurrent updates (idempotent)
+- Checkout x-forwarded-for (no H5.3)
+- PERISHABLE handling (H5.4)
+- Error codes mixing (spec compliant)
+
 ## Dev Agent Record
 
 ### Completion Notes

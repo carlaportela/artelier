@@ -7,6 +7,16 @@ import { db } from "~/server/db";
 import { type ShippingMethod } from "~/lib/fees";
 import { sendOrderConfirmation, sendNewSale } from "~/lib/resend";
 
+// TODO H6.1: Uncomment when Sentry is installed
+// import * as Sentry from "@sentry/nextjs";
+
+// Helper function for Sentry integration (H6.1: will use actual Sentry when installed)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function captureException(error: any, context?: Record<string, unknown>) {
+  console.error("Sentry capture:", { error, context });
+  // TODO H6.1: Replace with actual Sentry.captureException(error, { contexts: { webhook: context } })
+}
+
 export async function POST(req: Request) {
   try {
     //Obtiene el secret del webhook de Stripe en env.
@@ -70,43 +80,32 @@ export async function POST(req: Request) {
     if (event.type === "payment_intent.succeeded") {
       console.log("Pago completado:", event.id); //Se usa console.log para debugging.
 
-      //Se extraen los datos del evento (pago completado) e idempotencia (cuando se recibe un evento de pago completado, se comprueba si el id del evento existe previamente; si existe no se hace nada y si es un nuevo evento se crea un nuevo pedidos) para evitar pedidos duplicados procedentes del mismo evento.
+      //Se extraen los datos del evento
       const stripeEventId = event.id;
       const paymentIntentId = event.data.object.id;
-      const metadata = (event.data.object.metadata ?? {}) as Record<
-        string,
-        string
-      >; //Ponemos un type assertion para indicar que metadata se trata de un objeto (Record) con clave string y valor string. Si el objeto es undefined usa el objeto vacio
 
-      const existingOrder = await db.order.findFirst({
-        where: { stripeEventId },
-      });
-
-      /* En JavaScript/TypeScript, cuando la clave del objeto es igual al nombre de la variable, puedes usar la sintaxis corta:
-                // Versión larga
-                { stripeEventId: stripeEventId }
-
-                // Versión corta (equivalente)
-                { stripeEventId }
-                Se llama property shorthand. */
-
-      if (existingOrder) {
-        //Se devuelve 200 OK a Stripe (Para confirmar que se recibe el evento).
-        return NextResponse.json({ received: true }, { status: 200 });
+      //T2.1: Validar que metadata existe y es objeto válido
+      const metadata = event.data.object.metadata;
+      if (!metadata || typeof metadata !== "object") {
+        return NextResponse.json(
+          { error: "Metadata missing or invalid" },
+          { status: 400 },
+        );
       }
 
-      //Se comprueba que los datos de metadata son válidos y existen.
+      //Se comprueba que los campos de metadata necesarios existen
       // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-      if ( metadata === null ||
+      if (
         !metadata.buyerId ||
         !metadata.productId ||
         !metadata.priceInCents ||
         !metadata.platformFeeInCents ||
         !metadata.stripeFeeInCents ||
-        !metadata.totalInCents
+        !metadata.totalInCents ||
+        !metadata.shippingMethod
       ) {
         return NextResponse.json(
-          { error: "Metadata inválida" },
+          { error: "Metadata missing required fields" },
           { status: 400 },
         );
       }
@@ -115,10 +114,37 @@ export async function POST(req: Request) {
       const productId = metadata.productId;
       const buyerId = metadata.buyerId;
       const shippingMethod = metadata.shippingMethod;
+
+      //PATCH 10: Validar que parseInt no devuelve NaN
       const priceInCents = parseInt(metadata.priceInCents, 10);
       const platformFeeInCents = parseInt(metadata.platformFeeInCents, 10);
       const stripeFeeInCents = parseInt(metadata.stripeFeeInCents, 10);
       const totalInCents = parseInt(metadata.totalInCents, 10);
+
+      if (
+        isNaN(priceInCents) ||
+        isNaN(platformFeeInCents) ||
+        isNaN(stripeFeeInCents) ||
+        isNaN(totalInCents)
+      ) {
+        return NextResponse.json(
+          { error: "Invalid numeric values in metadata" },
+          { status: 400 },
+        );
+      }
+
+      //PATCH 5: Validar que shippingMethod es valor válido
+      const validShippingMethods = [
+        "PLATFORM",
+        "ARTISAN_OWN",
+        "PICKUP",
+      ] as const;
+      if (!validShippingMethods.includes(shippingMethod as never)) {
+        return NextResponse.json(
+          { error: "Invalid shipping method" },
+          { status: 400 },
+        );
+      }
 
       //Se comprueba que el producto existe, está active y no está borrado.
       const product = await db.product.findFirst({
@@ -137,8 +163,10 @@ export async function POST(req: Request) {
       });
 
       //Si no existe el producto o no hay una cuenta de stripe configurada, mandamos respuesta a Stripe con error y código.
-      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-      if (product === null || product.artisan.stripeAccountId === null) {
+      if (
+        product === null ||
+        !product.artisan?.stripeAccountId
+      ) {
         return NextResponse.json(
           { error: "Producto o artesano no disponible" },
           { status: 409 },
@@ -147,13 +175,38 @@ export async function POST(req: Request) {
 
       //Se emplea transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
       const order = await db.$transaction(async (tx) => {
-        //tx es como db pero dentro de la transacción. No se usa db sino await tx
+        //PATCH 1: T2.2 - Idempotencia movida dentro de transacción para evitar race condition
+        const existingOrder = await tx.order.findFirst({
+          where: { stripeEventId },
+        });
 
-        //1. Se crea el pedido (guardamos el pedido creado en una variable)
+        if (existingOrder) {
+          return existingOrder;
+        }
+
+        //PATCH 3: Validar que Product sigue activo dentro de transacción
+        const activeProduct = await tx.product.findFirst({
+          where: {
+            id: productId,
+            status: "ACTIVE",
+            deletedAt: null,
+          },
+          select: {
+            id: true,
+            type: true,
+            artisanId: true,
+          },
+        });
+
+        if (!activeProduct) {
+          throw new Error("PRODUCT_NO_LONGER_ACTIVE");
+        }
+
+        //1. Se crea el pedido
         const orderCreated = await tx.order.create({
           data: {
             buyerId,
-            artisanId: product.artisanId,
+            artisanId: activeProduct.artisanId,
             productId,
             status: "CONFIRMED",
             shippingMethod: shippingMethod as ShippingMethod,
@@ -167,8 +220,7 @@ export async function POST(req: Request) {
         });
 
         //2. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
-
-        if (product.type !== "PERISHABLE") {
+        if (activeProduct.type !== "PERISHABLE") {
           await tx.product.update({
             where: { id: productId },
             data: { status: "SOLD" },
@@ -176,25 +228,22 @@ export async function POST(req: Request) {
         }
 
         //3. Se marca primera venta como completada
-
-        //Se comprueba si existen pedidos anteriores al que acabamos de crear (id de pedido diferente al que acabamos de crear)
+        //PATCH 2: Buscar ACCEPTED en lugar de CONFIRMED (primera venta COMPLETADA, no solo creada)
         const previousOrders = await tx.order.findFirst({
           where: {
-            artisanId: product.artisanId,
-            status: "CONFIRMED",
+            artisanId: activeProduct.artisanId,
+            status: "ACCEPTED",
             NOT: { id: orderCreated.id },
           },
         });
 
-        //Si no existen pedidos previos marcamos en el user primera venta completada
-        if (previousOrders === null) {
+        if (!previousOrders) {
           await tx.user.update({
-            where: { id: product.artisanId },
+            where: { id: activeProduct.artisanId },
             data: { firstSaleCompleted: true },
           });
         }
 
-        //Se devuelve el order creado.
         return orderCreated;
       });
 
@@ -204,12 +253,15 @@ export async function POST(req: Request) {
         await sendOrderConfirmation(order);
         await sendNewSale(order);
       } catch (error) {
-        // Loguear el error pero no romper el webhook
         console.error(
           "Error enviando emails de notificación de venta completada:",
           error,
         );
-        // En producción usarías: captureException(error);
+        captureException(error, {
+          orderId: order.id,
+          buyerId: order.buyerId,
+          artisanId: order.artisanId,
+        });
       }
 
       // Devolver 200 OK a Stripe igual (el webhook se procesó)
