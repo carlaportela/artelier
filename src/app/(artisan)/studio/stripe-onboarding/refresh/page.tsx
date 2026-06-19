@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
-import { env } from "~/env";
+import { getBaseUrl } from "~/lib/stripe-url";
 
 
 //Función principal
@@ -24,11 +24,7 @@ export default async function StripeRefreshPage() {
 
   //Si tiene cuenta genera un nuevo AccountLink con la cuenta existente
   const accountId = user.stripeAccountId;
-  const base =
-    env.NEXTAUTH_URL ??
-    (env.VERCEL_URL
-      ? `https://${env.VERCEL_URL}`
-      : "http://localhost:3000");
+  const base = getBaseUrl(); //Obtenemos la URL de base de Stripe mediante el helper.
 
   //comprueba que stripe no es null sino redirigimos a la artesana.
   if (stripe === null) redirect("/studio/products/new");

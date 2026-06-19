@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner"; //Para mostrar notificaciones pequeñas que desaparecen automáticamente después de unos segundos.
 
 //Función principal del componente.
 export default function StripeConnectButton() {
@@ -30,6 +31,7 @@ export default function StripeConnectButton() {
       router.push(data.url);
     } catch {
       setLoading(false);
+      toast.error("No pudimos conectar tu cuenta. Intenta de nuevo.");
     }
   }
 
