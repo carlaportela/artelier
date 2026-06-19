@@ -4,6 +4,8 @@ import { env } from "~/env";
 import { NextResponse } from "next/server";
 import { stripe } from "~/lib/stripe";
 import { db } from "~/server/db";
+import { type ShippingMethod } from "~/lib/fees";
+import { count } from "console";
 
 export async function POST(req: Request) {
   //Obtiene el secret del webhook de Stripe en env.
@@ -70,7 +72,10 @@ export async function POST(req: Request) {
     //Se extraen los datos del evento (pago completado) e idempotencia (cuando se recibe un evento de pago completado, se comprueba si el id del evento existe previamente; si existe no se hace nada y si es un nuevo evento se crea un nuevo pedidos) para evitar pedidos duplicados procedentes del mismo evento.
     const stripeEventId = event.id;
     const paymentIntentId = event.data.object.id;
-    const metadata = (event.data.object.metadata ?? {}) as Record<string,string>; //Ponemos un type assertion para indicar que metadata se trata de un objeto (Record) con clave string y valor string. Si el objeto es undefined usa el objeto vacio
+    const metadata = (event.data.object.metadata ?? {}) as Record<
+      string,
+      string
+    >; //Ponemos un type assertion para indicar que metadata se trata de un objeto (Record) con clave string y valor string. Si el objeto es undefined usa el objeto vacio
 
     const existingOrder = await db.order.findFirst({
       where: { stripeEventId },
@@ -93,6 +98,8 @@ export async function POST(req: Request) {
     // Validar que metadata existe
     if (
       metadata === null ||
+      !metadata.buyerId ||
+      !metadata.productId ||
       !metadata.priceInCents ||
       !metadata.platformFeeInCents ||
       !metadata.stripeFeeInCents ||
@@ -110,26 +117,75 @@ export async function POST(req: Request) {
     const stripeFeeInCents = parseInt(metadata.stripeFeeInCents, 10);
     const totalInCents = parseInt(metadata.totalInCents, 10);
 
-    //Comprobamos que el producto existe, está active y no está borrado.
+    //Se comprueba que el producto existe, está active y no está borrado.
     const product = await db.product.findFirst({
-        where: {
-            id : productId, 
-            status :"ACTIVE",
-            deletedAt : null
-        },
-        select: {
-            id:true,
-            status: true,
-            artisanId: true,
-            artisan: { select: {stripeAccountId: true}
-            },
-
-        }
+      where: {
+        id: productId,
+        status: "ACTIVE",
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        type: true,
+        status: true,
+        artisanId: true,
+        artisan: { select: { stripeAccountId: true } },
+      },
     });
-    if(product === null || product.artisan.stripeAccountId === null){
-        return NextResponse.json({ error: "Producto o artesano no disponible"}, {status: 409},);
+
+    //Si no existe el producto o no hay una cuenta de stripe configurada, mandamos respuesta a Stripe con error y código.
+    if (product === null || product.artisan.stripeAccountId === null) {
+      return NextResponse.json(
+        { error: "Producto o artesano no disponible" },
+        { status: 409 },
+      );
     }
 
-    
+    //Empleamos transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
+    await db.$transaction(async (tx) => { //tx es como db pero dentro de la transacción. No se usa db sino await tx
+
+        //1. Se crea el pedido (guardamos el pedido creado en una variable)
+        const order = await tx.order.create({
+            data: {
+                buyerId,
+                artisanId: product.artisanId,
+                productId,
+                status: "CONFIRMED",
+                shippingMethod: shippingMethod as ShippingMethod,
+                priceInCents,
+                platformFeeInCents,
+                stripeFeeInCents,
+                totalInCents,
+                stripePaymentIntentId: paymentIntentId,
+                stripeEventId,
+            },
+        });
+
+        //2. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
+        
+        if(product.type !== "PERISHABLE") {
+            await tx.product.update({
+                where: { id: productId },
+                data: { status: "SOLD" },
+            });
+        }
+
+        //3. Se marca primera venta como completada
+
+        //Se comprueba si existen pedidos anteriores al que acabamos de crear (id de pedido diferente al que acabamos de crear)
+        const previousOrders = await tx.order.findFirst({
+            where: {
+                artisanId : product.artisanId, status : "CONFIRMED", NOT: { id: order.id} 
+            },
+        });
+
+        //Si no existen pedidos previos marcamos en el user primera venta completada
+        if(previousOrders === null){
+            await tx.user.update({
+                where: {id: product.artisanId},
+                data: {firstSaleCompleted: true}
+            })
+        }
+    })
   }
 }
