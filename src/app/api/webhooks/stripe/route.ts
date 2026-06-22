@@ -257,16 +257,20 @@ export async function POST(req: Request) {
 
       //Se notifica al comprador y al artesano de la venta completada.
       // T4: Enviar emails (fire-and-forget, no rompen el webhook si fallan)
-      Promise.allSettled([
-        sendOrderConfirmation(order),
-        sendNewSale(order),
-      ]).catch((error) => {
-        captureException(error, {
-          orderId: order.id,
-          buyerId: order.buyerId,
-          artisanId: order.artisanId,
-        });
-      });
+      void Promise.allSettled([
+        sendOrderConfirmation(order).catch((error) => {
+          captureException(error, {
+            orderId: order.id,
+            emailType: "confirmation",
+          });
+        }),
+        sendNewSale(order).catch((error) => {
+          captureException(error, {
+            orderId: order.id,
+            emailType: "newSale",
+          });
+        }),
+      ]);
 
       // Devolver 200 OK a Stripe igual (el webhook se procesó)
       return NextResponse.json({ received: true }, { status: 200 });
