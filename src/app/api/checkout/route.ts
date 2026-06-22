@@ -63,7 +63,11 @@ export async function POST(req: Request) {
   const body = (await req.json()) as Record<string, unknown>;
 
   // Validar tipos
-  if (typeof body.productId !== "string" || typeof body.shippingMethod !== "string") {
+  if (
+    typeof body.productId !== "string" ||
+    !body.productId.trim() ||
+    typeof body.shippingMethod !== "string"
+  ) {
     return NextResponse.json(
       { error: "Invalid request body" },
       { status: 400 },
