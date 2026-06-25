@@ -74,15 +74,15 @@ para que el proceso postventa sea transparente y proteja a ambas partes.
   - [x] T1.2: Añadir `pendingPenaltyInCents Int @default(0)` al modelo `User` en `prisma/schema.prisma`
   - [x] T1.3: Ejecutar `npx prisma migrate dev --name add_cancellation_and_penalty_fields`
 
-- [ ] T2 — API: cancelación por comprador
-  - [ ] T2.1: Crear `src/app/api/orders/[orderId]/cancel/route.ts` con método `POST`
-  - [ ] T2.2: Verificar autenticación y rol `BUYER`
-  - [ ] T2.3: Cargar el pedido y verificar que pertenece al comprador autenticado
-  - [ ] T2.4: Verificar que `order.status === 'CONFIRMED'` y `order.createdAt > now - 24h`
-  - [ ] T2.5: Crear Stripe Refund con `stripe.refunds.create({ payment_intent: order.stripePaymentIntentId })`
-  - [ ] T2.6: Actualizar `Order.status = CANCELLED`, `Order.cancellationReason` en transacción
-  - [ ] T2.7: Reactivar producto: `Product.status = ACTIVE` si el tipo no era PERISHABLE (verificar `expiresAt`)
-  - [ ] T2.8: Llamar a stub `sendCancellationEmail(order)` en fire-and-forget
+- [x] T2 — API: cancelación por comprador
+  - [x] T2.1: Crear `src/app/api/orders/[orderId]/cancel/route.ts` con método `POST`
+  - [x] T2.2: Verificar autenticación y rol `BUYER`
+  - [x] T2.3: Cargar el pedido y verificar que pertenece al comprador autenticado
+  - [x] T2.4: Verificar que `order.status === 'CONFIRMED'` y `order.createdAt > now - 24h`
+  - [x] T2.5: Crear Stripe Refund con `stripe.refunds.create({ payment_intent: order.stripePaymentIntentId })`
+  - [x] T2.6: Actualizar `Order.status = CANCELLED`, `Order.cancellationReason` en transacción
+  - [x] T2.7: Reactivar producto: `Product.status = ACTIVE` si el tipo no era PERISHABLE (verificar `expiresAt`)
+  - [x] T2.8: Llamar a stub `sendCancellationEmail(order)` en fire-and-forget
 
 - [ ] T3 — API: confirmación de envío por artesana
   - [ ] T3.1: Crear `src/app/api/orders/[orderId]/confirm-shipment/route.ts` con método `POST`
