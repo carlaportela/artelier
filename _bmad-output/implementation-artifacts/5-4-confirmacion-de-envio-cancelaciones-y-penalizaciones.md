@@ -84,14 +84,14 @@ para que el proceso postventa sea transparente y proteja a ambas partes.
   - [x] T2.7: Reactivar producto: `Product.status = ACTIVE` si el tipo no era PERISHABLE (verificar `expiresAt`)
   - [x] T2.8: Llamar a stub `sendCancellationEmail(order)` en fire-and-forget
 
-- [ ] T3 — API: confirmación de envío por artesana
-  - [ ] T3.1: Crear `src/app/api/orders/[orderId]/confirm-shipment/route.ts` con método `POST`
-  - [ ] T3.2: Verificar autenticación y rol `ARTISAN`
-  - [ ] T3.3: Cargar el pedido y verificar que `order.artisanId === session.user.id`
-  - [ ] T3.4: Verificar que `order.status === 'CONFIRMED' || 'IN_PREPARATION' || 'READY'`
-  - [ ] T3.5: Validar body con Zod: `{ trackingNumber?: string }` — requerido si `shippingMethod !== 'PICKUP'`
-  - [ ] T3.6: Actualizar `Order.status = SHIPPED` (o `READY` si `shippingMethod === 'PICKUP'`) y guardar `trackingNumber`
-  - [ ] T3.7: Llamar a stub `sendShipmentConfirmedEmail(order)` en fire-and-forget
+- [x] T3 — API: confirmación de envío por artesana
+  - [x] T3.1: Crear `src/app/api/orders/[orderId]/confirm-shipment/route.ts` con método `POST`
+  - [x] T3.2: Verificar autenticación y rol `ARTISAN`
+  - [x] T3.3: Cargar el pedido y verificar que `order.artisanId === session.user.id`
+  - [x] T3.4: Verificar que `order.status === 'CONFIRMED' || 'IN_PREPARATION' || 'READY'`
+  - [x] T3.5: Validar body con Zod: `{ trackingNumber?: string }` — requerido si `shippingMethod !== 'PICKUP'`
+  - [x] T3.6: Actualizar `Order.status = SHIPPED` (o `READY` si `shippingMethod === 'PICKUP'`) y guardar `trackingNumber`
+  - [x] T3.7: Llamar a stub `sendShipmentConfirmedEmail(order)` en fire-and-forget
 
 - [ ] T4 — API Cron: cancelación automática por incumplimiento
   - [ ] T4.1: Crear `src/app/api/cron/cancel-overdue-orders/route.ts` con método `POST`
