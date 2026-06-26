@@ -101,7 +101,9 @@ export async function POST(req: Request) {
         !metadata.platformFeeInCents ||
         !metadata.stripeFeeInCents ||
         !metadata.totalInCents ||
-        !metadata.shippingMethod
+        !metadata.shippingMethod ||
+        !metadata.firstSaleFeeWaived ||
+        !metadata.penaltyApplied
       ) {
         return NextResponse.json(
           { error: "Metadata missing required fields" },
@@ -119,6 +121,8 @@ export async function POST(req: Request) {
       const platformFeeInCents = parseInt(metadata.platformFeeInCents, 10);
       const stripeFeeInCents = parseInt(metadata.stripeFeeInCents, 10);
       const totalInCents = parseInt(metadata.totalInCents, 10);
+      const firstSaleFeeWaived = metadata.firstSaleFeeWaived; //Si se completo la primera venta del artesano.
+      const penaltyApplied = parseInt(metadata.penaltyApplied, 10); //Penalización que se cobro al artesano.
 
       if (
         isNaN(priceInCents) ||
@@ -183,16 +187,17 @@ export async function POST(req: Request) {
 
       //Se emplea transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
       const order = await db.$transaction(async (tx) => {
-        //PATCH 1: T2.2 - Idempotencia movida dentro de transacción para evitar race condition
+        //1. Se comprueba que no exista un pedido con el mismo id de Dtripe para evitar duplicados.
         const existingOrder = await tx.order.findFirst({
           where: { stripeEventId },
         });
 
+        //Si existía previamente, no se hace nada
         if (existingOrder) {
           return existingOrder;
         }
 
-        //PATCH 3: Validar que Product sigue activo dentro de transacción
+        //2. Se valida que el producto del pedido siga activo para poder procesar el pedido
         const activeProduct = await tx.product.findFirst({
           where: {
             id: productId,
@@ -206,11 +211,12 @@ export async function POST(req: Request) {
           },
         });
 
+        //Sino existe el producto se lanza el error correspondiente.
         if (!activeProduct) {
           throw new Error("PRODUCT_NO_LONGER_ACTIVE");
         }
 
-        //1. Se crea el pedido
+        //3. Se crea el pedido
         const orderCreated = await tx.order.create({
           data: {
             buyerId,
@@ -227,7 +233,7 @@ export async function POST(req: Request) {
           },
         });
 
-        //2. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
+        //4. Se actualiza el estado del producto a vendido, si el producto no es perecedero (Se gestionan en H5.4)
         if (activeProduct.type !== "PERISHABLE") {
           await tx.product.update({
             where: { id: productId },
@@ -235,8 +241,8 @@ export async function POST(req: Request) {
           });
         }
 
-        //3. Se marca primera venta como completada
-        //PATCH 2: Buscar ACCEPTED en lugar de CONFIRMED (primera venta COMPLETADA, no solo creada)
+        //5. Se marca primera venta como completada
+        //Se busca ACCEPTED en lugar de CONFIRMED (primera venta COMPLETADA, no solo creada)
         const previousOrders = await tx.order.findFirst({
           where: {
             artisanId: activeProduct.artisanId,
@@ -245,13 +251,30 @@ export async function POST(req: Request) {
           },
         });
 
-        if (!previousOrders) {
+        //Si no existen ventas previas y no se ha condonado la comisión por primera venta, se marca primera venta como completada.
+        if (!previousOrders && firstSaleFeeWaived === "true") {
           await tx.user.update({
             where: { id: activeProduct.artisanId },
             data: { firstSaleCompleted: true },
           });
         }
 
+        //6. Se comprueba si se ha cobrado algún tipo de penalización al artesano.
+        const previousPenalty = await tx.user.findFirst({
+          where: { id: activeProduct.artisanId },
+          select: { pendingPenaltyInCents: true },
+        });
+
+        //Si existen penalizaciones previas y se aplican penalizaciones, calculamos las penalizaciones pendientes que quedan despues de restarle las que se han aplicado.
+        if (previousPenalty && penaltyApplied > 0) {
+          const penaltyPendingUpdating = Math.max(0, previousPenalty.pendingPenaltyInCents - penaltyApplied); //Math.max(a, b) devuelve el número más grande de los dos. Con eso nos aseguramos de que el resultado nunca sea negativo.
+          await tx.user.update({
+            where: { id: activeProduct.artisanId },
+            data: { pendingPenaltyInCents: penaltyPendingUpdating },
+          });
+        }
+
+        //Devolvemos el pedido que se ha creado
         return orderCreated;
       });
 

@@ -6,10 +6,10 @@ import { db } from "~/server/db"; //Para realizar las consultas a la base de dat
 import { stripe } from "~/lib/stripe"; //Para realizar el pago y comprobar si esta configurada la cuenta de Stripe de la artesana.
 import { checkoutLimiter } from "~/lib/ratelimit"; //Para limitar el número de peticiones.
 import { headers } from "next/headers"; //Función de Next.js que permite leer las cabeceras HTTP de la petición entrante dentro de Server Components y Route Handlers. En el contexto del rate limiting lo usamos para obtener la IP del cliente
-import { calcFees} from "~/lib/fees"; //Se importa la funcionalidad para calcular comisiones y tipos de envío.
+import { calcFees } from "~/lib/fees"; //Se importa la funcionalidad para calcular comisiones y tipos de envío.
 import { getBaseUrl } from "~/lib/stripe-url"; //Helper para construir base URL consistentemente
-import { type ShippingMethod } from "~/lib/fees";  // ✅ Correcto
-
+import { type ShippingMethod } from "~/lib/fees"; // ✅ Correcto
+import { boolean } from "zod";
 
 //El parámetro req es necesario para leer el cuerpo de la petición que envía CHeckoutForm.
 export async function POST(req: Request) {
@@ -96,7 +96,13 @@ export async function POST(req: Request) {
       name: true,
       priceInCents: true,
       type: true,
-      artisan: { select: { stripeAccountId: true } },
+      artisan: {
+        select: {
+          stripeAccountId: true,
+          firstSaleCompleted: true,
+          pendingPenaltyInCents: true,
+        },
+      },
     },
   });
 
@@ -126,9 +132,28 @@ export async function POST(req: Request) {
     );
   }
 
-  //Se calculan las comisiones para esta compra.
-  const fees = calcFees(product.priceInCents, shippingMethod);
-  const applicationFee = fees.shippingCost + fees.insuranceFee + fees.stripeFee;
+  //Se calculan las comisiones para esta compra, teniendo en cuenta el precio del producto y el método de envío.
+  const fees = calcFees(product.priceInCents, shippingMethod); //Retorna fees.total que es el total que va a pagar el comprador: precio de producto y comisiones a cargo del comprador (envío, plataforma y stripe).
+
+  //Si se trata de la primera venta del artesano, no se cobra la insuranceFee
+  if (!product.artisan.firstSaleCompleted) {
+    fees.insuranceFee = 0;
+  }
+
+  //Se obtienen el total de las comisiones de la plataforma que va a retener (envío, seguro de la plataforma y transacción de Stripe).
+  //La artesana va a recibir fees.total - applicationFee
+  let applicationFee = fees.shippingCost + fees.insuranceFee + fees.stripeFee;
+  let penaltyCollected = 0; // valor por defecto si no hay penalización
+
+  //Si la artesana tiene penalización pendiente se suma al total de las comisiones de la plataforma.
+  if (product.artisan.pendingPenaltyInCents > 0) {
+    const baseFee = applicationFee; //Comisiones sin la penalización
+    applicationFee += product.artisan.pendingPenaltyInCents; //Comisiones a cobrar con la penalización
+    if (applicationFee > fees.total) {
+      applicationFee = fees.total; // Las comisiones no pueden superar lo que paga el comprador
+    }
+    penaltyCollected = applicationFee - baseFee; // lo que realmente cobraremos
+  }
 
   //Se crea la sesión de pago en Stripe y se devuelve la URL para redirigir a la compradora.
   const baseUrl = getBaseUrl();
@@ -161,6 +186,8 @@ export async function POST(req: Request) {
       platformFeeInCents: String(applicationFee),
       stripeFeeInCents: String(fees.stripeFee),
       totalInCents: String(fees.total),
+      firstSaleFeeWaived: String(!product.artisan.firstSaleCompleted), //!false = true
+      penaltyApplied: String(penaltyCollected),
     },
   });
 
