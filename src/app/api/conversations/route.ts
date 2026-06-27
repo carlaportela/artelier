@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
+import { conversationLimiter } from "~/lib/ratelimit";
 
 //Función POST de findOrCreate conversación entre compradora y artesana (para evitar duplicados). Si ya existe una conversación entre ambos, se devuelve esa conversación. Si no existe, se crea una nueva y se devuelve.
 export async function POST(req: NextRequest) {
@@ -12,6 +13,15 @@ export async function POST(req: NextRequest) {
   const session = await getServerSession();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  //Se limita el número de peticiones por usuario para evitar spam de conversaciones.
+  const { success } = await conversationLimiter.limit(session.user.id);
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too Many Requests" },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
   }
 
   //Solo las compradoras pueden iniciar conversaciones.

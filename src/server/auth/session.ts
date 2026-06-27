@@ -1,10 +1,13 @@
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 import { db } from "~/server/db";
 
 const SESSION_COOKIE = "authjs.session-token";
 
-export async function getServerSession() {
+// Cacheada por petición (React.cache): múltiples llamadas dentro del mismo
+// render/request comparten una sola consulta a la BD en lugar de repetirla.
+export const getServerSession = cache(async () => {
   const cookieStore = await cookies();
   const isProduction = process.env.NODE_ENV === "production";
   const token =
@@ -23,4 +26,4 @@ export async function getServerSession() {
 
   if (!row || row.expires < new Date()) return null;
   return { user: row.user, sessionToken: token };
-}
+});

@@ -15,6 +15,7 @@ const schema = z.object({
 export async function createPublicacion(data: unknown) {
   const session = await getServerSession();
   if (!session?.user) redirect("/login");
+  if (session.user.role !== "ARTISAN") redirect("/");
 
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
@@ -33,6 +34,7 @@ export async function createPublicacion(data: unknown) {
 export async function updatePublicacion(id: string, data: unknown) {
   const session = await getServerSession();
   if (!session?.user) redirect("/login");
+  if (session.user.role !== "ARTISAN") redirect("/");
 
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
@@ -51,6 +53,7 @@ export async function updatePublicacion(id: string, data: unknown) {
 export async function deletePublicacion(id: string) {
   const session = await getServerSession();
   if (!session?.user) redirect("/login");
+  if (session.user.role !== "ARTISAN") redirect("/");
 
   await db.processUpdate.updateMany({
     where: { id, artisanId: session.user.id },
