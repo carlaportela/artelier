@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const { success } = await conversationLimiter.limit(session.user.id);
   if (!success) {
     return NextResponse.json(
-      { error: "Too Many Requests" },
+      { error: { code: "RATE_LIMITED", message: "Demasiadas peticiones" } },
       { status: 429, headers: { "Retry-After": "60" } },
     );
   }
