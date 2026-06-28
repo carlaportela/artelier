@@ -1,4 +1,7 @@
+//Página de pedidos del comprador
+
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 
@@ -7,6 +10,7 @@ import { db } from "~/server/db";
 
 export const metadata: Metadata = { title: "Mis pedidos — Artelier" };
 
+//Función que renderiza la lista de pedidos.
 export default async function OrdersPage() {
   const session = await getServerSession();
   if (!session?.user) redirect("/login");
@@ -15,7 +19,7 @@ export default async function OrdersPage() {
 
   const orders = await db.order.findMany({
     where: { buyerId: session.user.id, deletedAt: null },
-    include: {
+    include: { //Con include se obtiene el order completo y además los campos seleccionados de las tablas relacionadas con el pedido.
       product: { select: { name: true, imageUrls: true } },
       artisan: { select: { name: true, id: true } },
     },
@@ -53,12 +57,20 @@ export default async function OrdersPage() {
                     year: "numeric",
                   }).format(new Date(order.createdAt))}
                 </p>
-                <p className="text-sm text-[--text]">
-                  {(order.totalInCents / 100).toLocaleString("es-ES", {
-                    style: "currency",
-                    currency: "EUR",
-                  })}
-                </p>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-[--text]">
+                    {(order.totalInCents / 100).toLocaleString("es-ES", {
+                      style: "currency",
+                      currency: "EUR",
+                    })}
+                  </p>
+                  <Link
+                    href={`/orders/${order.id}`}
+                    className="text-xs text-[#3d5a4f] transition-colors hover:text-[#4a6b5e] font-medium"
+                  >
+                    Ver pedido →
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
