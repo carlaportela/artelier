@@ -5,7 +5,7 @@
 import { revalidatePath } from "next/cache"; //Función de Next.js para revalidar la caché de una ruta específica después de crear un producto nuevo.
 import { z } from "zod"; //Zos es un biblioteca de validación de esquemas para Typescript, que se utiliza para definir y validar la estructura de datos del producto que se va a crear.
 
-import { getServerSession } from "~/server/auth/session"; //Función personalizada para obtener la sesión del usuario en el servidor, verificar si el usuario está autenticado y tiene rol de artesano para permitir la creación de productos.
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 
 //Definición del esquema de validación de Zod para los datos del producto que se va a crear. Si los datos no cumplen este esquema, se devuelve error de validación con detalles de los campos que fallaron.
@@ -29,10 +29,7 @@ const createProductSchema = z.object({
 //Función asíncrona que maneja la creación de un nuevo producto. Verifica previamente la autenticación y autorización del usuario, valida los datos de entrada, crea el producto en la base de datos y revalida las rutas relevantes para mostrar el nuevo productos en el catálogo del artesano.
 export async function createProduct(data: unknown) {
 
-  //Verificar sesión y rol de usuario con getServerSession.
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   //Validar los datos de entrada con el esquema de Zod definido anteriormente.
   const parsed = createProductSchema.safeParse(data);

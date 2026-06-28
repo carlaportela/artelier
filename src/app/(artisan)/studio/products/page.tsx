@@ -3,16 +3,13 @@
 // Solo accesible para usuarios con rol de Artesano.
 
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import CatalogoView from "./CatalogoView";
 
 export default async function StudioProductsPage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   // Incluimos todos los estados (ACTIVE, SOLD, EXPIRED) — solo excluimos soft-deleted.
   const products = await db.product.findMany({

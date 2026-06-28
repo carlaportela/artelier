@@ -4,7 +4,7 @@
 
 import { redirect } from "next/navigation";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import EditProductForm from "./EditProductForm";
 
@@ -15,9 +15,7 @@ interface PageProps {
 export default async function EditProductPage({ params }: PageProps) {
   const { id } = await params;
 
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   const product = await db.product.findUnique({
     where: { id, deletedAt: null },

@@ -7,7 +7,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 
 //Estados de pedido que bloquean la edición/eliminación del producto.
@@ -78,9 +78,7 @@ async function loadProduct(productId: string) {
 //Actualiza los datos editables de un producto (nombre, descripción, precio, tipo, fotos, categoría, expiresAt).
 //Bloquea la edición si hay pedidos activos en curso.
 export async function updateProduct(productId: string, data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const product = await loadProduct(productId);
   if (!product) return { error: { code: "NOT_FOUND" as const } };
@@ -121,9 +119,7 @@ export async function updateProduct(productId: string, data: unknown) {
 //Soft-delete del producto: establece deletedAt en la fecha actual.
 //Bloquea la eliminación si hay pedidos activos en curso.
 export async function deleteProduct(productId: string) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const product = await loadProduct(productId);
   if (!product) return { error: { code: "NOT_FOUND" as const } };

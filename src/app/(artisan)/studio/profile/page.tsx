@@ -4,7 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next"; //Para definir el título de la página en el navegador.
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import ProfilePageClient from "./ProfilePageClient"; // Gestiona editor de perfil + botones de cuenta en una sola fila
 
@@ -13,9 +13,7 @@ export const metadata: Metadata = { title: "Mi perfil — Artelier" };
 
 //Función principal de la página de perfil de estudio, que muestra el editor de perfil y las opciones de configuración.
 export default async function StudioProfilePage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   const [user, sealRequests] = await Promise.all([
     db.user.findUnique({

@@ -1,17 +1,14 @@
 //Página de pedidos del estudio — placeholder hasta que se implemente el sistema de pagos (Épica 5).
 
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { Package } from "lucide-react";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 
 export const metadata: Metadata = { title: "Pedidos — Artelier" };
 
 export default async function PedidosPage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   return (
     <main className="bg-[--bg]">
