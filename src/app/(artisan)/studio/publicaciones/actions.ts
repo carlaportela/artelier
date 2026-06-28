@@ -1,11 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { db } from "~/server/db";
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 
 const schema = z.object({
   content: z.string().trim().min(1, "El texto no puede estar vacío").max(500),
@@ -13,8 +12,7 @@ const schema = z.object({
 });
 
 export async function createPublicacion(data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
+  const session = await requireArtisanSession();
 
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
@@ -31,8 +29,7 @@ export async function createPublicacion(data: unknown) {
 }
 
 export async function updatePublicacion(id: string, data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
+  const session = await requireArtisanSession();
 
   const parsed = schema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.flatten().fieldErrors };
@@ -49,8 +46,7 @@ export async function updatePublicacion(id: string, data: unknown) {
 }
 
 export async function deletePublicacion(id: string) {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
+  const session = await requireArtisanSession();
 
   await db.processUpdate.updateMany({
     where: { id, artisanId: session.user.id },

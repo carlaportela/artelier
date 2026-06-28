@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server"; //Importa la librería para construir y enviar la respuesta de la API en formato JSON.
 import { getServerSession } from "~/server/auth/session"; //Importa la librería para validar que el usuario esté autenticado.
 import { cloudinary } from "~/lib/cloudinary"; //Importa el cliente de Cloudinary.
+import { uploadLimiter } from "~/lib/ratelimit"; //Limitador de peticiones para evitar abuso de subidas.
 import { env } from "~/env"; //Importa env.js para validar las variables de entorno.
 
 //Se establecen los tipos de imágenes que se van a subir.
@@ -39,6 +40,15 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { error: { code: "UNAUTHORIZED", message: "Debes iniciar sesión para subir imágenes" } },
       { status: 401 },
+    );
+  }
+
+  //Se limita el número de subidas por usuario para evitar abuso del servicio de imágenes.
+  const { success } = await uploadLimiter.limit(session.user.id);
+  if (!success) {
+    return NextResponse.json(
+      { error: { code: "RATE_LIMITED", message: "Demasiadas peticiones" } },
+      { status: 429, headers: { "Retry-After": "60" } },
     );
   }
 

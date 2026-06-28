@@ -6,6 +6,7 @@ import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
 import { getBaseUrl } from "~/lib/stripe-url";
+import { stripeConnectLimiter } from "~/lib/ratelimit";
 
 
 export async function POST() {
@@ -15,6 +16,15 @@ export async function POST() {
     return NextResponse.json(
       { error: { code: "UNAUTHORIZED", message: "Debes iniciar sesión" } },
       { status: 401 },
+    );
+  }
+
+  //Se limita el número de peticiones por usuario para no agotar la cuota de la API de Stripe.
+  const { success } = await stripeConnectLimiter.limit(session.user.id);
+  if (!success) {
+    return NextResponse.json(
+      { error: { code: "RATE_LIMITED", message: "Demasiadas peticiones" } },
+      { status: 429, headers: { "Retry-After": "300" } },
     );
   }
 

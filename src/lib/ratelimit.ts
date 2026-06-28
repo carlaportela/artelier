@@ -40,3 +40,7 @@ export const authLimiter = createLimiter(10, "60 s");
 export const messageLimiter = createLimiter(30, "60 s");
 export const checkoutLimiter = createLimiter(5, "60 s");
 export const disputeLimiter = createLimiter(5, "1 h");
+//Subida de imágenes, creación de conversaciones y onboarding de Stripe Connect.
+export const uploadLimiter = createLimiter(20, "60 s");
+export const conversationLimiter = createLimiter(10, "60 s");
+export const stripeConnectLimiter = createLimiter(5, "5 m");
