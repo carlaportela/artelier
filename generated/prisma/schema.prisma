@@ -107,29 +107,30 @@ model VerificationToken {
 // ─── Artelier models ──────────────────────────────────────────────────────────
 
 model User {
-  id                 String    @id @default(cuid())
-  name               String?
-  lastName           String?
-  email              String?   @unique
-  emailVerified      DateTime?
-  image              String?
-  bannerImage        String?
-  bio                String?
-  role               Role      @default(BUYER)
-  password           String?
-  locality           String?
-  street             String?
-  postalCode         String?
-  city               String?
-  province           String?
-  stripeAccountId    String?
-  firstSaleCompleted Boolean   @default(false)
-  twoFactorSecret    String?
-  twoFactorEnabled   Boolean   @default(false)
-  suspended          Boolean   @default(false)
-  deletedAt          DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  id                    String    @id @default(cuid())
+  name                  String?
+  lastName              String?
+  email                 String?   @unique
+  emailVerified         DateTime?
+  image                 String?
+  bannerImage           String?
+  bio                   String?
+  role                  Role      @default(BUYER)
+  password              String?
+  locality              String?
+  street                String?
+  postalCode            String?
+  city                  String?
+  province              String?
+  stripeAccountId       String?
+  firstSaleCompleted    Boolean   @default(false)
+  pendingPenaltyInCents Int       @default(0)
+  twoFactorSecret       String?
+  twoFactorEnabled      Boolean   @default(false)
+  suspended             Boolean   @default(false)
+  deletedAt             DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   accounts              Account[]
   sessions              Session[]
@@ -184,6 +185,7 @@ model Order {
   stripePaymentIntentId String         @unique
   stripeEventId         String         @unique
   trackingNumber        String?
+  cancellationReason    String?
   paidOut               Boolean        @default(false)
   deletedAt             DateTime?
   createdAt             DateTime       @default(now())

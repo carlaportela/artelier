@@ -123,7 +123,8 @@ model User {
     city               String?
     province           String?
     stripeAccountId    String?
-    firstSaleCompleted Boolean   @default(false)
+    firstSaleCompleted    Boolean   @default(false)
+    pendingPenaltyInCents Int       @default(0)
     twoFactorSecret    String?
     twoFactorEnabled   Boolean   @default(false)
     suspended          Boolean   @default(false)
@@ -184,6 +185,7 @@ model Order {
     stripePaymentIntentId String         @unique
     stripeEventId         String         @unique
     trackingNumber        String?
+    cancellationReason    String?
     paidOut               Boolean        @default(false)
     deletedAt             DateTime?
     createdAt             DateTime       @default(now())

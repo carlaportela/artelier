@@ -49,10 +49,10 @@ export default function ArtisanBottomNav() {
           active={pathname.startsWith("/studio/products") && !pathname.includes("/new")}
         />
         <NavItem
-          href="/studio/publicaciones"
+          href="/studio/posts"
           icon={Images}
           label="Publicaciones"
-          active={pathname.startsWith("/studio/publicaciones")}
+          active={pathname.startsWith("/studio/posts")}
         />
         <Link
           href="/studio/products/new"
@@ -68,10 +68,10 @@ export default function ArtisanBottomNav() {
           <Plus size={24} />
         </Link>
         <NavItem
-          href="/studio/mensajes"
+          href="/studio/messages"
           icon={MessageCircle}
           label="Mensajes"
-          active={pathname.startsWith("/studio/mensajes")}
+          active={pathname.startsWith("/studio/messages")}
         />
         <NavItem
           href="/studio/profile"

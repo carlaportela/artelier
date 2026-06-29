@@ -1,10 +1,10 @@
 //Página de conversación individual para la artesana en su studio.
 
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { getConversationWithMessages } from "~/server/queries/conversations";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import ConversationReadMarker from "~/components/ConversationReadMarker";
@@ -15,9 +15,7 @@ type Props = { params: Promise<{ conversationId: string }> };
 export default async function MensajeConversacionPage({ params }: Props) {
   const { conversationId } = await params;
 
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   const userId = session.user.id;
 
@@ -37,7 +35,7 @@ export default async function MensajeConversacionPage({ params }: Props) {
 
       {/* Encabezado */}
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/studio/mensajes" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
+        <Link href="/studio/messages" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
           <ChevronLeft size={22} />
         </Link>
         <div className="flex items-center gap-2">

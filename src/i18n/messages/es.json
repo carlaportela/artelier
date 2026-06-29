@@ -84,7 +84,15 @@
       "CANCELLED": "Cancelado",
       "REFUNDED": "Reembolsado",
       "IN_DISPUTE": "En disputa"
-    }
+    },
+    "orderDetail": "Detalle del pedido",
+    "cancelOrder": "Cancelar pedido",
+    "cancelOrderConfirm": "Confirmar cancelación",
+    "cancelOrderReason": "Motivo de la cancelación",
+    "cancelOrderReasonPlaceholder": "Explica el motivo de tu cancelación (mínimo 10 caracteres)",
+    "orderCancelled": "Pedido cancelado correctamente. El reembolso llegará en 5-10 días hábiles.",
+    "cancellationWindowClosed": "La ventana de cancelación de 24h ha expirado",
+    "trackingNumber": "Número de seguimiento"
   },
   "settings": {
     "title": "Configuración",

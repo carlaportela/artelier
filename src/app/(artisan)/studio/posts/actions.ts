@@ -25,7 +25,7 @@ export async function createPublicacion(data: unknown) {
     },
   });
 
-  revalidatePath("/studio/publicaciones");
+  revalidatePath("/studio/posts");
 }
 
 export async function updatePublicacion(id: string, data: unknown) {
@@ -42,7 +42,7 @@ export async function updatePublicacion(id: string, data: unknown) {
     },
   });
 
-  revalidatePath("/studio/publicaciones");
+  revalidatePath("/studio/posts");
 }
 
 export async function deletePublicacion(id: string) {
@@ -53,5 +53,5 @@ export async function deletePublicacion(id: string) {
     data: { deletedAt: new Date() },
   });
 
-  revalidatePath("/studio/publicaciones");
+  revalidatePath("/studio/posts");
 }

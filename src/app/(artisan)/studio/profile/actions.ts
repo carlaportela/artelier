@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 
 const profileSchema = z.object({
@@ -21,9 +21,7 @@ const processUpdateSchema = z.object({
 
 // Guarda solo los campos de texto del perfil (nombre, bio, localidad) sin tocar las imágenes
 export async function saveProfileInfo(data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const schema = z.object({
     name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -55,9 +53,7 @@ export async function saveProfileInfo(data: unknown) {
 }
 
 export async function saveProfile(data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const parsed = profileSchema.safeParse(data);
   if (!parsed.success) {
@@ -88,9 +84,7 @@ export async function saveProfile(data: unknown) {
 }
 
 export async function createProcessUpdate(data: unknown) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const parsed = processUpdateSchema.safeParse(data);
   if (!parsed.success) {

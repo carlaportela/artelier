@@ -1,11 +1,10 @@
 //Página de mensajes del estudio de la artesana — lista de conversaciones con compradoras.
 
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { timeAgo } from "~/lib/date";
@@ -13,9 +12,7 @@ import { timeAgo } from "~/lib/date";
 export const metadata: Metadata = { title: "Mensajes — Artelier" };
 
 export default async function MensajesPage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   const userId = session.user.id;
 
@@ -69,7 +66,7 @@ export default async function MensajesPage() {
             {convList.map((conv) => (
               <li key={conv.id}>
                 <Link
-                  href={`/studio/mensajes/${conv.id}`}
+                  href={`/studio/messages/${conv.id}`}
                   className="-mx-4 flex items-center gap-3 rounded-xl px-4 py-4 transition-colors hover:bg-black/5"
                 >
                   <PaletteAvatar

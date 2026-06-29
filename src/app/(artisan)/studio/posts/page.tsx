@@ -1,16 +1,13 @@
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import PublicacionesView from "./PublicacionesView";
 
 export const metadata: Metadata = { title: "Publicaciones — Artelier" };
 
 export default async function PublicacionesPage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  const session = await requireArtisanSession();
 
   const posts = await db.processUpdate.findMany({
     where: { artisanId: session.user.id, deletedAt: null },

@@ -15,13 +15,32 @@ if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL) {
 export const resend = new Resend(env.RESEND_API_KEY ?? "re_placeholder_dev");
 export const FROM_EMAIL = env.RESEND_FROM_EMAIL ?? "noreply@artelier.es";
 
+//Función de envío correo al comprador de confirmación de pedido.
 export async function sendOrderConfirmation(order: Order) {
   // TODO H6.1: Enviar email de confirmación de orden al comprador
   console.log("TODO: sendOrderConfirmation", order.id);
 }
 
+//Función de envío de correo al artesano de nuevo pedido.
 export async function sendNewSale(order: Order) {
-  // TODO H6.1: Enviar email de nueva venta al artesano
+  // TODO H6.1: Enviar email de nueva venta al artesano.
   console.log("TODO: sendNewSale", order.id);
 }
 
+//Función de envío de correo de cancelación de pedido.
+export async function sendCancellationEmail(order: Order) {
+  // TODO H6.1: Enviar email de cancelación de pedido.
+  console.log("TODO: sendCancellationEmail", order.id);
+}
+
+//Función de envío de correo de confirmación de envío de pedido.
+export async function sendShipmentConfirmedEmail(order: Order) {
+  // TODO H6.1: Enviar email de confirmación de envío de pedido.
+  console.log("TODO: sendShipmentConfirmedEmail", order.id);
+}
+
+//Función de envío de correo de cancelación de pedido por el sistema.
+export async function sendOrderCancelledBySystemEmail(order: Order) {
+  // TODO H6.1: Enviar email de cancelación de pedido por el sistema.
+  console.log("TODO: sendOrderCancelledBySystemEmail", order.id);
+}

@@ -1,17 +1,14 @@
 //Página de estadísticas del estudio del artesano. 
 
-import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { TrendingUp } from "lucide-react";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 
 export const metadata: Metadata = { title: "Estadísticas — Artelier" };
 
 export default async function EstadisticasPage() {
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
-  if (session.user.role !== "ARTISAN") redirect("/feed");
+  await requireArtisanSession();
 
   return (
     <main className="bg-[--bg]">

@@ -5871,8 +5871,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    pendingPenaltyInCents: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    pendingPenaltyInCents: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -5893,6 +5903,7 @@ export namespace Prisma {
     province: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean | null
+    pendingPenaltyInCents: number | null
     twoFactorSecret: string | null
     twoFactorEnabled: boolean | null
     suspended: boolean | null
@@ -5919,6 +5930,7 @@ export namespace Prisma {
     province: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean | null
+    pendingPenaltyInCents: number | null
     twoFactorSecret: string | null
     twoFactorEnabled: boolean | null
     suspended: boolean | null
@@ -5945,6 +5957,7 @@ export namespace Prisma {
     province: number
     stripeAccountId: number
     firstSaleCompleted: number
+    pendingPenaltyInCents: number
     twoFactorSecret: number
     twoFactorEnabled: number
     suspended: number
@@ -5954,6 +5967,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    pendingPenaltyInCents?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    pendingPenaltyInCents?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -5973,6 +5994,7 @@ export namespace Prisma {
     province?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
+    pendingPenaltyInCents?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
     suspended?: true
@@ -5999,6 +6021,7 @@ export namespace Prisma {
     province?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
+    pendingPenaltyInCents?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
     suspended?: true
@@ -6025,6 +6048,7 @@ export namespace Prisma {
     province?: true
     stripeAccountId?: true
     firstSaleCompleted?: true
+    pendingPenaltyInCents?: true
     twoFactorSecret?: true
     twoFactorEnabled?: true
     suspended?: true
@@ -6072,6 +6096,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -6102,6 +6138,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -6124,6 +6162,7 @@ export namespace Prisma {
     province: string | null
     stripeAccountId: string | null
     firstSaleCompleted: boolean
+    pendingPenaltyInCents: number
     twoFactorSecret: string | null
     twoFactorEnabled: boolean
     suspended: boolean
@@ -6131,6 +6170,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -6167,6 +6208,7 @@ export namespace Prisma {
     province?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -6209,6 +6251,7 @@ export namespace Prisma {
     province?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -6235,6 +6278,7 @@ export namespace Prisma {
     province?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -6261,6 +6305,7 @@ export namespace Prisma {
     province?: boolean
     stripeAccountId?: boolean
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: boolean
     twoFactorSecret?: boolean
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -6269,7 +6314,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "email" | "emailVerified" | "image" | "bannerImage" | "bio" | "role" | "password" | "locality" | "street" | "postalCode" | "city" | "province" | "stripeAccountId" | "firstSaleCompleted" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "lastName" | "email" | "emailVerified" | "image" | "bannerImage" | "bio" | "role" | "password" | "locality" | "street" | "postalCode" | "city" | "province" | "stripeAccountId" | "firstSaleCompleted" | "pendingPenaltyInCents" | "twoFactorSecret" | "twoFactorEnabled" | "suspended" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -6328,6 +6373,7 @@ export namespace Prisma {
       province: string | null
       stripeAccountId: string | null
       firstSaleCompleted: boolean
+      pendingPenaltyInCents: number
       twoFactorSecret: string | null
       twoFactorEnabled: boolean
       suspended: boolean
@@ -6789,6 +6835,7 @@ export namespace Prisma {
     readonly province: FieldRef<"User", 'String'>
     readonly stripeAccountId: FieldRef<"User", 'String'>
     readonly firstSaleCompleted: FieldRef<"User", 'Boolean'>
+    readonly pendingPenaltyInCents: FieldRef<"User", 'Int'>
     readonly twoFactorSecret: FieldRef<"User", 'String'>
     readonly twoFactorEnabled: FieldRef<"User", 'Boolean'>
     readonly suspended: FieldRef<"User", 'Boolean'>
@@ -8892,6 +8939,7 @@ export namespace Prisma {
     stripePaymentIntentId: string | null
     stripeEventId: string | null
     trackingNumber: string | null
+    cancellationReason: string | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8912,6 +8960,7 @@ export namespace Prisma {
     stripePaymentIntentId: string | null
     stripeEventId: string | null
     trackingNumber: string | null
+    cancellationReason: string | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8932,6 +8981,7 @@ export namespace Prisma {
     stripePaymentIntentId: number
     stripeEventId: number
     trackingNumber: number
+    cancellationReason: number
     paidOut: number
     deletedAt: number
     createdAt: number
@@ -8968,6 +9018,7 @@ export namespace Prisma {
     stripePaymentIntentId?: true
     stripeEventId?: true
     trackingNumber?: true
+    cancellationReason?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -8988,6 +9039,7 @@ export namespace Prisma {
     stripePaymentIntentId?: true
     stripeEventId?: true
     trackingNumber?: true
+    cancellationReason?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9008,6 +9060,7 @@ export namespace Prisma {
     stripePaymentIntentId?: true
     stripeEventId?: true
     trackingNumber?: true
+    cancellationReason?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9115,6 +9168,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber: string | null
+    cancellationReason: string | null
     paidOut: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -9154,6 +9208,7 @@ export namespace Prisma {
     stripePaymentIntentId?: boolean
     stripeEventId?: boolean
     trackingNumber?: boolean
+    cancellationReason?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9179,6 +9234,7 @@ export namespace Prisma {
     stripePaymentIntentId?: boolean
     stripeEventId?: boolean
     trackingNumber?: boolean
+    cancellationReason?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9202,6 +9258,7 @@ export namespace Prisma {
     stripePaymentIntentId?: boolean
     stripeEventId?: boolean
     trackingNumber?: boolean
+    cancellationReason?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9225,13 +9282,14 @@ export namespace Prisma {
     stripePaymentIntentId?: boolean
     stripeEventId?: boolean
     trackingNumber?: boolean
+    cancellationReason?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "cancellationReason" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     buyer?: boolean | UserDefaultArgs<ExtArgs>
     artisan?: boolean | UserDefaultArgs<ExtArgs>
@@ -9272,6 +9330,7 @@ export namespace Prisma {
       stripePaymentIntentId: string
       stripeEventId: string
       trackingNumber: string | null
+      cancellationReason: string | null
       paidOut: boolean
       deletedAt: Date | null
       createdAt: Date
@@ -9716,6 +9775,7 @@ export namespace Prisma {
     readonly stripePaymentIntentId: FieldRef<"Order", 'String'>
     readonly stripeEventId: FieldRef<"Order", 'String'>
     readonly trackingNumber: FieldRef<"Order", 'String'>
+    readonly cancellationReason: FieldRef<"Order", 'String'>
     readonly paidOut: FieldRef<"Order", 'Boolean'>
     readonly deletedAt: FieldRef<"Order", 'DateTime'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
@@ -21136,6 +21196,7 @@ export namespace Prisma {
     province: 'province',
     stripeAccountId: 'stripeAccountId',
     firstSaleCompleted: 'firstSaleCompleted',
+    pendingPenaltyInCents: 'pendingPenaltyInCents',
     twoFactorSecret: 'twoFactorSecret',
     twoFactorEnabled: 'twoFactorEnabled',
     suspended: 'suspended',
@@ -21181,6 +21242,7 @@ export namespace Prisma {
     stripePaymentIntentId: 'stripePaymentIntentId',
     stripeEventId: 'stripeEventId',
     trackingNumber: 'trackingNumber',
+    cancellationReason: 'cancellationReason',
     paidOut: 'paidOut',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -21765,6 +21827,7 @@ export namespace Prisma {
     province?: StringNullableFilter<"User"> | string | null
     stripeAccountId?: StringNullableFilter<"User"> | string | null
     firstSaleCompleted?: BoolFilter<"User"> | boolean
+    pendingPenaltyInCents?: IntFilter<"User"> | number
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
     twoFactorEnabled?: BoolFilter<"User"> | boolean
     suspended?: BoolFilter<"User"> | boolean
@@ -21806,6 +21869,7 @@ export namespace Prisma {
     province?: SortOrderInput | SortOrder
     stripeAccountId?: SortOrderInput | SortOrder
     firstSaleCompleted?: SortOrder
+    pendingPenaltyInCents?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
     twoFactorEnabled?: SortOrder
     suspended?: SortOrder
@@ -21850,6 +21914,7 @@ export namespace Prisma {
     province?: StringNullableFilter<"User"> | string | null
     stripeAccountId?: StringNullableFilter<"User"> | string | null
     firstSaleCompleted?: BoolFilter<"User"> | boolean
+    pendingPenaltyInCents?: IntFilter<"User"> | number
     twoFactorSecret?: StringNullableFilter<"User"> | string | null
     twoFactorEnabled?: BoolFilter<"User"> | boolean
     suspended?: BoolFilter<"User"> | boolean
@@ -21891,6 +21956,7 @@ export namespace Prisma {
     province?: SortOrderInput | SortOrder
     stripeAccountId?: SortOrderInput | SortOrder
     firstSaleCompleted?: SortOrder
+    pendingPenaltyInCents?: SortOrder
     twoFactorSecret?: SortOrderInput | SortOrder
     twoFactorEnabled?: SortOrder
     suspended?: SortOrder
@@ -21898,8 +21964,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -21923,6 +21991,7 @@ export namespace Prisma {
     province?: StringNullableWithAggregatesFilter<"User"> | string | null
     stripeAccountId?: StringNullableWithAggregatesFilter<"User"> | string | null
     firstSaleCompleted?: BoolWithAggregatesFilter<"User"> | boolean
+    pendingPenaltyInCents?: IntWithAggregatesFilter<"User"> | number
     twoFactorSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     twoFactorEnabled?: BoolWithAggregatesFilter<"User"> | boolean
     suspended?: BoolWithAggregatesFilter<"User"> | boolean
@@ -22059,6 +22128,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFilter<"Order"> | string
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -22083,6 +22153,7 @@ export namespace Prisma {
     stripePaymentIntentId?: SortOrder
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
+    cancellationReason?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22110,6 +22181,7 @@ export namespace Prisma {
     stripeFeeInCents?: IntFilter<"Order"> | number
     totalInCents?: IntFilter<"Order"> | number
     trackingNumber?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -22134,6 +22206,7 @@ export namespace Prisma {
     stripePaymentIntentId?: SortOrder
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
+    cancellationReason?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22162,6 +22235,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringWithAggregatesFilter<"Order"> | string
     stripeEventId?: StringWithAggregatesFilter<"Order"> | string
     trackingNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    cancellationReason?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paidOut?: BoolWithAggregatesFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -23049,6 +23123,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -23090,6 +23165,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -23131,6 +23207,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -23172,6 +23249,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -23213,6 +23291,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -23239,6 +23318,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -23265,6 +23345,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -23414,6 +23495,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -23438,6 +23520,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -23456,6 +23539,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23480,6 +23564,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23501,6 +23586,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -23518,6 +23604,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23538,6 +23625,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24470,6 +24558,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type AccountListRelationFilter = {
     every?: AccountWhereInput
     some?: AccountWhereInput
@@ -24598,12 +24697,17 @@ export namespace Prisma {
     province?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
+    pendingPenaltyInCents?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
     suspended?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    pendingPenaltyInCents?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -24624,6 +24728,7 @@ export namespace Prisma {
     province?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
+    pendingPenaltyInCents?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
     suspended?: SortOrder
@@ -24650,12 +24755,17 @@ export namespace Prisma {
     province?: SortOrder
     stripeAccountId?: SortOrder
     firstSaleCompleted?: SortOrder
+    pendingPenaltyInCents?: SortOrder
     twoFactorSecret?: SortOrder
     twoFactorEnabled?: SortOrder
     suspended?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    pendingPenaltyInCents?: SortOrder
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -24690,7 +24800,7 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -24698,7 +24808,12 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumProductTypeFilter<$PrismaModel = never> = {
@@ -24790,22 +24905,6 @@ export namespace Prisma {
     priceInCents?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
   export type EnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
@@ -24859,6 +24958,7 @@ export namespace Prisma {
     stripePaymentIntentId?: SortOrder
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
+    cancellationReason?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -24886,6 +24986,7 @@ export namespace Prisma {
     stripePaymentIntentId?: SortOrder
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
+    cancellationReason?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -24906,6 +25007,7 @@ export namespace Prisma {
     stripePaymentIntentId?: SortOrder
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
+    cancellationReason?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -25638,6 +25740,14 @@ export namespace Prisma {
     set?: boolean
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type AccountUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -26108,14 +26218,6 @@ export namespace Prisma {
     connectOrCreate?: SealRequestCreateOrConnectWithoutProductInput | SealRequestCreateOrConnectWithoutProductInput[]
     createMany?: SealRequestCreateManyProductInputEnvelope
     connect?: SealRequestWhereUniqueInput | SealRequestWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type EnumProductTypeFieldUpdateOperationsInput = {
@@ -26870,20 +26972,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedEnumProductTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
-  }
-
-  export type NestedEnumProductStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.ProductStatus[] | ListEnumProductStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ProductStatus[] | ListEnumProductStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -26909,6 +26997,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumProductTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductType | EnumProductTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductType[] | ListEnumProductTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductTypeFilter<$PrismaModel> | $Enums.ProductType
+  }
+
+  export type NestedEnumProductStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProductStatus | EnumProductStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProductStatus[] | ListEnumProductStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProductStatus[] | ListEnumProductStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
   }
 
   export type NestedEnumProductTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -27057,6 +27159,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -27097,6 +27200,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -27153,6 +27257,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -27193,6 +27298,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -27233,6 +27339,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -27273,6 +27380,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -27329,6 +27437,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -27369,6 +27478,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -27512,6 +27622,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -27534,6 +27645,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -27562,6 +27674,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -27584,6 +27697,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -28015,6 +28129,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFilter<"Order"> | string
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
+    cancellationReason?: StringNullableFilter<"Order"> | string | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -28308,6 +28423,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28348,6 +28464,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28386,6 +28503,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -28408,6 +28526,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -28510,6 +28629,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -28550,6 +28670,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -28648,6 +28769,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28688,6 +28810,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28733,6 +28856,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28773,6 +28897,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -28902,6 +29027,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -28942,6 +29068,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -28993,6 +29120,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29033,6 +29161,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29138,6 +29267,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29178,6 +29308,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29223,6 +29354,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29263,6 +29395,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29319,6 +29452,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29359,6 +29493,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29410,6 +29545,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29450,6 +29586,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29490,6 +29627,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29530,6 +29668,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29575,6 +29714,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29615,6 +29755,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29701,6 +29842,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29741,6 +29883,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29792,6 +29935,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29832,6 +29976,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -29911,6 +30056,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -29951,6 +30097,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30036,6 +30183,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30076,6 +30224,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30109,6 +30258,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30132,6 +30282,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30161,6 +30312,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30201,6 +30353,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30250,6 +30403,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30273,6 +30427,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30308,6 +30463,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30348,6 +30504,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30624,6 +30781,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30664,6 +30822,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30788,6 +30947,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30828,6 +30988,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -30948,6 +31109,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -30988,6 +31150,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -31033,6 +31196,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -31073,6 +31237,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -31129,6 +31294,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31169,6 +31335,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31220,6 +31387,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31260,6 +31428,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31300,6 +31469,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -31340,6 +31510,7 @@ export namespace Prisma {
     province?: string | null
     stripeAccountId?: string | null
     firstSaleCompleted?: boolean
+    pendingPenaltyInCents?: number
     twoFactorSecret?: string | null
     twoFactorEnabled?: boolean
     suspended?: boolean
@@ -31396,6 +31567,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31436,6 +31608,7 @@ export namespace Prisma {
     province?: NullableStringFieldUpdateOperationsInput | string | null
     stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
     firstSaleCompleted?: BoolFieldUpdateOperationsInput | boolean
+    pendingPenaltyInCents?: IntFieldUpdateOperationsInput | number
     twoFactorSecret?: NullableStringFieldUpdateOperationsInput | string | null
     twoFactorEnabled?: BoolFieldUpdateOperationsInput | boolean
     suspended?: BoolFieldUpdateOperationsInput | boolean
@@ -31508,6 +31681,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -31527,6 +31701,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -31751,6 +31926,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31773,6 +31949,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31793,6 +31970,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31810,6 +31988,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31832,6 +32011,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31852,6 +32032,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32145,6 +32326,7 @@ export namespace Prisma {
     stripePaymentIntentId: string
     stripeEventId: string
     trackingNumber?: string | null
+    cancellationReason?: string | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32180,6 +32362,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32202,6 +32385,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32222,6 +32406,7 @@ export namespace Prisma {
     stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

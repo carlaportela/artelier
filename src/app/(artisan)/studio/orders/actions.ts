@@ -5,15 +5,13 @@
 
 import { revalidatePath } from "next/cache";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 
 //Acepta un encargo personalizado: cambia status a ACCEPTED y crea/reutiliza una Conversation.
 //La transacción garantiza que ambas operaciones son atómicas.
 export async function acceptCustomOrder(requestId: string) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const request = await db.customOrderRequest.findFirst({
     where: { id: requestId, deletedAt: null },
@@ -44,16 +42,14 @@ export async function acceptCustomOrder(requestId: string) {
     return { error: { code: "DB_ERROR" as const } };
   }
 
-  revalidatePath("/studio/pedidos");
+  revalidatePath("/studio/orders");
   return { success: true as const };
 }
 
 //Rechaza un encargo personalizado: cambia status a REJECTED.
 //La solicitud permanece en BD como histórico pero deja de aparecer en la lista de pendientes.
 export async function rejectCustomOrder(requestId: string) {
-  const session = await getServerSession();
-  if (!session?.user) return { error: { code: "UNAUTHORIZED" as const } };
-  if (session.user.role !== "ARTISAN") return { error: { code: "FORBIDDEN" as const } };
+  const session = await requireArtisanSession();
 
   const request = await db.customOrderRequest.findFirst({
     where: { id: requestId, deletedAt: null },
@@ -72,6 +68,6 @@ export async function rejectCustomOrder(requestId: string) {
     return { error: { code: "DB_ERROR" as const } };
   }
 
-  revalidatePath("/studio/pedidos");
+  revalidatePath("/studio/orders");
   return { success: true as const };
 }
