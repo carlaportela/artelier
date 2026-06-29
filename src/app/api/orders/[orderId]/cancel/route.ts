@@ -47,6 +47,7 @@ export async function POST(
   //Buscamos el pedido en la base de datos verificando que comprador del pedido sea el usuario que autenticado de la sesión.
   const order = await db.order.findFirst({
     where: { id: orderId, buyerId: session.user.id, deletedAt: null },
+    include: { product: { select: { type: true, expiresAt: true } } },
   });
 
   //Si no existe el pedido, mandamos el correspondiente mensaje de error al servidor.
@@ -114,16 +115,36 @@ export async function POST(
   }
   await stripe.refunds.create({ payment_intent: order.stripePaymentIntentId });
 
+  //Se comprueba si el producto es perecedero y si su fecha límite ha expirado para poder o no activar de nuevo el producto.
+  const canReactivate =
+    order.product.type !== "PERISHABLE" ||
+    !order.product.expiresAt ||
+    order.product.expiresAt > new Date();
+
   //Cancelamos el pedido y reactivamos el producto. Ambas van en una transacción para que sean atómicas (todo o nada).
   await db.$transaction([
     db.order.update({
       where: { id: orderId },
       data: { status: "CANCELLED", cancellationReason: reason },
     }),
-    db.product.update({
-      where: { id: order.productId },
-      data: { status: "ACTIVE" },
-    }),
+
+    /*Se usa operador spread (...) combinado con un ternario para añadir elementos a un array de forma condicional.
+    [
+      operacion1,           // siempre se incluye
+      ...(condicion
+        ? [operacion2]      // se incluye solo si condicion es true
+        : []),              // si es false, spread de array vacío = nada
+    ]
+    */
+   
+    ...(canReactivate //Si el producto puede activarse se realiza un update en el base de datos
+      ? [
+          db.product.update({
+            where: { id: order.productId },
+            data: { status: "ACTIVE" },
+          }),
+        ]
+      : []),
   ]);
 
   //Se envía el correo de cancelación de pedido con control de errores

@@ -41,12 +41,12 @@ export async function POST(
       { status: 404 },
     );
   }
-  if (order.status !== "CONFIRMED") {
+  if (!["CONFIRMED", "IN_PREPARATION", "READY"].includes(order.status)){
     return NextResponse.json(
       {
         error: {
           code: "ORDER_NOT_CONFIRMABLE",
-          message: "El pedido aún no ha sido confirmado o ya fue procesado",
+          message: "El pedido aún no ha sido confirmado, no se ha preparado o no está listo",
         },
       },
       { status: 409 },

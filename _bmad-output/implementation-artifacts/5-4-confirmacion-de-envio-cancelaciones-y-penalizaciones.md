@@ -34,7 +34,7 @@ para que el proceso postventa sea transparente y proteja a ambas partes.
 - **Y** la compradora ve el estado actualizado en su historial de pedidos
 
 **AC4 — Cancelación automática por incumplimiento de plazo**
-- **Dado** que la artesana no confirma el envío en el plazo de 72 horas desde la confirmación del pedido
+- **Dado** que la artesana no confirma el envío en el plazo de 120 horas desde la confirmación del pedido
 - **Cuando** el Cron Job diario `POST /api/cron/cancel-overdue-orders` detecta el vencimiento
 - **Entonces** el `Order.status` pasa a `CANCELLED`
 - **Y** el importe íntegro se devuelve a la compradora vía Stripe Refund
