@@ -56,7 +56,11 @@ export async function GET(req: Request) {
       await db.$transaction([
         db.order.update({
           where: { id: order.id },
-          data: { status: "CANCELLED" },
+          data: {
+            status: "CANCELLED",
+            cancellationReason:
+              "El sistema ha cancelado tu pedido porque no se ha confirmado el envío en el plazo establecido. Se ha iniciado el reembolso.",
+          },
         }),
         db.product.update({
           where: { id: order.productId },
