@@ -66,7 +66,7 @@ export default async function MensajesPage() {
             {convList.map((conv) => (
               <li key={conv.id}>
                 <Link
-                  href={`/studio/mensajes/${conv.id}`}
+                  href={`/studio/messages/${conv.id}`}
                   className="-mx-4 flex items-center gap-3 rounded-xl px-4 py-4 transition-colors hover:bg-black/5"
                 >
                   <PaletteAvatar

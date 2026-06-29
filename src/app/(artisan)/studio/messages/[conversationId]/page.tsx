@@ -35,7 +35,7 @@ export default async function MensajeConversacionPage({ params }: Props) {
 
       {/* Encabezado */}
       <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/studio/mensajes" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
+        <Link href="/studio/messages" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
           <ChevronLeft size={22} />
         </Link>
         <div className="flex items-center gap-2">

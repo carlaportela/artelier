@@ -66,11 +66,11 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
         <div className="absolute right-0 top-full z-50 mt-4 w-52 rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
           {role === "ARTISAN" ? (
             <>
-              <Link href="/studio/estadisticas" onClick={close} className={linkClass}>
+              <Link href="/studio/statistics" onClick={close} className={linkClass}>
                 <TrendingUp size={14} className={iconClass} />
                 Estadísticas
               </Link>
-              <Link href="/studio/pedidos" onClick={close} className={linkClass}>
+              <Link href="/studio/orders" onClick={close} className={linkClass}>
                 <Package size={14} className={iconClass} />
                 Pedidos
               </Link>

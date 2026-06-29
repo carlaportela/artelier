@@ -42,7 +42,7 @@ export async function acceptCustomOrder(requestId: string) {
     return { error: { code: "DB_ERROR" as const } };
   }
 
-  revalidatePath("/studio/pedidos");
+  revalidatePath("/studio/orders");
   return { success: true as const };
 }
 
@@ -68,6 +68,6 @@ export async function rejectCustomOrder(requestId: string) {
     return { error: { code: "DB_ERROR" as const } };
   }
 
-  revalidatePath("/studio/pedidos");
+  revalidatePath("/studio/orders");
   return { success: true as const };
 }
