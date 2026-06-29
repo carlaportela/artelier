@@ -103,7 +103,7 @@ export async function POST(req: Request) {
         !metadata.totalInCents ||
         !metadata.shippingMethod ||
         !metadata.firstSaleFeeWaived ||
-        !metadata.penaltyApplied
+        metadata.penaltyApplied === undefined
       ) {
         return NextResponse.json(
           { error: "Metadata missing required fields" },
@@ -128,7 +128,8 @@ export async function POST(req: Request) {
         isNaN(priceInCents) ||
         isNaN(platformFeeInCents) ||
         isNaN(stripeFeeInCents) ||
-        isNaN(totalInCents)
+        isNaN(totalInCents) ||
+        isNaN(penaltyApplied)
       ) {
         return NextResponse.json(
           { error: "Invalid numeric values in metadata" },

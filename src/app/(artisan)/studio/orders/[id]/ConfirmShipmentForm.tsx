@@ -19,6 +19,9 @@ export default function ConfirmShipmentForm({
 
   const router = useRouter();
 
+  const requiresTracking = shippingMethod !== "PICKUP";
+  const canSubmit = !loading && (!requiresTracking || trackingNumber.trim().length > 0);
+
   //Función para gestionar la confirmación de envío
   async function handleSubmit() {
     setLoading(true); //Se pone cargando en true
@@ -47,20 +50,27 @@ export default function ConfirmShipmentForm({
   return (
     <div className="space-y-3">
       {shippingMethod !== "PICKUP" && ( //Si el método no es recogida en persona, se muestra el input para introducir el número de seguimiento.
-        <input
-          type="text"
-          value={trackingNumber}
-          onChange={(e) => setTrackingNumber(e.target.value)}
-          placeholder="Número de seguimiento"
-          className="w-full rounded-xl border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:ring-2 focus:ring-[#3d5a4f]/30 focus:outline-none"
-        />
+        <>
+          <input
+            type="text"
+            value={trackingNumber}
+            onChange={(e) => setTrackingNumber(e.target.value)}
+            placeholder="Número de seguimiento"
+            className="w-full rounded-xl border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:ring-2 focus:ring-[#3d5a4f]/30 focus:outline-none"
+          />
+          {trackingNumber.trim().length === 0 && (
+            <p className="text-xs text-[--text-muted]">
+              Introduce un número de seguimiento para confirmar el envío.
+            </p>
+          )}
+        </>
       )}
       <button
         onClick={handleSubmit}
-        disabled={loading}
+        disabled={!canSubmit}
         className="w-full rounded-full bg-[#3d5a4f] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
       >
-        {loading //Si es recogida en persona, en el botón de confirmar el el envío se muestra el texto de "Marcar listo para recogida", sino "Confirmar envío"
+        {loading //Si es recogida en persona, en el botón de confirmar el envío se muestra el texto de "Marcar listo para recogida", sino "Confirmar envío"
           ? "Confirmando..."
           : shippingMethod === "PICKUP"
             ? "Marcar como listo para recogida"
