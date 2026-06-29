@@ -8,7 +8,7 @@ import { requireArtisanSession } from "~/server/auth/guards";
 export const metadata: Metadata = { title: "Estadísticas — Artelier" };
 
 export default async function EstadisticasPage() {
-  const session = await requireArtisanSession();
+  await requireArtisanSession();
 
   return (
     <main className="bg-[--bg]">

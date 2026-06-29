@@ -1,15 +1,17 @@
-//Página que muestra el detalle de un pedido concreto al comprador.
+//Página de detalle de pedido del estudio del artesano.
 
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, Package, Truck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
-import { getServerSession } from "~/server/auth/session";
+import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
-import { CANCELLATION_WINDOW_MS, SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
-import CancelOrderDialog from "./CancelOrderDialog";
+import PaletteAvatar from "~/components/PaletteAvatar";
+import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
+import ConfirmShipmentForm from "./ConfirmShipmentForm";
+
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
 
@@ -21,27 +23,31 @@ interface Props {
 export default async function OrderDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const session = await getServerSession();
-  if (!session?.user) redirect("/login");
+  const session = await requireArtisanSession();
 
   const t = await getTranslations("account");
 
   const order = await db.order.findFirst({
-    where: { id, buyerId: session.user.id, deletedAt: null },
+    where: { id, artisanId: session.user.id, status: { not: "CANCELLED" } },
     include: {
       product: {
         select: { name: true, imageUrls: true, type: true, expiresAt: true },
       },
-      artisan: { select: { name: true, id: true } },
+      buyer: {
+        select: {
+          name: true,
+          lastName: true,
+          image: true,
+          street: true,
+          postalCode: true,
+          city: true,
+          province: true,
+        },
+      },
     },
   });
 
   if (!order) notFound();
-
-  //Variable en la que se comprueba si no ha expirado el período ventana para cancelación del pedido por parte de la compradora.
-  const canCancel =
-    order.status === "CONFIRMED" &&
-    Date.now() - order.createdAt.getTime() < CANCELLATION_WINDOW_MS;
 
   const formattedDate = new Intl.DateTimeFormat("es-ES", {
     day: "numeric",
@@ -62,7 +68,7 @@ export default async function OrderDetailPage({ params }: Props) {
       <div className="mx-auto max-w-lg space-y-6">
         {/* Volver */}
         <Link
-          href="/orders"
+          href="/studio/orders"
           className="inline-flex items-center gap-1 text-sm text-[--text-muted] transition-colors hover:text-[--text]"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -94,14 +100,6 @@ export default async function OrderDetailPage({ params }: Props) {
             <p className="font-display font-bold text-[--text]">
               {order.product.name}
             </p>
-            <p className="text-sm text-[--text-muted]">
-              <Link
-                href={`/artisan/${order.artisan.id}`}
-                className="transition-colors hover:text-[--text]"
-              >
-                {order.artisan.name}
-              </Link>
-            </p>
             <p className="mt-1 text-xs text-[--text-muted]">{formattedDate}</p>
           </div>
           <span className="ml-auto shrink-0 rounded-full bg-[--surface-2] px-2.5 py-1 text-xs text-[--text-muted]">
@@ -126,6 +124,29 @@ export default async function OrderDetailPage({ params }: Props) {
             </div>
           </div>
         )}
+        {/* Comprador */}
+        <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
+          <p className="mb-3 text-xs font-medium text-[--text-muted]">
+            Datos del comprador
+          </p>
+          <div className="flex items-center gap-3">
+            <PaletteAvatar
+              src={order.buyer.image}
+              name={order.buyer.name}
+              className="h-9 w-9 shrink-0"
+              fillColor="#c4956a"
+            />
+            <div>
+              <p className="text-sm font-medium text-[--text]">
+                {order.buyer.name} {order.buyer.lastName}
+              </p>
+              <p className="text-xs text-[--text-muted]">
+                {order.buyer.street}, {order.buyer.postalCode}{" "}
+                {order.buyer.city}, {order.buyer.province}
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Desglose de costes */}
         <div className="space-y-2 rounded-xl border border-[--border] bg-[--surface] p-4">
@@ -137,9 +158,7 @@ export default async function OrderDetailPage({ params }: Props) {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-[--text-muted]">Método de envío</span>
-            <span className="text-[--text]">
-              {SHIPPING_METHOD_LABELS[order.shippingMethod]}
-            </span>
+            <span className="text-[--text]">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-[--text-muted]">
@@ -156,21 +175,9 @@ export default async function OrderDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
-
-        {/* Motivo de cancelación */}
-        {order.cancellationReason && (
-          <div className="rounded-xl border border-red-100 bg-red-50 p-4">
-            <p className="text-xs font-medium text-red-600">
-              Motivo de cancelación
-            </p>
-            <p className="mt-1 text-sm text-red-700">
-              {order.cancellationReason}
-            </p>
-          </div>
-        )}
-
-        {/* Botón cancelar */}
-        {canCancel && <CancelOrderDialog orderId={order.id} />}
+        {order.status === "CONFIRMED" && (
+            <ConfirmShipmentForm orderId={order.id} shippingMethod={order.shippingMethod} />
+          )}
       </div>
     </main>
   );

@@ -6,6 +6,7 @@ import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
+import PaletteAvatar from "~/components/PaletteAvatar";
 
 export const metadata: Metadata = { title: "Pedidos — Artelier" };
 
@@ -69,14 +70,22 @@ export default async function PedidosPage() {
                     {t(`orderStatus.${order.status}`)}
                   </span>
                 </div>
-                <p className="text-xs text-[--text-muted]">
-                  {order.buyer.name} {order.buyer.lastName} ·{" "}
-                  {new Intl.DateTimeFormat("es-ES", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }).format(new Date(order.createdAt))}
-                </p>
+                <div className="flex items-center gap-3">
+                  <PaletteAvatar
+                    src={order.buyer.image}
+                    name={order.buyer.name}
+                    className="h-11 w-11 shrink-0"
+                    fillColor="#c4956a"
+                  />
+                  <p className="text-xs text-[--text-muted]">
+                    {order.buyer.name} {order.buyer.lastName} ·{" "}
+                    {new Intl.DateTimeFormat("es-ES", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    }).format(new Date(order.createdAt))}
+                  </p>
+                </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-[--text]">
                     {(order.totalInCents / 100).toLocaleString("es-ES", {

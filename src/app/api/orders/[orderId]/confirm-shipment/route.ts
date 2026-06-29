@@ -60,7 +60,7 @@ export async function POST(
   ) {
     //El número de seguimiento del envío lo leemos del cuerpo de la petición
     const body = (await req.json()) as Record<string, unknown>;
-    const trackingNumber = String(body.trackingNumber ?? "").trim();
+    const trackingNumber = (typeof body.trackingNumber === "string" ? body.trackingNumber : "").trim();
 
     //Si no existe número de seguimiento lanzamos el error correspondiente.
     if (!trackingNumber) {

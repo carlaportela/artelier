@@ -87,7 +87,7 @@ export async function POST(
 
   //Obtenemos la justificación del body de la petición
   const body = (await req.json()) as Record<string, unknown>;
-  const reason = String(body.reason ?? "").trim();
+  const reason = (typeof body.reason === "string" ? body.reason : "").trim();
   if (reason.length < 10) {
     return NextResponse.json(
       {

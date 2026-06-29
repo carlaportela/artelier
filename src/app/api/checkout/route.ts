@@ -9,7 +9,6 @@ import { headers } from "next/headers"; //Función de Next.js que permite leer l
 import { calcFees } from "~/lib/fees"; //Se importa la funcionalidad para calcular comisiones y tipos de envío.
 import { getBaseUrl } from "~/lib/stripe-url"; //Helper para construir base URL consistentemente
 import { type ShippingMethod } from "~/lib/fees"; // ✅ Correcto
-import { boolean } from "zod";
 
 //El parámetro req es necesario para leer el cuerpo de la petición que envía CHeckoutForm.
 export async function POST(req: Request) {
