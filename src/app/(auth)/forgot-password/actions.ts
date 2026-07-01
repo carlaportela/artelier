@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { db } from "~/server/db";
 import { resend, FROM_EMAIL } from "~/lib/resend";
-import PasswordResetEmail from "~/emails/PasswordReset";
+import PasswordResetEmail from "~/lib/emails/PasswordResetEmail";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email().transform((v) => v.toLowerCase()),

@@ -12498,6 +12498,7 @@ export namespace Prisma {
     readAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
+    emailNotifiedAt: Date | null
   }
 
   export type MessageMaxAggregateOutputType = {
@@ -12509,6 +12510,7 @@ export namespace Prisma {
     readAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
+    emailNotifiedAt: Date | null
   }
 
   export type MessageCountAggregateOutputType = {
@@ -12520,6 +12522,7 @@ export namespace Prisma {
     readAt: number
     deletedAt: number
     createdAt: number
+    emailNotifiedAt: number
     _all: number
   }
 
@@ -12533,6 +12536,7 @@ export namespace Prisma {
     readAt?: true
     deletedAt?: true
     createdAt?: true
+    emailNotifiedAt?: true
   }
 
   export type MessageMaxAggregateInputType = {
@@ -12544,6 +12548,7 @@ export namespace Prisma {
     readAt?: true
     deletedAt?: true
     createdAt?: true
+    emailNotifiedAt?: true
   }
 
   export type MessageCountAggregateInputType = {
@@ -12555,6 +12560,7 @@ export namespace Prisma {
     readAt?: true
     deletedAt?: true
     createdAt?: true
+    emailNotifiedAt?: true
     _all?: true
   }
 
@@ -12639,6 +12645,7 @@ export namespace Prisma {
     readAt: Date | null
     deletedAt: Date | null
     createdAt: Date
+    emailNotifiedAt: Date | null
     _count: MessageCountAggregateOutputType | null
     _min: MessageMinAggregateOutputType | null
     _max: MessageMaxAggregateOutputType | null
@@ -12667,6 +12674,7 @@ export namespace Prisma {
     readAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
+    emailNotifiedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -12680,6 +12688,7 @@ export namespace Prisma {
     readAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
+    emailNotifiedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -12693,6 +12702,7 @@ export namespace Prisma {
     readAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
+    emailNotifiedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -12706,9 +12716,10 @@ export namespace Prisma {
     readAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
+    emailNotifiedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "senderId" | "content" | "imageUrl" | "readAt" | "deletedAt" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "senderId" | "content" | "imageUrl" | "readAt" | "deletedAt" | "createdAt" | "emailNotifiedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -12737,6 +12748,7 @@ export namespace Prisma {
       readAt: Date | null
       deletedAt: Date | null
       createdAt: Date
+      emailNotifiedAt: Date | null
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
@@ -13170,6 +13182,7 @@ export namespace Prisma {
     readonly readAt: FieldRef<"Message", 'DateTime'>
     readonly deletedAt: FieldRef<"Message", 'DateTime'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
+    readonly emailNotifiedAt: FieldRef<"Message", 'DateTime'>
   }
     
 
@@ -21287,7 +21300,8 @@ export namespace Prisma {
     imageUrl: 'imageUrl',
     readAt: 'readAt',
     deletedAt: 'deletedAt',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    emailNotifiedAt: 'emailNotifiedAt'
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
@@ -22401,6 +22415,7 @@ export namespace Prisma {
     readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    emailNotifiedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -22414,6 +22429,7 @@ export namespace Prisma {
     readAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    emailNotifiedAt?: SortOrderInput | SortOrder
     conversation?: ConversationOrderByWithRelationInput
     sender?: UserOrderByWithRelationInput
   }
@@ -22430,6 +22446,7 @@ export namespace Prisma {
     readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    emailNotifiedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -22443,6 +22460,7 @@ export namespace Prisma {
     readAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    emailNotifiedAt?: SortOrderInput | SortOrder
     _count?: MessageCountOrderByAggregateInput
     _max?: MessageMaxOrderByAggregateInput
     _min?: MessageMinOrderByAggregateInput
@@ -22460,6 +22478,7 @@ export namespace Prisma {
     readAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+    emailNotifiedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
   }
 
   export type DisputeWhereInput = {
@@ -23786,6 +23805,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
   }
@@ -23799,6 +23819,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type MessageUpdateInput = {
@@ -23808,6 +23829,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
   }
@@ -23821,6 +23843,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageCreateManyInput = {
@@ -23832,6 +23855,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type MessageUpdateManyMutationInput = {
@@ -23841,6 +23865,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -23852,6 +23877,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DisputeCreateInput = {
@@ -25148,6 +25174,7 @@ export namespace Prisma {
     readAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
+    emailNotifiedAt?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
@@ -25159,6 +25186,7 @@ export namespace Prisma {
     readAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
+    emailNotifiedAt?: SortOrder
   }
 
   export type MessageMinOrderByAggregateInput = {
@@ -25170,6 +25198,7 @@ export namespace Prisma {
     readAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
+    emailNotifiedAt?: SortOrder
   }
 
   export type EnumDisputeStatusFilter<$PrismaModel = never> = {
@@ -27778,6 +27807,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutMessagesInput
   }
 
@@ -27789,6 +27819,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type MessageCreateOrConnectWithoutSenderInput = {
@@ -28224,6 +28255,7 @@ export namespace Prisma {
     readAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    emailNotifiedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
   }
 
   export type FollowUpsertWithWhereUniqueWithoutFollowerInput = {
@@ -29790,6 +29822,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
     sender: UserCreateNestedOneWithoutSentMessagesInput
   }
 
@@ -29801,6 +29834,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -31732,6 +31766,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type FollowCreateManyFollowerInput = {
@@ -32098,6 +32133,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
   }
 
@@ -32109,6 +32145,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUncheckedUpdateManyWithoutSenderInput = {
@@ -32119,6 +32156,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type FollowUpdateWithoutFollowerInput = {
@@ -32515,6 +32553,7 @@ export namespace Prisma {
     readAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
+    emailNotifiedAt?: Date | string | null
   }
 
   export type MessageUpdateWithoutConversationInput = {
@@ -32524,6 +32563,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
   }
 
@@ -32535,6 +32575,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
@@ -32545,6 +32586,7 @@ export namespace Prisma {
     readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ProductSealCreateManySealInput = {

@@ -244,7 +244,8 @@ exports.Prisma.MessageScalarFieldEnum = {
   imageUrl: 'imageUrl',
   readAt: 'readAt',
   deletedAt: 'deletedAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  emailNotifiedAt: 'emailNotifiedAt'
 };
 
 exports.Prisma.DisputeScalarFieldEnum = {

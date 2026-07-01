@@ -4,7 +4,7 @@ interface DataExportEmailProps {
   name: string | null;
 }
 
-export function DataExportEmail({ name }: DataExportEmailProps) {
+export default function DataExportEmail({ name }: DataExportEmailProps) {
   return (
     <Html lang="es">
       <Head />

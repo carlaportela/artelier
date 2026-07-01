@@ -84,16 +84,16 @@ development_status:
   epic-4-retrospective: optional
 
   # ─── Épico 5: Pagos y Checkout ────────────────────────────────────────────
-  epic-5: in-progress
+  epic-5: done
   5-1-onboarding-de-artesana-en-stripe-connect: done
   5-2-checkout-con-metodo-de-envio-y-desglose-completo: done
-  5-3-webhooks-de-stripe-e-idempotencia-de-pagos: ready-for-dev
-  5-4-confirmacion-de-envio-cancelaciones-y-penalizaciones: in-progress
+  5-3-webhooks-de-stripe-e-idempotencia-de-pagos: done
+  5-4-confirmacion-de-envio-cancelaciones-y-penalizaciones: done
   epic-5-retrospective: optional
 
   # ─── Épico 6: Pedidos, Notificaciones y Proceso de En preparación ─────────
-  epic-6: backlog
-  6-1-notificaciones-por-email-transaccionales: backlog
+  epic-6: in-progress
+  6-1-notificaciones-por-email-transaccionales: ready-for-dev
   6-2-timeline-de-estados-y-actualizaciones-de-proceso: backlog
   6-3-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
   epic-6-retrospective: optional
