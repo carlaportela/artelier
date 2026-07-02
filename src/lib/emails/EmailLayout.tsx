@@ -49,7 +49,7 @@ export default function EmailLayout({ children }: Props) {
               <polygon points="59,20 75,20 67,36" fill="#3d5a4f" transform="rotate(-26, 67, 20)" />
               <path d="M 2 12 C 22 30, 58 30, 78 12" stroke="#3d5a4f" strokeWidth="1.2" strokeLinecap="round" fill="none" />
             </svg>
-            <Text style={{ fontFamily: fontDisplay, color: green, fontSize: "22px", margin: 0 }}>
+            <Text style={{ fontFamily: fontDisplay, color: green, fontSize: "22px", fontWeight: "700", margin: 0 }}>
               Artelier
             </Text>
           </div>
@@ -58,6 +58,18 @@ export default function EmailLayout({ children }: Props) {
 
           {/* Contenido específico de cada email */}
           {children}
+
+          {/* Firma común */}
+          <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 20px 0" }}>
+            Si tienes alguna duda o consulta, puedes ponerte en contacto con nosotras en{" "}
+            <Link href="mailto:holi@artelier.es" style={{ color: green, fontFamily: fontBody }}>holi@artelier.es</Link>.
+          </Text>
+          <Text style={{ fontFamily: fontDisplay, color: green, fontSize: "16px", fontWeight: "700", margin: "0 0 4px 0" }}>
+            Atentamente,
+          </Text>
+          <Text style={{ fontFamily: fontDisplay, color: green, fontSize: "16px", fontWeight: "700", margin: 0 }}>
+            El equipo de Artelier
+          </Text>
 
           <Hr style={{ borderColor: "#e0dbd0", margin: "24px 0 16px 0" }} />
 
