@@ -3,7 +3,7 @@
 import { getServerSession } from "~/server/auth/session";
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
-import { sendShipmentConfirmedEmail } from "~/lib/resend";
+import { sendShipmentConfirmedEmail, sendOrderReadyForPickupEmail } from "~/lib/resend"; //Funciones de envío de correo de confirmación de envío de pedido o de confirmación de que el pedido está listo para recogida, dependiendo del método de envío seleccionado.
 
 export async function POST(
   req: Request,
@@ -86,8 +86,12 @@ export async function POST(
     });
   }
 
-  //Se envía el correo de confirmación de envío al comprador
-  void sendShipmentConfirmedEmail(order).catch(console.error);
+  //Se envía el correo de confirmación al comprador: uno distinto si es recogida en persona
+  if (order.shippingMethod === "PICKUP") {
+    void sendOrderReadyForPickupEmail(order).catch(console.error);
+  } else {
+    void sendShipmentConfirmedEmail(order).catch(console.error);
+  }
 
   return NextResponse.json({ data: { confirmed: true } });
 }

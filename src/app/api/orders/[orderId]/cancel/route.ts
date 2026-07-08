@@ -5,7 +5,7 @@ import { getServerSession } from "~/server/auth/session"; //Para comprobar si el
 import { db } from "~/server/db"; //Para realizar las consultas a la base de datos.
 import { stripe } from "~/lib/stripe"; //Para realizar el pago y comprobar si esta configurada la cuenta de Stripe de la artesana.
 import { CANCELLATION_WINDOW_MS } from "~/lib/order-constants"; //Constante de tiempo de ventana de cancelación de 24 horas para el comprador.
-import { sendCancellationEmail } from "~/lib/resend"; //Función de envío de correo de cancelación de pedido.
+import { sendCancellationEmail, sendOrderCancelledByBuyerEmail } from "~/lib/resend"; //Funciones de envío de correo de cancelación de pedido por la compradora para la compradora y la artesana.
 
 //Función principal de cancelación de pedido por el comprador
 export async function POST(
@@ -147,8 +147,9 @@ export async function POST(
       : []),
   ]);
 
-  //Se envía el correo de cancelación de pedido con control de errores
+  //Se envía el correo de cancelación de pedido a la compradora y a la artesana, con control de errores
   void sendCancellationEmail(order).catch(console.error);
+  void sendOrderCancelledByBuyerEmail(order).catch(console.error);
 
   //Se informa al servidor de que el pedido ha sido cancelado.
   return NextResponse.json({ data: { cancelled: true } });

@@ -7,6 +7,7 @@ import { z } from "zod"; //Zos es un biblioteca de validación de esquemas para 
 
 import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
+import { sendNewProductEmail } from "~/lib/resend";
 
 //Definición del esquema de validación de Zod para los datos del producto que se va a crear. Si los datos no cumplen este esquema, se devuelve error de validación con detalles de los campos que fallaron.
 const createProductSchema = z.object({
@@ -60,8 +61,9 @@ export async function createProduct(data: unknown) {
   });
 
   //Crear el nuevo producto en la base de datos con los datos proporcionados y la información del artesano (id y localidad).
+  let product;
   try {
-    await db.product.create({
+    product = await db.product.create({
       data: {
         artisanId: session.user.id,
         name,
@@ -77,6 +79,9 @@ export async function createProduct(data: unknown) {
   } catch {
     return { error: { code: "DB_ERROR" as const, message: "No se pudo crear el producto. Inténtalo de nuevo." } };
   }
+
+  //Se avisa a las seguidoras de la artesana del nuevo producto, sin bloquear la respuesta.
+  void sendNewProductEmail(product.id).catch(console.error);
 
   //Revalidar las rutas relevantes para que el nuevo producto aparezca en el catálogo del artesano y en la página principal de productos. Esto es necesario porque Next.js puede estar sirviendo versiones en caché de estas páginas, y sin revalidar, el nuevo producto no se mostraría hasta que la caché expirara.
   revalidatePath(`/artisan/${session.user.id}`);

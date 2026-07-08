@@ -1,6 +1,6 @@
 // Template del correo de nueva seguidora para la artesana.
 
-import { Text, Button, Section, Link } from "@react-email/components";
+import { Text, Button, Section } from "@react-email/components";
 import EmailLayout from "./EmailLayout";
 import { textDark, green, fontBody, fontDisplay } from "./tokens";
 

@@ -1,6 +1,6 @@
 // Template del correo de notificación de mensaje nuevo.
 
-import { Text, Button, Section, Row, Column, Link } from "@react-email/components";
+import { Text, Button, Section, Row, Column } from "@react-email/components";
 import EmailLayout from "./EmailLayout";
 import { textDark, green, muted, fontBody, fontDisplay } from "./tokens";
 
@@ -19,8 +19,6 @@ export default function NewMessageEmail({
   messagePreview,
   conversationUrl,
 }: Props) {
-  const displayName = senderName || "";
-
   return (
     <EmailLayout>
 
@@ -91,7 +89,7 @@ export default function NewMessageEmail({
           <>
             <div style={{ borderTop: "1px solid #e0dbd0", margin: "14px 0 12px 0" }} />
             <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: 0, fontStyle: "italic" }}>
-              "{messagePreview}"
+              &quot;{messagePreview}&quot;
             </Text>
           </>
         )}
