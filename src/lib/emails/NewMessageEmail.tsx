@@ -61,8 +61,6 @@ export default function NewMessageEmail({
                 </clipPath>
               </defs>
               {senderAvatarUrl ? (
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
                 <image
                   href={senderAvatarUrl}
                   x="0" y="0" width="24" height="24"
@@ -101,7 +99,7 @@ export default function NewMessageEmail({
               href={conversationUrl}
               style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block" }}
             >
-              Ver mensaje
+              Ver conversación
             </Button>
           </Column>
         </Row>

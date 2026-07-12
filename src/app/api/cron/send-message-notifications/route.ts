@@ -1,6 +1,14 @@
 // Endpoint invocado periódicamente por Vercel Cron Job.
 // Notifica por email los mensajes que llevan 5 minutos sin leerse.
 // Protegido con CRON_SECRET para evitar invocaciones no autorizadas.
+//
+// NOTA: el AC pide notificar a los 5 minutos, pero vercel.json programa este cron
+// cada hora ("0 * * * *") porque el plan Hobby de Vercel no permite crons más
+// frecuentes que una vez al día para intervalos de minutos/horas. Consecuencia:
+// el retraso real puede llegar a ~65 minutos. Decisión aceptada conscientemente
+// (revisión de H6.1, 2026-07-08); si se necesita cumplir los 5 minutos, la
+// alternativa es un disparador externo (ej. cron-job.org) llamando a este mismo
+// endpoint con el header Authorization, sin tocar el código.
 
 import { NextResponse } from "next/server";
 
@@ -54,10 +62,12 @@ export async function GET(req: Request) {
   for (const messageId of latestIdByGroup.values()) {
     try {
       // Se marca como notificado ANTES de enviar para evitar doble envío si el cron se reintenta.
-      await db.message.update({
-        where: { id: messageId },
+      // El where readAt:null revalida que no se haya leído justo entre el findMany y este update.
+      const { count } = await db.message.updateMany({
+        where: { id: messageId, readAt: null },
         data: { emailNotifiedAt: new Date() },
       });
+      if (count === 0) continue; // se leyó entretanto: no se envía email (AC5)
       await sendNewMessageEmail(messageId);
       notified++;
     } catch (error) {

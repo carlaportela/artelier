@@ -6,12 +6,15 @@ import { Resend } from "resend";
 import { env } from "~/env";
 import { db } from "~/server/db";
 import { PLATFORM_SHIPPING_COST } from "~/lib/fees";
-import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
+import { SHIPPING_METHOD_LABELS, PENALTY_AMOUNT_CENTS } from "~/lib/order-constants";
+import { getBaseUrl } from "~/lib/stripe-url";
 
 import OrderConfirmationEmail from "~/lib/emails/OrderConfirmationEmail";
 import NewSaleEmail from "~/lib/emails/NewSaleEmail";
+import FirstSaleEmail from "~/lib/emails/FirstSaleEmail";
 import CancellationEmail from "~/lib/emails/CancellationEmail";
 import OrderCancelledByBuyerEmail from "~/lib/emails/OrderCancelledByBuyerEmail";
+import OrderCancelledBySystemToArtisanEmail from "~/lib/emails/OrderCancelledBySystemToArtisanEmail";
 import ShipmentConfirmedEmail from "~/lib/emails/ShipmentConfirmedEmail";
 import OrderReadyForPickupEmail from "~/lib/emails/OrderReadyForPickupEmail";
 import NewFollowerEmail from "~/lib/emails/NewFollowerEmail";
@@ -70,8 +73,9 @@ export async function sendOrderConfirmation(order: Order) {
   });
 }
 
-//Función de envío de correo al artesano de nuevo pedido.
-export async function sendNewSale(order: Order) {
+//NewSaleEmail y FirstSaleEmail comparten exactamente los mismos datos — solo cambia
+//el template renderizado. Este helper evita duplicar el fetch y el cálculo de ganancias.
+async function buildNewSaleEmailData(order: Order) {
   const data = await db.order.findUnique({
     where: { id: order.id },
     include: {
@@ -89,17 +93,15 @@ export async function sendNewSale(order: Order) {
       },
     },
   });
-  if (!data?.artisan?.email) return;
+  if (!data?.artisan?.email) return null;
 
   //platformFeeInCents ya incluye stripeFeeInCents (es la application_fee de Stripe Connect),
   //así que la ganancia neta de la artesana es simplemente total - platformFee.
   const netEarningsInCents = data.totalInCents - data.platformFeeInCents;
 
-  await resend.emails.send({
-    from: FROM_EMAIL,
+  return {
     to: data.artisan.email,
-    subject: "¡Tienes un nuevo pedido! — Artelier",
-    react: NewSaleEmail({
+    props: {
       artisanName: data.artisan.name ?? "",
       orderId: data.id,
       productName: data.product.name,
@@ -113,7 +115,33 @@ export async function sendNewSale(order: Order) {
       shippingMethod: SHIPPING_METHOD_LABELS[data.shippingMethod] ?? data.shippingMethod,
       shippingLabelUrl: null,
       netEarningsInCents,
-    }),
+    },
+  };
+}
+
+//Función de envío de correo al artesano de nuevo pedido.
+export async function sendNewSale(order: Order) {
+  const email = await buildNewSaleEmailData(order);
+  if (!email) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: email.to,
+    subject: "¡Tienes un nuevo pedido! — Artelier",
+    react: NewSaleEmail(email.props),
+  });
+}
+
+//Función de envío de correo al artesano de su primera venta (celebración + guía de próximos pasos).
+export async function sendFirstSale(order: Order) {
+  const email = await buildNewSaleEmailData(order);
+  if (!email) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: email.to,
+    subject: "¡Enhorabuena, has vendido tu primer producto! — Artelier",
+    react: FirstSaleEmail(email.props),
   });
 }
 
@@ -148,6 +176,31 @@ export async function sendCancellationEmail(order: Order) {
 //(mismo template, mismo destinatario) — la diferencia ya está en cancellationReason.
 export async function sendOrderCancelledBySystemEmail(order: Order) {
   await sendCancellationEmail(order);
+}
+
+//Función de envío de correo a la artesana cuando el sistema cancela su pedido con penalización.
+export async function sendOrderCancelledBySystemToArtisanEmail(order: Order) {
+  const data = await db.order.findUnique({
+    where: { id: order.id },
+    include: {
+      artisan: { select: { name: true, email: true } },
+      product: { select: { name: true, imageUrls: true } },
+    },
+  });
+  if (!data?.artisan?.email) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.artisan.email,
+    subject: "Tu pedido se ha cancelado automáticamente — Artelier",
+    react: OrderCancelledBySystemToArtisanEmail({
+      artisanName: data.artisan.name ?? "",
+      orderId: data.id,
+      productName: data.product.name,
+      productImageUrl: data.product.imageUrls[0] ?? null,
+      penaltyInCents: PENALTY_AMOUNT_CENTS,
+    }),
+  });
 }
 
 //Función de envío de correo a la artesana cuando la compradora cancela el pedido.
@@ -250,7 +303,7 @@ export async function sendOrderReadyForPickupEmail(order: Order) {
 //Función de envío de correo a la artesana de nueva seguidora.
 export async function sendNewFollowerEmail(followerId: string, artisanId: string) {
   const [follower, artisan] = await Promise.all([
-    db.user.findUnique({ where: { id: followerId }, select: { name: true } }),
+    db.user.findUnique({ where: { id: followerId }, select: { name: true, image: true } }),
     db.user.findUnique({ where: { id: artisanId }, select: { name: true, email: true } }),
   ]);
   if (!artisan?.email) return;
@@ -262,6 +315,8 @@ export async function sendNewFollowerEmail(followerId: string, artisanId: string
     react: NewFollowerEmail({
       artisanName: artisan.name ?? "",
       followerName: follower?.name ?? "Alguien",
+      followerImageUrl: follower?.image ?? null,
+      followersUrl: `${getBaseUrl()}/studio/followers`,
     }),
   });
 }
@@ -280,7 +335,7 @@ export async function sendNewMessageEmail(messageId: string) {
       sender: { select: { name: true, image: true } },
     },
   });
-  if (!message) return;
+  if (!message || message.deletedAt) return;
 
   //El destinatario es siempre el otro participante de la conversación (no quien envía el mensaje).
   const senderIsBuyer = message.senderId === message.conversation.buyerId;
@@ -290,13 +345,17 @@ export async function sendNewMessageEmail(messageId: string) {
   if (!recipient.email) return;
 
   const conversationUrl = senderIsBuyer
-    ? `https://artelier.es/studio/messages/${message.conversationId}`
-    : `https://artelier.es/messages/${message.conversationId}`;
+    ? `${getBaseUrl()}/studio/messages/${message.conversationId}`
+    : `${getBaseUrl()}/messages/${message.conversationId}`;
 
   const messagePreview =
-    message.content.length > 100
-      ? `${message.content.slice(0, 100)}…`
-      : message.content;
+    message.content.length > 0
+      ? message.content.length > 99
+        ? `${message.content.slice(0, 99)}…`
+        : message.content
+      : message.imageUrl
+        ? "📷 Imagen"
+        : null;
 
   await resend.emails.send({
     from: FROM_EMAIL,
@@ -330,7 +389,7 @@ export async function sendNewProductEmail(productId: string) {
   if (!product) return;
 
   //Promise.allSettled: si el email de una seguidora falla, no bloquea el envío al resto.
-  await Promise.allSettled(
+  const results = await Promise.allSettled(
     product.artisan.followers
       .filter((f): f is typeof f & { follower: { email: string; name: string | null } } => !!f.follower.email)
       .map(({ follower }) =>
@@ -343,11 +402,20 @@ export async function sendNewProductEmail(productId: string) {
             artisanName: product.artisan.name ?? "",
             productName: product.name,
             productImageUrl: product.imageUrls[0] ?? null,
-            productUrl: `https://artelier.es/product/${product.id}`,
+            productUrl: `${getBaseUrl()}/product/${product.id}`,
             productDescription: product.description,
             priceInCents: product.priceInCents,
           }),
         }),
       ),
   );
+
+  for (const result of results) {
+    if (result.status === "rejected") {
+      console.error(
+        `[sendNewProductEmail] Error notificando a una seguidora del producto ${product.id}`,
+        result.reason,
+      );
+    }
+  }
 }

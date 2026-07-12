@@ -62,19 +62,15 @@ export default function FirstSaleEmail({
         <strong style={{ fontFamily: fontBody }}>¡Ahora toca ponerse manos a la obra!</strong><br />Realiza los siguiente pasos para completar tu primera venta con éxito:
       </Text>
       <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 8px 0", paddingLeft: "16px" }}>
-        <strong style={{ fontFamily: fontBody }}>1. Confirma el pedido</strong><br />
-        Tienes <strong style={{ fontFamily: fontBody }}>24 horas</strong> para aceptarlo o cancelarlo desde tu estudio. Si no lo confirmas a tiempo, se cancelará automáticamente.
-      </Text>
-      <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 8px 0", paddingLeft: "16px" }}>
-        <strong style={{ fontFamily: fontBody }}>2. Prepara tu creación</strong><br />
+        <strong style={{ fontFamily: fontBody }}>1. Prepara tu creación</strong><br />
         Envuélvela con cariño, que va a hacer a alguien muy feliz.
       </Text>
       <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 8px 0", paddingLeft: "16px" }}>
-        <strong style={{ fontFamily: fontBody }}>3. Envía o confirma que el pedido está listo para la recogida</strong><br />
-        Una vez confirmado el pedido, tienes <strong style={{ fontFamily: fontBody }}>5 días</strong> para confirmar el envío o marcar el pedido como listo para recogida. <br />Esto dependerá del método de envío seleccionado por la compradora.
+        <strong style={{ fontFamily: fontBody }}>2. Envía o confirma que el pedido está listo para la recogida</strong><br />
+        Tienes <strong style={{ fontFamily: fontBody }}>5 días</strong> desde la compra para confirmar el envío o marcar el pedido como listo para recogida (según el método elegido por la compradora). Si no lo haces a tiempo, el pedido se cancelará automáticamente y se aplicará una penalización.
       </Text>
       <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 20px 0", paddingLeft: "16px" }}>
-        <strong style={{ fontFamily: fontBody }}>4. ¡Recibe tu dinero!</strong><br />
+        <strong style={{ fontFamily: fontBody }}>3. ¡Recibe tu dinero!</strong><br />
         Cuando la compradora confirme que ha recibido el pedido o lo ha recogido, recibirás el importe de la venta.
       </Text>
 
@@ -178,25 +174,19 @@ export default function FirstSaleEmail({
           </Row>
         </div>
 
-        {/* Botones */}
+        {/* Botón */}
         <Row>
           <Column style={{ textAlign: "right" }}>
             <Button
               href={`https://artelier.es/studio/orders/${orderId}`}
-              style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block", marginRight: "8px" }}
+              style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block" }}
             >
-              Confirmar pedido
-            </Button>
-            <Button
-              href={`https://artelier.es/studio/orders/${orderId}`}
-              style={{ backgroundColor: "transparent", color: muted, borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block", border: "1px solid #e0dbd0" }}
-            >
-              Cancelar pedido
+              Ver pedido en mi estudio
             </Button>
           </Column>
         </Row>
         <Text style={{ fontFamily: fontBody, color: "#9ca3af", fontSize: "11px", textAlign: "right", margin: "8px 0 0 0" }}>
-          Recuerda que dispones de <strong style={{ fontFamily: fontBody }}>24 horas</strong> para confirmar o cancelar este pedido.<br />En caso contrario, el pedido se cancelará automáticamente.
+          Recuerda que dispones de <strong style={{ fontFamily: fontBody }}>5 días</strong> para confirmar el envío o marcar el pedido como listo para recogida.<br />En caso contrario, el pedido se cancelará automáticamente y se aplicará una penalización.
         </Text>
 
       </Section>

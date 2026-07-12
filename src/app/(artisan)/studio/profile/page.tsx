@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Mi perfil — Artelier" };
 export default async function StudioProfilePage() {
   const session = await requireArtisanSession();
 
-  const [user, sealRequests] = await Promise.all([
+  const [user, sealRequests, followersCount] = await Promise.all([
     db.user.findUnique({
       where: { id: session.user.id },
       select: {
@@ -32,6 +32,7 @@ export default async function StudioProfilePage() {
       where: { artisanId: session.user.id, status: "APPROVED", productId: null, deletedAt: null },
       include: { seal: { select: { name: true, type: true } } },
     }),
+    db.follow.count({ where: { followingId: session.user.id } }),
   ]);
 
   if (!user) redirect("/login");
@@ -46,6 +47,16 @@ export default async function StudioProfilePage() {
           className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
         >
           Ver tu perfil público
+        </Link>
+      </div>
+
+      {/* ── Seguidoras ── */}
+      <div className="px-4 pb-4">
+        <Link
+          href="/studio/followers"
+          className="text-sm font-medium text-[#3d5a4f] transition-colors hover:text-[#4a6b5e]"
+        >
+          {followersCount} {followersCount === 1 ? "seguidora" : "seguidoras"} →
         </Link>
       </div>
 

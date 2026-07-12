@@ -1,5 +1,14 @@
 # Deferred Work
 
+## Deferred from: code review of 6-1-notificaciones-por-email-transaccionales (2026-07-08)
+
+- Fallo de envío en el cron de mensajes marca igual el resto del grupo como notificado, sin reintento — consistente con el patrón de fallo silencioso ya aceptado en H1.2; crear historia de monitorización/alerting sobre envíos de email fallidos
+- `followArtisan()` no impide auto-seguirse — gap pre-existente de H1.4, fuera de alcance de H6.1
+- `shippingCostInCents`/`insuranceFeeInCents` se reconstruyen por resta en `resend.ts` en vez de guardarse en el pedido — funciona hoy, pero es frágil si cambia `PLATFORM_SHIPPING_COST`; requeriría columnas nuevas en `Order` y guardarlas en el checkout
+- `div` con `display:flex` en la cabecera de `EmailLayout.tsx` puede romperse en Outlook — ya hay un TODO reconociendo el mismo problema para el logo; ampliar esa nota cuando se haga el hardening de compatibilidad de clientes de email
+- URL de Google Fonts hardcodeada con hash de versión en `EmailLayout.tsx` — frágil pero bajo riesgo, hay fallback a Georgia
+- Todos los templates de email hardcodean `https://artelier.es` directamente en el JSX de cada botón (en vez de usar `getBaseUrl()`) — refactor amplio de los 9 templates, mejor como historia de hardening dedicada
+
 ## Deferred from: code review of 3-4-paginas-legales-estaticas-lssi (2026-06-08)
 
 - Artisan studio sin AppFooter — decisión de diseño intencional (usa ArtisanBottomNav); AC1 de H3.4 no aplica al área de artesana por diseño
