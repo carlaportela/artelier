@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { db } from "~/server/db";
 import { resend, FROM_EMAIL } from "~/lib/resend";
-import PasswordResetEmail from "~/emails/PasswordReset";
+import PasswordResetEmail from "~/lib/emails/PasswordResetEmail";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email().transform((v) => v.toLowerCase()),
@@ -19,7 +19,7 @@ export async function requestPasswordReset(data: unknown) {
 
   const { email } = parsed.data;
 
-  const user = await db.user.findUnique({ where: { email } });
+  const user = await db.user.findUnique({ where: { email }, select: { id: true, name: true } });
 
   if (user) {
     const token = crypto.randomUUID();
@@ -40,7 +40,7 @@ export async function requestPasswordReset(data: unknown) {
         from: FROM_EMAIL,
         to: email,
         subject: "Recupera tu contraseña — Artelier",
-        react: PasswordResetEmail({ resetUrl }),
+        react: PasswordResetEmail({ resetUrl, name: user.name }),
       });
     } catch (err) {
       console.error("[Artelier] Error enviando email de recuperación:", err);

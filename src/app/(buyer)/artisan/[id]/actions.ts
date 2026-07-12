@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
+import { sendNewFollowerEmail } from "~/lib/resend";
 
 // ─── Seguir / Dejar de seguir ────────────────────────────────────────────────
 
@@ -17,6 +18,9 @@ export async function followArtisan(artisanId: string) {
   await db.follow.create({
     data: { followerId: session.user.id, followingId: artisanId },
   });
+
+  //Se avisa a la artesana de la nueva seguidora, sin bloquear la respuesta al comprador.
+  void sendNewFollowerEmail(session.user.id, artisanId).catch(console.error);
 
   revalidatePath(`/artisan/${artisanId}`);
   return { success: true } as const;

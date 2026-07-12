@@ -1,6 +1,6 @@
 # Historia 5.4: Confirmación de envío, cancelaciones y penalizaciones
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 

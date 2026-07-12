@@ -9,7 +9,7 @@ import { getServerSession } from "~/server/auth/session";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { resend, FROM_EMAIL } from "~/lib/resend";
 import { changePasswordSchema, deleteAccountSchema } from "~/lib/validations/auth";
-import { DataExportEmail } from "~/lib/resend/DataExportEmail";
+import DataExportEmail from "~/lib/emails/DataExportEmail";
 import { DataExportPdf } from "~/lib/pdf/DataExportPdf";
 
 export async function changePassword(data: unknown) {

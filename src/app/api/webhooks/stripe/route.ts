@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { stripe } from "~/lib/stripe";
 import { db } from "~/server/db";
 import { type ShippingMethod } from "~/lib/fees";
-import { sendOrderConfirmation, sendNewSale } from "~/lib/resend";
+import { sendOrderConfirmation, sendNewSale, sendFirstSale } from "~/lib/resend";
 import { validateCheckoutFees } from "~/lib/fees";
 
 // TODO H6.1: Uncomment when Sentry is installed
@@ -187,15 +187,16 @@ export async function POST(req: Request) {
       }
 
       //Se emplea transacción para que en caso de que se produzca algún error al realizar los pasos, todo se revierta.
-      const order = await db.$transaction(async (tx) => {
+      const { order, isFirstSale } = await db.$transaction(async (tx) => {
         //1. Se comprueba que no exista un pedido con el mismo id de Dtripe para evitar duplicados.
         const existingOrder = await tx.order.findFirst({
           where: { stripeEventId },
         });
 
-        //Si existía previamente, no se hace nada
+        //Si existía previamente, no se hace nada. isFirstSale=false: no se reenvía el email
+        //especial de celebración en reintentos/reentregas duplicadas del webhook.
         if (existingOrder) {
-          return existingOrder;
+          return { order: existingOrder, isFirstSale: false };
         }
 
         //2. Se valida que el producto del pedido siga activo para poder procesar el pedido
@@ -253,7 +254,8 @@ export async function POST(req: Request) {
         });
 
         //Si no existen ventas previas y no se ha condonado la comisión por primera venta, se marca primera venta como completada.
-        if (!previousOrders && firstSaleFeeWaived === "true") {
+        const isFirstSale = !previousOrders && firstSaleFeeWaived === "true";
+        if (isFirstSale) {
           await tx.user.update({
             where: { id: activeProduct.artisanId },
             data: { firstSaleCompleted: true },
@@ -275,8 +277,8 @@ export async function POST(req: Request) {
           });
         }
 
-        //Devolvemos el pedido que se ha creado
-        return orderCreated;
+        //Devolvemos el pedido creado y si esta venta es la primera del artesano.
+        return { order: orderCreated, isFirstSale };
       });
 
       //Se notifica al comprador y al artesano de la venta completada.
@@ -288,10 +290,10 @@ export async function POST(req: Request) {
             emailType: "confirmation",
           });
         }),
-        sendNewSale(order).catch((error) => {
+        (isFirstSale ? sendFirstSale(order) : sendNewSale(order)).catch((error) => {
           captureException(error, {
             orderId: order.id,
-            emailType: "newSale",
+            emailType: isFirstSale ? "firstSale" : "newSale",
           });
         }),
       ]);

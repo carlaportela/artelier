@@ -8,7 +8,10 @@ import {
   SHIPPING_DEADLINE_MS,
   PENALTY_AMOUNT_CENTS,
 } from "~/lib/order-constants";
-import { sendOrderCancelledBySystemEmail } from "~/lib/resend";
+import {
+  sendOrderCancelledBySystemEmail,
+  sendOrderCancelledBySystemToArtisanEmail,
+} from "~/lib/resend";
 import { stripe } from "~/lib/stripe";
 
 export const dynamic = "force-dynamic"; // nunca cachear este endpoint
@@ -74,8 +77,9 @@ export async function GET(req: Request) {
 
       cancelledCount++; //Se aumenta el contador para continuar con la iteración de pedidos a cancelar.
 
-      //3. Se envía el correo de cancelación de pedido correspondiente.
+      //3. Se envía el correo de cancelación de pedido a la compradora y a la artesana (con la penalización).
       void sendOrderCancelledBySystemEmail(order).catch(console.error);
+      void sendOrderCancelledBySystemToArtisanEmail(order).catch(console.error);
     } catch (error) {
       //Se muestran los errores en consola.
       console.error(`Error procesando el pedido ${order.id}`, error);

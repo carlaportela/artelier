@@ -239,6 +239,7 @@ model Message {
     readAt         DateTime?
     deletedAt      DateTime?
     createdAt      DateTime     @default(now())
+    emailNotifiedAt DateTime?
 
     conversation Conversation @relation(fields: [conversationId], references: [id])
     sender       User         @relation(fields: [senderId], references: [id])
