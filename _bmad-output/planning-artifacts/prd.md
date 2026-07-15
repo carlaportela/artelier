@@ -492,6 +492,7 @@ Las funcionalidades de V2 (Mobile + Crecimiento) y V3 (Visión) están definidas
 ### Estados de Pedido y Proceso
 
 - **FR50:** Un artesano puede actualizar el estado de fabricación de un pedido activo (En preparación → Listo → Enviado / Listo para recogida), visible para el comprador en su historial de pedidos
+- **FR51:** Un artesano puede aceptar o rechazar (con motivo) un pedido confirmado dentro de un plazo de 24 horas; el rechazo voluntario no conlleva penalización. Si no responde dentro del plazo, el sistema cancela el pedido automáticamente y aplica la penalización económica existente.
 
 ---
 

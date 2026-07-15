@@ -1,5 +1,5 @@
 # generated: 2026-05-18
-# last_updated: 2026-07-08
+# last_updated: 2026-07-15
 # project: artelier
 # project_key: NOKEY
 # tracking_system: file-system
@@ -94,8 +94,9 @@ development_status:
   # ─── Épico 6: Pedidos, Notificaciones y Proceso de En preparación ─────────
   epic-6: in-progress
   6-1-notificaciones-por-email-transaccionales: done
-  6-2-timeline-de-estados-y-actualizaciones-de-proceso: backlog
-  6-3-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
+  6-2-aceptacion-o-rechazo-de-pedido-por-la-artesana: ready-for-dev
+  6-3-timeline-de-estados-y-actualizaciones-de-proceso: backlog
+  6-4-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
   epic-6-retrospective: optional
 
   # ─── Épico 7: Confianza, Sellos y Disputas ────────────────────────────────
