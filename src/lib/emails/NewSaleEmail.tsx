@@ -316,12 +316,12 @@ export default function NewSaleEmail({
               href={`https://artelier.es/studio/orders/${orderId}`}
               style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block" }}
             >
-              Ver pedido en mi estudio
+              Ver pedido
             </Button>
           </Column>
         </Row>
         <Text style={{ fontFamily: fontBody, color: "#9ca3af", fontSize: "11px", textAlign: "right", margin: "8px 0 0 0" }}>
-          Recuerda que dispones de <strong style={{ fontFamily: fontBody}}>5 días</strong> para confirmar el envío o marcar el pedido como listo para recogida.<br/>En caso contrario, el pedido se cancelará automáticamente y se aplicará una penalización.
+          Recuerda que dispones de <strong style={{ fontFamily: fontBody}}>24 horas</strong> para aceptar o rechazar este pedido.<br/>Si no respondes a tiempo, el pedido se cancelará automáticamente y se aplicará una penalización.
         </Text>
 
       </Section>

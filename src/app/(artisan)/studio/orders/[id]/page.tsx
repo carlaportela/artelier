@@ -11,6 +11,7 @@ import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
 import ConfirmShipmentForm from "./ConfirmShipmentForm";
+import AcceptOrRejectOrderCard from "./AcceptOrRejectOrderCard";
 
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
@@ -176,8 +177,14 @@ export default async function OrderDetailPage({ params }: Props) {
           </div>
         </div>
         {order.status === "CONFIRMED" && (
-            <ConfirmShipmentForm orderId={order.id} shippingMethod={order.shippingMethod} />
-          )}
+          <AcceptOrRejectOrderCard
+            orderId={order.id}
+            createdAt={order.createdAt.toISOString()}
+          />
+        )}
+        {order.status === "IN_PREPARATION" && (
+          <ConfirmShipmentForm orderId={order.id} shippingMethod={order.shippingMethod} />
+        )}
       </div>
     </main>
   );

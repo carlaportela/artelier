@@ -23,7 +23,7 @@ export default function CancellationEmail({
 }: Props) {
   const fmt = (cents: number) =>
     (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
-  const reason = cancellationReason ?? "La artesana no ha confirmado el pedido dentro del plazo indicado.";
+  const reason = cancellationReason ?? "La artesana no ha aceptado el pedido dentro del plazo indicado.";
   return (
     <EmailLayout>
 

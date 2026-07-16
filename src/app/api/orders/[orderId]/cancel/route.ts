@@ -6,6 +6,7 @@ import { db } from "~/server/db"; //Para realizar las consultas a la base de dat
 import { stripe } from "~/lib/stripe"; //Para realizar el pago y comprobar si esta configurada la cuenta de Stripe de la artesana.
 import { CANCELLATION_WINDOW_MS } from "~/lib/order-constants"; //Constante de tiempo de ventana de cancelación de 24 horas para el comprador.
 import { sendCancellationEmail, sendOrderCancelledByBuyerEmail } from "~/lib/resend"; //Funciones de envío de correo de cancelación de pedido por la compradora para la compradora y la artesana.
+import { canReactivateProduct } from "~/lib/orders"; //Regla compartida de si un producto puede reactivarse tras cancelar un pedido.
 
 //Función principal de cancelación de pedido por el comprador
 export async function POST(
@@ -115,29 +116,13 @@ export async function POST(
   }
   await stripe.refunds.create({ payment_intent: order.stripePaymentIntentId });
 
-  //Se comprueba si el producto es perecedero y si su fecha límite ha expirado para poder o no activar de nuevo el producto.
-  const canReactivate =
-    order.product.type !== "PERISHABLE" ||
-    !order.product.expiresAt ||
-    order.product.expiresAt > new Date();
-
-  //Cancelamos el pedido y reactivamos el producto. Ambas van en una transacción para que sean atómicas (todo o nada).
+  //Cancelamos el pedido y reactivamos el producto si procede. Ambas van en una transacción para que sean atómicas (todo o nada).
   await db.$transaction([
     db.order.update({
       where: { id: orderId },
       data: { status: "CANCELLED", cancellationReason: reason },
     }),
-
-    /*Se usa operador spread (...) combinado con un ternario para añadir elementos a un array de forma condicional.
-    [
-      operacion1,           // siempre se incluye
-      ...(condicion
-        ? [operacion2]      // se incluye solo si condicion es true
-        : []),              // si es false, spread de array vacío = nada
-    ]
-    */
-   
-    ...(canReactivate //Si el producto puede activarse se realiza un update en el base de datos
+    ...(canReactivateProduct(order.product)
       ? [
           db.product.update({
             where: { id: order.productId },
