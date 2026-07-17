@@ -6,7 +6,7 @@ import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
 import { ACCEPTANCE_WINDOW_MS } from "~/lib/order-constants";
 import { sendCancellationEmail } from "~/lib/resend";
-import { canReactivateProduct } from "~/lib/orders";
+import { claimAndCancelOrder } from "~/lib/orders";
 
 export async function POST(
   req: Request,
@@ -102,14 +102,16 @@ export async function POST(
     );
   }
 
-  //Reclamamos el pedido de forma atómica antes de tocar Stripe: el "where" exige que siga en
-  //CONFIRMED en el momento exacto de la escritura, para no reembolsar por error un pedido que la
-  //artesana ya aceptó o que el cron ya canceló entre la comprobación de arriba y este punto.
-  const claimed = await db.order.updateMany({
-    where: { id: orderId, status: "CONFIRMED" },
-    data: { status: "CANCELLED", cancellationReason: reason },
+  //Reclamamos el pedido y reactivamos el producto (si procede) de forma atómica, antes de tocar
+  //Stripe: así no reembolsamos por error un pedido que la artesana ya aceptó o que el cron ya
+  //canceló entre la comprobación de arriba y este punto (ver claimAndCancelOrder en ~/lib/orders).
+  const claimed = await claimAndCancelOrder({
+    orderId,
+    cancellationReason: reason,
+    product: order.product,
+    productId: order.productId,
   });
-  if (claimed.count === 0) {
+  if (!claimed) {
     return NextResponse.json(
       {
         error: {
@@ -121,16 +123,9 @@ export async function POST(
     );
   }
 
-  //El pedido ya es nuestro (reclamado) — procedemos al reembolso íntegro. El rechazo voluntario no penaliza a la artesana.
+  //El pedido ya es nuestro (reclamado y el producto reactivado atómicamente) — procedemos al
+  //reembolso íntegro. El rechazo voluntario no penaliza a la artesana.
   await stripe.refunds.create({ payment_intent: order.stripePaymentIntentId });
-
-  //Reactivamos el producto si procede (no perecedero, o perecedero aún no caducado).
-  if (canReactivateProduct(order.product)) {
-    await db.product.update({
-      where: { id: order.productId },
-      data: { status: "ACTIVE" },
-    });
-  }
 
   //Se avisa a la compradora del rechazo y el motivo — reutilizamos la misma función y template que
   //ya usa la cancelación de H6.1, no hace falta un email nuevo para esto.

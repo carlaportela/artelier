@@ -71,7 +71,7 @@ para no comprometerme a producir algo que no puedo entregar, y que el sistema re
   - [x] T6.1: En `src/app/api/cron/cancel-overdue-orders/route.ts`, cambiar el `deadline` de `SHIPPING_DEADLINE_MS` a `ACCEPTANCE_WINDOW_MS` para el filtro `status: "CONFIRMED"`
   - [x] T6.2: Actualizar el texto de `cancellationReason` guardado: de "no se ha confirmado el envío..." a algo como "El sistema ha cancelado tu pedido porque la artesana no lo aceptó dentro del plazo de 24 horas. Se ha iniciado el reembolso."
   - [x] T6.3: Añadir la misma comprobación `canReactivate` que ya existe en `cancel/route.ts` (`PERISHABLE` + `expiresAt`) antes de reactivar el producto — bug preexistente de H5.4 detectado al tocar este archivo: hoy reactiva incondicionalmente, sin comprobar si el producto perecedero ya caducó
-  - [x] T6.4: Añadir comentario en el endpoint documentando que, por el límite del plan Hobby de Vercel (crons sub-diarios no se ejecutan con esa frecuencia real), el plazo de 24h puede demorarse hasta ~48h en el peor caso — mismo compromiso aceptado en H6.1 para el cron de mensajes
+  - [x] T6.4: Añadir comentario en el endpoint documentando que, por el límite del plan Hobby de Vercel (crons subdiarios no se ejecutan con esa frecuencia real), el plazo de 24h puede demorarse hasta ~48h en el peor caso — mismo compromiso aceptado en H6.1 para el cron de mensajes
   - [x] T6.5: NO tocar el resto de la lógica (reembolso Stripe, aplicación de `PENALTY_AMOUNT_CENTS`, envío de `sendOrderCancelledBySystemEmail` + `sendOrderCancelledBySystemToArtisanEmail`) — ya está correcta y se reutiliza tal cual
 
 - [x] T7 — Typecheck y build limpio
@@ -100,7 +100,7 @@ Esta historia es principalmente **recombinar código ya existente**, no escribir
 
 ### Precisión real del plazo de 24 horas
 
-El cron `cancel-overdue-orders` corre una vez al día (`vercel.json`, `"0 3 * * *"`). En el plan Hobby de Vercel, los crons declarados con frecuencia sub-diaria no se ejecutan realmente con esa frecuencia — igual que se documentó en H6.1 para el cron de notificación de mensajes. Consecuencia: un pedido no aceptado puede tardar hasta ~48h en cancelarse automáticamente en el peor caso, no exactamente 24h. Decisión ya tomada (2026-07-15): aceptar este compromiso, documentarlo en código (T6.4), no cambiar infraestructura. La UI (contador visual, AC1) sigue mostrando 24h como plazo — es la artesana quien debe actuar dentro de ese plazo; el margen extra del cron es solo el peor caso del mecanismo de respaldo automático.
+El cron `cancel-overdue-orders` corre una vez al día (`vercel.json`, `"0 3 * * *"`). En el plan Hobby de Vercel, los crons declarados con frecuencia subdiaria no se ejecutan realmente con esa frecuencia — igual que se documentó en H6.1 para el cron de notificación de mensajes. Consecuencia: un pedido no aceptado puede tardar hasta ~48h en cancelarse automáticamente en el peor caso, no exactamente 24h. Decisión ya tomada (2026-07-15): aceptar este compromiso, documentarlo en código (T6.4), no cambiar infraestructura. La UI (contador visual, AC1) sigue mostrando 24h como plazo — es la artesana quien debe actuar dentro de ese plazo; el margen extra del cron es solo el peor caso del mecanismo de respaldo automático.
 
 ### Impacto técnico relacionado (fuera de alcance de esta historia, anotado para H6.3)
 
