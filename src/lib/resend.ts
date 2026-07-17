@@ -10,6 +10,7 @@ import { SHIPPING_METHOD_LABELS, PENALTY_AMOUNT_CENTS } from "~/lib/order-consta
 import { getBaseUrl } from "~/lib/stripe-url";
 
 import OrderConfirmationEmail from "~/lib/emails/OrderConfirmationEmail";
+import OrderAcceptedEmail from "~/lib/emails/OrderAcceptedEmail";
 import NewSaleEmail from "~/lib/emails/NewSaleEmail";
 import FirstSaleEmail from "~/lib/emails/FirstSaleEmail";
 import CancellationEmail from "~/lib/emails/CancellationEmail";
@@ -69,6 +70,32 @@ export async function sendOrderConfirmation(order: Order) {
       insuranceFeeInCents,
       stripeFeeInCents: data.stripeFeeInCents,
       totalInCents: data.totalInCents,
+    }),
+  });
+}
+
+//Función de envío de correo a la compradora cuando la artesana acepta su pedido.
+export async function sendOrderAcceptedEmail(order: Order) {
+  const data = await db.order.findUnique({
+    where: { id: order.id },
+    include: {
+      buyer: { select: { name: true, email: true } },
+      product: { select: { name: true, imageUrls: true } },
+      artisan: { select: { name: true, lastName: true } },
+    },
+  });
+  if (!data?.buyer?.email) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.buyer.email,
+    subject: "¡Tu pedido ha sido aceptado! — Artelier",
+    react: OrderAcceptedEmail({
+      buyerName: data.buyer.name ?? "",
+      orderId: data.id,
+      productName: data.product.name,
+      productImageUrl: data.product.imageUrls[0] ?? null,
+      artisanName: fullName(data.artisan.name, data.artisan.lastName),
     }),
   });
 }

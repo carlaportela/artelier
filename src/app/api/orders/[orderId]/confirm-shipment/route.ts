@@ -41,7 +41,7 @@ export async function POST(
       { status: 404 },
     );
   }
-  if (!["CONFIRMED", "IN_PREPARATION", "READY"].includes(order.status)){
+  if (!["IN_PREPARATION", "READY"].includes(order.status)){
     return NextResponse.json(
       {
         error: {

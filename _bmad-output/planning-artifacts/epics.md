@@ -182,7 +182,8 @@ FR46: Épico 8 — Admin suspende o elimina perfiles por incumplimiento
 FR47: Épico 8 — Panel de métricas básicas de actividad
 FR48: Épico 8 — Páginas legales accesibles desde todas las páginas (LSSI)
 FR49: Épico 5 — Primera venta sin comisión para la artesana
-FR50: Épico 6 H6.2/H6.3 — Artesana actualiza estados de pedido; comprador confirma entrega y acepta
+FR50: Épico 6 H6.3/H6.4 — Artesana actualiza estados de pedido; comprador confirma entrega y acepta
+FR51: Épico 6 H6.2 — Artesana acepta o rechaza un pedido confirmado, o el sistema lo cancela por falta de respuesta
 
 ## Epic List
 
@@ -220,8 +221,8 @@ Un comprador puede completar una compra con desglose completo de costes visible 
 **UX-DRs cubiertos:** UX-DR14
 
 ### Épico 6: Pedidos, Notificaciones y Proceso de En preparación
-El comprador recibe su confirmación de pedido por email y puede seguir el estado en tiempo real. La artesana avanza los estados hasta Entregado; la compradora acepta el pedido (o el sistema lo hace automáticamente tras 48h), momento en que Stripe libera el pago. Todos los eventos importantes generan notificaciones por email.
-**FRs cubiertos:** FR38 · FR39 · FR40 · FR50
+El comprador recibe la confirmación de que su pedido se ha realizado correctamente. La artesana acepta o rechaza el pedido dentro de un plazo de 24 horas (o el sistema lo cancela automáticamente si no responde en ese plazo); si lo acepta, el comprador recibe la confirmación de que la artesana ha aceptado su pedido, y esta avanza los estados de preparación hasta Entregado, visibles para la compradora en tiempo real. Al recibir o recoger el pedido, la compradora lo acepta (o el sistema lo hace automáticamente tras 48h), momento en que Stripe libera el pago. Todos los eventos importantes generan notificaciones por email.
+**FRs cubiertos:** FR38 · FR39 · FR40 · FR50 · FR51
 **ARs cubiertos:** AR8
 **UX-DRs cubiertos:** UX-DR7 · UX-DR8
 
@@ -988,7 +989,36 @@ para estar informada sin tener que entrar en la aplicación.
 **Y** incluye pie de página con enlace a preferencias de notificación y enlace de baja
 **Y** es enviado mediante Resend con `from: noreply@artelier.es`
 
-### Historia 6.2: Timeline de estados y actualizaciones de proceso
+### Historia 6.2: Aceptación o rechazo de pedido por la artesana
+
+Como artesana,
+quiero poder aceptar o rechazar un pedido confirmado dentro de un plazo determinado,
+para no comprometerme a producir algo que no puedo entregar, y que el sistema resuelva automáticamente los pedidos que no atienda a tiempo.
+
+**Acceptance Criteria:**
+
+**Dado** que soy artesana y tengo un pedido nuevo en estado Confirmado
+**Cuando** entro al detalle del pedido en `/studio/orders/[id]`
+**Entonces** veo dos opciones: "Aceptar pedido" y "No puedo con este pedido"
+**Y** tengo un plazo de 24 horas desde la confirmación del pago para decidir, con un contador visual del tiempo restante
+
+**Dado** que acepto el pedido
+**Cuando** confirmo la aceptación
+**Entonces** el pedido pasa a estado "En preparación" y puedo empezar a actualizar su progreso (Historia 6.3)
+**Y** la compradora recibe un email confirmando que la artesana ha aceptado su pedido
+
+**Dado** que rechazo el pedido
+**Cuando** indico un motivo (mínimo 10 caracteres)
+**Entonces** el pedido se cancela, se reembolsa íntegramente a la compradora, y el producto vuelve a estar disponible en el catálogo
+**Y** no se aplica ninguna penalización a la artesana
+**Y** la compradora recibe un email explicando la cancelación y el motivo indicado
+
+**Dado** que no acepto ni rechazo el pedido dentro del plazo de 24 horas
+**Cuando** el cron periódico revisa los pedidos pendientes de aceptación
+**Entonces** el sistema cancela el pedido automáticamente, reembolsa a la compradora, reactiva el producto, y aplica la penalización económica existente (`PENALTY_AMOUNT_CENTS`)
+**Y** tanto la compradora como la artesana reciben el email correspondiente
+
+### Historia 6.3: Timeline de estados y actualizaciones de proceso
 
 Como artesana y compradora,
 quiero visualizar el progreso de un pedido en un timeline claro y que la artesana pueda añadir mensajes personales en cada avance de estado,
@@ -996,7 +1026,7 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 
 **Acceptance Criteria:**
 
-**Dado** que soy artesana con un pedido confirmado en `/studio/orders/[id]`
+**Dado** que soy artesana con un pedido ya aceptado en `/studio/orders/[id]` (Historia 6.2)
 **Cuando** visualizo el detalle del pedido
 **Entonces** veo el componente `OrderStatusTimeline` con los 6 estados: Confirmado → **En preparación** → Listo → Enviado → Entregado → Aceptado
 **Y** el estado actual aparece marcado con `aria-current="step"` en el `<ol>` subyacente
@@ -1005,8 +1035,8 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 **Cuando** pulso "Avanzar estado" en el panel de estudio
 **Entonces** puedo avanzar la secuencia Confirmado → En preparación → Listo → Enviado, añadiendo un mensaje personal opcional (máx. 280 caracteres) en cada paso
 **Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline de la compradora
-**Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente vía webhook del carrier (Historia 6.3)
-**Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento (Historia 6.3)
+**Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente vía webhook del carrier (Historia 6.4)
+**Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento (Historia 6.4)
 
 **Dado** que soy compradora viendo `/orders/[id]`
 **Cuando** la artesana actualiza el estado del pedido
@@ -1014,7 +1044,7 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 **Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
 **Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
 
-### Historia 6.3: Confirmación de entrega, aceptación del comprador y liberación de pago
+### Historia 6.4: Confirmación de entrega, aceptación del comprador y liberación de pago
 
 Como artesana y compradora,
 quiero que el estado "Entregado" se marque automáticamente cuando la mensajería lo confirme o manualmente cuando la artesana lo entregue en persona, y que el pago se libere solo cuando la compradora acepte o transcurran 48 horas sin disputa,

@@ -55,7 +55,7 @@ export default function NewFollowerEmail({ artisanName, followerName, followerIm
           href={followersUrl}
           style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 28px", fontSize: "14px", fontFamily: fontBody, display: "inline-block" }}
         >
-          Ver mis seguidoras
+          Ver mis seguidores
         </Button>
       </Section>
 

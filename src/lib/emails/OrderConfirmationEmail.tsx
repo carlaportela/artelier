@@ -345,7 +345,7 @@ export default function OrderConfirmationEmail({
                 marginRight: "8px",
               }}
             >
-              Ver mi pedido
+              Ver pedido
             </Button>
             <Button
               href={`https://artelier.es/orders/${orderId}`}
