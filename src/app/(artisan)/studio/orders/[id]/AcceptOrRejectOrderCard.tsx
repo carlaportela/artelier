@@ -59,6 +59,10 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
 
+  //El plazo ya ha expirado: el servidor rechazaría accept/reject con 409, así que deshabilitamos
+  //los botones en vez de dejar que la artesana lo intente y reciba un error.
+  const expired = remaining <= 0;
+
   //Contador visual: se actualiza cada 30s, no hace falta más precisión para un plazo de 24h.
   useEffect(() => {
     const interval = setInterval(() => setRemaining(deadline - Date.now()), 30_000);
@@ -112,20 +116,22 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
         Tienes un pedido nuevo — decide si lo aceptas
       </p>
       <p className="text-xs text-[--text-muted]">
-        Quedan {formatRemaining(remaining)} para decidir. Si no respondes a tiempo, el pedido se cancelará automáticamente.
+        {expired
+          ? "El plazo para decidir ha expirado. El pedido se cancelará automáticamente."
+          : `Quedan ${formatRemaining(remaining)} para decidir. Si no respondes a tiempo, el pedido se cancelará automáticamente.`}
       </p>
 
       <div className="flex gap-2">
         <button
           onClick={handleAccept}
-          disabled={loading}
+          disabled={loading || expired}
           className="flex-1 rounded-full bg-[#3d5a4f] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
         >
           Aceptar pedido
         </button>
         <button
           onClick={() => setRejectOpen(true)}
-          disabled={loading}
+          disabled={loading || expired}
           className="flex-1 rounded-full border border-red-200 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
         >
           No puedo con este pedido
@@ -170,7 +176,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
             </button>
             <button
               onClick={handleReject}
-              disabled={loading || reason.trim().length < 10}
+              disabled={loading || expired || reason.trim().length < 10}
               className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
             >
               {loading ? "Rechazando..." : "Confirmar rechazo"}

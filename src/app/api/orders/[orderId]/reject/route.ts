@@ -102,14 +102,26 @@ export async function POST(
     );
   }
 
-  //Reclamamos el pedido de forma atómica antes de tocar Stripe: el "where" exige que siga en
-  //CONFIRMED en el momento exacto de la escritura, para no reembolsar por error un pedido que la
-  //artesana ya aceptó o que el cron ya canceló entre la comprobación de arriba y este punto.
-  const claimed = await db.order.updateMany({
-    where: { id: orderId, status: "CONFIRMED" },
-    data: { status: "CANCELLED", cancellationReason: reason },
+  //Reclamamos el pedido y reactivamos el producto (si procede) en una única transacción atómica,
+  //antes de tocar Stripe: el "where" del updateMany exige que el pedido siga en CONFIRMED en el
+  //momento exacto de la escritura, para no reembolsar por error un pedido que la artesana ya aceptó
+  //o que el cron ya canceló entre la comprobación de arriba y este punto. Al ir ambas escrituras en
+  //la misma transacción, nunca queda el pedido cancelado sin que el producto se haya reactivado (o
+  //viceversa) si algo falla a medias.
+  const claimedCount = await db.$transaction(async (tx) => {
+    const claimed = await tx.order.updateMany({
+      where: { id: orderId, status: "CONFIRMED" },
+      data: { status: "CANCELLED", cancellationReason: reason },
+    });
+    if (claimed.count > 0 && canReactivateProduct(order.product)) {
+      await tx.product.update({
+        where: { id: order.productId },
+        data: { status: "ACTIVE" },
+      });
+    }
+    return claimed.count;
   });
-  if (claimed.count === 0) {
+  if (claimedCount === 0) {
     return NextResponse.json(
       {
         error: {
@@ -121,16 +133,9 @@ export async function POST(
     );
   }
 
-  //El pedido ya es nuestro (reclamado) — procedemos al reembolso íntegro. El rechazo voluntario no penaliza a la artesana.
+  //El pedido ya es nuestro (reclamado y el producto reactivado atómicamente) — procedemos al
+  //reembolso íntegro. El rechazo voluntario no penaliza a la artesana.
   await stripe.refunds.create({ payment_intent: order.stripePaymentIntentId });
-
-  //Reactivamos el producto si procede (no perecedero, o perecedero aún no caducado).
-  if (canReactivateProduct(order.product)) {
-    await db.product.update({
-      where: { id: order.productId },
-      data: { status: "ACTIVE" },
-    });
-  }
 
   //Se avisa a la compradora del rechazo y el motivo — reutilizamos la misma función y template que
   //ya usa la cancelación de H6.1, no hace falta un email nuevo para esto.
