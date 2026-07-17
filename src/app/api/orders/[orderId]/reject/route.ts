@@ -6,7 +6,7 @@ import { db } from "~/server/db";
 import { stripe } from "~/lib/stripe";
 import { ACCEPTANCE_WINDOW_MS } from "~/lib/order-constants";
 import { sendCancellationEmail } from "~/lib/resend";
-import { canReactivateProduct } from "~/lib/orders";
+import { claimAndCancelOrder } from "~/lib/orders";
 
 export async function POST(
   req: Request,
@@ -102,26 +102,16 @@ export async function POST(
     );
   }
 
-  //Reclamamos el pedido y reactivamos el producto (si procede) en una única transacción atómica,
-  //antes de tocar Stripe: el "where" del updateMany exige que el pedido siga en CONFIRMED en el
-  //momento exacto de la escritura, para no reembolsar por error un pedido que la artesana ya aceptó
-  //o que el cron ya canceló entre la comprobación de arriba y este punto. Al ir ambas escrituras en
-  //la misma transacción, nunca queda el pedido cancelado sin que el producto se haya reactivado (o
-  //viceversa) si algo falla a medias.
-  const claimedCount = await db.$transaction(async (tx) => {
-    const claimed = await tx.order.updateMany({
-      where: { id: orderId, status: "CONFIRMED" },
-      data: { status: "CANCELLED", cancellationReason: reason },
-    });
-    if (claimed.count > 0 && canReactivateProduct(order.product)) {
-      await tx.product.update({
-        where: { id: order.productId },
-        data: { status: "ACTIVE" },
-      });
-    }
-    return claimed.count;
+  //Reclamamos el pedido y reactivamos el producto (si procede) de forma atómica, antes de tocar
+  //Stripe: así no reembolsamos por error un pedido que la artesana ya aceptó o que el cron ya
+  //canceló entre la comprobación de arriba y este punto (ver claimAndCancelOrder en ~/lib/orders).
+  const claimed = await claimAndCancelOrder({
+    orderId,
+    cancellationReason: reason,
+    product: order.product,
+    productId: order.productId,
   });
-  if (claimedCount === 0) {
+  if (!claimed) {
     return NextResponse.json(
       {
         error: {

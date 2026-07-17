@@ -20,7 +20,7 @@ import {
   sendOrderCancelledBySystemToArtisanEmail,
 } from "~/lib/resend";
 import { stripe } from "~/lib/stripe";
-import { canReactivateProduct } from "~/lib/orders";
+import { claimAndCancelOrder } from "~/lib/orders";
 
 export const dynamic = "force-dynamic"; // nunca cachear este endpoint
 
@@ -60,37 +60,19 @@ export async function GET(req: Request) {
 
   for (const order of expiredOrders) {
     try {
-      //1. Reclamamos el pedido, reactivamos el producto (si procede) y aplicamos la penalización en
-      //una única transacción atómica: el "where" del updateMany exige que el pedido siga en
-      //CONFIRMED en el momento exacto de la escritura, para no pisar una aceptación/rechazo de la
-      //artesana que haya ocurrido justo entre la consulta de arriba y este punto. Al ir las tres
-      //escrituras juntas, nunca queda el pedido cancelado sin penalización/reactivación (o
-      //viceversa) si alguna falla a medias.
-      const claimedCount = await db.$transaction(async (tx) => {
-        const claimed = await tx.order.updateMany({
-          where: { id: order.id, status: "CONFIRMED" },
-          data: {
-            status: "CANCELLED",
-            cancellationReason:
-              "El sistema ha cancelado tu pedido porque la artesana no lo aceptó dentro del plazo de 24 horas. Se ha iniciado el reembolso.",
-          },
-        });
-        if (claimed.count === 0) {
-          return 0;
-        }
-        if (canReactivateProduct(order.product)) {
-          await tx.product.update({
-            where: { id: order.productId },
-            data: { status: "ACTIVE" },
-          });
-        }
-        await tx.user.update({
-          where: { id: order.artisanId },
-          data: { pendingPenaltyInCents: { increment: PENALTY_AMOUNT_CENTS } }, //Se acumula a penalizaciones anteriores
-        });
-        return claimed.count;
+      //1. Reclamamos el pedido, reactivamos el producto (si procede) y aplicamos la penalización de
+      //forma atómica (ver claimAndCancelOrder en ~/lib/orders) — el "where" interno exige que el
+      //pedido siga en CONFIRMED en el momento exacto de la escritura, para no pisar una
+      //aceptación/rechazo de la artesana ocurrida justo entre la consulta de arriba y este punto.
+      const claimed = await claimAndCancelOrder({
+        orderId: order.id,
+        cancellationReason:
+          "El sistema ha cancelado tu pedido porque la artesana no lo aceptó dentro del plazo de 24 horas. Se ha iniciado el reembolso.",
+        product: order.product,
+        productId: order.productId,
+        penalty: { artisanId: order.artisanId, amountCents: PENALTY_AMOUNT_CENTS },
       });
-      if (claimedCount === 0) {
+      if (!claimed) {
         continue;
       }
 

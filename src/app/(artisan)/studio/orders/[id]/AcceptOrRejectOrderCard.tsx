@@ -21,6 +21,10 @@ interface Props {
   createdAt: string; //ISO string — Date no cruza el límite servidor→cliente como instancia.
 }
 
+//Margen antes de considerar expirado el plazo en el cliente, por si el reloj del dispositivo va
+//adelantado respecto al servidor — que sigue siendo quien realmente decide con su propio reloj.
+const CLOCK_SKEW_GRACE_MS = 5 * 60 * 1000;
+
 //Formatea los milisegundos restantes como "Xh Ymin".
 function formatRemaining(ms: number) {
   if (ms <= 0) return "0h 0min";
@@ -61,7 +65,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
 
   //El plazo ya ha expirado: el servidor rechazaría accept/reject con 409, así que deshabilitamos
   //los botones en vez de dejar que la artesana lo intente y reciba un error.
-  const expired = remaining <= 0;
+  const expired = remaining <= -CLOCK_SKEW_GRACE_MS;
 
   //Contador visual: se actualiza cada 30s, no hace falta más precisión para un plazo de 24h.
   useEffect(() => {
