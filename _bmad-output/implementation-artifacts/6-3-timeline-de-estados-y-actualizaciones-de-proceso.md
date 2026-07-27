@@ -42,17 +42,17 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
   - [x] T1.2: `npx prisma migrate dev --name add_order_status_update`
   - [x] T1.3: Añadir `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH = 280` en `src/lib/order-constants.ts`, junto a las demás constantes de negocio
 
-- [ ] T2 — Endpoint para avanzar estado (AC2)
-  - [ ] T2.1: Crear `src/app/api/orders/[orderId]/advance-status/route.ts` — `POST`, rol `ARTISAN`, verifica `order.artisanId === session.user.id` (mismo patrón de guard que `accept/route.ts`)
-  - [ ] T2.2: El endpoint NO recibe el estado destino del cliente — lo calcula server-side a partir de `order.status` actual + `order.shippingMethod` (evita que el cliente pueda saltarse pasos):
+- [x] T2 — Endpoint para avanzar estado (AC2)
+  - [x] T2.1: Crear `src/app/api/orders/[orderId]/advance-status/route.ts` — `POST`, rol `ARTISAN`, verifica `order.artisanId === session.user.id` (mismo patrón de guard que `accept/route.ts`)
+  - [x] T2.2: El endpoint NO recibe el estado destino del cliente — lo calcula server-side a partir de `order.status` actual + `order.shippingMethod` (evita que el cliente pueda saltarse pasos):
     - `IN_PREPARATION` → siguiente = `READY` (todos los métodos de envío)
     - `READY` + `shippingMethod !== "PICKUP"` → siguiente = `SHIPPED` (requiere `trackingNumber` en el body, igual que el antiguo `confirm-shipment`)
     - `READY` + `shippingMethod === "PICKUP"` → 409 `ORDER_NOT_ADVANCEABLE` (el pedido de recogida ya está en su último paso manual de esta historia; "Entregado" es la Historia 6.4)
     - Cualquier otro `order.status` → 409 `ORDER_NOT_ADVANCEABLE`
-  - [ ] T2.3: Body `{ message?: string; trackingNumber?: string }`. Validar `message.length <= ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH` (si no, 422 `INVALID_MESSAGE`). Validar `trackingNumber` no vacío cuando el siguiente estado es `SHIPPED` (si no, 422 `INVALID_TRACKING_NUMBER` — mismo código que usaba `confirm-shipment`)
-  - [ ] T2.4: Reclamo atómico + creación del `OrderStatusUpdate` en una única transacción interactiva (`db.$transaction(async (tx) => ...)`), **siguiendo el mismo patrón que `claimAndCancelOrder` en `src/lib/orders.ts` (Historia 6.2)**: `tx.order.updateMany({ where: { id: orderId, status: currentStatus }, data: { status: nextStatus, ...(trackingNumber && { trackingNumber }) } })`, comprobar `count`, y solo si `count > 0` crear `tx.processUpdate.create({ data: { orderId, status: nextStatus, message: message || null } })`. Si `count === 0`, devolver 409 `ORDER_NOT_ADVANCEABLE` — evita el mismo problema de condición de carrera que Sourcery señaló en la Historia 6.2 (doble clic, dos pestañas)
-  - [ ] T2.5: Fire-and-forget del email correspondiente al nuevo estado (ver T4)
-  - [ ] T2.6: Eliminar `src/app/api/orders/[orderId]/confirm-shipment/route.ts` — este endpoint queda completamente reemplazado por `advance-status` (saltaba directamente `IN_PREPARATION → SHIPPED` sin pasar por `READY`, lo cual es incompatible con el timeline paso a paso de esta historia)
+  - [x] T2.3: Body `{ message?: string; trackingNumber?: string }`. Validar `message.length <= ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH` (si no, 422 `INVALID_MESSAGE`). Validar `trackingNumber` no vacío cuando el siguiente estado es `SHIPPED` (si no, 422 `INVALID_TRACKING_NUMBER` — mismo código que usaba `confirm-shipment`)
+  - [x] T2.4: Reclamo atómico + creación del `OrderStatusUpdate` en una única transacción interactiva (`db.$transaction(async (tx) => ...)`), **siguiendo el mismo patrón que `claimAndCancelOrder` en `src/lib/orders.ts` (Historia 6.2)**: `tx.order.updateMany({ where: { id: orderId, status: currentStatus }, data: { status: nextStatus, ...(trackingNumber && { trackingNumber }) } })`, comprobar `count`, y solo si `count > 0` crear `tx.orderStatusUpdate.create({ data: { orderId, status: nextStatus, message: message || null } })`. Si `count === 0`, devolver 409 `ORDER_NOT_ADVANCEABLE` — evita el mismo problema de condición de carrera que Sourcery señaló en la Historia 6.2 (doble clic, dos pestañas)
+  - [x] T2.5: Fire-and-forget del email correspondiente al nuevo estado (ver T4) — **pendiente de completar en T4**: por ahora llama a las funciones de email con su firma actual (sin mensaje personal), ya que `sendOrderPreparedEmail` aún no existe
+  - [x] T2.6: Eliminar `src/app/api/orders/[orderId]/confirm-shipment/route.ts` — este endpoint queda completamente reemplazado por `advance-status` (saltaba directamente `IN_PREPARATION → SHIPPED` sin pasar por `READY`, lo cual es incompatible con el timeline paso a paso de esta historia)
 
 - [ ] T3 — Endpoint de lectura para polling de la compradora (AC3)
   - [ ] T3.1: Crear `src/app/api/orders/[orderId]/route.ts` — `GET`, verifica que `order.buyerId === session.user.id` **o** `order.artisanId === session.user.id` (ambos roles pueden consultarlo)
