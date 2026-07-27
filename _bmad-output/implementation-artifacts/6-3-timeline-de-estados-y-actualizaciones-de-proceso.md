@@ -54,10 +54,10 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
   - [x] T2.5: Fire-and-forget del email correspondiente al nuevo estado (ver T4) — **pendiente de completar en T4**: por ahora llama a las funciones de email con su firma actual (sin mensaje personal), ya que `sendOrderPreparedEmail` aún no existe
   - [x] T2.6: Eliminar `src/app/api/orders/[orderId]/confirm-shipment/route.ts` — este endpoint queda completamente reemplazado por `advance-status` (saltaba directamente `IN_PREPARATION → SHIPPED` sin pasar por `READY`, lo cual es incompatible con el timeline paso a paso de esta historia)
 
-- [ ] T3 — Endpoint de lectura para polling de la compradora (AC3)
-  - [ ] T3.1: Crear `src/app/api/orders/[orderId]/route.ts` — `GET`, verifica que `order.buyerId === session.user.id` **o** `order.artisanId === session.user.id` (ambos roles pueden consultarlo)
-  - [ ] T3.2: Query param `?since=<ISO timestamp>` — mismo patrón exacto que `src/app/api/messages/[conversationId]/route.ts`: si se pasa `since`, devuelve solo `{ status, trackingNumber, statusUpdates: OrderStatusUpdate[] }` con `statusUpdates` filtrados por `createdAt: { gt: sinceDate }`; si no se pasa, devuelve el pedido completo con todos los `statusUpdates` (orden `createdAt: "asc"`)
-  - [ ] T3.3: Añadir rate limiter `orderStatusLimiter = createLimiter(30, "60 s")` en `src/lib/ratelimit.ts` (mismo presupuesto que `messageLimiter`, mismo motivo: endpoint de polling)
+- [x] T3 — Endpoint de lectura para polling de la compradora (AC3)
+  - [x] T3.1: Crear `src/app/api/orders/[orderId]/route.ts` — `GET`, verifica que `order.buyerId === session.user.id` **o** `order.artisanId === session.user.id` (ambos roles pueden consultarlo)
+  - [x] T3.2: Query param `?since=<ISO timestamp>` — mismo patrón exacto que `src/app/api/messages/[conversationId]/route.ts`: si se pasa `since`, devuelve solo `{ status, trackingNumber, statusUpdates: OrderStatusUpdate[] }` con `statusUpdates` filtrados por `createdAt: { gt: sinceDate }`; si no se pasa, devuelve el pedido completo con todos los `statusUpdates` (orden `createdAt: "asc"`)
+  - [x] T3.3: Añadir rate limiter `orderStatusLimiter = createLimiter(30, "60 s")` en `src/lib/ratelimit.ts` (mismo presupuesto que `messageLimiter`, mismo motivo: endpoint de polling)
 
 - [ ] T4 — Emails de cambio de estado (AC3)
   - [ ] T4.1: Extender `src/lib/emails/ShipmentConfirmedEmail.tsx` y `sendShipmentConfirmedEmail` en `resend.ts` con prop opcional `personalMessage: string | null` — se muestra como bloque adicional en el email si no es null (mismo layout que el resto: `Text` con `fontBody`, debajo de la descripción del envío)
