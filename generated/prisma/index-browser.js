@@ -215,6 +215,14 @@ exports.Prisma.OrderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.OrderStatusUpdateScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  status: 'status',
+  message: 'message',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CustomOrderRequestScalarFieldEnum = {
   id: 'id',
   buyerId: 'buyerId',
@@ -400,6 +408,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Product: 'Product',
   Order: 'Order',
+  OrderStatusUpdate: 'OrderStatusUpdate',
   CustomOrderRequest: 'CustomOrderRequest',
   Conversation: 'Conversation',
   Message: 'Message',

@@ -95,7 +95,7 @@ development_status:
   epic-6: in-progress
   6-1-notificaciones-por-email-transaccionales: done
   6-2-aceptacion-o-rechazo-de-pedido-por-la-artesana: done
-  6-3-timeline-de-estados-y-actualizaciones-de-proceso: ready-for-dev
+  6-3-timeline-de-estados-y-actualizaciones-de-proceso: in-progress
   6-4-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
   epic-6-retrospective: optional
 

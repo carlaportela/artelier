@@ -21,7 +21,7 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 - **Dado** que soy artesana y quiero avanzar el estado del pedido
 - **Cuando** pulso "Avanzar estado" en el panel de estudio
 - **Entonces** puedo avanzar la secuencia En preparación → Listo → Enviado (Confirmado→En preparación ya lo cubre el "Aceptar pedido" de la Historia 6.2), añadiendo un mensaje personal opcional (máx. 280 caracteres) en cada paso
-- **Y** el mensaje personal se muestra como componente `ProcessUpdate` en el timeline de la compradora
+- **Y** el mensaje personal se muestra como componente `OrderStatusUpdate` en el timeline de la compradora
 - **Y** el paso a "Entregado" no está disponible manualmente si el pedido usa envío de la plataforma — en ese caso lo marca el sistema automáticamente vía webhook del carrier (Historia 6.4)
 - **Y** el paso a "Aceptado" es exclusivo de la compradora o del sistema por vencimiento (Historia 6.4)
 - **Y** para pedidos de recogida en persona, "Listo" es el último paso avanzable manualmente desde esta historia — "Entregado" lo marca la artesana manualmente en persona, pero eso es alcance de la Historia 6.4, no de ésta
@@ -30,17 +30,17 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 - **Dado** que soy compradora viendo `/orders/[id]`
 - **Cuando** la artesana actualiza el estado del pedido
 - **Entonces** el timeline se actualiza automáticamente (polling cada 30s si la pestaña está visible, pausado si `document.hidden`)
-- **Y** veo el estado actualizado y el mensaje personal de la artesana como `ProcessUpdate`
+- **Y** veo el estado actualizado y el mensaje personal de la artesana como `OrderStatusUpdate`
 - **Y** recibo un email de notificación con el nuevo estado (Historia 6.1)
 
 [Source: _bmad-output/planning-artifacts/epics.md#Historia 6.3, _bmad-output/planning-artifacts/prd.md#FR50]
 
 ## Tasks / Subtasks
 
-- [ ] T1 — Migración de base de datos: historial de estados con mensaje personal (AC1, AC2, AC3)
-  - [ ] T1.1: Añadir modelo `ProcessUpdate` en `prisma/schema.prisma`: `id`, `orderId`, `status` (`OrderStatus`), `message` (`String?`), `createdAt` (`DateTime @default(now())`). Relación `order Order @relation(fields: [orderId], references: [id])` + añadir `processUpdates ProcessUpdate[]` al modelo `Order`
-  - [ ] T1.2: `npx prisma migrate dev --name add_process_update`
-  - [ ] T1.3: Añadir `PROCESS_UPDATE_MESSAGE_MAX_LENGTH = 280` en `src/lib/order-constants.ts`, junto a las demás constantes de negocio
+- [x] T1 — Migración de base de datos: historial de estados con mensaje personal (AC1, AC2, AC3)
+  - [x] T1.1: Añadir modelo `OrderStatusUpdate` en `prisma/schema.prisma`: `id`, `orderId`, `status` (`OrderStatus`), `message` (`String?`), `createdAt` (`DateTime @default(now())`). Relación `order Order @relation(fields: [orderId], references: [id])` + añadir `statusUpdates OrderStatusUpdate[]` al modelo `Order`
+  - [x] T1.2: `npx prisma migrate dev --name add_order_status_update`
+  - [x] T1.3: Añadir `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH = 280` en `src/lib/order-constants.ts`, junto a las demás constantes de negocio
 
 - [ ] T2 — Endpoint para avanzar estado (AC2)
   - [ ] T2.1: Crear `src/app/api/orders/[orderId]/advance-status/route.ts` — `POST`, rol `ARTISAN`, verifica `order.artisanId === session.user.id` (mismo patrón de guard que `accept/route.ts`)
@@ -49,14 +49,14 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
     - `READY` + `shippingMethod !== "PICKUP"` → siguiente = `SHIPPED` (requiere `trackingNumber` en el body, igual que el antiguo `confirm-shipment`)
     - `READY` + `shippingMethod === "PICKUP"` → 409 `ORDER_NOT_ADVANCEABLE` (el pedido de recogida ya está en su último paso manual de esta historia; "Entregado" es la Historia 6.4)
     - Cualquier otro `order.status` → 409 `ORDER_NOT_ADVANCEABLE`
-  - [ ] T2.3: Body `{ message?: string; trackingNumber?: string }`. Validar `message.length <= PROCESS_UPDATE_MESSAGE_MAX_LENGTH` (si no, 422 `INVALID_MESSAGE`). Validar `trackingNumber` no vacío cuando el siguiente estado es `SHIPPED` (si no, 422 `INVALID_TRACKING_NUMBER` — mismo código que usaba `confirm-shipment`)
-  - [ ] T2.4: Reclamo atómico + creación del `ProcessUpdate` en una única transacción interactiva (`db.$transaction(async (tx) => ...)`), **siguiendo el mismo patrón que `claimAndCancelOrder` en `src/lib/orders.ts` (Historia 6.2)**: `tx.order.updateMany({ where: { id: orderId, status: currentStatus }, data: { status: nextStatus, ...(trackingNumber && { trackingNumber }) } })`, comprobar `count`, y solo si `count > 0` crear `tx.processUpdate.create({ data: { orderId, status: nextStatus, message: message || null } })`. Si `count === 0`, devolver 409 `ORDER_NOT_ADVANCEABLE` — evita el mismo problema de condición de carrera que Sourcery señaló en la Historia 6.2 (doble clic, dos pestañas)
+  - [ ] T2.3: Body `{ message?: string; trackingNumber?: string }`. Validar `message.length <= ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH` (si no, 422 `INVALID_MESSAGE`). Validar `trackingNumber` no vacío cuando el siguiente estado es `SHIPPED` (si no, 422 `INVALID_TRACKING_NUMBER` — mismo código que usaba `confirm-shipment`)
+  - [ ] T2.4: Reclamo atómico + creación del `OrderStatusUpdate` en una única transacción interactiva (`db.$transaction(async (tx) => ...)`), **siguiendo el mismo patrón que `claimAndCancelOrder` en `src/lib/orders.ts` (Historia 6.2)**: `tx.order.updateMany({ where: { id: orderId, status: currentStatus }, data: { status: nextStatus, ...(trackingNumber && { trackingNumber }) } })`, comprobar `count`, y solo si `count > 0` crear `tx.processUpdate.create({ data: { orderId, status: nextStatus, message: message || null } })`. Si `count === 0`, devolver 409 `ORDER_NOT_ADVANCEABLE` — evita el mismo problema de condición de carrera que Sourcery señaló en la Historia 6.2 (doble clic, dos pestañas)
   - [ ] T2.5: Fire-and-forget del email correspondiente al nuevo estado (ver T4)
   - [ ] T2.6: Eliminar `src/app/api/orders/[orderId]/confirm-shipment/route.ts` — este endpoint queda completamente reemplazado por `advance-status` (saltaba directamente `IN_PREPARATION → SHIPPED` sin pasar por `READY`, lo cual es incompatible con el timeline paso a paso de esta historia)
 
 - [ ] T3 — Endpoint de lectura para polling de la compradora (AC3)
   - [ ] T3.1: Crear `src/app/api/orders/[orderId]/route.ts` — `GET`, verifica que `order.buyerId === session.user.id` **o** `order.artisanId === session.user.id` (ambos roles pueden consultarlo)
-  - [ ] T3.2: Query param `?since=<ISO timestamp>` — mismo patrón exacto que `src/app/api/messages/[conversationId]/route.ts`: si se pasa `since`, devuelve solo `{ status, trackingNumber, processUpdates: ProcessUpdate[] }` con `processUpdates` filtrados por `createdAt: { gt: sinceDate }`; si no se pasa, devuelve el pedido completo con todos los `processUpdates` (orden `createdAt: "asc"`)
+  - [ ] T3.2: Query param `?since=<ISO timestamp>` — mismo patrón exacto que `src/app/api/messages/[conversationId]/route.ts`: si se pasa `since`, devuelve solo `{ status, trackingNumber, statusUpdates: OrderStatusUpdate[] }` con `statusUpdates` filtrados por `createdAt: { gt: sinceDate }`; si no se pasa, devuelve el pedido completo con todos los `statusUpdates` (orden `createdAt: "asc"`)
   - [ ] T3.3: Añadir rate limiter `orderStatusLimiter = createLimiter(30, "60 s")` en `src/lib/ratelimit.ts` (mismo presupuesto que `messageLimiter`, mismo motivo: endpoint de polling)
 
 - [ ] T4 — Emails de cambio de estado (AC3)
@@ -70,10 +70,10 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 
 - [ ] T5 — Componentes de timeline (AC1, AC2, AC3)
   - [ ] T5.1: Crear `src/components/order/OrderStatusTimeline.tsx` — recibe `status: OrderStatus` y `shippingMethod: ShippingMethod`. Renderiza un `<ol>` con los 6 estados canónicos (usa las traducciones ya existentes en `orderStatus.*` de `es.json`, NO crear claves nuevas). El paso actual lleva `aria-current="step"`. Si `shippingMethod === "PICKUP"`, omite visualmente el paso "Enviado" y sustituye la etiqueta de "Listo" por "Listo para recogida" (ver Dev Notes) — esto es lógica de presentación local al componente, no toca `es.json`
-  - [ ] T5.2: Crear `src/components/order/ProcessUpdate.tsx` — recibe `status`, `message`, `createdAt` de un `ProcessUpdate`; renderiza una entrada de timeline con el mensaje personal si existe (arquitecture.md original lo ubicaba en `components/messaging/`, pero no reutiliza el modelo `Message` — se coloca en `components/order/` por cohesión con el dato que realmente representa; no hay `components/messaging/` en el código actual, así que no hay convención que romper)
-  - [ ] T5.3: Reemplazar `src/app/(artisan)/studio/orders/[id]/ConfirmShipmentForm.tsx` por `AdvanceStatusForm.tsx` (mismo patrón `"use client"`, fetch + toast + `router.refresh()` que el resto de esta zona) — muestra el campo de `trackingNumber` solo cuando el siguiente paso es `SHIPPED` (`order.status === "READY" && shippingMethod !== "PICKUP"`), y siempre un textarea opcional de mensaje personal con contador de caracteres (mismo patrón que `AcceptOrRejectOrderCard.tsx`, mínimo 0 en vez de 10, máximo `PROCESS_UPDATE_MESSAGE_MAX_LENGTH`)
+  - [ ] T5.2: Crear `src/components/order/OrderStatusUpdate.tsx` — recibe `status`, `message`, `createdAt` de un `OrderStatusUpdate`; renderiza una entrada de timeline con el mensaje personal si existe (arquitecture.md original lo ubicaba en `components/messaging/`, pero no reutiliza el modelo `Message` — se coloca en `components/order/` por cohesión con el dato que realmente representa; no hay `components/messaging/` en el código actual, así que no hay convención que romper)
+  - [ ] T5.3: Reemplazar `src/app/(artisan)/studio/orders/[id]/ConfirmShipmentForm.tsx` por `AdvanceStatusForm.tsx` (mismo patrón `"use client"`, fetch + toast + `router.refresh()` que el resto de esta zona) — muestra el campo de `trackingNumber` solo cuando el siguiente paso es `SHIPPED` (`order.status === "READY" && shippingMethod !== "PICKUP"`), y siempre un textarea opcional de mensaje personal con contador de caracteres (mismo patrón que `AcceptOrRejectOrderCard.tsx`, mínimo 0 en vez de 10, máximo `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH`)
   - [ ] T5.4: En `src/app/(artisan)/studio/orders/[id]/page.tsx`: renderizar `<OrderStatusTimeline>` siempre (para todos los estados), y `<AdvanceStatusForm>` cuando `order.status === "IN_PREPARATION"` **o** (`order.status === "READY"` y `shippingMethod !== "PICKUP"`) — sustituye el bloque actual que solo cubría `IN_PREPARATION`
-  - [ ] T5.5: Crear `src/app/(buyer)/orders/[id]/OrderStatusPoller.tsx` (`"use client"`) — recibe `orderId`, estado inicial y `processUpdates` iniciales como props desde el server component; hace polling a `GET /api/orders/[orderId]?since=` cada 30s con pausa en `document.hidden`, **replicando el patrón exacto ya establecido en `src/components/MessageArea.tsx`** (mismo `useRef` para evitar closures obsoletas, mismo `visibilitychange` + `setInterval`, NO crear un hook nuevo en `src/hooks/` — ese directorio no existe en el código real pese a estar en `architecture.md`, la convención real de este proyecto es inline en el componente). Renderiza `<OrderStatusTimeline>` + lista de `<ProcessUpdate>`
+  - [ ] T5.5: Crear `src/app/(buyer)/orders/[id]/OrderStatusPoller.tsx` (`"use client"`) — recibe `orderId`, estado inicial y `statusUpdates` iniciales como props desde el server component; hace polling a `GET /api/orders/[orderId]?since=` cada 30s con pausa en `document.hidden`, **replicando el patrón exacto ya establecido en `src/components/MessageArea.tsx`** (mismo `useRef` para evitar closures obsoletas, mismo `visibilitychange` + `setInterval`, NO crear un hook nuevo en `src/hooks/` — ese directorio no existe en el código real pese a estar en `architecture.md`, la convención real de este proyecto es inline en el componente). Renderiza `<OrderStatusTimeline>` + lista de `<OrderStatusUpdate>`
   - [ ] T5.6: En `src/app/(buyer)/orders/[id]/page.tsx`, renderizar `<OrderStatusPoller>` en vez de (o junto a) la actual etiqueta plana de estado — mantener el resto de la página (card de producto, desglose de costes, cancelación) sin cambios
 
 - [ ] T6 — Typecheck y build limpio
@@ -84,7 +84,7 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
 
 ### Esta historia SÍ requiere migración de base de datos (a diferencia de H6.1/H6.2)
 
-Las historias 6.1 y 6.2 reutilizaron el enum `OrderStatus` existente sin tocar el esquema. **Esta es diferente**: no existe ningún modelo para guardar el historial de cambios de estado con su mensaje personal asociado — `Order` solo guarda su estado *actual*, no un historial. Sin un modelo nuevo (`ProcessUpdate`), no hay forma de mostrar "el mensaje que puso la artesana cuando pasó a Listo" de forma persistente, ni de que el polling de la compradora detecte "hay una actualización nueva desde mi último `since`". Ver T1.
+Las historias 6.1 y 6.2 reutilizaron el enum `OrderStatus` existente sin tocar el esquema. **Esta es diferente**: no existe ningún modelo para guardar el historial de cambios de estado con su mensaje personal asociado — `Order` solo guarda su estado *actual*, no un historial. Sin un modelo nuevo (`OrderStatusUpdate`), no hay forma de mostrar "el mensaje que puso la artesana cuando pasó a Listo" de forma persistente, ni de que el polling de la compradora detecte "hay una actualización nueva desde mi último `since`". Ver T1.
 
 ### Cambio de comportamiento: `confirm-shipment` desaparece, sustituido por `advance-status`
 
@@ -99,7 +99,7 @@ El endpoint actual `POST /api/orders/[orderId]/confirm-shipment` (Historia 5.4, 
 - **Transacción atómica con reclamo de estado:** replicar el patrón de `claimAndCancelOrder` en `src/lib/orders.ts` (Historia 6.2, añadido tras revisión de Sourcery) — `updateMany` con `where` que exige el estado actual esperado, comprobar `count`, solo entonces proceder. Esto evita desde el principio la misma clase de condición de carrera que se corrigió a posteriori en 6.2 (doble clic, dos pestañas del navegador).
 - **Polling + Page Visibility API:** replicar exactamente el patrón inline de `src/components/MessageArea.tsx` (líneas ~59-110) — `useRef` para evitar closures obsoletas sobre el último timestamp, `setInterval` + `document.addEventListener("visibilitychange", ...)`, limpieza en el `return` del `useEffect`. **No crear un hook `useOrderStatus` ni ningún archivo en `src/hooks/`** — ese directorio no existe en el código real (a pesar de estar en `architecture.md` como `useMessages.ts`); la convención real y ya probada de este proyecto es mantener el polling inline en el componente cliente que lo usa.
 - **Rate limiting del endpoint GET de polling:** mismo patrón que `messages/[conversationId]/route.ts` — `createLimiter(30, "60 s")` desde `~/lib/ratelimit.ts`.
-- **UI de recogida de mensaje personal:** mismo patrón que el textarea de motivo de `AcceptOrRejectOrderCard.tsx` (Historia 6.2) — contador de caracteres, pero aquí el mensaje es *opcional* (mínimo 0, no 10) y el máximo es `PROCESS_UPDATE_MESSAGE_MAX_LENGTH` (280) en vez de un mínimo.
+- **UI de recogida de mensaje personal:** mismo patrón que el textarea de motivo de `AcceptOrRejectOrderCard.tsx` (Historia 6.2) — contador de caracteres, pero aquí el mensaje es *opcional* (mínimo 0, no 10) y el máximo es `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH` (280) en vez de un mínimo.
 - **Emails reutilizados en vez de duplicados:** `ShipmentConfirmedEmail`/`sendShipmentConfirmedEmail` y `OrderReadyForPickupEmail`/`sendOrderReadyForPickupEmail` ya existen (Historia 6.1) y cubren `SHIPPED` y `READY+PICKUP` — se **extienden** con un campo opcional de mensaje personal, no se duplican. Solo `OrderPreparedEmail` es genuinamente nuevo (caso sin cobertura previa).
 
 ### Estados fuera de alcance de esta historia
@@ -122,7 +122,7 @@ src/app/api/orders/[orderId]/route.ts
 src/app/(artisan)/studio/orders/[id]/AdvanceStatusForm.tsx
 src/app/(buyer)/orders/[id]/OrderStatusPoller.tsx
 src/components/order/OrderStatusTimeline.tsx
-src/components/order/ProcessUpdate.tsx
+src/components/order/OrderStatusUpdate.tsx
 src/lib/emails/OrderPreparedEmail.tsx
 ```
 
@@ -136,8 +136,8 @@ src/app/(artisan)/studio/orders/[id]/ConfirmShipmentForm.tsx
 ### Archivos a modificar
 
 ```
-prisma/schema.prisma                                 ← modelo ProcessUpdate
-src/lib/order-constants.ts                            ← PROCESS_UPDATE_MESSAGE_MAX_LENGTH
+prisma/schema.prisma                                 ← modelo OrderStatusUpdate
+src/lib/order-constants.ts                            ← ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH
 src/lib/ratelimit.ts                                  ← orderStatusLimiter
 src/lib/resend.ts                                     ← sendOrderPreparedEmail + extender sendShipmentConfirmedEmail/sendOrderReadyForPickupEmail
 src/lib/emails/ShipmentConfirmedEmail.tsx              ← prop personalMessage
@@ -154,7 +154,7 @@ src/app/(buyer)/orders/[id]/page.tsx                   ← OrderStatusPoller
 
 ### Project Structure Notes
 
-- `src/components/order/` y `src/components/messaging/` no existen todavía en el código real (solo en `architecture.md`) — se crea `src/components/order/` según lo planeado; `ProcessUpdate.tsx` se ubica ahí en vez de en `messaging/` por cohesión de datos (ver Dev Notes).
+- `src/components/order/` y `src/components/messaging/` no existen todavía en el código real (solo en `architecture.md`) — se crea `src/components/order/` según lo planeado; `OrderStatusUpdate.tsx` se ubica ahí en vez de en `messaging/` por cohesión de datos (ver Dev Notes).
 - `src/hooks/` tampoco existe en el código real — no crearlo; seguir la convención real de polling inline (ver Dev Notes).
 - Los nuevos endpoints siguen la convención `kebab-case` + verbo final (`/advance-status`) ya usada por `/confirm-shipment`, `/accept`, `/reject`.
 
@@ -162,7 +162,7 @@ src/app/(buyer)/orders/[id]/page.tsx                   ← OrderStatusPoller
 
 - [Source: _bmad-output/planning-artifacts/epics.md#Historia 6.3: Timeline de estados y actualizaciones de proceso]
 - [Source: _bmad-output/planning-artifacts/prd.md#FR50]
-- [Source: _bmad-output/planning-artifacts/architecture.md#Estructura de carpetas — OrderStatusTimeline.tsx, ProcessUpdate.tsx, useMessages.ts (patrón, no ubicación literal — ver Project Structure Notes)]
+- [Source: _bmad-output/planning-artifacts/architecture.md#Estructura de carpetas — OrderStatusTimeline.tsx, OrderStatusUpdate.tsx, useMessages.ts (patrón, no ubicación literal — ver Project Structure Notes)]
 - [Source: src/components/MessageArea.tsx — patrón de polling + Page Visibility API a replicar]
 - [Source: src/app/api/messages/[conversationId]/route.ts — patrón de endpoint GET con `?since=` y rate limiting]
 - [Source: src/lib/orders.ts — patrón `claimAndCancelOrder` de reclamo atómico (Historia 6.2, post-revisión de Sourcery)]
@@ -178,5 +178,7 @@ claude-sonnet-5
 ### Debug Log References
 
 ### Completion Notes List
+
+- T1: el nombre original propuesto para el modelo nuevo (`ProcessUpdate`) colisionaba con un modelo ya existente sin relación alguna (publicaciones de la artesana para sus seguidoras, `studio/posts`). Renombrado a `OrderStatusUpdate` (y el campo de relación en `Order` de `processUpdates` a `statusUpdates`, y la constante `PROCESS_UPDATE_MESSAGE_MAX_LENGTH` a `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH`) antes de generar la migración. El componente `ProcessUpdate.tsx` planeado en T5.2 pasa a llamarse `OrderStatusUpdate.tsx` por la misma razón.
 
 ### File List

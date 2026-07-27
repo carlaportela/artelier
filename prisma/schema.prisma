@@ -195,6 +195,18 @@ model Order {
     artisan  User      @relation("ArtisanOrders", fields: [artisanId], references: [id])
     product  Product   @relation(fields: [productId], references: [id])
     disputes Dispute[]
+    statusUpdates OrderStatusUpdate[]
+}
+
+//Historial de cambios de estado de un pedido con mensaje personal opcional de la artesana (Historia 6.3).
+model OrderStatusUpdate {
+    id        String      @id @default(cuid())
+    orderId   String
+    status    OrderStatus
+    message   String?
+    createdAt DateTime    @default(now())
+
+    order Order @relation(fields: [orderId], references: [id])
 }
 
 model CustomOrderRequest {
