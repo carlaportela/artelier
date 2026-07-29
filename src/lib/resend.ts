@@ -18,6 +18,7 @@ import OrderCancelledByBuyerEmail from "~/lib/emails/OrderCancelledByBuyerEmail"
 import OrderCancelledBySystemToArtisanEmail from "~/lib/emails/OrderCancelledBySystemToArtisanEmail";
 import ShipmentConfirmedEmail from "~/lib/emails/ShipmentConfirmedEmail";
 import OrderReadyForPickupEmail from "~/lib/emails/OrderReadyForPickupEmail";
+import OrderPreparedEmail from "~/lib/emails/OrderPreparedEmail";
 import NewFollowerEmail from "~/lib/emails/NewFollowerEmail";
 import NewProductEmail from "~/lib/emails/NewProductEmail";
 import NewMessageEmail from "~/lib/emails/NewMessageEmail";
@@ -258,7 +259,7 @@ export async function sendOrderCancelledByBuyerEmail(order: Order) {
 }
 
 //Función de envío de correo de confirmación de envío de pedido (PLATFORM / ARTISAN_OWN).
-export async function sendShipmentConfirmedEmail(order: Order) {
+export async function sendShipmentConfirmedEmail(order: Order, personalMessage: string | null) {
   const data = await db.order.findUnique({
     where: { id: order.id },
     include: {
@@ -282,12 +283,13 @@ export async function sendShipmentConfirmedEmail(order: Order) {
       shippingMethod: SHIPPING_METHOD_LABELS[data.shippingMethod] ?? data.shippingMethod,
       estimatedDelivery: null,
       trackingNumber: data.trackingNumber,
+      personalMessage: personalMessage,//Se pasa el mensaje personalizado de la artesana (si lo hay) al template del correo de confirmación de envío.
     }),
   });
 }
 
 //Función de envío de correo de pedido listo para recogida (método PICKUP).
-export async function sendOrderReadyForPickupEmail(order: Order) {
+export async function sendOrderReadyForPickupEmail(order: Order, personalMessage: string | null) {
   const data = await db.order.findUnique({
     where: { id: order.id },
     include: {
@@ -323,6 +325,34 @@ export async function sendOrderReadyForPickupEmail(order: Order) {
       artisanName: fullName(data.artisan.name, data.artisan.lastName),
       pickupAddress,
       pickupSchedule: null,
+      personalMessage,
+    }),
+  });
+}
+
+//Función de envío de correo de pedido listo, pendiente de envío (métodos PLATFORM / ARTISAN_OWN).
+export async function sendOrderPreparedEmail(order: Order, personalMessage: string | null) {
+  const data = await db.order.findUnique({
+    where: { id: order.id },
+    include: {
+      buyer: { select: { name: true, email: true } },
+      product: { select: { name: true, imageUrls: true } },
+      artisan: { select: { name: true, lastName: true } },
+    },
+  });
+  if (!data?.buyer?.email) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.buyer.email,
+    subject: "¡Tu pedido ya está listo! — Artelier",
+    react: OrderPreparedEmail({
+      buyerName: data.buyer.name ?? "",
+      orderId: data.id,
+      productName: data.product.name,
+      productImageUrl: data.product.imageUrls[0] ?? null,
+      artisanName: fullName(data.artisan.name, data.artisan.lastName),
+      personalMessage,
     }),
   });
 }

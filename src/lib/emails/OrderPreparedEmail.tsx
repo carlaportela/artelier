@@ -1,4 +1,4 @@
-// Template del correo de pedido listo para recogida, dirigido a la compradora.
+// Template del correo de pedido listo (pendiente de envío) para la compradora.
 
 import { Text, Button, Section, Row, Column, Img, Link } from "@react-email/components";
 import EmailLayout from "./EmailLayout";
@@ -10,19 +10,15 @@ interface Props {
   productName: string;
   productImageUrl: string | null;
   artisanName: string;
-  pickupAddress: string;
-  pickupSchedule: string | null;
   personalMessage: string | null;
 }
 
-export default function OrderReadyForPickupEmail({
+export default function OrderPreparedEmail({
   buyerName,
   orderId,
   productName,
   productImageUrl,
   artisanName,
-  pickupAddress,
-  pickupSchedule,
   personalMessage,
 }: Props) {
   return (
@@ -32,13 +28,13 @@ export default function OrderReadyForPickupEmail({
         Hola{buyerName ? ` ${buyerName}` : ""}:
       </Text>
       <Text style={{ fontFamily: fontDisplay, color: green, fontSize: "22px", fontWeight: "700", margin: "0 0 12px 0" }}>
-        ¡Tu pedido está listo para recoger!
+        ¡Tu pedido ya está listo!
       </Text>
       <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 8px 0" }}>
-        {artisanName ?? "La artesana"} ha preparado tu pedido y ya puedes pasar a recogerlo.
+        {artisanName ?? "La artesana"} ha terminado de preparar tu pedido. En breve lo enviará.
       </Text>
       <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "14px", margin: "0 0 20px 0" }}>
-        Aquí tienes los detalles para la recogida:
+        Te avisaremos de nuevo en cuanto salga de camino.
       </Text>
 
       {/* Card */}
@@ -83,25 +79,6 @@ export default function OrderReadyForPickupEmail({
           </Column>
         </Row>
 
-        {/* Datos de recogida */}
-        <div style={{ borderTop: "1px solid #e0dbd0", margin: "16px 0 12px 0" }} />
-        <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 1px 0" }}>
-          Dirección de recogida
-        </Text>
-        <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "13px", fontWeight: "600", margin: "0 0 10px 0" }}>
-          {pickupAddress}
-        </Text>
-        {pickupSchedule && (
-          <>
-            <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 1px 0" }}>
-              Horario de recogida
-            </Text>
-            <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "13px", margin: 0 }}>
-              {pickupSchedule}
-            </Text>
-          </>
-        )}
-
         {/* Mensaje personal de la artesana (opcional) */}
         {personalMessage && (
           <>
@@ -122,16 +99,12 @@ export default function OrderReadyForPickupEmail({
               href={`https://artelier.es/orders/${orderId}`}
               style={{ backgroundColor: green, color: "#fff", borderRadius: "999px", padding: "12px 24px", fontSize: "14px", fontFamily: fontBody, display: "inline-block" }}
             >
-              Confirmar recogida
+              Ver mi pedido
             </Button>
           </Column>
         </Row>
-        <Text style={{ fontFamily: fontBody, color: "#9ca3af", fontSize: "11px", textAlign: "right", margin: "8px 0 0 0" }}>
-          Recuerda confirmar la recogida en el momento en el que la artesana te entrega el pedido para verificar tu identidad.
-        </Text>
 
       </Section>
-
 
     </EmailLayout>
   );

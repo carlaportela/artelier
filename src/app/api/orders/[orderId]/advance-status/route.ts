@@ -127,11 +127,11 @@ export async function POST(
 
   //Se avisa a la compradora del avance de estado con el email correspondiente.
   if (nextStatus === "READY" && order.shippingMethod === "PICKUP") {
-    void sendOrderReadyForPickupEmail(order).catch(console.error);
+    void sendOrderReadyForPickupEmail(order, message || null).catch(console.error);
   } else if (nextStatus === "READY") {
-    void sendOrderPreparedEmail(order).catch(console.error);
+    void sendOrderPreparedEmail(order, message || null).catch(console.error);
   } else if (nextStatus === "SHIPPED") {
-    void sendShipmentConfirmedEmail(order).catch(console.error);
+    void sendShipmentConfirmedEmail(order, message || null).catch(console.error);
   }
 
   return NextResponse.json({ data: { status: nextStatus } });

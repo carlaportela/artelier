@@ -59,11 +59,11 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
   - [x] T3.2: Query param `?since=<ISO timestamp>` — mismo patrón exacto que `src/app/api/messages/[conversationId]/route.ts`: si se pasa `since`, devuelve solo `{ status, trackingNumber, statusUpdates: OrderStatusUpdate[] }` con `statusUpdates` filtrados por `createdAt: { gt: sinceDate }`; si no se pasa, devuelve el pedido completo con todos los `statusUpdates` (orden `createdAt: "asc"`)
   - [x] T3.3: Añadir rate limiter `orderStatusLimiter = createLimiter(30, "60 s")` en `src/lib/ratelimit.ts` (mismo presupuesto que `messageLimiter`, mismo motivo: endpoint de polling)
 
-- [ ] T4 — Emails de cambio de estado (AC3)
-  - [ ] T4.1: Extender `src/lib/emails/ShipmentConfirmedEmail.tsx` y `sendShipmentConfirmedEmail` en `resend.ts` con prop opcional `personalMessage: string | null` — se muestra como bloque adicional en el email si no es null (mismo layout que el resto: `Text` con `fontBody`, debajo de la descripción del envío)
-  - [ ] T4.2: Extender `src/lib/emails/OrderReadyForPickupEmail.tsx` y `sendOrderReadyForPickupEmail` igual, con `personalMessage: string | null`
-  - [ ] T4.3: Crear `src/lib/emails/OrderPreparedEmail.tsx` + `sendOrderPreparedEmail(order, message)` en `resend.ts` — cubre el caso genuinamente nuevo de "pedido listo, envío por plataforma o propio, aún no enviado" (`READY` + `shippingMethod !== "PICKUP"`), que no tenía email antes porque ese estado intermedio no se usaba para esos métodos. Mismo layout que `OrderAcceptedEmail.tsx` (Historia 6.2): saludo, card con producto, mensaje personal opcional, botón "Ver mi pedido"
-  - [ ] T4.4: En `advance-status/route.ts`, el email a enviar depende del nuevo estado calculado en T2.2:
+- [x] T4 — Emails de cambio de estado (AC3)
+  - [x] T4.1: Extender `src/lib/emails/ShipmentConfirmedEmail.tsx` y `sendShipmentConfirmedEmail` en `resend.ts` con prop opcional `personalMessage: string | null` — se muestra como bloque adicional en el email si no es null (mismo layout que el resto: `Text` con `fontBody`, debajo de la descripción del envío)
+  - [x] T4.2: Extender `src/lib/emails/OrderReadyForPickupEmail.tsx` y `sendOrderReadyForPickupEmail` igual, con `personalMessage: string | null`
+  - [x] T4.3: Crear `src/lib/emails/OrderPreparedEmail.tsx` + `sendOrderPreparedEmail(order, message)` en `resend.ts` — cubre el caso genuinamente nuevo de "pedido listo, envío por plataforma o propio, aún no enviado" (`READY` + `shippingMethod !== "PICKUP"`), que no tenía email antes porque ese estado intermedio no se usaba para esos métodos. Mismo layout que `OrderAcceptedEmail.tsx` (Historia 6.2): saludo, card con producto, mensaje personal opcional, botón "Ver mi pedido"
+  - [x] T4.4: En `advance-status/route.ts`, el email a enviar depende del nuevo estado calculado en T2.2:
     - `READY` + `PICKUP` → `sendOrderReadyForPickupEmail(order, message)`
     - `READY` + no `PICKUP` → `sendOrderPreparedEmail(order, message)`
     - `SHIPPED` → `sendShipmentConfirmedEmail(order, message)`

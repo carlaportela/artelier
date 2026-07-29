@@ -21,6 +21,7 @@ interface Props {
   shippingMethod: string;
   estimatedDelivery: string | null;
   trackingNumber: string | null;
+  personalMessage: string | null; //Campo opcional para que la artesana pueda enviar un mensaje personalizado a la compradora junto con el correo de confirmación de envío.
 }
 
 export default function ShipmentConfirmedEmail({
@@ -32,6 +33,7 @@ export default function ShipmentConfirmedEmail({
   shippingMethod,
   estimatedDelivery,
   trackingNumber,
+  personalMessage,
 }: Props) {
   return (
     <EmailLayout>
@@ -240,6 +242,39 @@ export default function ShipmentConfirmedEmail({
               }}
             >
               {trackingNumber}
+            </Text>
+          </>
+        )}
+
+        {/* Mensaje personal de la artesana (opcional) */}
+        {personalMessage && (
+          <>
+            <div
+              style={{
+                borderTop: "1px solid #e0dbd0",
+                margin: "16px 0 12px 0",
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: fontBody,
+                color: muted,
+                fontSize: "13px",
+                margin: "0 0 1px 0",
+              }}
+            >
+              Mensaje
+            </Text>
+            <Text
+              style={{
+                fontFamily: fontDisplay,
+                color: textDark,
+                fontSize: "13px",
+                fontWeight: "600",
+                margin: "0 0 1px 0",
+              }}
+            >
+              {personalMessage}
             </Text>
           </>
         )}
