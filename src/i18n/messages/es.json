@@ -78,6 +78,7 @@
       "CONFIRMED": "Confirmado",
       "IN_PREPARATION": "En preparación",
       "READY": "Listo para enviar",
+      "READY_PICKUP": "Listo para recogida",
       "SHIPPED": "Enviado",
       "DELIVERED": "Entregado",
       "ACCEPTED": "Aceptado",
@@ -92,7 +93,19 @@
     "cancelOrderReasonPlaceholder": "Explica el motivo de tu cancelación (mínimo 10 caracteres)",
     "orderCancelled": "Pedido cancelado correctamente. El reembolso llegará en 5-10 días hábiles.",
     "cancellationWindowClosed": "La ventana de cancelación de 24h ha expirado",
-    "trackingNumber": "Número de seguimiento"
+    "trackingNumber": "Número de seguimiento",
+    "advanceStatus": {
+      "trackingNumberHelp": "Introduce un número de seguimiento para confirmar el envío.",
+      "messagePlaceholder": "Mensaje para la compradora (opcional)",
+      "submit": "Avanzar estado",
+      "submitting": "Avanzando estado...",
+      "success": "Estado del pedido actualizado.",
+      "connectionError": "Error de conexión. Inténtalo de nuevo.",
+      "errorNotAdvanceable": "Este pedido ya no se puede avanzar de estado.",
+      "errorInvalidTracking": "Introduce un número de seguimiento válido.",
+      "errorMessageTooLong": "El mensaje no puede superar los {max} caracteres.",
+      "errorFallback": "No se pudo avanzar el estado del pedido. Inténtalo de nuevo."
+    }
   },
   "settings": {
     "title": "Configuración",

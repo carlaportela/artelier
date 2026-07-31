@@ -10,6 +10,7 @@ import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { CANCELLATION_WINDOW_MS, SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
 import CancelOrderDialog from "./CancelOrderDialog";
+import OrderStatusPoller, { type StatusUpdateData } from "./OrderStatusPoller";
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
 
@@ -33,10 +34,19 @@ export default async function OrderDetailPage({ params }: Props) {
         select: { name: true, imageUrls: true, type: true, expiresAt: true },
       },
       artisan: { select: { name: true, id: true } },
+      statusUpdates: { orderBy: { createdAt: "asc" } },
     },
   });
 
   if (!order) notFound();
+
+  //El poller necesita las fechas como string (ISO) — un Date no cruza el límite servidor→cliente como instancia.
+  const initialStatusUpdates: StatusUpdateData[] = order.statusUpdates.map((update) => ({
+    id: update.id,
+    status: update.status,
+    message: update.message,
+    createdAt: update.createdAt.toISOString(),
+  }));
 
   //Variable en la que se comprueba si no ha expirado el período ventana para cancelación del pedido por parte de la compradora.
   const canCancel =
@@ -108,6 +118,14 @@ export default async function OrderDetailPage({ params }: Props) {
             {t(`orderStatus.${order.status}`)}
           </span>
         </div>
+
+        {/* Timeline de estados, con actualización en tiempo real */}
+        <OrderStatusPoller
+          orderId={order.id}
+          initialStatus={order.status}
+          shippingMethod={order.shippingMethod}
+          initialStatusUpdates={initialStatusUpdates}
+        />
 
         {/* Número de seguimiento */}
         {order.trackingNumber && (

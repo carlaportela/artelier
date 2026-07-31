@@ -10,8 +10,9 @@ import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
-import ConfirmShipmentForm from "./ConfirmShipmentForm";
+import AdvanceStatusForm from "./AdvanceStatusForm";
 import AcceptOrRejectOrderCard from "./AcceptOrRejectOrderCard";
+import OrderStatusTimeline from "~/components/order/OrderStatusTimeline";
 
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
@@ -108,6 +109,11 @@ export default async function OrderDetailPage({ params }: Props) {
           </span>
         </div>
 
+        {/* Timeline de estados */}
+        <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
+          <OrderStatusTimeline status={order.status} shippingMethod={order.shippingMethod} />
+        </div>
+
         {/* Número de seguimiento */}
         {order.trackingNumber && (
           <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4">
@@ -182,8 +188,13 @@ export default async function OrderDetailPage({ params }: Props) {
             createdAt={order.createdAt.toISOString()}
           />
         )}
-        {order.status === "IN_PREPARATION" && (
-          <ConfirmShipmentForm orderId={order.id} shippingMethod={order.shippingMethod} />
+        {(order.status === "IN_PREPARATION" ||
+          (order.status === "READY" && order.shippingMethod !== "PICKUP")) && (
+          <AdvanceStatusForm
+            orderId={order.id}
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+          />
         )}
       </div>
     </main>

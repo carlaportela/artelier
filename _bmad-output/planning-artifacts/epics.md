@@ -1423,4 +1423,32 @@ para que la plataforma cumpla con la LSSI, el RGPD y la normativa de cookies.
 **Cuando** se generan en build time
 **Entonces** son páginas SSG sin JavaScript de cliente innecesario
 **Y** incluyen fecha de última actualización visible en el documento
+
+---
+
+## Épico 9: Internacionalización completa
+
+Artelier nace con vocación de dar servicio a un marketplace de artesanas y artesanos gallegos, con el objetivo de ofrecer la plataforma en gallego. El sistema de traducciones (next-intl) existe desde el inicio del proyecto, pero durante el desarrollo se ha ido aplicando de forma parcial: solo el vocabulario compartido entre varias pantallas (p. ej. los estados de pedido) pasa por `es.json`, mientras que buena parte del texto específico de formularios y componentes de interacción (botones, placeholders, mensajes de error/éxito) quedó hardcodeado en castellano directamente en el componente. Esta épica cierra esa brecha: si la plataforma ofrece traducción, debe ser íntegra, no parcial.
+
+### Historia 9.1: Traducir todo el texto de la interfaz a través de next-intl y completar gl.json
+
+Como usuaria de Artelier (compradora o artesana),
+quiero que toda la interfaz esté disponible en gallego y no solo una parte de ella,
+para que la plataforma cumpla su propósito original de dar servicio pleno a la comunidad artesana gallega.
+
+**Acceptance Criteria:**
+
+**Dado** que reviso los componentes cliente existentes en la aplicación (formularios, diálogos, tarjetas de acción, mensajes de error/éxito de `toast`)
+**Cuando** busco texto de interfaz visible para la usuaria
+**Entonces** ningún texto está hardcodeado directamente en el componente — todo pasa por `useTranslations` (cliente) o `getTranslations` (servidor), con sus claves añadidas a `es.json`
+
+**Dado** que comparo `gl.json` con `es.json`
+**Cuando** reviso sus namespaces y claves
+**Entonces** `gl.json` contiene exactamente las mismas claves que `es.json`, sin namespaces ni claves faltantes, traducidas al gallego
+
+**Dado** que cambio el idioma activo de la sesión a gallego
+**Cuando** navego por cualquier página de la aplicación (no solo las páginas públicas ya traducidas)
+**Entonces** todo el texto se muestra en gallego, sin ninguna cadena residual en castellano
+
+[Source: _bmad-output/implementation-artifacts/6-3-timeline-de-estados-y-actualizaciones-de-proceso.md#Dev Notes — decisión de producto tomada durante H6.3 (2026-07-31): la app debe traducirse de forma íntegra, no parcial]
 **Y** cumplen con los requisitos de información obligatoria de la LSSI: datos del titular, domicilio, NIF, email de contacto
