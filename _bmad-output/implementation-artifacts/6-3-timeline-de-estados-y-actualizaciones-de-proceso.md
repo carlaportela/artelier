@@ -1,6 +1,6 @@
 # Story 6.3: Timeline de estados y actualizaciones de proceso
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -77,9 +77,9 @@ para que el proceso sea transparente y humano desde la confirmación hasta el en
   - [x] T5.6: En `src/app/(buyer)/orders/[id]/page.tsx`, renderizar `<OrderStatusPoller>` en vez de (o junto a) la actual etiqueta plana de estado — mantener el resto de la página (card de producto, desglose de costes, cancelación) sin cambios
   - [x] T5.7 (añadida durante la implementación): pasar todo el texto de UI de `OrderStatusTimeline.tsx`, `OrderStatusUpdate.tsx` y `AdvanceStatusForm.tsx` por `useTranslations("account")` en vez de hardcodearlo — decisión explícita de Maldita (2026-07-31) al descubrir la primera vez el problema con `orderStatus.READY_PICKUP`. Nuevas claves en `es.json` bajo `account.advanceStatus.*`; se reutiliza la clave `account.trackingNumber` ya existente (no usada hasta ahora). Ver Dev Notes y la nueva historia de deuda de i18n para el texto hardcodeado ya existente en historias anteriores (5.4, 6.1, 6.2), fuera de alcance de ésta
 
-- [ ] T6 — Typecheck y build limpio
-  - [ ] T6.1: `npx tsc --noEmit` sin errores
-  - [ ] T6.2: `npx next build` sin errores
+- [x] T6 — Typecheck y build limpio
+  - [x] T6.1: `npx tsc --noEmit` sin errores
+  - [x] T6.2: `npx next build` sin errores
 
 ## Dev Notes
 
@@ -183,5 +183,40 @@ claude-sonnet-5
 ### Completion Notes List
 
 - T1: el nombre original propuesto para el modelo nuevo (`ProcessUpdate`) colisionaba con un modelo ya existente sin relación alguna (publicaciones de la artesana para sus seguidoras, `studio/posts`). Renombrado a `OrderStatusUpdate` (y el campo de relación en `Order` de `processUpdates` a `statusUpdates`, y la constante `PROCESS_UPDATE_MESSAGE_MAX_LENGTH` a `ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH`) antes de generar la migración. El componente `ProcessUpdate.tsx` planeado en T5.2 pasa a llamarse `OrderStatusUpdate.tsx` por la misma razón.
+- T5.1/T5.2/T5.7: al escribir la etiqueta especial "Listo para recogida" se hardcodeó primero directamente en el componente en vez de pasar por `es.json`, rompiendo el sistema de i18n para ese caso concreto. Corregido añadiendo la clave `orderStatus.READY_PICKUP`. A raíz de esto, decisión de producto (Maldita, 2026-07-31): todo texto de UI nuevo debe pasar por `next-intl` de aquí en adelante — se añadió el bloque `account.advanceStatus.*` a `es.json` y se revisó `AdvanceStatusForm.tsx` para que ningún texto quedara hardcodeado. El texto ya hardcodeado en historias anteriores (5.4, 6.1, 6.2) queda como deuda formalizada en el nuevo **Épico 9 / Historia 9.1** (`epics.md`, `sprint-status.yaml`), fuera de alcance de esta historia.
+- T5.3/T5.4: `confirm-shipment/route.ts` (endpoint) y `ConfirmShipmentForm.tsx` (componente) se eliminan por completo, sustituidos por `advance-status/route.ts` y `AdvanceStatusForm.tsx` respectivamente — el antiguo endpoint saltaba directamente `IN_PREPARATION → SHIPPED` sin pasar por `READY`, incompatible con la secuencia paso a paso de esta historia.
 
 ### File List
+
+**Nuevos:**
+```
+src/lib/emails/OrderPreparedEmail.tsx
+src/app/api/orders/[orderId]/advance-status/route.ts
+src/app/api/orders/[orderId]/route.ts
+src/app/(artisan)/studio/orders/[id]/AdvanceStatusForm.tsx
+src/app/(buyer)/orders/[id]/OrderStatusPoller.tsx
+src/components/order/OrderStatusTimeline.tsx
+src/components/order/OrderStatusUpdate.tsx
+prisma/migrations/20260727093013_add_order_status_update/
+```
+
+**Eliminados:**
+```
+src/app/api/orders/[orderId]/confirm-shipment/route.ts
+src/app/(artisan)/studio/orders/[id]/ConfirmShipmentForm.tsx
+```
+
+**Modificados:**
+```
+prisma/schema.prisma
+src/lib/order-constants.ts
+src/lib/ratelimit.ts
+src/lib/resend.ts
+src/lib/emails/ShipmentConfirmedEmail.tsx
+src/lib/emails/OrderReadyForPickupEmail.tsx
+src/i18n/messages/es.json
+src/app/(artisan)/studio/orders/[id]/page.tsx
+src/app/(buyer)/orders/[id]/page.tsx
+_bmad-output/planning-artifacts/epics.md (Épico 9 nuevo)
+_bmad-output/implementation-artifacts/sprint-status.yaml
+```
