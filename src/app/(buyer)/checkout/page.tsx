@@ -33,13 +33,30 @@ export default async function CheckoutPage({
     },
   });
 
-  //Si el producto no existe o no existe una cuenta de Stripe asociada al artesano que creo el producto se lanza un mensaje de advertencia de que el producto no está disponible y se muestra un enlace para volver al catálogo.
-  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-  if (product === null || product.artisan.stripeAccountId === null) {
+  //Si el producto no existe, no está activo o se ha borrado, se informa de que no está disponible.
+  if (product === null) {
     return (
       <main className="flex flex-col items-center gap-4 px-4 py-16 text-center">
         <p className="text-lg font-medium text-[--text]">
           Este producto no está disponible
+        </p>
+        <Link href="/feed" className="text-sm text-[--text-muted] underline">
+          Volver al catálogo
+        </Link>
+      </main>
+    );
+  }
+
+  //Si el producto existe pero su artesana todavía no ha conectado su cuenta de Stripe, no se puede
+  //procesar el pago — es una situación distinta de "no disponible" y merece su propio mensaje.
+  if (product.artisan.stripeAccountId === null) {
+    return (
+      <main className="flex flex-col items-center gap-4 px-4 py-16 text-center">
+        <p className="text-lg font-medium text-[--text]">
+          Esta artesana todavía no puede recibir pagos
+        </p>
+        <p className="text-sm text-[--text-muted]">
+          Inténtalo de nuevo más tarde.
         </p>
         <Link href="/feed" className="text-sm text-[--text-muted] underline">
           Volver al catálogo
