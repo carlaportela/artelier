@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import type { OrderStatus, ShippingMethod } from "generated/prisma";
 
 import { ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH } from "~/lib/order-constants";
+import { getNextAdvanceableStatus } from "~/lib/order-status-transitions";
 
 interface Props {
   orderId: string;
@@ -42,11 +43,11 @@ export default function AdvanceStatusForm({ orderId, status, shippingMethod }: P
   }
 
   //Solo el paso Listo -> Enviado (envío por plataforma o propio) necesita número de seguimiento.
-  const requiresTracking = status === "READY" && shippingMethod !== "PICKUP";
+  const requiresTracking = getNextAdvanceableStatus(status, shippingMethod) === "SHIPPED";
   const canSubmit =
     !loading &&
     (!requiresTracking || trackingNumber.trim().length > 0) &&
-    message.length <= ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH;
+    message.trim().length <= ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH;
 
   async function handleSubmit() {
     setLoading(true);
@@ -96,7 +97,7 @@ export default function AdvanceStatusForm({ orderId, status, shippingMethod }: P
         />
         <p
           className={`text-xs ${
-            message.length > ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH ? "text-red-500" : "text-[--text-muted]"
+            message.trim().length > ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH ? "text-red-500" : "text-[--text-muted]"
           }`}
         >
           {message.length}/{ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH}

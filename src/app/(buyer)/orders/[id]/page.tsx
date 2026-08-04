@@ -2,15 +2,20 @@
 
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Package, Truck } from "lucide-react";
+import { ChevronLeft, Package } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { CANCELLATION_WINDOW_MS, SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
+import { getOrderStatusLabelKey } from "~/lib/order-status-label";
 import CancelOrderDialog from "./CancelOrderDialog";
 import OrderStatusPoller, { type StatusUpdateData } from "./OrderStatusPoller";
+
+//Estados fuera de la secuencia "feliz" del timeline (Confirmado → ... → Aceptado) — para estos, el
+//timeline no se muestra (la tarjeta de motivo de cancelación ya cubre la comunicación necesaria).
+const TIMELINE_STATUSES = ["CONFIRMED", "IN_PREPARATION", "READY", "SHIPPED", "DELIVERED", "ACCEPTED"];
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
 
@@ -115,34 +120,21 @@ export default async function OrderDetailPage({ params }: Props) {
             <p className="mt-1 text-xs text-[--text-muted]">{formattedDate}</p>
           </div>
           <span className="ml-auto shrink-0 rounded-full bg-[--surface-2] px-2.5 py-1 text-xs text-[--text-muted]">
-            {t(`orderStatus.${order.status}`)}
+            {t(getOrderStatusLabelKey(order.status, order.shippingMethod))}
           </span>
         </div>
 
-        {/* Timeline de estados, con actualización en tiempo real */}
-        <OrderStatusPoller
-          orderId={order.id}
-          initialStatus={order.status}
-          shippingMethod={order.shippingMethod}
-          initialStatusUpdates={initialStatusUpdates}
-        />
-
-        {/* Número de seguimiento */}
-        {order.trackingNumber && (
-          <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4">
-            <Truck
-              className="h-5 w-5 shrink-0 text-[#3d5a4f]"
-              strokeWidth={1.5}
-            />
-            <div>
-              <p className="text-xs font-medium text-[--text-muted]">
-                {t("trackingNumber")}
-              </p>
-              <p className="font-mono text-sm font-medium text-[--text]">
-                {order.trackingNumber}
-              </p>
-            </div>
-          </div>
+        {/* Timeline de estados, con actualización en tiempo real — solo para pedidos en la
+        secuencia normal; un pedido cancelado/reembolsado/en disputa ya tiene su propia tarjeta
+        de motivo más abajo, y el timeline no representa bien esos estados terminales. */}
+        {TIMELINE_STATUSES.includes(order.status) && (
+          <OrderStatusPoller
+            orderId={order.id}
+            initialStatus={order.status}
+            shippingMethod={order.shippingMethod}
+            initialStatusUpdates={initialStatusUpdates}
+            initialTrackingNumber={order.trackingNumber}
+          />
         )}
 
         {/* Desglose de costes */}

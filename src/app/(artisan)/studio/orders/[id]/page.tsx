@@ -10,6 +10,8 @@ import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
+import { getOrderStatusLabelKey } from "~/lib/order-status-label";
+import { getNextAdvanceableStatus } from "~/lib/order-status-transitions";
 import AdvanceStatusForm from "./AdvanceStatusForm";
 import AcceptOrRejectOrderCard from "./AcceptOrRejectOrderCard";
 import OrderStatusTimeline from "~/components/order/OrderStatusTimeline";
@@ -105,7 +107,7 @@ export default async function OrderDetailPage({ params }: Props) {
             <p className="mt-1 text-xs text-[--text-muted]">{formattedDate}</p>
           </div>
           <span className="ml-auto shrink-0 rounded-full bg-[--surface-2] px-2.5 py-1 text-xs text-[--text-muted]">
-            {t(`orderStatus.${order.status}`)}
+            {t(getOrderStatusLabelKey(order.status, order.shippingMethod))}
           </span>
         </div>
 
@@ -188,8 +190,7 @@ export default async function OrderDetailPage({ params }: Props) {
             createdAt={order.createdAt.toISOString()}
           />
         )}
-        {(order.status === "IN_PREPARATION" ||
-          (order.status === "READY" && order.shippingMethod !== "PICKUP")) && (
+        {getNextAdvanceableStatus(order.status, order.shippingMethod) && (
           <AdvanceStatusForm
             orderId={order.id}
             status={order.status}

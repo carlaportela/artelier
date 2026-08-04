@@ -1,10 +1,10 @@
 //Endpoint de API para que la artesana avance el estado de un pedido (En preparación → Listo → Enviado).
 
 import { NextResponse } from "next/server";
-import type { OrderStatus } from "generated/prisma";
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import { ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH } from "~/lib/order-constants";
+import { getNextAdvanceableStatus } from "~/lib/order-status-transitions";
 import {
   sendOrderReadyForPickupEmail,
   sendOrderPreparedEmail,
@@ -48,13 +48,10 @@ export async function POST(
   }
 
   //Calculamos el siguiente estado a partir del estado actual y el método de envío — el cliente
-  //nunca decide el estado destino, así se evita que se salte pasos de la secuencia.
-  let nextStatus: OrderStatus;
-  if (order.status === "IN_PREPARATION") {
-    nextStatus = "READY";
-  } else if (order.status === "READY" && order.shippingMethod !== "PICKUP") {
-    nextStatus = "SHIPPED";
-  } else {
+  //nunca decide el estado destino, así se evita que se salte pasos de la secuencia. Misma función
+  //que usan AdvanceStatusForm.tsx y page.tsx para no repetir esta regla de tres formas distintas.
+  const nextStatus = getNextAdvanceableStatus(order.status, order.shippingMethod);
+  if (!nextStatus) {
     return NextResponse.json(
       {
         error: {
@@ -66,21 +63,11 @@ export async function POST(
     );
   }
 
-  //Obtenemos el mensaje personal opcional y el número de seguimiento (solo si aplica) del body.
+  //Obtenemos el número de seguimiento (solo si aplica) y el mensaje personal opcional del body.
+  //Se valida el número de seguimiento primero: es el requisito más específico de esta transición
+  //concreta, y así la artesana ve ese error antes que el genérico de longitud del mensaje si fallan
+  //los dos a la vez.
   const body = (await req.json()) as Record<string, unknown>;
-  const message = typeof body.message === "string" ? body.message.trim() : "";
-  if (message.length > ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH) {
-    return NextResponse.json(
-      {
-        error: {
-          code: "INVALID_MESSAGE",
-          message: `El mensaje no puede superar los ${ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH} caracteres`,
-        },
-      },
-      { status: 422 },
-    );
-  }
-
   const trackingNumber = typeof body.trackingNumber === "string" ? body.trackingNumber.trim() : "";
   if (nextStatus === "SHIPPED" && !trackingNumber) {
     return NextResponse.json(
@@ -88,6 +75,19 @@ export async function POST(
         error: {
           code: "INVALID_TRACKING_NUMBER",
           message: "Número de seguimiento no encontrado",
+        },
+      },
+      { status: 422 },
+    );
+  }
+
+  const message = typeof body.message === "string" ? body.message.trim() : "";
+  if (message.length > ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH) {
+    return NextResponse.json(
+      {
+        error: {
+          code: "INVALID_MESSAGE",
+          message: `El mensaje no puede superar los ${ORDER_STATUS_UPDATE_MESSAGE_MAX_LENGTH} caracteres`,
         },
       },
       { status: 422 },

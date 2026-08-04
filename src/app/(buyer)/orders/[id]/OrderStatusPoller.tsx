@@ -4,6 +4,8 @@
 //hay novedades (polling + Page Visibility API), replicando el patrón ya establecido en
 //src/components/MessageArea.tsx para el chat.
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Truck } from "lucide-react";
 import type { OrderStatus, ShippingMethod } from "generated/prisma";
 import OrderStatusTimeline from "~/components/order/OrderStatusTimeline";
 import OrderStatusUpdate from "~/components/order/OrderStatusUpdate";
@@ -20,6 +22,7 @@ interface Props {
   initialStatus: OrderStatus;
   shippingMethod: ShippingMethod;
   initialStatusUpdates: StatusUpdateData[];
+  initialTrackingNumber: string | null;
 }
 
 export default function OrderStatusPoller({
@@ -27,9 +30,14 @@ export default function OrderStatusPoller({
   initialStatus,
   shippingMethod,
   initialStatusUpdates,
+  initialTrackingNumber,
 }: Props) {
-  //Estado local para el estado del pedido y las actualizaciones de estado, que se actualizan con los datos del servidor.
+  const t = useTranslations("account");
+
+  //Estado local para el estado del pedido, el número de seguimiento y las actualizaciones de
+  //estado, que se actualizan con los datos del servidor en cada sondeo.
   const [status, setStatus] = useState(initialStatus);
+  const [trackingNumber, setTrackingNumber] = useState(initialTrackingNumber);
   const [statusUpdates, setStatusUpdates] = useState(initialStatusUpdates);
 
   //Referencia para acceder a la última actualización dentro del setInterval sin closures obsoletas.
@@ -48,9 +56,10 @@ export default function OrderStatusPoller({
         const res = await fetch(`/api/orders/${orderId}${query}`);
         if (!res.ok) return;
         const { data } = (await res.json()) as {
-          data: { status: OrderStatus; statusUpdates: StatusUpdateData[] };
+          data: { status: OrderStatus; trackingNumber: string | null; statusUpdates: StatusUpdateData[] };
         };
         setStatus(data.status);
+        setTrackingNumber(data.trackingNumber);
         if (data.statusUpdates.length > 0) {
           setStatusUpdates((prev) => [...prev, ...data.statusUpdates]);
         }
@@ -89,6 +98,16 @@ export default function OrderStatusPoller({
       <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
         <OrderStatusTimeline status={status} shippingMethod={shippingMethod} />
       </div>
+
+      {trackingNumber && (
+        <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4">
+          <Truck className="h-5 w-5 shrink-0 text-[#3d5a4f]" strokeWidth={1.5} />
+          <div>
+            <p className="text-xs font-medium text-[--text-muted]">{t("trackingNumber")}</p>
+            <p className="font-mono text-sm font-medium text-[--text]">{trackingNumber}</p>
+          </div>
+        </div>
+      )}
 
       {statusUpdates.length > 0 && ( //Solo renderiza la lista de actualizaciones si hay alguna, para evitar un espacio vacío innecesario.
         <ol className="space-y-2">

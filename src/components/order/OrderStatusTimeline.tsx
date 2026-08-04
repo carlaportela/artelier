@@ -4,6 +4,7 @@
 //Entregado → Aceptado. Se usa tanto en la vista de la artesana como en la de la compradora.
 import { useTranslations } from "next-intl";
 import type { OrderStatus, ShippingMethod } from "generated/prisma";
+import { getOrderStatusLabelKey } from "~/lib/order-status-label";
 
 interface Props {
   status: OrderStatus;
@@ -24,14 +25,10 @@ export default function OrderStatusTimeline({ status, shippingMethod }: Props) {
       {steps.map((step, index) => {
         //Encontramos el índice del paso actual y determinamos si cada paso es el actual, si ya se ha completado o si es el último paso.
         const isCurrent = index === currentIndex;
-        const isDone = currentIndex >= 0 && index < currentIndex;
+        const isDone = index < currentIndex;
         const isLast = index === steps.length - 1;
 
-        //"Listo" tiene una clave de traducción distinta para recogida en persona.
-        const label =
-          step === "READY" && shippingMethod === "PICKUP"
-            ? t("orderStatus.READY_PICKUP")
-            : t(`orderStatus.${step}`);
+        const label = t(getOrderStatusLabelKey(step, shippingMethod));
 
         //Renderizamos cada paso como un elemento de lista con un círculo que indica si estás completado (verde), actual (gris oscuro) o pendiente (gris claro), y una línea que conecta los pasos completados. El texto del paso también cambia de estilo según su estado.
         return (

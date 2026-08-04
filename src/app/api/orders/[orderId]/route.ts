@@ -33,6 +33,9 @@ export async function GET(req: NextRequest, { params }: Params) {
       //Si al menos una de las condiciones es cierta (o se trata de una compradora o de una artesana.)
       OR: [{ buyerId: session.user.id }, { artisanId: session.user.id }],
     },
+    //Solo traemos lo que realmente se usa más abajo — mismo patrón que getParticipantOrError en
+    //messages/[conversationId]/route.ts para este mismo tipo de comprobación en una ruta de polling.
+    select: { status: true, trackingNumber: true },
   });
   if (!order) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });

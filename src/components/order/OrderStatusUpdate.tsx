@@ -5,6 +5,7 @@
 import { useTranslations } from "next-intl";
 import type { OrderStatus, ShippingMethod } from "generated/prisma";
 import { formatTime } from "~/lib/date";
+import { getOrderStatusLabelKey } from "~/lib/order-status-label";
 
 interface Props {
   status: OrderStatus;
@@ -15,12 +16,7 @@ interface Props {
 
 export default function OrderStatusUpdate({ status, message, createdAt, shippingMethod }: Props) {
   const t = useTranslations("account");
-
-  //Misma clave de traducción especial que en OrderStatusTimeline — consistencia visual.
-  const label =
-    status === "READY" && shippingMethod === "PICKUP"
-      ? t("orderStatus.READY_PICKUP")
-      : t(`orderStatus.${status}`);
+  const label = t(getOrderStatusLabelKey(status, shippingMethod));
 
   return (
     <li className="rounded-xl border border-[--border] bg-[--surface] p-3">
