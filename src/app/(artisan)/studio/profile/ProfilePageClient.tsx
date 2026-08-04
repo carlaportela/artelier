@@ -8,6 +8,7 @@ import { PasswordSection, DeleteSection } from "~/components/account/AccountSett
 import { saveProfileInfo } from "./actions";
 import { requestDataExport } from "~/app/(buyer)/account/settings/actions";
 import LocalidadSelect from "~/components/LocalidadSelect";
+import StripeConnectButton from "~/components/StripeConnectButton";
 
 type ActiveSection = "profile" | "export" | "account" | null;
 
@@ -20,22 +21,30 @@ interface Props {
     image: string | null;
     bannerImage: string | null;
     email: string | null;
+    stripeAccountId: string | null;
   };
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
+  followersCount: number;
+  //Si venimos de completar el onboarding de Stripe, abrimos directamente "Gestionar cuenta" para
+  //que se vea de inmediato el nuevo estado "✓ Tu cuenta bancaria está conectada."
+  justConnectedStripe?: boolean;
 }
 
-export default function ProfilePageClient({ user, sealRequests }: Props) {
+export default function ProfilePageClient({ user, sealRequests, followersCount, justConnectedStripe }: Props) {
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
+  const [activeSection, setActiveSection] = useState<ActiveSection>(
+    justConnectedStripe ? "account" : null,
+  );
 
   function toggle(section: ActiveSection) {
-    setActiveSection((prev) => (prev === section ? null : section));
+    if (activeSection === section) return; // el botón activo no se puede volver a pulsar
+    setActiveSection(section);
   }
 
   return (
     <>
       {/* ── Banner, avatar y datos en modo lectura ── */}
-      <StudioProfileEditor user={user} sealRequests={sealRequests} />
+      <StudioProfileEditor user={user} sealRequests={sealRequests} followersCount={followersCount} />
 
       {/* ── Sección de cuenta ── */}
       <section className="mt-8 space-y-6 px-5 pb-8">
@@ -57,6 +66,18 @@ export default function ProfilePageClient({ user, sealRequests }: Props) {
 
           <button
             type="button"
+            onClick={() => toggle("account")}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
+              activeSection === "account"
+                ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
+                : "cursor-pointer bg-[#94a49e] hover:bg-[#a3b1ab]"
+            }`}
+          >
+            Gestionar cuenta
+          </button>
+
+          <button
+            type="button"
             onClick={() => toggle("export")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
               activeSection === "export"
@@ -65,18 +86,6 @@ export default function ProfilePageClient({ user, sealRequests }: Props) {
             }`}
           >
             Exportar datos
-          </button>
-
-          <button
-            type="button"
-            onClick={() => toggle("account")}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
-              activeSection === "account"
-                ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
-                : "cursor-pointer bg-[#94a49e] hover:bg-[#a3b1ab]"
-            }`}
-          >
-            Configurar cuenta
           </button>
         </div>
 
@@ -92,7 +101,11 @@ export default function ProfilePageClient({ user, sealRequests }: Props) {
           <ExportDataSection onClose={() => setActiveSection(null)} />
         )}
         {activeSection === "account" && (
-          <AccountSection user={user} onClose={() => setActiveSection(null)} />
+          <AccountSection
+            user={user}
+            justConnectedStripe={justConnectedStripe}
+            onClose={() => setActiveSection(null)}
+          />
         )}
       </section>
     </>
@@ -165,7 +178,7 @@ function ProfileEditSection({
             rows={3}
             maxLength={150}
             placeholder="Cuéntanos algo sobre ti..."
-            className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] transition-colors focus-visible:border-[#3d5a4f]"
+            className="w-full resize-none rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] transition-colors focus-visible:border-[#3d5a4f]"
           />
         </div>
         <p className={`mt-1 text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-[--text-muted]"}`}>
@@ -242,19 +255,22 @@ function ExportDataSection({ onClose }: { onClose: () => void }) {
   );
 }
 
-// ── Configurar cuenta (email + contraseña + eliminar) ────────────────────────
+// ── Gestionar cuenta (email + contraseña + eliminar + pagos) ─────────────────
 
 function AccountSection({
   user,
+  justConnectedStripe,
   onClose,
 }: {
   user: Props["user"];
+  justConnectedStripe?: boolean;
   onClose: () => void;
 }) {
   const [subSection, setSubSection] = useState<"password" | "delete" | null>(null);
 
   function toggleSub(section: "password" | "delete") {
-    setSubSection((prev) => (prev === section ? null : section));
+    if (subSection === section) return; // el botón activo no se puede volver a pulsar
+    setSubSection(section);
   }
 
   return (
@@ -275,6 +291,30 @@ function AccountSection({
           <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
           <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse desde la aplicación.</p>
         </div>
+      </div>
+
+      {/* Cuentas vinculadas (Stripe Connect) — siempre visible, no hace falta desplegarla */}
+      <div className="space-y-2">
+        <label className="block pl-1 text-sm font-medium text-[--text]">Recepción de pagos</label>
+        {user.stripeAccountId ? (
+          <p className="rounded-lg bg-[--surface-2] px-3 py-2 text-sm text-[#3d5a4f]">
+            {justConnectedStripe
+              ? "✓ Tu cuenta bancaria se ha conectado con éxito."
+              : "✓ Tu cuenta bancaria está conectada."}
+          </p>
+        ) : (
+          <div className="flex items-center gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
+            <Info size={13} className="shrink-0 text-[#3d5a4f]/60" />
+            <p className="flex-1 text-xs text-[--text-muted]">
+              Debes conectar una cuenta bancaria para poder recibir los pagos.
+            </p>
+            <StripeConnectButton
+              label="Conectar"
+              returnTo="/studio/profile"
+              className="shrink-0 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+            />
+          </div>
+        )}
       </div>
 
       {/* Botones de acciones de cuenta */}
@@ -306,7 +346,7 @@ function AccountSection({
           onClick={onClose}
           className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
         >
-          Cerrar
+          Cancelar
         </button>
       </div>
 

@@ -32,9 +32,15 @@ export function PasswordSection({ onClose }: { onClose: () => void }) {
   const [success, setSuccess] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
+  //Las contraseñas ya no coinciden si ambas tienen contenido y son distintas — no se comprueba
+  //mientras el campo de confirmación está vacío, para no mostrar el aviso antes de tiempo.
+  const passwordsMismatch =
+    fields.confirmPassword.length > 0 && fields.newPassword !== fields.confirmPassword;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (passwordsMismatch) return; //No se llega a llamar al servidor si ya sabemos que no coinciden.
     setIsPending(true);
     const result = await changePassword(fields);
     if (result?.error) {
@@ -68,10 +74,21 @@ export function PasswordSection({ onClose }: { onClose: () => void }) {
           />
         </div>
       ))}
+      {passwordsMismatch && <p className="text-sm text-red-600">Las contraseñas no coinciden</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
       {success && <p className="text-sm text-[#3d5a4f]">{t("passwordChanged")}</p>}
       <div className="flex gap-2 pt-1">
-        <button type="submit" disabled={isPending || !fields.currentPassword || !fields.newPassword || !fields.confirmPassword} className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a3b1ab] disabled:opacity-50 disabled:pointer-events-none">
+        <button
+          type="submit"
+          disabled={
+            isPending ||
+            !fields.currentPassword ||
+            !fields.newPassword ||
+            !fields.confirmPassword ||
+            passwordsMismatch
+          }
+          className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a3b1ab] disabled:opacity-50 disabled:pointer-events-none"
+        >
           {isPending ? "Guardando..." : "Guardar nueva contraseña"}
         </button>
         <button type="button" onClick={onClose} className={btnOutline}>
