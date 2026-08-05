@@ -250,7 +250,7 @@ export default function PedidosView({ pending, processed }: Props) {
             </button>
             <button
               onClick={() => confirmReject && handleReject(confirmReject)}
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              className="rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
             >
               Rechazar
             </button>

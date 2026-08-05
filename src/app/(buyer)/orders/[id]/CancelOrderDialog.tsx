@@ -60,7 +60,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full rounded-full border border-red-200 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
+        className="w-full rounded-full bg-red-700 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
       >
         Cancelar pedido
       </button>
@@ -107,7 +107,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
             <button
               onClick={handleCancel}
               disabled={loading || reason.trim().length < 10}
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+              className="rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50"
             >
               {loading ? "Cancelando..." : "Confirmar cancelación"}
             </button>

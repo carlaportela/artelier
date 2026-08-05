@@ -141,7 +141,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 type="button"
                 onClick={handleDelete}
                 disabled={isPending}
-                className="flex-1 cursor-pointer rounded-full bg-red-600 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60"
+                className="flex-1 cursor-pointer rounded-full bg-red-700 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-60"
               >
                 {isPending ? "Eliminando..." : "Eliminar"}
               </button>

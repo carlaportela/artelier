@@ -8,21 +8,9 @@ import { getTranslations } from "next-intl/server";
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
+import { ORDER_STATUS_DOT } from "~/lib/order-constants";
 
 export const metadata: Metadata = { title: "Mis pedidos — Artelier" };
-
-//Color del punto indicador según el estado del pedido: mostaza = en curso, verde = completado, gris = cerrado, rojo = requiere atención.
-const ORDER_STATUS_DOT: Record<string, string> = {
-  CONFIRMED: "bg-[#c4956a]",
-  IN_PREPARATION: "bg-[#c4956a]",
-  READY: "bg-[#c4956a]",
-  SHIPPED: "bg-[#c4956a]",
-  DELIVERED: "bg-[#3d5a4f]",
-  ACCEPTED: "bg-[#3d5a4f]",
-  CANCELLED: "bg-[#94a49e]",
-  REFUNDED: "bg-[#94a49e]",
-  IN_DISPUTE: "bg-red-600",
-};
 
 //Función que renderiza la lista de pedidos.
 export default async function OrdersPage() {
