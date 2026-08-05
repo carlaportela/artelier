@@ -75,7 +75,7 @@
     "myOrders": "Mis pedidos",
     "noOrders": "Aquí verás tus pedidos cuando hagas tu primera compra",
     "orderStatus": {
-      "CONFIRMED": "Confirmado",
+      "CONFIRMED": "Pagado",
       "IN_PREPARATION": "En preparación",
       "READY": "Listo para enviar",
       "SHIPPED": "Enviado",

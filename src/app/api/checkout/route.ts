@@ -173,21 +173,24 @@ export async function POST(req: Request) {
       //Datos de pago: comisiones (de Stripe, de envío y seguro de plataforma) y cuenta de Stripe de destino (artesana).
       application_fee_amount: applicationFee,
       transfer_data: { destination: product.artisan.stripeAccountId },
+      //La metadata debe ir aquí (en el PaymentIntent), no en el nivel superior de la Sesión de
+      //Checkout: el webhook escucha "payment_intent.succeeded" y lee la metadata del PaymentIntent,
+      //que Stripe NO copia automáticamente desde la metadata de la Sesión.
+      metadata: {
+        //Datos de la transacción: producto, artesano, método de envío, precio del producto, comisiones desglosadas.
+        productId: product.id,
+        buyerId: session.user.id,
+        shippingMethod,
+        priceInCents: String(product.priceInCents),
+        platformFeeInCents: String(applicationFee),
+        stripeFeeInCents: String(fees.stripeFee),
+        totalInCents: String(fees.total),
+        firstSaleFeeWaived: String(!product.artisan.firstSaleCompleted), //!false = true
+        penaltyApplied: String(penaltyCollected),
+      },
     },
-    success_url: `${baseUrl}/checkout/success`, //Dirección de pago realizado
+    success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`, //Dirección de pago realizado
     cancel_url: `${baseUrl}/checkout?productId=${product.id}`, //Dirección de pago cancelado.
-    metadata: {
-      //Datos de la transacción: producto, artesano, método de envío, precio del producto, comisiones desglosadas.
-      productId: product.id,
-      buyerId: session.user.id,
-      shippingMethod,
-      priceInCents: String(product.priceInCents),
-      platformFeeInCents: String(applicationFee),
-      stripeFeeInCents: String(fees.stripeFee),
-      totalInCents: String(fees.total),
-      firstSaleFeeWaived: String(!product.artisan.firstSaleCompleted), //!false = true
-      penaltyApplied: String(penaltyCollected),
-    },
   });
 
   if (stripeSession.url === null) {

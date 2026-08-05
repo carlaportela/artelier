@@ -23,7 +23,7 @@ export default async function CheckoutSuccessPage({
 
   if (session.payment_status === "paid") {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-4 text-center">
+      <main className="flex min-h-screen flex-col items-center gap-6 px-4 pt-24 text-center md:pt-32">
         <div className="flex flex-col items-center gap-3">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3d5a4f]/10">
             <svg
@@ -44,8 +44,9 @@ export default async function CheckoutSuccessPage({
             ¡Pago realizado!
           </h1>
           <p className="max-w-sm text-sm text-[--text-muted]">
-            Tu pedido está siendo procesado. La artesana recibirá una
-            notificación y comenzará a prepararlo.
+            Tu pedido está siendo procesado.
+            <br />
+            La artesana recibirá una notificación y comenzará a prepararlo.
           </p>
         </div>
 

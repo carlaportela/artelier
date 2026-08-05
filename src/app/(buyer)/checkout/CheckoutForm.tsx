@@ -281,6 +281,14 @@ export default function CheckoutForm({ product }: { product: Product }) {
           >
             {loading ? "Procesando..." : `Pagar ${fmt(fees.total)}`}
           </button>
+
+          {/* Cancelar compra */}
+          <Link
+            href={`/product/${product.id}`}
+            className="mt-3 block w-full cursor-pointer rounded-full border border-[#ccc8bc] py-3 text-center text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+          >
+            Cancelar compra
+          </Link>
         </div>
       </div>
     </main>
