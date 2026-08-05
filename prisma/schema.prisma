@@ -156,6 +156,7 @@ model Product {
     description  String
     priceInCents Int
     type         ProductType
+    isPersonalized Boolean     @default(false)
     status       ProductStatus @default(ACTIVE)
     expiresAt    DateTime?
     imageUrls    String[]

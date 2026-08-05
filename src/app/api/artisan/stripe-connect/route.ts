@@ -8,8 +8,11 @@ import { stripe } from "~/lib/stripe";
 import { getBaseUrl } from "~/lib/stripe-url";
 import { stripeConnectLimiter } from "~/lib/ratelimit";
 
+//Lista blanca de páginas a las que se puede volver tras el onboarding — nunca se usa un valor
+//recibido del cliente sin validar contra esta lista, para evitar un redirect abierto.
+const ALLOWED_RETURN_PATHS = ["/studio/orders", "/studio/profile"];
 
-export async function POST() {
+export async function POST(req: Request) {
   //Se comprueba que el usuario esté autenticado, sino se devuelve el mensaje de error correspondiente.
   const session = await getServerSession();
   if (!session?.user) {
@@ -83,12 +86,20 @@ export async function POST() {
     });
   }
 
+  //Se comprueba a qué página quiere volver la artesana tras conectar — solo se acepta si está en
+  //la lista blanca, sino se usa la página genérica de siempre por defecto.
+  const body = (await req.json().catch(() => ({}))) as { returnTo?: unknown };
+  const returnTo =
+    typeof body.returnTo === "string" && ALLOWED_RETURN_PATHS.includes(body.returnTo)
+      ? body.returnTo
+      : "/studio/stripe-onboarding";
+
   //Se genera AccountLink para redirigir a la artesana al onboarding de Stripe
   const base = getBaseUrl(); //Obtenemos la base URL del helper.
 
   const link = await stripe.accountLinks.create({
     account: accountId,
-    return_url: `${base}/studio/stripe-onboarding`,
+    return_url: `${base}${returnTo}?stripeConnected=1`,
     refresh_url: `${base}/studio/stripe-onboarding/refresh`,
     type: "account_onboarding",
   });

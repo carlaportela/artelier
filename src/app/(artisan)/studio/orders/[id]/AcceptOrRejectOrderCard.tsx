@@ -181,7 +181,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
             <button
               onClick={handleReject}
               disabled={loading || expired || reason.trim().length < 10}
-              className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
+              className="rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50"
             >
               {loading ? "Rechazando..." : "Confirmar rechazo"}
             </button>

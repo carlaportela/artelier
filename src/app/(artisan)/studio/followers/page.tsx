@@ -15,7 +15,7 @@ export default async function FollowersPage() {
   const follows = await db.follow.findMany({
     where: { followingId: session.user.id },
     include: {
-      follower: { select: { name: true, lastName: true, image: true } },
+      follower: { select: { name: true, lastName: true, image: true, locality: true, province: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -24,7 +24,7 @@ export default async function FollowersPage() {
     <main className="bg-[--bg]">
       <div className="mx-auto max-w-lg px-4 py-8">
         <h1 className="font-display mb-6 text-xl font-bold text-[--text]">
-          Seguidoras
+          Mis seguidores
         </h1>
         {follows.length === 0 ? ( //Si no existen seguidoras muestra el mensaje correspondiente.
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
@@ -56,6 +56,12 @@ export default async function FollowersPage() {
                 />
                 <p className="text-sm font-medium text-[--text]">
                   {follower.name} {follower.lastName}
+                  {(follower.locality ?? follower.province) && (
+                    <span className="font-normal text-[--text-muted]">
+                      {" "}
+                      · {[follower.locality, follower.province].filter(Boolean).join(", ")}
+                    </span>
+                  )}
                 </p>
               </div>
             ))}

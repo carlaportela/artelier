@@ -15,6 +15,7 @@ const createProductSchema = z.object({
   description: z.string().trim().max(280, "La descripción no puede superar 280 caracteres"),
   priceInCents: z.number().int().min(1, "El precio debe ser mayor que 0").max(2_147_483_647, "El precio introducido es demasiado alto"),
   type: z.enum(["UNIQUE", "PERISHABLE", "STANDARD"]),
+  isPersonalized: z.boolean(),
   imageUrls: z.array(z.string().url()).min(1, "Añade al menos una imagen").max(7, "Máximo 7 imágenes"),
   category: z.string().trim().min(1, "Selecciona una categoría"),
   expiresAt: z
@@ -44,7 +45,7 @@ export async function createProduct(data: unknown) {
   }
 
   //Extraer los campos validados del producto a crear.
-  const { name, description, priceInCents, type, imageUrls, category, expiresAt } = parsed.data;
+  const { name, description, priceInCents, type, isPersonalized, imageUrls, category, expiresAt } = parsed.data;
 
   //Contar cuantos producto activos tiene el artesano para determinar si este es su primer producto, lo cual puede ser útil para mostrar mensajes de bienvenida o tutoriales específicos para nuevos vendedores.
   const existingCount = await db.product.count({
@@ -70,6 +71,7 @@ export async function createProduct(data: unknown) {
         description,
         priceInCents,
         type,
+        isPersonalized,
         imageUrls,
         category,
         locality: artisan?.locality ?? "", //Se asocia la localidad del artesano al producto, o se deja vacío si no existe.

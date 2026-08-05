@@ -50,6 +50,7 @@ export default async function EditProductPage({ params }: PageProps) {
         description: product.description,
         priceInCents: product.priceInCents,
         type: product.type,
+        isPersonalized: product.isPersonalized,
         status: product.status,
         imageUrls: product.imageUrls,
         category: product.category,
