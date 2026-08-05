@@ -32,6 +32,7 @@ const updateProductSchema = z
       .min(1, "El precio debe ser mayor que 0")
       .max(2_147_483_647, "El precio introducido es demasiado alto"),
     type: z.enum(["UNIQUE", "PERISHABLE", "STANDARD"]),
+    isPersonalized: z.boolean(),
     imageUrls: z
       .array(z.string().url())
       .min(1, "Añade al menos una imagen")

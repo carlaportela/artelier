@@ -27,8 +27,11 @@ export default async function CheckoutPage({
     select: {
       id: true,
       name: true,
+      description: true,
       priceInCents: true,
       type: true,
+      isPersonalized: true,
+      imageUrls: true,
       artisan: { select: { stripeAccountId: true} },
     },
   });

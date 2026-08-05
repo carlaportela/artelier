@@ -423,6 +423,7 @@ export default function NewProductWizard() {
   const [priceEuros, setPriceEuros] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState<"UNIQUE" | "PERISHABLE" | "STANDARD">("UNIQUE");
+  const [isPersonalized, setIsPersonalized] = useState(false);
   const [category, setCategory] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -551,6 +552,7 @@ export default function NewProductWizard() {
       description: description.trim(),
       priceInCents,
       type,
+      isPersonalized,
       imageUrls: images.map((img) => img.url),
       category,
       expiresAt: expiresAt || undefined,
@@ -810,6 +812,20 @@ export default function NewProductWizard() {
             <p className="text-xs text-[--text-muted]">{TYPE_DESCRIPTIONS[type]}</p>
           </div>
         </div>
+
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={isPersonalized}
+            onChange={(e) => setIsPersonalized(e.target.checked)}
+            className="mt-0.5"
+          />
+          <span className="text-sm text-[--text-muted]">
+            Este producto se hace a medida o se personaliza para cada pedido
+            (grabados, tallas, medidas...). No lo marques solo porque sea una
+            pieza única.
+          </span>
+        </label>
 
         {type === "PERISHABLE" && (
           <div className="space-y-2">

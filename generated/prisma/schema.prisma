@@ -150,20 +150,21 @@ model User {
 }
 
 model Product {
-  id           String        @id @default(cuid())
-  artisanId    String
-  name         String
-  description  String
-  priceInCents Int
-  type         ProductType
-  status       ProductStatus @default(ACTIVE)
-  expiresAt    DateTime?
-  imageUrls    String[]
-  category     String
-  locality     String
-  deletedAt    DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id             String        @id @default(cuid())
+  artisanId      String
+  name           String
+  description    String
+  priceInCents   Int
+  type           ProductType
+  isPersonalized Boolean       @default(false)
+  status         ProductStatus @default(ACTIVE)
+  expiresAt      DateTime?
+  imageUrls      String[]
+  category       String
+  locality       String
+  deletedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   artisan      User          @relation(fields: [artisanId], references: [id])
   orders       Order[]

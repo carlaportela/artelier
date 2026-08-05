@@ -7635,6 +7635,7 @@ export namespace Prisma {
     description: string | null
     priceInCents: number | null
     type: $Enums.ProductType | null
+    isPersonalized: boolean | null
     status: $Enums.ProductStatus | null
     expiresAt: Date | null
     category: string | null
@@ -7651,6 +7652,7 @@ export namespace Prisma {
     description: string | null
     priceInCents: number | null
     type: $Enums.ProductType | null
+    isPersonalized: boolean | null
     status: $Enums.ProductStatus | null
     expiresAt: Date | null
     category: string | null
@@ -7667,6 +7669,7 @@ export namespace Prisma {
     description: number
     priceInCents: number
     type: number
+    isPersonalized: number
     status: number
     expiresAt: number
     imageUrls: number
@@ -7694,6 +7697,7 @@ export namespace Prisma {
     description?: true
     priceInCents?: true
     type?: true
+    isPersonalized?: true
     status?: true
     expiresAt?: true
     category?: true
@@ -7710,6 +7714,7 @@ export namespace Prisma {
     description?: true
     priceInCents?: true
     type?: true
+    isPersonalized?: true
     status?: true
     expiresAt?: true
     category?: true
@@ -7726,6 +7731,7 @@ export namespace Prisma {
     description?: true
     priceInCents?: true
     type?: true
+    isPersonalized?: true
     status?: true
     expiresAt?: true
     imageUrls?: true
@@ -7830,6 +7836,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized: boolean
     status: $Enums.ProductStatus
     expiresAt: Date | null
     imageUrls: string[]
@@ -7866,6 +7873,7 @@ export namespace Prisma {
     description?: boolean
     priceInCents?: boolean
     type?: boolean
+    isPersonalized?: boolean
     status?: boolean
     expiresAt?: boolean
     imageUrls?: boolean
@@ -7888,6 +7896,7 @@ export namespace Prisma {
     description?: boolean
     priceInCents?: boolean
     type?: boolean
+    isPersonalized?: boolean
     status?: boolean
     expiresAt?: boolean
     imageUrls?: boolean
@@ -7906,6 +7915,7 @@ export namespace Prisma {
     description?: boolean
     priceInCents?: boolean
     type?: boolean
+    isPersonalized?: boolean
     status?: boolean
     expiresAt?: boolean
     imageUrls?: boolean
@@ -7924,6 +7934,7 @@ export namespace Prisma {
     description?: boolean
     priceInCents?: boolean
     type?: boolean
+    isPersonalized?: boolean
     status?: boolean
     expiresAt?: boolean
     imageUrls?: boolean
@@ -7934,7 +7945,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "artisanId" | "name" | "description" | "priceInCents" | "type" | "status" | "expiresAt" | "imageUrls" | "category" | "locality" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "artisanId" | "name" | "description" | "priceInCents" | "type" | "isPersonalized" | "status" | "expiresAt" | "imageUrls" | "category" | "locality" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     artisan?: boolean | UserDefaultArgs<ExtArgs>
     orders?: boolean | Product$ordersArgs<ExtArgs>
@@ -7964,6 +7975,7 @@ export namespace Prisma {
       description: string
       priceInCents: number
       type: $Enums.ProductType
+      isPersonalized: boolean
       status: $Enums.ProductStatus
       expiresAt: Date | null
       imageUrls: string[]
@@ -8405,6 +8417,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Product", 'String'>
     readonly priceInCents: FieldRef<"Product", 'Int'>
     readonly type: FieldRef<"Product", 'ProductType'>
+    readonly isPersonalized: FieldRef<"Product", 'Boolean'>
     readonly status: FieldRef<"Product", 'ProductStatus'>
     readonly expiresAt: FieldRef<"Product", 'DateTime'>
     readonly imageUrls: FieldRef<"Product", 'String[]'>
@@ -21228,6 +21241,7 @@ export namespace Prisma {
     description: 'description',
     priceInCents: 'priceInCents',
     type: 'type',
+    isPersonalized: 'isPersonalized',
     status: 'status',
     expiresAt: 'expiresAt',
     imageUrls: 'imageUrls',
@@ -22024,6 +22038,7 @@ export namespace Prisma {
     description?: StringFilter<"Product"> | string
     priceInCents?: IntFilter<"Product"> | number
     type?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    isPersonalized?: BoolFilter<"Product"> | boolean
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     expiresAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     imageUrls?: StringNullableListFilter<"Product">
@@ -22045,6 +22060,7 @@ export namespace Prisma {
     description?: SortOrder
     priceInCents?: SortOrder
     type?: SortOrder
+    isPersonalized?: SortOrder
     status?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     imageUrls?: SortOrder
@@ -22069,6 +22085,7 @@ export namespace Prisma {
     description?: StringFilter<"Product"> | string
     priceInCents?: IntFilter<"Product"> | number
     type?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    isPersonalized?: BoolFilter<"Product"> | boolean
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     expiresAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     imageUrls?: StringNullableListFilter<"Product">
@@ -22090,6 +22107,7 @@ export namespace Prisma {
     description?: SortOrder
     priceInCents?: SortOrder
     type?: SortOrder
+    isPersonalized?: SortOrder
     status?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     imageUrls?: SortOrder
@@ -22115,6 +22133,7 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Product"> | string
     priceInCents?: IntWithAggregatesFilter<"Product"> | number
     type?: EnumProductTypeWithAggregatesFilter<"Product"> | $Enums.ProductType
+    isPersonalized?: BoolWithAggregatesFilter<"Product"> | boolean
     status?: EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
     expiresAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     imageUrls?: StringNullableListFilter<"Product">
@@ -23379,6 +23398,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -23400,6 +23420,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -23419,6 +23440,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -23440,6 +23462,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -23460,6 +23483,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -23476,6 +23500,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -23493,6 +23518,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -24881,6 +24907,7 @@ export namespace Prisma {
     description?: SortOrder
     priceInCents?: SortOrder
     type?: SortOrder
+    isPersonalized?: SortOrder
     status?: SortOrder
     expiresAt?: SortOrder
     imageUrls?: SortOrder
@@ -24902,6 +24929,7 @@ export namespace Prisma {
     description?: SortOrder
     priceInCents?: SortOrder
     type?: SortOrder
+    isPersonalized?: SortOrder
     status?: SortOrder
     expiresAt?: SortOrder
     category?: SortOrder
@@ -24918,6 +24946,7 @@ export namespace Prisma {
     description?: SortOrder
     priceInCents?: SortOrder
     type?: SortOrder
+    isPersonalized?: SortOrder
     status?: SortOrder
     expiresAt?: SortOrder
     category?: SortOrder
@@ -27598,6 +27627,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -27617,6 +27647,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -28117,6 +28148,7 @@ export namespace Prisma {
     description?: StringFilter<"Product"> | string
     priceInCents?: IntFilter<"Product"> | number
     type?: EnumProductTypeFilter<"Product"> | $Enums.ProductType
+    isPersonalized?: BoolFilter<"Product"> | boolean
     status?: EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
     expiresAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     imageUrls?: StringNullableListFilter<"Product">
@@ -28963,6 +28995,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -28983,6 +29016,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -29233,6 +29267,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -29253,6 +29288,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -30655,6 +30691,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -30675,6 +30712,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -30734,6 +30772,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -30754,6 +30793,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -30890,6 +30930,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -30910,6 +30951,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -31062,6 +31104,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -31082,6 +31125,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -31692,6 +31736,7 @@ export namespace Prisma {
     description: string
     priceInCents: number
     type: $Enums.ProductType
+    isPersonalized?: boolean
     status?: $Enums.ProductStatus
     expiresAt?: Date | string | null
     imageUrls?: ProductCreateimageUrlsInput | string[]
@@ -31902,6 +31947,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -31921,6 +31967,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
@@ -31940,6 +31987,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     priceInCents?: IntFieldUpdateOperationsInput | number
     type?: EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+    isPersonalized?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imageUrls?: ProductUpdateimageUrlsInput | string[]
