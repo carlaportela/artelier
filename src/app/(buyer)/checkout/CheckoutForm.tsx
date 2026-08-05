@@ -174,7 +174,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
                       type="button"
                       onClick={() => setShowInsuranceInfo((prev) => !prev)}
                       aria-label={showInsuranceInfo ? "Ocultar detalle del seguro" : "Ver detalle del seguro"}
-                      className="cursor-pointer text-[--text-muted]/50 transition-colors hover:text-[#3d5a4f]"
+                      className="cursor-pointer text-[--text-muted]/35 transition-colors hover:text-[#3d5a4f]"
                     >
                       <Info size={13} />
                     </button>
@@ -182,7 +182,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
                   <span>{fmt(fees.insuranceFee)}</span>
                 </div>
                 {showInsuranceInfo && (
-                  <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/70">
+                  <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/55">
                     Cubre incidencias de pedido como pérdida, daños y disputas.
                   </p>
                 )}
@@ -196,7 +196,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
                       type="button"
                       onClick={() => setShowStripeInfo((prev) => !prev)}
                       aria-label={showStripeInfo ? "Ocultar detalle de la pasarela de pago" : "Ver detalle de la pasarela de pago"}
-                      className="cursor-pointer text-[--text-muted]/50 transition-colors hover:text-[#3d5a4f]"
+                      className="cursor-pointer text-[--text-muted]/35 transition-colors hover:text-[#3d5a4f]"
                     >
                       <Info size={13} />
                     </button>
@@ -204,7 +204,7 @@ export default function CheckoutForm({ product }: { product: Product }) {
                   <span>{fmt(fees.stripeFee)}</span>
                 </div>
                 {showStripeInfo && (
-                  <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/70">
+                  <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/55">
                     Comisión de Stripe por procesar el pago.
                   </p>
                 )}
