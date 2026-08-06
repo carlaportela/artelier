@@ -1,9 +1,10 @@
 interface ArtelierLogoProps {
   width?: number;
   height?: number;
+  className?: string;
 }
 
-export default function ArtelierLogo({ width = 96, height = 56 }: ArtelierLogoProps) {
+export default function ArtelierLogo({ width = 96, height = 56, className }: ArtelierLogoProps) {
   return (
     <svg
       width={width}
@@ -12,6 +13,7 @@ export default function ArtelierLogo({ width = 96, height = 56 }: ArtelierLogoPr
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Artelier"
+      className={className}
     >
       {/* Banderillas — rotadas para seguir la curvatura local del hilo */}
       <polygon

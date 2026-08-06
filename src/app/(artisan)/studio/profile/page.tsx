@@ -11,9 +11,14 @@ import ProfilePageClient from "./ProfilePageClient"; // Gestiona editor de perfi
 //Metadata para definir el título de la página
 export const metadata: Metadata = { title: "Mi perfil — Artelier" };
 
+interface Props {
+  searchParams: Promise<{ stripeConnected?: string }>;
+}
+
 //Función principal de la página de perfil de estudio, que muestra el editor de perfil y las opciones de configuración.
-export default async function StudioProfilePage() {
+export default async function StudioProfilePage({ searchParams }: Props) {
   const session = await requireArtisanSession();
+  const { stripeConnected } = await searchParams;
 
   const [user, sealRequests, followersCount] = await Promise.all([
     db.user.findUnique({
@@ -26,6 +31,7 @@ export default async function StudioProfilePage() {
         image: true,
         bannerImage: true,
         email: true,
+        stripeAccountId: true,
       },
     }),
     db.sealRequest.findMany({
@@ -50,18 +56,13 @@ export default async function StudioProfilePage() {
         </Link>
       </div>
 
-      {/* ── Seguidoras ── */}
-      <div className="px-4 pb-4">
-        <Link
-          href="/studio/followers"
-          className="text-sm font-medium text-[#3d5a4f] transition-colors hover:text-[#4a6b5e]"
-        >
-          {followersCount} {followersCount === 1 ? "seguidora" : "seguidoras"} →
-        </Link>
-      </div>
-
       {/* ── Editor de perfil + botones de cuenta ── */}
-      <ProfilePageClient user={user} sealRequests={sealRequests} />
+      <ProfilePageClient
+        user={user}
+        sealRequests={sealRequests}
+        followersCount={followersCount}
+        justConnectedStripe={stripeConnected === "1"}
+      />
     </main>
   );
 }

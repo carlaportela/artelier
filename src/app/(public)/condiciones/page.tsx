@@ -57,7 +57,7 @@ export default function CondicionesPage() {
         </div>
 
         <div>
-          <h2 className="mb-3 text-base font-semibold text-[--text]">6. Derecho de desistimiento</h2>
+          <h2 id="desistimiento" className="mb-3 text-base font-semibold text-[--text]">6. Derecho de desistimiento</h2>
           <p>
             De acuerdo con el Real Decreto Legislativo 1/2007 (TRLGDCU), la compradora dispone de <span className="font-medium">14 días naturales</span> desde la recepción del pedido para ejercer el derecho de desistimiento sin necesidad de justificación.
           </p>

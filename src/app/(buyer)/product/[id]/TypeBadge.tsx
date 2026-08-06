@@ -22,13 +22,13 @@ export function TypeBadge({ label, className, tooltip }: TypeBadgeProps) {
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-label="Más información"
-          className="cursor-pointer text-[#9a9088] transition-colors hover:text-[#5a5648]"
+          className="cursor-pointer text-[--text-muted]/35 transition-colors hover:text-[#3d5a4f]"
         >
           <Info size={13} />
         </button>
       </span>
       {open && (
-        <p className="mt-2 text-xs" style={{ color: "#5a5648" }}>
+        <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/55">
           {tooltip}
         </p>
       )}

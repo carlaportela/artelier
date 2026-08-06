@@ -12,3 +12,16 @@ export const SHIPPING_METHOD_LABELS: Record<string, string> = {
   ARTISAN_OWN: "Envío particular por el artesano",
   PICKUP: "Recogida en persona",
 };
+
+//Color del punto indicador según el estado del pedido: mostaza = en curso, verde = completado, gris = cerrado, rojo = requiere atención.
+export const ORDER_STATUS_DOT: Record<string, string> = {
+  CONFIRMED: "bg-[#c4956a]",
+  IN_PREPARATION: "bg-[#c4956a]",
+  READY: "bg-[#c4956a]",
+  SHIPPED: "bg-[#c4956a]",
+  DELIVERED: "bg-[#3d5a4f]",
+  ACCEPTED: "bg-[#3d5a4f]",
+  CANCELLED: "bg-[#94a49e]",
+  REFUNDED: "bg-[#94a49e]",
+  IN_DISPUTE: "bg-red-600",
+};

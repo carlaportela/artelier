@@ -5,6 +5,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Pencil, Plus, Loader2, MapPin, ScanSearch, Camera, Trash2 } from "lucide-react";
 
 import { saveProfile } from "./actions";
@@ -29,9 +30,10 @@ interface Props {
     bannerImage: string | null;
   };
   sealRequests: Array<{ id: string; seal: { name: string; type: string } }>;
+  followersCount: number;
 }
 
-export default function StudioProfileEditor({ user, sealRequests }: Props) {
+export default function StudioProfileEditor({ user, sealRequests, followersCount }: Props) {
   const [avatarUrl, setAvatarUrl]         = useState(user.image ?? "");
   const [bannerUrl, setBannerUrl]         = useState(user.bannerImage ?? "");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -226,12 +228,19 @@ export default function StudioProfileEditor({ user, sealRequests }: Props) {
           <h2 className="font-display text-xl font-bold text-[--text]">
             {user.name ?? <span className="text-[--text-muted]">Sin nombre</span>}
           </h2>
-          {user.locality && (
-            <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
-              <MapPin size={12} />
-              {user.locality}
-            </p>
-          )}
+          <p className="flex flex-wrap items-center gap-1 text-sm font-medium text-[#3d5a4f]">
+            {user.locality && (
+              <>
+                <MapPin size={12} />
+                {user.locality}
+                <span className="text-[--text-muted]">·</span>
+              </>
+            )}
+            <Link href="/studio/followers" className="transition-colors hover:text-[#4a6b5e]">
+              <strong>{followersCount}</strong>{" "}
+              {followersCount === 1 ? "seguidor" : "seguidores"}
+            </Link>
+          </p>
           {sealRequests.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {sealRequests.map((sr) => (

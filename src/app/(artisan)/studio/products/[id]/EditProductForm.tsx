@@ -69,6 +69,7 @@ interface ProductData {
   description: string;
   priceInCents: number;
   type: "UNIQUE" | "PERISHABLE" | "STANDARD";
+  isPersonalized: boolean;
   status: "ACTIVE" | "SOLD" | "EXPIRED";
   imageUrls: string[];
   category: string;
@@ -394,6 +395,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
   const [description, setDescription] = useState(product.description);
   const [priceEuros, setPriceEuros] = useState(() => (product.priceInCents / 100).toFixed(2));
   const [type, setType] = useState<"UNIQUE" | "PERISHABLE" | "STANDARD">(product.type);
+  const [isPersonalized, setIsPersonalized] = useState(product.isPersonalized);
   const [category, setCategory] = useState(product.category);
   const [expiresAt, setExpiresAt] = useState(product.expiresAt ?? "");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -495,6 +497,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
         description: description.trim(),
         priceInCents: cents,
         type,
+        isPersonalized,
         imageUrls: images.map((img) => img.url),
         category,
         expiresAt: expiresAt || undefined,
@@ -681,6 +684,22 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
             <p className="text-xs text-[--text-muted]">{TYPE_DESCRIPTIONS[type]}</p>
             {fieldErrors.type && <p className="text-xs text-red-600">{fieldErrors.type}</p>}
           </div>
+
+          {/* ── Personalizado ──────────────────────────────────────────── */}
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={isPersonalized}
+              onChange={(e) => setIsPersonalized(e.target.checked)}
+              disabled={isDisabled}
+              className="mt-0.5"
+            />
+            <span className="text-sm text-[--text-muted]">
+              Este producto se hace a medida o se personaliza para cada
+              pedido (grabados, tallas, medidas...). No lo marques solo
+              porque sea una pieza única.
+            </span>
+          </label>
 
           {/* ── Fecha de caducidad (solo perecederos) ─────────────────── */}
           {type === "PERISHABLE" && (

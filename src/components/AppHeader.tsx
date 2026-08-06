@@ -28,19 +28,16 @@ export default async function AppHeader() {
 
   return (
     <header className="sticky top-0 shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
-      <div className="mx-auto grid h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl grid-cols-[1fr_auto_1fr] items-center px-4">
+      <div className="mx-auto flex h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl items-center justify-between px-4">
 
-        {/* Izquierda — nombre de marca */}
+        {/* Izquierda — nombre de marca + logo, juntos */}
         <Link
           href={homeHref}
-          className="font-display text-2xl font-bold text-[#3d5a4f] transition-colors hover:text-[#4a6b5e]"
+          aria-label="Artelier — inicio"
+          className="flex items-center gap-3 transition-colors hover:text-[#4a6b5e]"
         >
-          Artelier
-        </Link>
-
-        {/* Centro — logo */}
-        <Link href={homeHref} aria-label="Artelier — inicio">
-          <ArtelierLogo width={80} height={46} />
+          <ArtelierLogo width={56} height={32} className="-translate-y-1" />
+          <span className="font-display text-2xl font-bold text-[#3d5a4f]">Artelier</span>
         </Link>
 
         {/* Derecha — saludo + avatar con menú o botón Entrar */}
@@ -48,7 +45,7 @@ export default async function AppHeader() {
           {user ? (
             <>
               <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-[--text]">
-                {user.name ? `¡Hola, ${user.name.split(" ")[0]}!` : "¡Hola!"}
+                {user.name ? `¡Hola ${user.name.split(" ")[0]}!` : "¡Hola!"}
               </span>
               <UserMenu
                 name={user.name ?? null}
