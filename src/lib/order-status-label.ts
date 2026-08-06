@@ -4,9 +4,13 @@
 
 import type { OrderStatus, ShippingMethod } from "generated/prisma";
 
-export function getOrderStatusLabelKey(status: OrderStatus, shippingMethod: ShippingMethod): string {
+export function getOrderStatusLabelKey(
+  status: OrderStatus,
+  shippingMethod: ShippingMethod,
+  namespace: "orderStatus" | "orderStatusExplanation" = "orderStatus",
+): string {
   if (status === "READY" && shippingMethod === "PICKUP") {
-    return "orderStatus.READY_PICKUP";
+    return `${namespace}.READY_PICKUP`;
   }
-  return `orderStatus.${status}`;
+  return `${namespace}.${status}`;
 }

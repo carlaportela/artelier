@@ -18,16 +18,17 @@ export default function ExportDataButton() {
 
   return (
     <div className="space-y-3">
-      <h2 className="font-display text-lg text-[--text]">{t("exportData")}</h2>
-      <p className="text-sm text-[--text-muted]">{t("exportDataDescription")}</p>
-
+      <h2 className="font-display text-base font-bold text-[--text] md:text-lg">Privacidad</h2>
+      <p className="text-sm text-[--text-muted]">
+        La custodia de tus datos es lo más importante para nosotros. Como usuario de Artelier, tienes derecho a conocer la información que guardamos sobre ti y a obtener una copia de ella.
+      </p>
       <button
         type="button"
         onClick={handleExport}
         disabled={status === "pending" || status === "done"}
-        className="cursor-pointer rounded-full bg-[#8f9e94] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a0afa5] disabled:cursor-not-allowed disabled:opacity-60"
+        className="cursor-pointer rounded-full bg-[#8f9e94] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a0afa5] disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-60"
       >
-        {status === "pending" ? "Enviando..." : t("exportData")}
+        {status === "pending" ? "Exportando..." : status === "done" ? "Datos exportados" : t("exportData")}
       </button>
 
       {status === "done" && (

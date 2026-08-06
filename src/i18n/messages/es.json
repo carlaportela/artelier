@@ -81,10 +81,19 @@
       "READY_PICKUP": "Listo para recogida",
       "SHIPPED": "Enviado",
       "DELIVERED": "Entregado",
-      "ACCEPTED": "Aceptado",
+      "ACCEPTED": "Completado",
       "CANCELLED": "Cancelado",
       "REFUNDED": "Reembolsado",
       "IN_DISPUTE": "En disputa"
+    },
+    "orderStatusExplanation": {
+      "CONFIRMED": "Tu pedido está pagado y a la espera de ser aceptado por la artesana o artesano.",
+      "IN_PREPARATION": "Tu pedido ha sido aceptado y está en preparación.",
+      "READY": "Tu pedido está listo para enviarse.",
+      "READY_PICKUP": "Tu pedido está listo para que lo recojas.",
+      "SHIPPED": "Tu pedido está en camino.",
+      "DELIVERED": "Tu pedido ha sido entregado. Es necesario que confirmes la recepción una vez lo hayas revisado.",
+      "ACCEPTED": "La recepción del pedido ha sido confirmada. ¡Compra completada!"
     },
     "orderDetail": "Detalle del pedido",
     "cancelOrder": "Cancelar pedido",
@@ -119,8 +128,7 @@
     "deleteAccountWarning": "Esta acción es irreversible. Tus datos se anonimizarán permanentemente.",
     "confirmWithPassword": "Introduce tu contraseña para confirmar",
     "exportData": "Exportar mis datos",
-    "exportDataDescription": "Recibirás un correo con todos tus datos en PDF.",
-    "exportRequested": "Correo enviado. Revisa tu bandeja de entrada.",
+    "exportRequested": "Te hemos enviado un correo electrónico con tus datos en PDF. Por favor, revisa tu bandeja de entrada.",
     "cancel": "Cancelar"
   },
   "errors": {

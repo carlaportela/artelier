@@ -23,6 +23,7 @@ interface Props {
   shippingMethod: ShippingMethod;
   initialStatusUpdates: StatusUpdateData[];
   initialTrackingNumber: string | null;
+  orderCreatedAt: string;
 }
 
 export default function OrderStatusPoller({
@@ -31,6 +32,7 @@ export default function OrderStatusPoller({
   shippingMethod,
   initialStatusUpdates,
   initialTrackingNumber,
+  orderCreatedAt,
 }: Props) {
   const t = useTranslations("account");
 
@@ -95,8 +97,9 @@ export default function OrderStatusPoller({
 
   return (
     <>
-      <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
-        <OrderStatusTimeline status={status} shippingMethod={shippingMethod} />
+      <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
+        <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">El pedido se encuentra</p>
+        <OrderStatusTimeline status={status} shippingMethod={shippingMethod} orderCreatedAt={orderCreatedAt} />
       </div>
 
       {trackingNumber && (

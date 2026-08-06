@@ -85,7 +85,7 @@ export default function ArtisanProfileTabs({
                       )}
                       {/* Badge de estado */}
                       {badge && (
-                        <span className={`absolute bottom-2 left-2 rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
+                        <span className={`absolute bottom-2 right-2 rounded px-1.5 py-0.5 text-xs font-medium ${badge.className}`}>
                           {badge.label}
                         </span>
                       )}
@@ -94,7 +94,7 @@ export default function ArtisanProfileTabs({
                       <p className={`truncate font-display text-base font-bold ${!isActive ? "text-[--text-muted]" : "text-[--text]"}`}>
                         {product.name}
                       </p>
-                      <p className="text-xs text-[#3d5a4f]">
+                      <p className={`text-xs ${!isActive ? "text-[--text-muted]" : "text-[#3d5a4f]"}`}>
                         {(product.priceInCents / 100).toLocaleString("es-ES", {
                           style: "currency",
                           currency: "EUR",

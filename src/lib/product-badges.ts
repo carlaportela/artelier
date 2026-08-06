@@ -13,7 +13,7 @@ interface Badge {
  * - ACTIVE + expiresAt  → "Por tiempo limitado" (ámbar)
  * - ACTIVE sin expiresAt → null (no se muestra badge)
  * - SOLD                → "Vendido" (gris oscuro casi negro)
- * - EXPIRED             → "No disponible" (gris oscuro)
+ * - EXPIRED             → "Expirado" (gris oscuro)
  *
  * @param variant "overlay" para fondos semi-transparentes (sobre imagen),
  *                "solid"   para fondos sólidos (vista lista)
@@ -38,7 +38,7 @@ export function getProductBadge(
   }
   // EXPIRED
   return {
-    label: "No disponible",
-    className: variant === "overlay" ? "bg-gray-700/80 text-white" : "bg-gray-700 text-white",
+    label: "Expirado",
+    className: variant === "overlay" ? "bg-gray-500/80 text-white" : "bg-gray-500 text-white",
   };
 }

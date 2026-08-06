@@ -113,7 +113,11 @@ export default async function OrderDetailPage({ params }: Props) {
 
         {/* Timeline de estados */}
         <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
-          <OrderStatusTimeline status={order.status} shippingMethod={order.shippingMethod} />
+          <OrderStatusTimeline
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+            orderCreatedAt={order.createdAt.toISOString()}
+          />
         </div>
 
         {/* Número de seguimiento */}

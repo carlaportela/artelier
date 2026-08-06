@@ -23,7 +23,7 @@ export default async function FeedPage() {
 
     if (followCount === 0) {
         return (
-        <main className="px-4 py-8">
+        <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
             <div className="flex flex-col items-center gap-4 py-20 text-center">
             <p className="text-[--text]">Todavía no sigues a ninguna artesana o artesano</p>
             <Link
@@ -69,7 +69,7 @@ export default async function FeedPage() {
 
     if (initialProducts.length === 0) {
         return (
-        <main className="px-4 py-8">
+        <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
             <p className="py-20 text-center text-sm text-[--text-muted]">
             Las artesanas y artesanos que sigues aún no tienen productos publicados
             </p>
@@ -78,13 +78,10 @@ export default async function FeedPage() {
     }
 
     return (
-        <main className="px-4 py-8">
-            <h1 className="font-display text-center text-3xl font-bold text-[--text]">
-                ¿Qué es lo último?
+        <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
+            <h1 className="font-display mb-6 text-xl font-bold text-[--text] md:text-2xl">
+                Mis novedades
             </h1>
-            <p className="mt-1 text-sm text-[--text-muted] text-center mb-6">
-                Novedades de las artesanas y artesanos que te gustan
-            </p>
         <FeedClient
             initialProducts={initialProducts}
             initialNextCursor={initialNextCursor ?? null}
