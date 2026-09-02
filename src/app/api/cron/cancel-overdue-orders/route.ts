@@ -68,6 +68,7 @@ export async function GET(req: Request) {
         orderId: order.id,
         cancellationReason:
           "El sistema ha cancelado tu pedido porque la artesana no lo aceptó dentro del plazo de 24 horas. Se ha iniciado el reembolso.",
+        cancelledBy: "SYSTEM",
         product: order.product,
         productId: order.productId,
         penalty: { artisanId: order.artisanId, amountCents: PENALTY_AMOUNT_CENTS },

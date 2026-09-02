@@ -40,6 +40,14 @@ enum OrderStatus {
     IN_DISPUTE
 }
 
+//Quién originó la cancelación de un pedido — el estado CANCELLED por sí solo no distingue si fue la
+//compradora quien canceló, la artesana quien rechazó el pedido, o el sistema por falta de aceptación.
+enum CancelledBy {
+    BUYER
+    ARTISAN
+    SYSTEM
+}
+
 enum DisputeStatus {
     OPEN
     RETURN_REQUESTED
@@ -187,6 +195,7 @@ model Order {
     stripeEventId         String         @unique
     trackingNumber        String?
     cancellationReason    String?
+    cancelledBy           CancelledBy?
     paidOut               Boolean        @default(false)
     deletedAt             DateTime?
     createdAt             DateTime       @default(now())

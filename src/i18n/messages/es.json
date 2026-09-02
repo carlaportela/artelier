@@ -93,8 +93,26 @@
       "READY_PICKUP": "Tu pedido está listo para que lo recojas.",
       "SHIPPED": "Tu pedido está en camino.",
       "DELIVERED": "Tu pedido ha sido entregado. Es necesario que confirmes la recepción una vez lo hayas revisado.",
-      "ACCEPTED": "La recepción del pedido ha sido confirmada. ¡Compra completada!"
+      "ACCEPTED": "La recepción del pedido ha sido confirmada. ¡Compra completada!",
+      "CANCELLED": "Este pedido ha sido cancelado.",
+      "REFUNDED": "Este pedido ha sido reembolsado.",
+      "IN_DISPUTE": "Este pedido está en disputa."
     },
+    "cancellationExplanation": {
+      "BUYER": {
+        "BUYER": "Has cancelado tu pedido.",
+        "ARTISAN": "Tu pedido ha sido cancelado por el comprador."
+      },
+      "ARTISAN": {
+        "BUYER": "Tu pedido ha sido cancelado por el artesano/a.",
+        "ARTISAN": "Has cancelado tu pedido."
+      },
+      "SYSTEM": {
+        "BUYER": "Tu pedido ha sido cancelado automáticamente por falta de aceptación por parte del vendedor.",
+        "ARTISAN": "Tu pedido ha sido cancelado automáticamente por no haberlo aceptado dentro del plazo de 24 horas."
+      }
+    },
+    "cancellationRefundNote": "Te reembolsaremos el importe en el método de pago seleccionado en un plazo de 5-10 días hábiles.",
     "orderDetail": "Detalle del pedido",
     "cancelOrder": "Cancelar pedido",
     "cancelOrderConfirm": "Confirmar cancelación",

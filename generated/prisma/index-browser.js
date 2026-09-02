@@ -210,6 +210,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   stripeEventId: 'stripeEventId',
   trackingNumber: 'trackingNumber',
   cancellationReason: 'cancellationReason',
+  cancelledBy: 'cancelledBy',
   paidOut: 'paidOut',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
@@ -379,6 +380,12 @@ exports.ShippingMethod = exports.$Enums.ShippingMethod = {
   PLATFORM: 'PLATFORM',
   ARTISAN_OWN: 'ARTISAN_OWN',
   PICKUP: 'PICKUP'
+};
+
+exports.CancelledBy = exports.$Enums.CancelledBy = {
+  BUYER: 'BUYER',
+  ARTISAN: 'ARTISAN',
+  SYSTEM: 'SYSTEM'
 };
 
 exports.CustomOrderStatus = exports.$Enums.CustomOrderStatus = {

@@ -145,6 +145,15 @@ export const OrderStatus: {
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 
+export const CancelledBy: {
+  BUYER: 'BUYER',
+  ARTISAN: 'ARTISAN',
+  SYSTEM: 'SYSTEM'
+};
+
+export type CancelledBy = (typeof CancelledBy)[keyof typeof CancelledBy]
+
+
 export const DisputeStatus: {
   OPEN: 'OPEN',
   RETURN_REQUESTED: 'RETURN_REQUESTED',
@@ -200,6 +209,10 @@ export const ProductStatus: typeof $Enums.ProductStatus
 export type OrderStatus = $Enums.OrderStatus
 
 export const OrderStatus: typeof $Enums.OrderStatus
+
+export type CancelledBy = $Enums.CancelledBy
+
+export const CancelledBy: typeof $Enums.CancelledBy
 
 export type DisputeStatus = $Enums.DisputeStatus
 
@@ -9053,6 +9066,7 @@ export namespace Prisma {
     stripeEventId: string | null
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -9074,6 +9088,7 @@ export namespace Prisma {
     stripeEventId: string | null
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -9095,6 +9110,7 @@ export namespace Prisma {
     stripeEventId: number
     trackingNumber: number
     cancellationReason: number
+    cancelledBy: number
     paidOut: number
     deletedAt: number
     createdAt: number
@@ -9132,6 +9148,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9153,6 +9170,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9174,6 +9192,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9282,6 +9301,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -9322,6 +9342,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9349,6 +9370,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9373,6 +9395,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9397,13 +9420,14 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "cancellationReason" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "cancellationReason" | "cancelledBy" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     buyer?: boolean | UserDefaultArgs<ExtArgs>
     artisan?: boolean | UserDefaultArgs<ExtArgs>
@@ -9447,6 +9471,7 @@ export namespace Prisma {
       stripeEventId: string
       trackingNumber: string | null
       cancellationReason: string | null
+      cancelledBy: $Enums.CancelledBy | null
       paidOut: boolean
       deletedAt: Date | null
       createdAt: Date
@@ -9893,6 +9918,7 @@ export namespace Prisma {
     readonly stripeEventId: FieldRef<"Order", 'String'>
     readonly trackingNumber: FieldRef<"Order", 'String'>
     readonly cancellationReason: FieldRef<"Order", 'String'>
+    readonly cancelledBy: FieldRef<"Order", 'CancelledBy'>
     readonly paidOut: FieldRef<"Order", 'Boolean'>
     readonly deletedAt: FieldRef<"Order", 'DateTime'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
@@ -22456,6 +22482,7 @@ export namespace Prisma {
     stripeEventId: 'stripeEventId',
     trackingNumber: 'trackingNumber',
     cancellationReason: 'cancellationReason',
+    cancelledBy: 'cancelledBy',
     paidOut: 'paidOut',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -22764,6 +22791,20 @@ export namespace Prisma {
    * Reference to a field of type 'ShippingMethod[]'
    */
   export type ListEnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CancelledBy'
+   */
+  export type EnumCancelledByFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CancelledBy'>
+    
+
+
+  /**
+   * Reference to a field of type 'CancelledBy[]'
+   */
+  export type ListEnumCancelledByFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CancelledBy[]'>
     
 
 
@@ -23359,6 +23400,7 @@ export namespace Prisma {
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -23385,6 +23427,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
     cancellationReason?: SortOrderInput | SortOrder
+    cancelledBy?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -23414,6 +23457,7 @@ export namespace Prisma {
     totalInCents?: IntFilter<"Order"> | number
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -23440,6 +23484,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
     cancellationReason?: SortOrderInput | SortOrder
+    cancelledBy?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -23469,6 +23514,7 @@ export namespace Prisma {
     stripeEventId?: StringWithAggregatesFilter<"Order"> | string
     trackingNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
     cancellationReason?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableWithAggregatesFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolWithAggregatesFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -24796,6 +24842,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -24822,6 +24869,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -24842,6 +24890,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24868,6 +24917,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24891,6 +24941,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -24909,6 +24960,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24930,6 +24982,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26308,6 +26361,13 @@ export namespace Prisma {
     not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
   }
 
+  export type EnumCancelledByNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableFilter<$PrismaModel> | $Enums.CancelledBy | null
+  }
+
   export type ProductScalarRelationFilter = {
     is?: ProductWhereInput
     isNot?: ProductWhereInput
@@ -26338,6 +26398,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -26366,6 +26427,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -26387,6 +26449,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -26418,6 +26481,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShippingMethodFilter<$PrismaModel>
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
+  }
+
+  export type EnumCancelledByNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel> | $Enums.CancelledBy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCancelledByNullableFilter<$PrismaModel>
+    _max?: NestedEnumCancelledByNullableFilter<$PrismaModel>
   }
 
   export type OrderScalarRelationFilter = {
@@ -27785,6 +27858,10 @@ export namespace Prisma {
     set?: $Enums.ShippingMethod
   }
 
+  export type NullableEnumCancelledByFieldUpdateOperationsInput = {
+    set?: $Enums.CancelledBy | null
+  }
+
   export type UserUpdateOneRequiredWithoutBuyerOrdersNestedInput = {
     create?: XOR<UserCreateWithoutBuyerOrdersInput, UserUncheckedCreateWithoutBuyerOrdersInput>
     connectOrCreate?: UserCreateOrConnectWithoutBuyerOrdersInput
@@ -28509,6 +28586,13 @@ export namespace Prisma {
     not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
   }
 
+  export type NestedEnumCancelledByNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableFilter<$PrismaModel> | $Enums.CancelledBy | null
+  }
+
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -28527,6 +28611,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShippingMethodFilter<$PrismaModel>
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel> | $Enums.CancelledBy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCancelledByNullableFilter<$PrismaModel>
+    _max?: NestedEnumCancelledByNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumCustomOrderStatusFilter<$PrismaModel = never> = {
@@ -29087,6 +29181,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -29111,6 +29206,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -29141,6 +29237,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -29165,6 +29262,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -29601,6 +29699,7 @@ export namespace Prisma {
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -29976,6 +30075,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30000,6 +30100,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30790,6 +30891,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30815,6 +30917,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30850,6 +30953,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30875,6 +30979,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31894,6 +31999,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -31919,6 +32025,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32041,6 +32148,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32066,6 +32174,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33330,6 +33439,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33350,6 +33460,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33579,6 +33690,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33603,6 +33715,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33625,6 +33738,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33643,6 +33757,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33667,6 +33782,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33689,6 +33805,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33986,6 +34103,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -34022,6 +34140,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34046,6 +34165,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34068,6 +34188,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

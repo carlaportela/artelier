@@ -21,7 +21,7 @@ export const ORDER_STATUS_DOT: Record<string, string> = {
   SHIPPED: "bg-[#c4956a]",
   DELIVERED: "bg-[#3d5a4f]",
   ACCEPTED: "bg-[#3d5a4f]",
-  CANCELLED: "bg-[#94a49e]",
+  CANCELLED: "bg-red-700",
   REFUNDED: "bg-[#94a49e]",
   IN_DISPUTE: "bg-red-600",
 };

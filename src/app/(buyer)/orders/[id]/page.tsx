@@ -10,13 +10,12 @@ import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import {
   CANCELLATION_WINDOW_MS,
-  ORDER_STATUS_DOT,
   SHIPPING_METHOD_LABELS,
 } from "~/lib/order-constants";
 import { PLATFORM_SHIPPING_COST } from "~/lib/fees";
-import { getOrderStatusLabelKey } from "~/lib/order-status-label";
 import CancelOrderDialog from "./CancelOrderDialog";
 import OrderStatusPoller, { type StatusUpdateData } from "./OrderStatusPoller";
+import TerminalStatusCard from "./TerminalStatusCard";
 
 //Estados fuera de la secuencia "feliz" del timeline (Confirmado → ... → Aceptado) — para estos, el
 //timeline no se muestra (la tarjeta de motivo de cancelación ya cubre la comunicación necesaria).
@@ -178,8 +177,8 @@ export default async function OrderDetailPage({ params }: Props) {
         </div>
 
         {/* Timeline de estados, con actualización en tiempo real — solo para pedidos en la
-        secuencia normal; un pedido cancelado/reembolsado/en disputa ya tiene su propia tarjeta
-        de motivo más abajo, y el timeline no representa bien esos estados terminales. */}
+        secuencia normal; un pedido cancelado/reembolsado/en disputa usa TerminalStatusCard,
+        con el mismo lenguaje visual pero solo dos pasos (Pagado → estado final). */}
         {TIMELINE_STATUSES.includes(order.status) ? (
           <OrderStatusPoller
             orderId={order.id}
@@ -190,27 +189,13 @@ export default async function OrderDetailPage({ params }: Props) {
             orderCreatedAt={order.createdAt.toISOString()}
           />
         ) : (
-          <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-            <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">El pedido se encuentra</p>
-            <span className="flex items-center gap-1.5 font-semibold text-[--text]">
-              <span
-                className={`h-1.5 w-1.5 shrink-0 rounded-full ${ORDER_STATUS_DOT[order.status] ?? "bg-[#94a49e]"}`}
-              />
-              {t(getOrderStatusLabelKey(order.status, order.shippingMethod))}
-            </span>
-          </div>
-        )}
-
-        {/* Motivo de cancelación */}
-        {order.cancellationReason && (
-          <div className="rounded-xl border border-red-100 bg-red-50 p-4">
-            <p className="text-xs font-medium text-red-600">
-              Motivo de cancelación
-            </p>
-            <p className="mt-1 text-sm text-red-700">
-              {order.cancellationReason}
-            </p>
-          </div>
+          <TerminalStatusCard
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+            cancellationReason={order.cancellationReason}
+            cancelledBy={order.cancelledBy}
+            viewerRole="BUYER"
+          />
         )}
 
         <div className="flex flex-col gap-3 sm:flex-row">
