@@ -72,8 +72,8 @@ export default function OrderConfirmationEmail({
           margin: "0 0 4px 0",
         }}
       >
-        {artisanName} ha confirmado tu pedido y lo está preparando con mucho
-        mimo en estos momentos.
+        Tu pago se ha realizado correctamente. {artisanName} tiene ahora 24
+        horas para aceptar tu pedido y empezar a prepararlo.
       </Text>
       <Text
         style={{
@@ -83,7 +83,7 @@ export default function OrderConfirmationEmail({
           margin: "0 0 4px 0",
         }}
       >
-        Te informaremos de nuevo cuando el pedido esté listo.
+        Te avisaremos en cuanto lo acepte.
       </Text>
       <Text
         style={{
@@ -144,7 +144,7 @@ export default function OrderConfirmationEmail({
                 margin: "0 0 1px 0",
               }}
             >
-              Número de pedido
+              Identificador de pedido
             </Text>
             <Text
               style={{
@@ -329,39 +329,51 @@ export default function OrderConfirmationEmail({
           </Row>
         </div>
 
-        {/* Botones inline dentro del card alineados a la derecha */}
+        {/* Botones alineados a la derecha — tabla explícita en vez de inline-block, más fiable
+        en clientes de correo para garantizar que queden en línea y con espacio entre ellos. */}
         <Row>
           <Column style={{ textAlign: "right" }}>
-            <Button
-              href={`https://artelier.es/orders/${orderId}`}
-              style={{
-                backgroundColor: green,
-                color: "#fff",
-                borderRadius: "999px",
-                padding: "12px 24px",
-                fontSize: "14px",
-                fontFamily: fontBody,
-                display: "inline-block",
-                marginRight: "8px",
-              }}
-            >
-              Ver pedido
-            </Button>
-            <Button
-              href={`https://artelier.es/orders/${orderId}`}
-              style={{
-                backgroundColor: "transparent",
-                color: muted,
-                borderRadius: "999px",
-                padding: "12px 24px",
-                fontSize: "14px",
-                fontFamily: fontBody,
-                display: "inline-block",
-                border: "1px solid #e0dbd0",
-              }}
-            >
-              Cancelar pedido
-            </Button>
+            <table role="presentation" cellPadding="0" cellSpacing="0" className="btn-stack-table" style={{ marginLeft: "auto" }}>
+              <tbody>
+                <tr>
+                  <td className="btn-stack-td" style={{ paddingRight: "8px" }}>
+                    <Button
+                      href={`https://artelier.es/orders/${orderId}`}
+                      className="btn-stack-btn"
+                      style={{
+                        backgroundColor: green,
+                        color: "#fff",
+                        borderRadius: "999px",
+                        padding: "12px 24px",
+                        fontSize: "14px",
+                        fontFamily: fontBody,
+                        display: "inline-block",
+                      }}
+                    >
+                      Ver pedido
+                    </Button>
+                  </td>
+                  <td className="btn-stack-td">
+                    <Button
+                      href={`https://artelier.es/orders/${orderId}`}
+                      className="btn-stack-btn"
+                      style={{
+                        backgroundColor: "transparent",
+                        color: muted,
+                        borderRadius: "999px",
+                        padding: "12px 24px",
+                        fontSize: "14px",
+                        fontFamily: fontBody,
+                        display: "inline-block",
+                        border: "1px solid #e0dbd0",
+                      }}
+                    >
+                      Cancelar pedido
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </Column>
         </Row>
         <Text

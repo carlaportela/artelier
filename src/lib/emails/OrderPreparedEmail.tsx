@@ -65,7 +65,7 @@ export default function OrderPreparedEmail({
 
           <Column style={{ verticalAlign: "top", paddingLeft: "8px" }}>
             <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 1px 0" }}>
-              Número de pedido
+              Identificador de pedido
             </Text>
             <Text style={{ fontFamily: "monospace", color: textDark, fontSize: "13px", margin: "0 0 10px 0" }}>
               {orderId}

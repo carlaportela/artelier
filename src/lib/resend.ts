@@ -59,7 +59,7 @@ export async function sendOrderConfirmation(order: Order) {
   await resend.emails.send({
     from: FROM_EMAIL,
     to: data.buyer.email,
-    subject: "Tu pedido ha sido confirmado — Artelier",
+    subject: "Hemos recibido tu pedido — Artelier",
     react: OrderConfirmationEmail({
       orderId: data.id,
       productName: data.product.name,

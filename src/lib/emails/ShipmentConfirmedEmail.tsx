@@ -127,7 +127,7 @@ export default function ShipmentConfirmedEmail({
                 margin: "0 0 1px 0",
               }}
             >
-              Número de pedido
+              Identificador de pedido
             </Text>
             <Text
               style={{
