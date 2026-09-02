@@ -34,7 +34,7 @@ export default function DeleteAccountForm() {
 
   return (
     <div className="space-y-3">
-      <h2 className="font-display text-lg text-[--text]">{t("deleteAccount")}</h2>
+      <h2 className="font-display text-base font-bold text-[--text] md:text-lg">{t("deleteAccount")}</h2>
 
       {!open ? (
         <button

@@ -135,213 +135,127 @@ export default function AccountForm({ user }: AccountFormProps) {
     <>
     <div className="space-y-6">
 
-      {/* ── Foto de perfil ── */}
-      <div className="flex flex-col items-center gap-2">
-        <div className="relative inline-block">
-          <PaletteAvatar
-            src={imageUrl || null}
-            name={user.name}
-            className="h-40 w-40"
-            fillColor="#c4956a"
-          />
+      <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
+      <div className="flex flex-col-reverse gap-6 sm:flex-row sm:items-start sm:justify-between">
 
-          {imageUrl ? (
-            <button
-              type="button"
-              aria-label="Editar foto de perfil"
-              onClick={() => setShowPhotoMenu((v) => !v)}
-              disabled={uploading}
-              className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
-            >
-              <Pencil size={13} />
-            </button>
-          ) : (
-            <label
-              htmlFor="avatar-upload"
-              className={`absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
-            >
-              <Plus size={15} />
-            </label>
-          )}
+        <div className="flex-1">
+        <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Datos personales</p>
+        {/* ── Modo vista ── */}
+        {!editing ? (
+          <div className="space-y-5">
 
-          {showPhotoMenu && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
-              <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
-                <button
-                  type="button"
-                  onClick={handleReajustar}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
-                >
-                  <ScanSearch size={14} className="shrink-0" />
-                  Reajustar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { fileInputRef.current?.click(); setShowPhotoMenu(false); }}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
-                >
-                  <Camera size={14} className="shrink-0" />
-                  Cambiar
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDeletePhoto}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition-colors hover:text-red-700"
-                >
-                  <Trash2 size={14} className="shrink-0" />
-                  Eliminar
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-
-        <input
-          ref={fileInputRef}
-          id="avatar-upload"
-          type="file"
-          accept="image/*"
-          aria-label="Subir foto de perfil"
-          className="sr-only"
-          disabled={uploading}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) { e.target.value = ""; setShowPhotoMenu(false); setCropFile(file); }
-          }}
-        />
-        {uploading && <p className="text-xs text-[--text-muted]">Subiendo...</p>}
-        {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
-      </div>
-
-      {/* ── Modo vista ── */}
-      {!editing ? (
-        <div className="space-y-5">
-
-          {/* Datos personales */}
-          <div className="space-y-3">
-            <h2 className="font-display text-lg text-[--text]">Datos personales</h2>
-            <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
-              <p className="text-sm text-[--text]">{user.name ?? <span className="italic text-[--text-muted]">Sin nombre</span>}</p>
+            {/* Datos personales */}
+            <div className="space-y-1.5 text-sm">
+              <p>
+                <span className="text-[--text-muted]">{t("name")}: </span>
+                <span className="text-[--text]">{user.name ?? <span className="italic text-[--text-muted]">Sin nombre</span>}</span>
+              </p>
+              <p>
+                <span className="text-[--text-muted]">Apellidos: </span>
+                <span className="text-[--text]">{user.lastName ?? ""}</span>
+              </p>
+              <p>
+                <span className="text-[--text-muted]">{t("locality")}: </span>
+                <span className="text-[--text]">{user.locality ?? <span className="italic text-[--text-muted]">Sin localidad</span>}</span>
+              </p>
+              <p>
+                <span className="text-[--text-muted]">Correo electrónico: </span>
+                <span className="text-[--text-muted]">{email}</span>
+              </p>
             </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Apellidos</label>
-              <p className="text-sm text-[--text]">{user.lastName ?? ""}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
-              <p className="text-sm text-[--text]">{user.locality ?? <span className="italic text-[--text-muted]">Sin localidad</span>}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
-              <p className="text-sm text-[--text-muted]">{email}</p>
-            </div>
-          </div>
 
-          <div className="border-t border-[--border]" />
-
-          {/* Dirección de envío */}
-          <div className="space-y-3">
-            <h2 className="font-display text-lg text-[--text]">Dirección de envío</h2>
             {hasAddress ? (
-              <div className="space-y-3">
+              <div className="space-y-1.5 text-sm">
                 {user.street && (
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium leading-none text-[--text-muted]">Calle y número</label>
-                    <p className="text-sm text-[--text]">{user.street}</p>
-                  </div>
+                  <p>
+                    <span className="text-[--text-muted]">Dirección: </span>
+                    <span className="text-[--text]">{user.street}</span>
+                  </p>
                 )}
-                <div className="grid grid-cols-2 gap-3">
-                  {user.postalCode && (
-                    <div className="space-y-1">
-                      <label className="text-sm font-medium leading-none text-[--text-muted]">Código postal</label>
-                      <p className="text-sm text-[--text]">{user.postalCode}</p>
-                    </div>
-                  )}
-                  {user.city && (
-                    <div className="space-y-1">
-                      <label className="text-sm font-medium leading-none text-[--text-muted]">Ciudad</label>
-                      <p className="text-sm text-[--text]">{user.city}</p>
-                    </div>
-                  )}
-                </div>
+                {user.postalCode && (
+                  <p>
+                    <span className="text-[--text-muted]">Código postal: </span>
+                    <span className="text-[--text]">{user.postalCode}</span>
+                  </p>
+                )}
+                {user.city && (
+                  <p>
+                    <span className="text-[--text-muted]">Ciudad: </span>
+                    <span className="text-[--text]">{user.city}</span>
+                  </p>
+                )}
                 {user.province && (
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium leading-none text-[--text-muted]">Provincia</label>
-                    <p className="text-sm text-[--text]">{user.province}</p>
-                  </div>
+                  <p>
+                    <span className="text-[--text-muted]">Provincia: </span>
+                    <span className="text-[--text]">{user.province}</span>
+                  </p>
                 )}
               </div>
             ) : (
               <p className="text-sm text-[--text-muted]">Aún no se ha guardado ninguna dirección</p>
             )}
-          </div>
 
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-          >
-            Editar perfil
-          </button>
-        </div>
-      ) : (
-        /* ── Modo edición ── */
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <h2 className="font-display text-lg text-[--text]">Datos personales</h2>
-          <div className="space-y-1">
-            <label htmlFor="name" className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
-            <input
-              id="name"
-              {...form.register("name")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
-            />
-            {form.formState.errors.name && (
-              <p className="text-xs text-red-600">{form.formState.errors.name.message}</p>
-            )}
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className="cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            >
+              Editar datos personales
+            </button>
           </div>
-
-          <div className="space-y-1">
-            <label htmlFor="lastName" className="text-sm font-medium leading-none text-[--text-muted]">Apellidos</label>
-            <input
-              id="lastName"
-              {...form.register("lastName")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="locality" className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
-            <input
-              id="locality"
-              placeholder="Ej: Santiago de Compostela"
-              {...form.register("locality")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
-            />
-            {form.formState.errors.locality && (
-              <p className="text-xs text-red-600">{form.formState.errors.locality.message}</p>
-            )}
-          </div>
-
-          {email && (
+        ) : (
+          /* ── Modo edición ── */
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
-              <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
-                {email}
-              </div>
-              <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-                <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-                <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse.</p>
-              </div>
+              <label htmlFor="name" className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
+              <input
+                id="name"
+                {...form.register("name")}
+                className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              />
+              {form.formState.errors.name && (
+                <p className="text-xs text-red-600">{form.formState.errors.name.message}</p>
+              )}
             </div>
-          )}
 
-          <div className="border-t border-[--border] pt-2">
-            <h2 className="mb-3 font-display text-lg text-[--text]">Dirección de envío</h2>
+            <div className="space-y-1">
+              <label htmlFor="lastName" className="text-sm font-medium leading-none text-[--text-muted]">Apellidos</label>
+              <input
+                id="lastName"
+                {...form.register("lastName")}
+                className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label htmlFor="locality" className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
+              <input
+                id="locality"
+                placeholder="Ej: Santiago de Compostela"
+                {...form.register("locality")}
+                className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              />
+              {form.formState.errors.locality && (
+                <p className="text-xs text-red-600">{form.formState.errors.locality.message}</p>
+              )}
+            </div>
+
+            {email && (
+              <div className="space-y-1">
+                <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
+                <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
+                  {email}
+                </div>
+                <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
+                  <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
+                  <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse.</p>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-3">
               <div className="space-y-1">
-                <label htmlFor="street" className="text-sm font-medium leading-none text-[--text-muted]">Calle y número</label>
+                <label htmlFor="street" className="text-sm font-medium leading-none text-[--text-muted]">Dirección</label>
                 <input
                   id="street"
                   placeholder="Calle Artesanía 123 - 1ºA"
@@ -379,26 +293,109 @@ export default function AccountForm({ user }: AccountFormProps) {
                 />
               </div>
             </div>
+
+            <div className="flex gap-3 pt-1">
+              <button
+                type="submit"
+                disabled={isPending || uploading}
+                className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isPending ? "Guardando..." : t("saveChanges")}
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm font-medium text-[--text] transition-colors hover:bg-[#ccc8bc]"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        )}
+        </div>
+
+        {/* ── Foto de perfil ── */}
+        <div className="flex shrink-0 flex-col items-center gap-2 sm:items-end">
+          <div className="relative inline-block">
+            <PaletteAvatar
+              src={imageUrl || null}
+              name={user.name}
+              className="h-40 w-40"
+              fillColor="#c4956a"
+            />
+
+            {imageUrl ? (
+              <button
+                type="button"
+                aria-label="Editar foto de perfil"
+                onClick={() => setShowPhotoMenu((v) => !v)}
+                disabled={uploading}
+                className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+              >
+                <Pencil size={13} />
+              </button>
+            ) : (
+              <label
+                htmlFor="avatar-upload"
+                className={`absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
+              >
+                <Plus size={15} />
+              </label>
+            )}
+
+            {showPhotoMenu && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
+                <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                  <button
+                    type="button"
+                    onClick={handleReajustar}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                  >
+                    <ScanSearch size={14} className="shrink-0" />
+                    Reajustar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { fileInputRef.current?.click(); setShowPhotoMenu(false); }}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                  >
+                    <Camera size={14} className="shrink-0" />
+                    Cambiar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDeletePhoto}
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 transition-colors hover:text-red-700"
+                  >
+                    <Trash2 size={14} className="shrink-0" />
+                    Eliminar
+                  </button>
+                </div>
+              </>
+            )}
           </div>
 
-          <div className="flex gap-3 pt-1">
-            <button
-              type="submit"
-              disabled={isPending || uploading}
-              className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isPending ? "Guardando..." : t("saveChanges")}
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="flex-1 cursor-pointer rounded-full border border-[--border] py-2 text-sm font-medium text-[--text-muted] transition-colors hover:bg-[--surface-2]"
-            >
-              Cancelar
-            </button>
-          </div>
-        </form>
-      )}
+          <input
+            ref={fileInputRef}
+            id="avatar-upload"
+            type="file"
+            accept="image/*"
+            aria-label="Subir foto de perfil"
+            className="sr-only"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) { e.target.value = ""; setShowPhotoMenu(false); setCropFile(file); }
+            }}
+          />
+          {uploading && <p className="text-xs text-[--text-muted]">Subiendo...</p>}
+          {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
+        </div>
+
+      </div>
+      </div>
+
     </div>
 
     {cropFile && (

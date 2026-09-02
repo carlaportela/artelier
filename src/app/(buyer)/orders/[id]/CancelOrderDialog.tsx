@@ -60,7 +60,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full rounded-full bg-red-700 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+        className="w-full cursor-pointer rounded-full bg-red-700 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
       >
         Cancelar pedido
       </button>
@@ -68,19 +68,16 @@ export default function CancelOrderDialog({ orderId }: Props) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>¿Cancelar este pedido?</DialogTitle>
+            <DialogTitle className="text-lg font-bold">¿Quieres cancelar este pedido?</DialogTitle>
             <DialogDescription>
-              Se realizará un reembolso íntegro a tu método de pago en 5-10 días hábiles. Esta acción no se puede deshacer.
+              Esta acción es irreversible.
+              <br />
+              Cuando se cancele el pedido te reembolsaremos íntegramente el importe en el
+              método de pago seleccionado en un plazo de 5 a 7 días hábiles.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-2">
-            <label
-              htmlFor="cancel-reason"
-              className="text-sm font-medium text-[--text]"
-            >
-              Motivo de la cancelación
-            </label>
             <textarea
               id="cancel-reason"
               value={reason}
@@ -100,14 +97,14 @@ export default function CancelOrderDialog({ orderId }: Props) {
             <button
               onClick={() => setOpen(false)}
               disabled={loading}
-              className="rounded-full border border-[--border] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[--surface-2] disabled:opacity-50"
+              className="cursor-pointer rounded-full border border-[--border] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[--surface-2] disabled:opacity-50"
             >
               Volver
             </button>
             <button
               onClick={handleCancel}
               disabled={loading || reason.trim().length < 10}
-              className="rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+              className="cursor-pointer rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:pointer-events-none disabled:opacity-50"
             >
               {loading ? "Cancelando..." : "Confirmar cancelación"}
             </button>

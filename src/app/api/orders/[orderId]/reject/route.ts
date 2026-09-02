@@ -108,6 +108,7 @@ export async function POST(
   const claimed = await claimAndCancelOrder({
     orderId,
     cancellationReason: reason,
+    cancelledBy: "ARTISAN",
     product: order.product,
     productId: order.productId,
   });

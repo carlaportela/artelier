@@ -2,6 +2,7 @@
 //(comprador, artesana, y el cron de cancelación automática).
 
 import { db } from "~/server/db";
+import type { CancelledBy } from "generated/prisma";
 
 interface ReactivatableProduct {
   type: string;
@@ -21,6 +22,7 @@ export function canReactivateProduct(product: ReactivatableProduct): boolean {
 interface ClaimAndCancelOrderParams {
   orderId: string;
   cancellationReason: string;
+  cancelledBy: CancelledBy;
   product: ReactivatableProduct;
   productId: string;
   //Solo lo indica el cron de cancelación automática — el rechazo voluntario de la artesana no penaliza.
@@ -38,6 +40,7 @@ interface ClaimAndCancelOrderParams {
 export async function claimAndCancelOrder({
   orderId,
   cancellationReason,
+  cancelledBy,
   product,
   productId,
   penalty,
@@ -45,7 +48,7 @@ export async function claimAndCancelOrder({
   const claimedCount = await db.$transaction(async (tx) => {
     const claimed = await tx.order.updateMany({
       where: { id: orderId, status: "CONFIRMED" },
-      data: { status: "CANCELLED", cancellationReason },
+      data: { status: "CANCELLED", cancellationReason, cancelledBy },
     });
     if (claimed.count === 0) {
       return 0;

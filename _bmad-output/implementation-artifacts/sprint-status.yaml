@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-05-18
-last_updated: 2026-06-22
+last_updated: 2026-07-20
 project: artelier
 project_key: NOKEY
 tracking_system: file-system
@@ -94,8 +94,8 @@ development_status:
   # ─── Épico 6: Pedidos, Notificaciones y Proceso de En preparación ─────────
   epic-6: in-progress
   6-1-notificaciones-por-email-transaccionales: done
-  6-2-aceptacion-o-rechazo-de-pedido-por-la-artesana: ready-for-dev
-  6-3-timeline-de-estados-y-actualizaciones-de-proceso: backlog
+  6-2-aceptacion-o-rechazo-de-pedido-por-la-artesana: done
+  6-3-timeline-de-estados-y-actualizaciones-de-proceso: review
   6-4-confirmacion-de-entrega-aceptacion-y-liberacion-de-pago: backlog
   epic-6-retrospective: optional
 
@@ -114,3 +114,8 @@ development_status:
   8-3-moderacion-de-perfiles-y-gestion-de-solicitudes-de-sellos: backlog
   8-4-paginas-legales-lssi-y-gestion-de-cookies: backlog
   epic-8-retrospective: optional
+
+  # ─── Épico 9: Internacionalización completa ───────────────────────────────
+  epic-9: backlog
+  9-1-traducir-toda-la-ui-y-completar-gl-json: backlog
+  epic-9-retrospective: optional

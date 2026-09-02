@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Info } from "lucide-react";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { changePassword } from "~/app/(buyer)/account/settings/actions";
@@ -132,7 +133,7 @@ export function ExportSection({ onClose }: { onClose: () => void }) {
             disabled={status === "pending"}
             className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {status === "pending" ? "Enviando..." : "Solicitar exportación"}
+            {status === "pending" ? "Exportando..." : "Solicitar exportación"}
           </button>
         )}
         <button type="button" onClick={onClose} className={btnOutline}>
@@ -145,7 +146,13 @@ export function ExportSection({ onClose }: { onClose: () => void }) {
 
 // ── Sección: Eliminar cuenta ─────────────────────────────────────────────────
 
-export function DeleteSection({ onClose }: { onClose: () => void }) {
+export function DeleteSection({
+  onClose,
+  role = "ARTISAN",
+}: {
+  onClose: () => void;
+  role?: "ARTISAN" | "BUYER";
+}) {
   const t = useTranslations("settings");
   const tErrors = useTranslations("errors");
   const [password, setPassword] = useState("");
@@ -168,7 +175,7 @@ export function DeleteSection({ onClose }: { onClose: () => void }) {
       <p className="text-sm text-[--text-muted]">
         ¡Nos da mucha pena que te vayas! Esta acción es{" "}
         <strong className="text-[--text]">permanente e irreversible</strong>:{" "}
-        se eliminarán tu perfil, productos y todos tus datos de Artelier.
+        se eliminarán tu perfil, {role === "ARTISAN" ? "tus productos" : "tus pedidos"} y todos tus datos de Artelier.
       </p>
       <div className="space-y-1">
         <Label htmlFor="delete-password" className="font-normal text-[--text-muted]">

@@ -354,7 +354,7 @@ function AccountSection({
         <PasswordSection onClose={() => setSubSection(null)} />
       )}
       {subSection === "delete" && (
-        <DeleteSection onClose={() => setSubSection(null)} />
+        <DeleteSection onClose={() => setSubSection(null)} role="ARTISAN" />
       )}
     </div>
   );

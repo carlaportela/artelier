@@ -31,7 +31,7 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
           </div>
         )}
         {badge && (
-          <span className={`absolute bottom-3 left-3 rounded px-2 py-0.5 text-xs font-medium ${badge.className}`}>
+          <span className={`absolute bottom-3 right-3 rounded-md px-3 py-1.5 text-sm font-medium ${badge.className}`}>
             {badge.label}
           </span>
         )}

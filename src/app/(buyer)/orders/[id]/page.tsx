@@ -2,20 +2,24 @@
 
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { Package, Truck } from "lucide-react";
+import { Package } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 
 import { getServerSession } from "~/server/auth/session";
 import { db } from "~/server/db";
 import {
-  ACCEPTANCE_WINDOW_MS,
   CANCELLATION_WINDOW_MS,
   SHIPPING_METHOD_LABELS,
 } from "~/lib/order-constants";
 import { PLATFORM_SHIPPING_COST } from "~/lib/fees";
 import CancelOrderDialog from "./CancelOrderDialog";
-import OrderStatusInfo from "./OrderStatusInfo";
+import OrderStatusPoller, { type StatusUpdateData } from "./OrderStatusPoller";
+import TerminalStatusCard from "./TerminalStatusCard";
+
+//Estados fuera de la secuencia "feliz" del timeline (Confirmado → ... → Aceptado) — para estos, el
+//timeline no se muestra (la tarjeta de motivo de cancelación ya cubre la comunicación necesaria).
+const TIMELINE_STATUSES = ["CONFIRMED", "IN_PREPARATION", "READY", "SHIPPED", "DELIVERED", "ACCEPTED"];
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
 
@@ -39,10 +43,19 @@ export default async function OrderDetailPage({ params }: Props) {
         select: { name: true, imageUrls: true, type: true, expiresAt: true },
       },
       artisan: { select: { name: true, id: true } },
+      statusUpdates: { orderBy: { createdAt: "asc" } },
     },
   });
 
   if (!order) notFound();
+
+  //El poller necesita las fechas como string (ISO) — un Date no cruza el límite servidor→cliente como instancia.
+  const initialStatusUpdates: StatusUpdateData[] = order.statusUpdates.map((update) => ({
+    id: update.id,
+    status: update.status,
+    message: update.message,
+    createdAt: update.createdAt.toISOString(),
+  }));
 
   //Variable en la que se comprueba si no ha expirado el período ventana para cancelación del pedido por parte de la compradora.
   const canCancel =
@@ -54,14 +67,6 @@ export default async function OrderDetailPage({ params }: Props) {
     month: "long",
     year: "numeric",
   }).format(new Date(order.createdAt));
-
-  //Fecha límite para que la artesana acepte o rechace el pedido — se muestra como explicación del estado "Pagado".
-  const acceptanceDeadline = new Intl.DateTimeFormat("es-ES", {
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(order.createdAt.getTime() + ACCEPTANCE_WINDOW_MS));
 
   const formatCents = (cents: number) =>
     (cents / 100).toLocaleString("es-ES", {
@@ -78,11 +83,6 @@ export default async function OrderDetailPage({ params }: Props) {
   const commissionsInCents =
     order.totalInCents - order.priceInCents - shippingCostInCents;
 
-  const statusExplanation =
-    order.status === "CONFIRMED"
-      ? `Tu pedido está pagado y a la espera de que la artesana lo acepte. Tiene de plazo hasta el ${acceptanceDeadline} — si no responde a tiempo, el pedido se cancelará automáticamente y se te reembolsará.`
-      : undefined;
-
   return (
     <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
       <div className="space-y-6">
@@ -94,31 +94,41 @@ export default async function OrderDetailPage({ params }: Props) {
         <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
         {/* Tarjeta del pedido */}
         <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Lo que has comprado</p>
+          <div className="mb-4 flex items-baseline justify-between gap-2">
+            <p className="font-display text-base font-bold text-[--text] md:text-lg">Has comprado</p>
+            <span className="shrink-0 text-xs text-[--text-muted]">{formattedDate}</span>
+          </div>
           <div className="flex gap-4">
-            {productImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={productImage}
-                alt={order.product.name}
-                className="h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
-              />
-            ) : (
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-[--surface-2] sm:h-24 sm:w-24">
-                <Package
-                  className="h-7 w-7 text-[--text-muted]"
-                  strokeWidth={1.5}
+            <Link href={`/product/${order.productId}`} className="shrink-0">
+              {productImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={productImage}
+                  alt={order.product.name}
+                  className="h-20 w-20 rounded-lg object-cover transition-opacity hover:opacity-80 sm:h-24 sm:w-24"
                 />
-              </div>
-            )}
+              ) : (
+                <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-[--surface-2] transition-opacity hover:opacity-80 sm:h-24 sm:w-24">
+                  <Package
+                    className="h-7 w-7 text-[--text-muted]"
+                    strokeWidth={1.5}
+                  />
+                </div>
+              )}
+            </Link>
 
             <div className="min-w-0 flex-1 space-y-1.5 text-sm">
               <p>
                 <span className="text-[--text-muted]">Producto: </span>
-                <span className="font-medium text-[--text]">{order.product.name}</span>
+                <Link
+                  href={`/product/${order.productId}`}
+                  className="font-medium text-[--text] transition-colors hover:text-[#3d5a4f]"
+                >
+                  {order.product.name}
+                </Link>
               </p>
               <p>
-                <span className="text-[--text-muted]">Artesano: </span>
+                <span className="text-[--text-muted]">Elaborado por: </span>
                 <Link
                   href={`/artisan/${order.artisan.id}`}
                   className="text-[--text] transition-colors hover:text-[#3d5a4f]"
@@ -127,11 +137,7 @@ export default async function OrderDetailPage({ params }: Props) {
                 </Link>
               </p>
               <p>
-                <span className="text-[--text-muted]">Fecha: </span>
-                <span className="text-[--text]">{formattedDate}</span>
-              </p>
-              <p>
-                <span className="text-[--text-muted]">Método de envío: </span>
+                <span className="text-[--text-muted]">Enviado mediante: </span>
                 <span className="text-[--text]">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
               </p>
             </div>
@@ -140,10 +146,10 @@ export default async function OrderDetailPage({ params }: Props) {
 
         {/* Desglose de costes */}
         <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Lo que has pagado</p>
+          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Has pagado</p>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-[--text-muted]">Precio</span>
+              <span className="text-[--text-muted]">Producto</span>
               <span className="text-[--text]">
                 {formatCents(order.priceInCents)}
               </span>
@@ -170,44 +176,26 @@ export default async function OrderDetailPage({ params }: Props) {
         </div>
         </div>
 
-        {/* Estado */}
-        <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">El estado en el que se encuentra</p>
-          <OrderStatusInfo
-            status={order.status}
-            statusLabel={t(`orderStatus.${order.status}`)}
-            explanation={statusExplanation}
+        {/* Timeline de estados, con actualización en tiempo real — solo para pedidos en la
+        secuencia normal; un pedido cancelado/reembolsado/en disputa usa TerminalStatusCard,
+        con el mismo lenguaje visual pero solo dos pasos (Pagado → estado final). */}
+        {TIMELINE_STATUSES.includes(order.status) ? (
+          <OrderStatusPoller
+            orderId={order.id}
+            initialStatus={order.status}
+            shippingMethod={order.shippingMethod}
+            initialStatusUpdates={initialStatusUpdates}
+            initialTrackingNumber={order.trackingNumber}
+            orderCreatedAt={order.createdAt.toISOString()}
           />
-        </div>
-
-        {/* Número de seguimiento */}
-        {order.trackingNumber && (
-          <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-            <Truck
-              className="h-5 w-5 shrink-0 text-[#3d5a4f]"
-              strokeWidth={1.5}
-            />
-            <div>
-              <p className="text-xs font-medium text-[--text-muted]">
-                {t("trackingNumber")}
-              </p>
-              <p className="font-mono text-sm font-medium text-[--text]">
-                {order.trackingNumber}
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Motivo de cancelación */}
-        {order.cancellationReason && (
-          <div className="rounded-xl border border-red-100 bg-red-50 p-4">
-            <p className="text-xs font-medium text-red-600">
-              Motivo de cancelación
-            </p>
-            <p className="mt-1 text-sm text-red-700">
-              {order.cancellationReason}
-            </p>
-          </div>
+        ) : (
+          <TerminalStatusCard
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+            cancellationReason={order.cancellationReason}
+            cancelledBy={order.cancelledBy}
+            viewerRole="BUYER"
+          />
         )}
 
         <div className="flex flex-col gap-3 sm:flex-row">

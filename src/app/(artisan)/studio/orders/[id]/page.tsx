@@ -10,8 +10,11 @@ import { requireArtisanSession } from "~/server/auth/guards";
 import { db } from "~/server/db";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import { SHIPPING_METHOD_LABELS } from "~/lib/order-constants";
-import ConfirmShipmentForm from "./ConfirmShipmentForm";
+import { getOrderStatusLabelKey } from "~/lib/order-status-label";
+import { getNextAdvanceableStatus } from "~/lib/order-status-transitions";
+import AdvanceStatusForm from "./AdvanceStatusForm";
 import AcceptOrRejectOrderCard from "./AcceptOrRejectOrderCard";
+import OrderStatusTimeline from "~/components/order/OrderStatusTimeline";
 
 
 export const metadata: Metadata = { title: "Detalle del pedido — Artelier" };
@@ -104,8 +107,17 @@ export default async function OrderDetailPage({ params }: Props) {
             <p className="mt-1 text-xs text-[--text-muted]">{formattedDate}</p>
           </div>
           <span className="ml-auto shrink-0 rounded-full bg-[--surface-2] px-2.5 py-1 text-xs text-[--text-muted]">
-            {t(`orderStatus.${order.status}`)}
+            {t(getOrderStatusLabelKey(order.status, order.shippingMethod))}
           </span>
+        </div>
+
+        {/* Timeline de estados */}
+        <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
+          <OrderStatusTimeline
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+            orderCreatedAt={order.createdAt.toISOString()}
+          />
         </div>
 
         {/* Número de seguimiento */}
@@ -182,8 +194,12 @@ export default async function OrderDetailPage({ params }: Props) {
             createdAt={order.createdAt.toISOString()}
           />
         )}
-        {order.status === "IN_PREPARATION" && (
-          <ConfirmShipmentForm orderId={order.id} shippingMethod={order.shippingMethod} />
+        {getNextAdvanceableStatus(order.status, order.shippingMethod) && (
+          <AdvanceStatusForm
+            orderId={order.id}
+            status={order.status}
+            shippingMethod={order.shippingMethod}
+          />
         )}
       </div>
     </main>

@@ -210,10 +210,19 @@ exports.Prisma.OrderScalarFieldEnum = {
   stripeEventId: 'stripeEventId',
   trackingNumber: 'trackingNumber',
   cancellationReason: 'cancellationReason',
+  cancelledBy: 'cancelledBy',
   paidOut: 'paidOut',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderStatusUpdateScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  status: 'status',
+  message: 'message',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CustomOrderRequestScalarFieldEnum = {
@@ -373,6 +382,12 @@ exports.ShippingMethod = exports.$Enums.ShippingMethod = {
   PICKUP: 'PICKUP'
 };
 
+exports.CancelledBy = exports.$Enums.CancelledBy = {
+  BUYER: 'BUYER',
+  ARTISAN: 'ARTISAN',
+  SYSTEM: 'SYSTEM'
+};
+
 exports.CustomOrderStatus = exports.$Enums.CustomOrderStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -401,6 +416,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Product: 'Product',
   Order: 'Order',
+  OrderStatusUpdate: 'OrderStatusUpdate',
   CustomOrderRequest: 'CustomOrderRequest',
   Conversation: 'Conversation',
   Message: 'Message',

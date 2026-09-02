@@ -78,13 +78,41 @@
       "CONFIRMED": "Pagado",
       "IN_PREPARATION": "En preparación",
       "READY": "Listo para enviar",
+      "READY_PICKUP": "Listo para recogida",
       "SHIPPED": "Enviado",
       "DELIVERED": "Entregado",
-      "ACCEPTED": "Aceptado",
+      "ACCEPTED": "Completado",
       "CANCELLED": "Cancelado",
       "REFUNDED": "Reembolsado",
       "IN_DISPUTE": "En disputa"
     },
+    "orderStatusExplanation": {
+      "CONFIRMED": "Tu pedido está pagado y a la espera de ser aceptado por la artesana o artesano.",
+      "IN_PREPARATION": "Tu pedido ha sido aceptado y está en preparación.",
+      "READY": "Tu pedido está listo para enviarse.",
+      "READY_PICKUP": "Tu pedido está listo para que lo recojas.",
+      "SHIPPED": "Tu pedido está en camino.",
+      "DELIVERED": "Tu pedido ha sido entregado. Es necesario que confirmes la recepción una vez lo hayas revisado.",
+      "ACCEPTED": "La recepción del pedido ha sido confirmada. ¡Compra completada!",
+      "CANCELLED": "Este pedido ha sido cancelado.",
+      "REFUNDED": "Este pedido ha sido reembolsado.",
+      "IN_DISPUTE": "Este pedido está en disputa."
+    },
+    "cancellationExplanation": {
+      "BUYER": {
+        "BUYER": "Has cancelado tu pedido.",
+        "ARTISAN": "Tu pedido ha sido cancelado por el comprador."
+      },
+      "ARTISAN": {
+        "BUYER": "Tu pedido ha sido cancelado por el artesano/a.",
+        "ARTISAN": "Has cancelado tu pedido."
+      },
+      "SYSTEM": {
+        "BUYER": "Tu pedido ha sido cancelado automáticamente por falta de aceptación por parte del vendedor.",
+        "ARTISAN": "Tu pedido ha sido cancelado automáticamente por no haberlo aceptado dentro del plazo de 24 horas."
+      }
+    },
+    "cancellationRefundNote": "Te reembolsaremos el importe en el método de pago seleccionado en un plazo de 5-10 días hábiles.",
     "orderDetail": "Detalle del pedido",
     "cancelOrder": "Cancelar pedido",
     "cancelOrderConfirm": "Confirmar cancelación",
@@ -92,7 +120,19 @@
     "cancelOrderReasonPlaceholder": "Explica el motivo de tu cancelación (mínimo 10 caracteres)",
     "orderCancelled": "Pedido cancelado correctamente. El reembolso llegará en 5-10 días hábiles.",
     "cancellationWindowClosed": "La ventana de cancelación de 24h ha expirado",
-    "trackingNumber": "Número de seguimiento"
+    "trackingNumber": "Número de seguimiento",
+    "advanceStatus": {
+      "trackingNumberHelp": "Introduce un número de seguimiento para confirmar el envío.",
+      "messagePlaceholder": "Mensaje para la compradora (opcional)",
+      "submit": "Avanzar estado",
+      "submitting": "Avanzando estado...",
+      "success": "Estado del pedido actualizado.",
+      "connectionError": "Error de conexión. Inténtalo de nuevo.",
+      "errorNotAdvanceable": "Este pedido ya no se puede avanzar de estado.",
+      "errorInvalidTracking": "Introduce un número de seguimiento válido.",
+      "errorMessageTooLong": "El mensaje no puede superar los {max} caracteres.",
+      "errorFallback": "No se pudo avanzar el estado del pedido. Inténtalo de nuevo."
+    }
   },
   "settings": {
     "title": "Configuración",
@@ -106,8 +146,7 @@
     "deleteAccountWarning": "Esta acción es irreversible. Tus datos se anonimizarán permanentemente.",
     "confirmWithPassword": "Introduce tu contraseña para confirmar",
     "exportData": "Exportar mis datos",
-    "exportDataDescription": "Recibirás un correo con todos tus datos en PDF.",
-    "exportRequested": "Correo enviado. Revisa tu bandeja de entrada.",
+    "exportRequested": "Te hemos enviado un correo electrónico con tus datos en PDF. Por favor, revisa tu bandeja de entrada.",
     "cancel": "Cancelar"
   },
   "errors": {

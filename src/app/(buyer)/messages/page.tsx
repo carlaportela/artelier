@@ -48,9 +48,9 @@ export default async function MessagesPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-[--bg]">
-      <div className="px-4 py-6">
-        <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Mensajes</h1>
+    <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
+      <div>
+        <h1 className="mb-6 font-display text-xl font-bold text-[--text] md:text-2xl">Mis mensajes</h1>
 
         {convList.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-20 text-center">
@@ -62,12 +62,12 @@ export default async function MessagesPage() {
             </p>
           </div>
         ) : (
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-3">
             {convList.map((conv) => (
               <li key={conv.id}>
                 <Link
                   href={`/messages/${conv.id}`}
-                  className="-mx-4 flex items-center gap-3 rounded-xl px-4 py-4 transition-colors hover:bg-black/5"
+                  className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4 transition-colors hover:bg-black/5"
                 >
                   <PaletteAvatar
                     src={conv.otherUser.image}

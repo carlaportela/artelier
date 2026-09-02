@@ -40,6 +40,14 @@ enum OrderStatus {
   IN_DISPUTE
 }
 
+//Quién originó la cancelación de un pedido — el estado CANCELLED por sí solo no distingue si fue la
+//compradora quien canceló, la artesana quien rechazó el pedido, o el sistema por falta de aceptación.
+enum CancelledBy {
+  BUYER
+  ARTISAN
+  SYSTEM
+}
+
 enum DisputeStatus {
   OPEN
   RETURN_REQUESTED
@@ -187,15 +195,28 @@ model Order {
   stripeEventId         String         @unique
   trackingNumber        String?
   cancellationReason    String?
+  cancelledBy           CancelledBy?
   paidOut               Boolean        @default(false)
   deletedAt             DateTime?
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 
-  buyer    User      @relation("BuyerOrders", fields: [buyerId], references: [id])
-  artisan  User      @relation("ArtisanOrders", fields: [artisanId], references: [id])
-  product  Product   @relation(fields: [productId], references: [id])
-  disputes Dispute[]
+  buyer         User                @relation("BuyerOrders", fields: [buyerId], references: [id])
+  artisan       User                @relation("ArtisanOrders", fields: [artisanId], references: [id])
+  product       Product             @relation(fields: [productId], references: [id])
+  disputes      Dispute[]
+  statusUpdates OrderStatusUpdate[]
+}
+
+//Historial de cambios de estado de un pedido con mensaje personal opcional de la artesana (Historia 6.3).
+model OrderStatusUpdate {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  message   String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
 }
 
 model CustomOrderRequest {

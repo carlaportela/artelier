@@ -44,6 +44,11 @@ export type Product = $Result.DefaultSelection<Prisma.$ProductPayload>
  */
 export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
 /**
+ * Model OrderStatusUpdate
+ * 
+ */
+export type OrderStatusUpdate = $Result.DefaultSelection<Prisma.$OrderStatusUpdatePayload>
+/**
  * Model CustomOrderRequest
  * 
  */
@@ -140,6 +145,15 @@ export const OrderStatus: {
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 
+export const CancelledBy: {
+  BUYER: 'BUYER',
+  ARTISAN: 'ARTISAN',
+  SYSTEM: 'SYSTEM'
+};
+
+export type CancelledBy = (typeof CancelledBy)[keyof typeof CancelledBy]
+
+
 export const DisputeStatus: {
   OPEN: 'OPEN',
   RETURN_REQUESTED: 'RETURN_REQUESTED',
@@ -195,6 +209,10 @@ export const ProductStatus: typeof $Enums.ProductStatus
 export type OrderStatus = $Enums.OrderStatus
 
 export const OrderStatus: typeof $Enums.OrderStatus
+
+export type CancelledBy = $Enums.CancelledBy
+
+export const CancelledBy: typeof $Enums.CancelledBy
 
 export type DisputeStatus = $Enums.DisputeStatus
 
@@ -389,6 +407,16 @@ export class PrismaClient<
     * ```
     */
   get order(): Prisma.OrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.orderStatusUpdate`: Exposes CRUD operations for the **OrderStatusUpdate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderStatusUpdates
+    * const orderStatusUpdates = await prisma.orderStatusUpdate.findMany()
+    * ```
+    */
+  get orderStatusUpdate(): Prisma.OrderStatusUpdateDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.customOrderRequest`: Exposes CRUD operations for the **CustomOrderRequest** model.
@@ -936,6 +964,7 @@ export namespace Prisma {
     User: 'User',
     Product: 'Product',
     Order: 'Order',
+    OrderStatusUpdate: 'OrderStatusUpdate',
     CustomOrderRequest: 'CustomOrderRequest',
     Conversation: 'Conversation',
     Message: 'Message',
@@ -964,7 +993,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "user" | "product" | "order" | "customOrderRequest" | "conversation" | "message" | "dispute" | "seal" | "productSeal" | "sealRequest" | "follow" | "processUpdate" | "transactionLog"
+      modelProps: "account" | "session" | "verificationToken" | "user" | "product" | "order" | "orderStatusUpdate" | "customOrderRequest" | "conversation" | "message" | "dispute" | "seal" | "productSeal" | "sealRequest" | "follow" | "processUpdate" | "transactionLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1409,6 +1438,80 @@ export namespace Prisma {
           count: {
             args: Prisma.OrderCountArgs<ExtArgs>
             result: $Utils.Optional<OrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      OrderStatusUpdate: {
+        payload: Prisma.$OrderStatusUpdatePayload<ExtArgs>
+        fields: Prisma.OrderStatusUpdateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderStatusUpdateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderStatusUpdateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          findFirst: {
+            args: Prisma.OrderStatusUpdateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderStatusUpdateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          findMany: {
+            args: Prisma.OrderStatusUpdateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>[]
+          }
+          create: {
+            args: Prisma.OrderStatusUpdateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          createMany: {
+            args: Prisma.OrderStatusUpdateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderStatusUpdateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>[]
+          }
+          delete: {
+            args: Prisma.OrderStatusUpdateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          update: {
+            args: Prisma.OrderStatusUpdateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderStatusUpdateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderStatusUpdateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderStatusUpdateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderStatusUpdateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderStatusUpdatePayload>
+          }
+          aggregate: {
+            args: Prisma.OrderStatusUpdateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderStatusUpdate>
+          }
+          groupBy: {
+            args: Prisma.OrderStatusUpdateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderStatusUpdateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderStatusUpdateCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderStatusUpdateCountAggregateOutputType> | number
           }
         }
       }
@@ -2254,6 +2357,7 @@ export namespace Prisma {
     user?: UserOmit
     product?: ProductOmit
     order?: OrderOmit
+    orderStatusUpdate?: OrderStatusUpdateOmit
     customOrderRequest?: CustomOrderRequestOmit
     conversation?: ConversationOmit
     message?: MessageOmit
@@ -2551,10 +2655,12 @@ export namespace Prisma {
 
   export type OrderCountOutputType = {
     disputes: number
+    statusUpdates: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     disputes?: boolean | OrderCountOutputTypeCountDisputesArgs
+    statusUpdates?: boolean | OrderCountOutputTypeCountStatusUpdatesArgs
   }
 
   // Custom InputTypes
@@ -2573,6 +2679,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountDisputesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DisputeWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountStatusUpdatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderStatusUpdateWhereInput
   }
 
 
@@ -8953,6 +9066,7 @@ export namespace Prisma {
     stripeEventId: string | null
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8974,6 +9088,7 @@ export namespace Prisma {
     stripeEventId: string | null
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -8995,6 +9110,7 @@ export namespace Prisma {
     stripeEventId: number
     trackingNumber: number
     cancellationReason: number
+    cancelledBy: number
     paidOut: number
     deletedAt: number
     createdAt: number
@@ -9032,6 +9148,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9053,6 +9170,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9074,6 +9192,7 @@ export namespace Prisma {
     stripeEventId?: true
     trackingNumber?: true
     cancellationReason?: true
+    cancelledBy?: true
     paidOut?: true
     deletedAt?: true
     createdAt?: true
@@ -9182,6 +9301,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber: string | null
     cancellationReason: string | null
+    cancelledBy: $Enums.CancelledBy | null
     paidOut: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -9222,6 +9342,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9230,6 +9351,7 @@ export namespace Prisma {
     artisan?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
     disputes?: boolean | Order$disputesArgs<ExtArgs>
+    statusUpdates?: boolean | Order$statusUpdatesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -9248,6 +9370,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9272,6 +9395,7 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -9296,18 +9420,20 @@ export namespace Prisma {
     stripeEventId?: boolean
     trackingNumber?: boolean
     cancellationReason?: boolean
+    cancelledBy?: boolean
     paidOut?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "cancellationReason" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "buyerId" | "artisanId" | "productId" | "status" | "shippingMethod" | "priceInCents" | "platformFeeInCents" | "stripeFeeInCents" | "totalInCents" | "stripePaymentIntentId" | "stripeEventId" | "trackingNumber" | "cancellationReason" | "cancelledBy" | "paidOut" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     buyer?: boolean | UserDefaultArgs<ExtArgs>
     artisan?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
     disputes?: boolean | Order$disputesArgs<ExtArgs>
+    statusUpdates?: boolean | Order$statusUpdatesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9328,6 +9454,7 @@ export namespace Prisma {
       artisan: Prisma.$UserPayload<ExtArgs>
       product: Prisma.$ProductPayload<ExtArgs>
       disputes: Prisma.$DisputePayload<ExtArgs>[]
+      statusUpdates: Prisma.$OrderStatusUpdatePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9344,6 +9471,7 @@ export namespace Prisma {
       stripeEventId: string
       trackingNumber: string | null
       cancellationReason: string | null
+      cancelledBy: $Enums.CancelledBy | null
       paidOut: boolean
       deletedAt: Date | null
       createdAt: Date
@@ -9746,6 +9874,7 @@ export namespace Prisma {
     artisan<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     disputes<T extends Order$disputesArgs<ExtArgs> = {}>(args?: Subset<T, Order$disputesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    statusUpdates<T extends Order$statusUpdatesArgs<ExtArgs> = {}>(args?: Subset<T, Order$statusUpdatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9789,6 +9918,7 @@ export namespace Prisma {
     readonly stripeEventId: FieldRef<"Order", 'String'>
     readonly trackingNumber: FieldRef<"Order", 'String'>
     readonly cancellationReason: FieldRef<"Order", 'String'>
+    readonly cancelledBy: FieldRef<"Order", 'CancelledBy'>
     readonly paidOut: FieldRef<"Order", 'Boolean'>
     readonly deletedAt: FieldRef<"Order", 'DateTime'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
@@ -10213,6 +10343,30 @@ export namespace Prisma {
   }
 
   /**
+   * Order.statusUpdates
+   */
+  export type Order$statusUpdatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    where?: OrderStatusUpdateWhereInput
+    orderBy?: OrderStatusUpdateOrderByWithRelationInput | OrderStatusUpdateOrderByWithRelationInput[]
+    cursor?: OrderStatusUpdateWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderStatusUpdateScalarFieldEnum | OrderStatusUpdateScalarFieldEnum[]
+  }
+
+  /**
    * Order without action
    */
   export type OrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10228,6 +10382,1064 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: OrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OrderStatusUpdate
+   */
+
+  export type AggregateOrderStatusUpdate = {
+    _count: OrderStatusUpdateCountAggregateOutputType | null
+    _min: OrderStatusUpdateMinAggregateOutputType | null
+    _max: OrderStatusUpdateMaxAggregateOutputType | null
+  }
+
+  export type OrderStatusUpdateMinAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    status: $Enums.OrderStatus | null
+    message: string | null
+    createdAt: Date | null
+  }
+
+  export type OrderStatusUpdateMaxAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    status: $Enums.OrderStatus | null
+    message: string | null
+    createdAt: Date | null
+  }
+
+  export type OrderStatusUpdateCountAggregateOutputType = {
+    id: number
+    orderId: number
+    status: number
+    message: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type OrderStatusUpdateMinAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    message?: true
+    createdAt?: true
+  }
+
+  export type OrderStatusUpdateMaxAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    message?: true
+    createdAt?: true
+  }
+
+  export type OrderStatusUpdateCountAggregateInputType = {
+    id?: true
+    orderId?: true
+    status?: true
+    message?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type OrderStatusUpdateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderStatusUpdate to aggregate.
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusUpdates to fetch.
+     */
+    orderBy?: OrderStatusUpdateOrderByWithRelationInput | OrderStatusUpdateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderStatusUpdateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusUpdates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusUpdates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderStatusUpdates
+    **/
+    _count?: true | OrderStatusUpdateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderStatusUpdateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderStatusUpdateMaxAggregateInputType
+  }
+
+  export type GetOrderStatusUpdateAggregateType<T extends OrderStatusUpdateAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderStatusUpdate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderStatusUpdate[P]>
+      : GetScalarType<T[P], AggregateOrderStatusUpdate[P]>
+  }
+
+
+
+
+  export type OrderStatusUpdateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderStatusUpdateWhereInput
+    orderBy?: OrderStatusUpdateOrderByWithAggregationInput | OrderStatusUpdateOrderByWithAggregationInput[]
+    by: OrderStatusUpdateScalarFieldEnum[] | OrderStatusUpdateScalarFieldEnum
+    having?: OrderStatusUpdateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderStatusUpdateCountAggregateInputType | true
+    _min?: OrderStatusUpdateMinAggregateInputType
+    _max?: OrderStatusUpdateMaxAggregateInputType
+  }
+
+  export type OrderStatusUpdateGroupByOutputType = {
+    id: string
+    orderId: string
+    status: $Enums.OrderStatus
+    message: string | null
+    createdAt: Date
+    _count: OrderStatusUpdateCountAggregateOutputType | null
+    _min: OrderStatusUpdateMinAggregateOutputType | null
+    _max: OrderStatusUpdateMaxAggregateOutputType | null
+  }
+
+  type GetOrderStatusUpdateGroupByPayload<T extends OrderStatusUpdateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderStatusUpdateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderStatusUpdateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderStatusUpdateGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderStatusUpdateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderStatusUpdateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    message?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusUpdate"]>
+
+  export type OrderStatusUpdateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    message?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusUpdate"]>
+
+  export type OrderStatusUpdateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    message?: boolean
+    createdAt?: boolean
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderStatusUpdate"]>
+
+  export type OrderStatusUpdateSelectScalar = {
+    id?: boolean
+    orderId?: boolean
+    status?: boolean
+    message?: boolean
+    createdAt?: boolean
+  }
+
+  export type OrderStatusUpdateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "status" | "message" | "createdAt", ExtArgs["result"]["orderStatusUpdate"]>
+  export type OrderStatusUpdateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderStatusUpdateIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+  export type OrderStatusUpdateIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | OrderDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderStatusUpdatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderStatusUpdate"
+    objects: {
+      order: Prisma.$OrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      orderId: string
+      status: $Enums.OrderStatus
+      message: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["orderStatusUpdate"]>
+    composites: {}
+  }
+
+  type OrderStatusUpdateGetPayload<S extends boolean | null | undefined | OrderStatusUpdateDefaultArgs> = $Result.GetResult<Prisma.$OrderStatusUpdatePayload, S>
+
+  type OrderStatusUpdateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderStatusUpdateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderStatusUpdateCountAggregateInputType | true
+    }
+
+  export interface OrderStatusUpdateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderStatusUpdate'], meta: { name: 'OrderStatusUpdate' } }
+    /**
+     * Find zero or one OrderStatusUpdate that matches the filter.
+     * @param {OrderStatusUpdateFindUniqueArgs} args - Arguments to find a OrderStatusUpdate
+     * @example
+     * // Get one OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderStatusUpdateFindUniqueArgs>(args: SelectSubset<T, OrderStatusUpdateFindUniqueArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderStatusUpdate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderStatusUpdateFindUniqueOrThrowArgs} args - Arguments to find a OrderStatusUpdate
+     * @example
+     * // Get one OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderStatusUpdateFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderStatusUpdateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderStatusUpdate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateFindFirstArgs} args - Arguments to find a OrderStatusUpdate
+     * @example
+     * // Get one OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderStatusUpdateFindFirstArgs>(args?: SelectSubset<T, OrderStatusUpdateFindFirstArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderStatusUpdate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateFindFirstOrThrowArgs} args - Arguments to find a OrderStatusUpdate
+     * @example
+     * // Get one OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderStatusUpdateFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderStatusUpdateFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderStatusUpdates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderStatusUpdates
+     * const orderStatusUpdates = await prisma.orderStatusUpdate.findMany()
+     * 
+     * // Get first 10 OrderStatusUpdates
+     * const orderStatusUpdates = await prisma.orderStatusUpdate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderStatusUpdateWithIdOnly = await prisma.orderStatusUpdate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderStatusUpdateFindManyArgs>(args?: SelectSubset<T, OrderStatusUpdateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderStatusUpdate.
+     * @param {OrderStatusUpdateCreateArgs} args - Arguments to create a OrderStatusUpdate.
+     * @example
+     * // Create one OrderStatusUpdate
+     * const OrderStatusUpdate = await prisma.orderStatusUpdate.create({
+     *   data: {
+     *     // ... data to create a OrderStatusUpdate
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderStatusUpdateCreateArgs>(args: SelectSubset<T, OrderStatusUpdateCreateArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderStatusUpdates.
+     * @param {OrderStatusUpdateCreateManyArgs} args - Arguments to create many OrderStatusUpdates.
+     * @example
+     * // Create many OrderStatusUpdates
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderStatusUpdateCreateManyArgs>(args?: SelectSubset<T, OrderStatusUpdateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderStatusUpdates and returns the data saved in the database.
+     * @param {OrderStatusUpdateCreateManyAndReturnArgs} args - Arguments to create many OrderStatusUpdates.
+     * @example
+     * // Create many OrderStatusUpdates
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderStatusUpdates and only return the `id`
+     * const orderStatusUpdateWithIdOnly = await prisma.orderStatusUpdate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderStatusUpdateCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderStatusUpdateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderStatusUpdate.
+     * @param {OrderStatusUpdateDeleteArgs} args - Arguments to delete one OrderStatusUpdate.
+     * @example
+     * // Delete one OrderStatusUpdate
+     * const OrderStatusUpdate = await prisma.orderStatusUpdate.delete({
+     *   where: {
+     *     // ... filter to delete one OrderStatusUpdate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderStatusUpdateDeleteArgs>(args: SelectSubset<T, OrderStatusUpdateDeleteArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderStatusUpdate.
+     * @param {OrderStatusUpdateUpdateArgs} args - Arguments to update one OrderStatusUpdate.
+     * @example
+     * // Update one OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderStatusUpdateUpdateArgs>(args: SelectSubset<T, OrderStatusUpdateUpdateArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderStatusUpdates.
+     * @param {OrderStatusUpdateDeleteManyArgs} args - Arguments to filter OrderStatusUpdates to delete.
+     * @example
+     * // Delete a few OrderStatusUpdates
+     * const { count } = await prisma.orderStatusUpdate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderStatusUpdateDeleteManyArgs>(args?: SelectSubset<T, OrderStatusUpdateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderStatusUpdates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderStatusUpdates
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderStatusUpdateUpdateManyArgs>(args: SelectSubset<T, OrderStatusUpdateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderStatusUpdates and returns the data updated in the database.
+     * @param {OrderStatusUpdateUpdateManyAndReturnArgs} args - Arguments to update many OrderStatusUpdates.
+     * @example
+     * // Update many OrderStatusUpdates
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderStatusUpdates and only return the `id`
+     * const orderStatusUpdateWithIdOnly = await prisma.orderStatusUpdate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderStatusUpdateUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderStatusUpdateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderStatusUpdate.
+     * @param {OrderStatusUpdateUpsertArgs} args - Arguments to update or create a OrderStatusUpdate.
+     * @example
+     * // Update or create a OrderStatusUpdate
+     * const orderStatusUpdate = await prisma.orderStatusUpdate.upsert({
+     *   create: {
+     *     // ... data to create a OrderStatusUpdate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderStatusUpdate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderStatusUpdateUpsertArgs>(args: SelectSubset<T, OrderStatusUpdateUpsertArgs<ExtArgs>>): Prisma__OrderStatusUpdateClient<$Result.GetResult<Prisma.$OrderStatusUpdatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderStatusUpdates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateCountArgs} args - Arguments to filter OrderStatusUpdates to count.
+     * @example
+     * // Count the number of OrderStatusUpdates
+     * const count = await prisma.orderStatusUpdate.count({
+     *   where: {
+     *     // ... the filter for the OrderStatusUpdates we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderStatusUpdateCountArgs>(
+      args?: Subset<T, OrderStatusUpdateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderStatusUpdateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderStatusUpdate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderStatusUpdateAggregateArgs>(args: Subset<T, OrderStatusUpdateAggregateArgs>): Prisma.PrismaPromise<GetOrderStatusUpdateAggregateType<T>>
+
+    /**
+     * Group by OrderStatusUpdate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderStatusUpdateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderStatusUpdateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderStatusUpdateGroupByArgs['orderBy'] }
+        : { orderBy?: OrderStatusUpdateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderStatusUpdateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderStatusUpdateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderStatusUpdate model
+   */
+  readonly fields: OrderStatusUpdateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderStatusUpdate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderStatusUpdateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderStatusUpdate model
+   */
+  interface OrderStatusUpdateFieldRefs {
+    readonly id: FieldRef<"OrderStatusUpdate", 'String'>
+    readonly orderId: FieldRef<"OrderStatusUpdate", 'String'>
+    readonly status: FieldRef<"OrderStatusUpdate", 'OrderStatus'>
+    readonly message: FieldRef<"OrderStatusUpdate", 'String'>
+    readonly createdAt: FieldRef<"OrderStatusUpdate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderStatusUpdate findUnique
+   */
+  export type OrderStatusUpdateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusUpdate to fetch.
+     */
+    where: OrderStatusUpdateWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusUpdate findUniqueOrThrow
+   */
+  export type OrderStatusUpdateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusUpdate to fetch.
+     */
+    where: OrderStatusUpdateWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusUpdate findFirst
+   */
+  export type OrderStatusUpdateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusUpdate to fetch.
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusUpdates to fetch.
+     */
+    orderBy?: OrderStatusUpdateOrderByWithRelationInput | OrderStatusUpdateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderStatusUpdates.
+     */
+    cursor?: OrderStatusUpdateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusUpdates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusUpdates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatusUpdates.
+     */
+    distinct?: OrderStatusUpdateScalarFieldEnum | OrderStatusUpdateScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusUpdate findFirstOrThrow
+   */
+  export type OrderStatusUpdateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusUpdate to fetch.
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusUpdates to fetch.
+     */
+    orderBy?: OrderStatusUpdateOrderByWithRelationInput | OrderStatusUpdateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderStatusUpdates.
+     */
+    cursor?: OrderStatusUpdateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusUpdates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusUpdates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatusUpdates.
+     */
+    distinct?: OrderStatusUpdateScalarFieldEnum | OrderStatusUpdateScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusUpdate findMany
+   */
+  export type OrderStatusUpdateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderStatusUpdates to fetch.
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderStatusUpdates to fetch.
+     */
+    orderBy?: OrderStatusUpdateOrderByWithRelationInput | OrderStatusUpdateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderStatusUpdates.
+     */
+    cursor?: OrderStatusUpdateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderStatusUpdates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderStatusUpdates.
+     */
+    skip?: number
+    distinct?: OrderStatusUpdateScalarFieldEnum | OrderStatusUpdateScalarFieldEnum[]
+  }
+
+  /**
+   * OrderStatusUpdate create
+   */
+  export type OrderStatusUpdateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderStatusUpdate.
+     */
+    data: XOR<OrderStatusUpdateCreateInput, OrderStatusUpdateUncheckedCreateInput>
+  }
+
+  /**
+   * OrderStatusUpdate createMany
+   */
+  export type OrderStatusUpdateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderStatusUpdates.
+     */
+    data: OrderStatusUpdateCreateManyInput | OrderStatusUpdateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderStatusUpdate createManyAndReturn
+   */
+  export type OrderStatusUpdateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderStatusUpdates.
+     */
+    data: OrderStatusUpdateCreateManyInput | OrderStatusUpdateCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderStatusUpdate update
+   */
+  export type OrderStatusUpdateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderStatusUpdate.
+     */
+    data: XOR<OrderStatusUpdateUpdateInput, OrderStatusUpdateUncheckedUpdateInput>
+    /**
+     * Choose, which OrderStatusUpdate to update.
+     */
+    where: OrderStatusUpdateWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusUpdate updateMany
+   */
+  export type OrderStatusUpdateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderStatusUpdates.
+     */
+    data: XOR<OrderStatusUpdateUpdateManyMutationInput, OrderStatusUpdateUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderStatusUpdates to update
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * Limit how many OrderStatusUpdates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderStatusUpdate updateManyAndReturn
+   */
+  export type OrderStatusUpdateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderStatusUpdates.
+     */
+    data: XOR<OrderStatusUpdateUpdateManyMutationInput, OrderStatusUpdateUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderStatusUpdates to update
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * Limit how many OrderStatusUpdates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderStatusUpdate upsert
+   */
+  export type OrderStatusUpdateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderStatusUpdate to update in case it exists.
+     */
+    where: OrderStatusUpdateWhereUniqueInput
+    /**
+     * In case the OrderStatusUpdate found by the `where` argument doesn't exist, create a new OrderStatusUpdate with this data.
+     */
+    create: XOR<OrderStatusUpdateCreateInput, OrderStatusUpdateUncheckedCreateInput>
+    /**
+     * In case the OrderStatusUpdate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderStatusUpdateUpdateInput, OrderStatusUpdateUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderStatusUpdate delete
+   */
+  export type OrderStatusUpdateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
+    /**
+     * Filter which OrderStatusUpdate to delete.
+     */
+    where: OrderStatusUpdateWhereUniqueInput
+  }
+
+  /**
+   * OrderStatusUpdate deleteMany
+   */
+  export type OrderStatusUpdateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderStatusUpdates to delete
+     */
+    where?: OrderStatusUpdateWhereInput
+    /**
+     * Limit how many OrderStatusUpdates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderStatusUpdate without action
+   */
+  export type OrderStatusUpdateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderStatusUpdate
+     */
+    select?: OrderStatusUpdateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderStatusUpdate
+     */
+    omit?: OrderStatusUpdateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderStatusUpdateInclude<ExtArgs> | null
   }
 
 
@@ -21270,6 +22482,7 @@ export namespace Prisma {
     stripeEventId: 'stripeEventId',
     trackingNumber: 'trackingNumber',
     cancellationReason: 'cancellationReason',
+    cancelledBy: 'cancelledBy',
     paidOut: 'paidOut',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -21277,6 +22490,17 @@ export namespace Prisma {
   };
 
   export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+  export const OrderStatusUpdateScalarFieldEnum: {
+    id: 'id',
+    orderId: 'orderId',
+    status: 'status',
+    message: 'message',
+    createdAt: 'createdAt'
+  };
+
+  export type OrderStatusUpdateScalarFieldEnum = (typeof OrderStatusUpdateScalarFieldEnum)[keyof typeof OrderStatusUpdateScalarFieldEnum]
 
 
   export const CustomOrderRequestScalarFieldEnum: {
@@ -21567,6 +22791,20 @@ export namespace Prisma {
    * Reference to a field of type 'ShippingMethod[]'
    */
   export type ListEnumShippingMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ShippingMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CancelledBy'
+   */
+  export type EnumCancelledByFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CancelledBy'>
+    
+
+
+  /**
+   * Reference to a field of type 'CancelledBy[]'
+   */
+  export type ListEnumCancelledByFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CancelledBy[]'>
     
 
 
@@ -22162,6 +23400,7 @@ export namespace Prisma {
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -22170,6 +23409,7 @@ export namespace Prisma {
     artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     disputes?: DisputeListRelationFilter
+    statusUpdates?: OrderStatusUpdateListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -22187,6 +23427,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
     cancellationReason?: SortOrderInput | SortOrder
+    cancelledBy?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22195,6 +23436,7 @@ export namespace Prisma {
     artisan?: UserOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
     disputes?: DisputeOrderByRelationAggregateInput
+    statusUpdates?: OrderStatusUpdateOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -22215,6 +23457,7 @@ export namespace Prisma {
     totalInCents?: IntFilter<"Order"> | number
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -22223,6 +23466,7 @@ export namespace Prisma {
     artisan?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     disputes?: DisputeListRelationFilter
+    statusUpdates?: OrderStatusUpdateListRelationFilter
   }, "id" | "stripePaymentIntentId" | "stripeEventId">
 
   export type OrderOrderByWithAggregationInput = {
@@ -22240,6 +23484,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrderInput | SortOrder
     cancellationReason?: SortOrderInput | SortOrder
+    cancelledBy?: SortOrderInput | SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -22269,10 +23514,66 @@ export namespace Prisma {
     stripeEventId?: StringWithAggregatesFilter<"Order"> | string
     trackingNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
     cancellationReason?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableWithAggregatesFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolWithAggregatesFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+  }
+
+  export type OrderStatusUpdateWhereInput = {
+    AND?: OrderStatusUpdateWhereInput | OrderStatusUpdateWhereInput[]
+    OR?: OrderStatusUpdateWhereInput[]
+    NOT?: OrderStatusUpdateWhereInput | OrderStatusUpdateWhereInput[]
+    id?: StringFilter<"OrderStatusUpdate"> | string
+    orderId?: StringFilter<"OrderStatusUpdate"> | string
+    status?: EnumOrderStatusFilter<"OrderStatusUpdate"> | $Enums.OrderStatus
+    message?: StringNullableFilter<"OrderStatusUpdate"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusUpdate"> | Date | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }
+
+  export type OrderStatusUpdateOrderByWithRelationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    order?: OrderOrderByWithRelationInput
+  }
+
+  export type OrderStatusUpdateWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OrderStatusUpdateWhereInput | OrderStatusUpdateWhereInput[]
+    OR?: OrderStatusUpdateWhereInput[]
+    NOT?: OrderStatusUpdateWhereInput | OrderStatusUpdateWhereInput[]
+    orderId?: StringFilter<"OrderStatusUpdate"> | string
+    status?: EnumOrderStatusFilter<"OrderStatusUpdate"> | $Enums.OrderStatus
+    message?: StringNullableFilter<"OrderStatusUpdate"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusUpdate"> | Date | string
+    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+  }, "id">
+
+  export type OrderStatusUpdateOrderByWithAggregationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    message?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: OrderStatusUpdateCountOrderByAggregateInput
+    _max?: OrderStatusUpdateMaxOrderByAggregateInput
+    _min?: OrderStatusUpdateMinOrderByAggregateInput
+  }
+
+  export type OrderStatusUpdateScalarWhereWithAggregatesInput = {
+    AND?: OrderStatusUpdateScalarWhereWithAggregatesInput | OrderStatusUpdateScalarWhereWithAggregatesInput[]
+    OR?: OrderStatusUpdateScalarWhereWithAggregatesInput[]
+    NOT?: OrderStatusUpdateScalarWhereWithAggregatesInput | OrderStatusUpdateScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OrderStatusUpdate"> | string
+    orderId?: StringWithAggregatesFilter<"OrderStatusUpdate"> | string
+    status?: EnumOrderStatusWithAggregatesFilter<"OrderStatusUpdate"> | $Enums.OrderStatus
+    message?: StringNullableWithAggregatesFilter<"OrderStatusUpdate"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"OrderStatusUpdate"> | Date | string
   }
 
   export type CustomOrderRequestWhereInput = {
@@ -23541,6 +24842,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -23549,6 +24851,7 @@ export namespace Prisma {
     artisan: UserCreateNestedOneWithoutArtisanOrdersInput
     product: ProductCreateNestedOneWithoutOrdersInput
     disputes?: DisputeCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -23566,11 +24869,13 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     disputes?: DisputeUncheckedCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -23585,6 +24890,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23593,6 +24899,7 @@ export namespace Prisma {
     artisan?: UserUpdateOneRequiredWithoutArtisanOrdersNestedInput
     product?: ProductUpdateOneRequiredWithoutOrdersNestedInput
     disputes?: DisputeUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -23610,11 +24917,13 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disputes?: DisputeUncheckedUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -23632,6 +24941,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -23650,6 +24960,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23671,10 +24982,66 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateCreateInput = {
+    id?: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+    order: OrderCreateNestedOneWithoutStatusUpdatesInput
+  }
+
+  export type OrderStatusUpdateUncheckedCreateInput = {
+    id?: string
+    orderId: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusUpdateUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneRequiredWithoutStatusUpdatesNestedInput
+  }
+
+  export type OrderStatusUpdateUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateCreateManyInput = {
+    id?: string
+    orderId: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusUpdateUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CustomOrderRequestCreateInput = {
@@ -24994,9 +26361,26 @@ export namespace Prisma {
     not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
   }
 
+  export type EnumCancelledByNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableFilter<$PrismaModel> | $Enums.CancelledBy | null
+  }
+
   export type ProductScalarRelationFilter = {
     is?: ProductWhereInput
     isNot?: ProductWhereInput
+  }
+
+  export type OrderStatusUpdateListRelationFilter = {
+    every?: OrderStatusUpdateWhereInput
+    some?: OrderStatusUpdateWhereInput
+    none?: OrderStatusUpdateWhereInput
+  }
+
+  export type OrderStatusUpdateOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type OrderCountOrderByAggregateInput = {
@@ -25014,6 +26398,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -25042,6 +26427,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -25063,6 +26449,7 @@ export namespace Prisma {
     stripeEventId?: SortOrder
     trackingNumber?: SortOrder
     cancellationReason?: SortOrder
+    cancelledBy?: SortOrder
     paidOut?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -25094,6 +26481,45 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShippingMethodFilter<$PrismaModel>
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
+  }
+
+  export type EnumCancelledByNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel> | $Enums.CancelledBy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCancelledByNullableFilter<$PrismaModel>
+    _max?: NestedEnumCancelledByNullableFilter<$PrismaModel>
+  }
+
+  export type OrderScalarRelationFilter = {
+    is?: OrderWhereInput
+    isNot?: OrderWhereInput
+  }
+
+  export type OrderStatusUpdateCountOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OrderStatusUpdateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type OrderStatusUpdateMinOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    status?: SortOrder
+    message?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EnumCustomOrderStatusFilter<$PrismaModel = never> = {
@@ -25235,11 +26661,6 @@ export namespace Prisma {
     in?: $Enums.DisputeStatus[] | ListEnumDisputeStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.DisputeStatus[] | ListEnumDisputeStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumDisputeStatusFilter<$PrismaModel> | $Enums.DisputeStatus
-  }
-
-  export type OrderScalarRelationFilter = {
-    is?: OrderWhereInput
-    isNot?: OrderWhereInput
   }
 
   export type DisputeCountOrderByAggregateInput = {
@@ -26408,11 +27829,25 @@ export namespace Prisma {
     connect?: DisputeWhereUniqueInput | DisputeWhereUniqueInput[]
   }
 
+  export type OrderStatusUpdateCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput> | OrderStatusUpdateCreateWithoutOrderInput[] | OrderStatusUpdateUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusUpdateCreateOrConnectWithoutOrderInput | OrderStatusUpdateCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderStatusUpdateCreateManyOrderInputEnvelope
+    connect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+  }
+
   export type DisputeUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<DisputeCreateWithoutOrderInput, DisputeUncheckedCreateWithoutOrderInput> | DisputeCreateWithoutOrderInput[] | DisputeUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: DisputeCreateOrConnectWithoutOrderInput | DisputeCreateOrConnectWithoutOrderInput[]
     createMany?: DisputeCreateManyOrderInputEnvelope
     connect?: DisputeWhereUniqueInput | DisputeWhereUniqueInput[]
+  }
+
+  export type OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput> | OrderStatusUpdateCreateWithoutOrderInput[] | OrderStatusUpdateUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusUpdateCreateOrConnectWithoutOrderInput | OrderStatusUpdateCreateOrConnectWithoutOrderInput[]
+    createMany?: OrderStatusUpdateCreateManyOrderInputEnvelope
+    connect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
   }
 
   export type EnumOrderStatusFieldUpdateOperationsInput = {
@@ -26421,6 +27856,10 @@ export namespace Prisma {
 
   export type EnumShippingMethodFieldUpdateOperationsInput = {
     set?: $Enums.ShippingMethod
+  }
+
+  export type NullableEnumCancelledByFieldUpdateOperationsInput = {
+    set?: $Enums.CancelledBy | null
   }
 
   export type UserUpdateOneRequiredWithoutBuyerOrdersNestedInput = {
@@ -26461,6 +27900,20 @@ export namespace Prisma {
     deleteMany?: DisputeScalarWhereInput | DisputeScalarWhereInput[]
   }
 
+  export type OrderStatusUpdateUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput> | OrderStatusUpdateCreateWithoutOrderInput[] | OrderStatusUpdateUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusUpdateCreateOrConnectWithoutOrderInput | OrderStatusUpdateCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderStatusUpdateUpsertWithWhereUniqueWithoutOrderInput | OrderStatusUpdateUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderStatusUpdateCreateManyOrderInputEnvelope
+    set?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    disconnect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    delete?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    connect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    update?: OrderStatusUpdateUpdateWithWhereUniqueWithoutOrderInput | OrderStatusUpdateUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderStatusUpdateUpdateManyWithWhereWithoutOrderInput | OrderStatusUpdateUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderStatusUpdateScalarWhereInput | OrderStatusUpdateScalarWhereInput[]
+  }
+
   export type DisputeUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<DisputeCreateWithoutOrderInput, DisputeUncheckedCreateWithoutOrderInput> | DisputeCreateWithoutOrderInput[] | DisputeUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: DisputeCreateOrConnectWithoutOrderInput | DisputeCreateOrConnectWithoutOrderInput[]
@@ -26473,6 +27926,34 @@ export namespace Prisma {
     update?: DisputeUpdateWithWhereUniqueWithoutOrderInput | DisputeUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: DisputeUpdateManyWithWhereWithoutOrderInput | DisputeUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: DisputeScalarWhereInput | DisputeScalarWhereInput[]
+  }
+
+  export type OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput> | OrderStatusUpdateCreateWithoutOrderInput[] | OrderStatusUpdateUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: OrderStatusUpdateCreateOrConnectWithoutOrderInput | OrderStatusUpdateCreateOrConnectWithoutOrderInput[]
+    upsert?: OrderStatusUpdateUpsertWithWhereUniqueWithoutOrderInput | OrderStatusUpdateUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: OrderStatusUpdateCreateManyOrderInputEnvelope
+    set?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    disconnect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    delete?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    connect?: OrderStatusUpdateWhereUniqueInput | OrderStatusUpdateWhereUniqueInput[]
+    update?: OrderStatusUpdateUpdateWithWhereUniqueWithoutOrderInput | OrderStatusUpdateUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: OrderStatusUpdateUpdateManyWithWhereWithoutOrderInput | OrderStatusUpdateUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: OrderStatusUpdateScalarWhereInput | OrderStatusUpdateScalarWhereInput[]
+  }
+
+  export type OrderCreateNestedOneWithoutStatusUpdatesInput = {
+    create?: XOR<OrderCreateWithoutStatusUpdatesInput, OrderUncheckedCreateWithoutStatusUpdatesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStatusUpdatesInput
+    connect?: OrderWhereUniqueInput
+  }
+
+  export type OrderUpdateOneRequiredWithoutStatusUpdatesNestedInput = {
+    create?: XOR<OrderCreateWithoutStatusUpdatesInput, OrderUncheckedCreateWithoutStatusUpdatesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutStatusUpdatesInput
+    upsert?: OrderUpsertWithoutStatusUpdatesInput
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutStatusUpdatesInput, OrderUpdateWithoutStatusUpdatesInput>, OrderUncheckedUpdateWithoutStatusUpdatesInput>
   }
 
   export type UserCreateNestedOneWithoutCustomOrdersAsBuyerInput = {
@@ -27105,6 +28586,13 @@ export namespace Prisma {
     not?: NestedEnumShippingMethodFilter<$PrismaModel> | $Enums.ShippingMethod
   }
 
+  export type NestedEnumCancelledByNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableFilter<$PrismaModel> | $Enums.CancelledBy | null
+  }
+
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.OrderStatus | EnumOrderStatusFieldRefInput<$PrismaModel>
     in?: $Enums.OrderStatus[] | ListEnumOrderStatusFieldRefInput<$PrismaModel>
@@ -27123,6 +28611,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumShippingMethodFilter<$PrismaModel>
     _max?: NestedEnumShippingMethodFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CancelledBy | EnumCancelledByFieldRefInput<$PrismaModel> | null
+    in?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.CancelledBy[] | ListEnumCancelledByFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumCancelledByNullableWithAggregatesFilter<$PrismaModel> | $Enums.CancelledBy | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumCancelledByNullableFilter<$PrismaModel>
+    _max?: NestedEnumCancelledByNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumCustomOrderStatusFilter<$PrismaModel = never> = {
@@ -27683,6 +29181,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -27690,6 +29189,7 @@ export namespace Prisma {
     artisan: UserCreateNestedOneWithoutArtisanOrdersInput
     product: ProductCreateNestedOneWithoutOrdersInput
     disputes?: DisputeCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutBuyerInput = {
@@ -27706,11 +29206,13 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     disputes?: DisputeUncheckedCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutBuyerInput = {
@@ -27735,6 +29237,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -27742,6 +29245,7 @@ export namespace Prisma {
     buyer: UserCreateNestedOneWithoutBuyerOrdersInput
     product: ProductCreateNestedOneWithoutOrdersInput
     disputes?: DisputeCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutArtisanInput = {
@@ -27758,11 +29262,13 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     disputes?: DisputeUncheckedCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutArtisanInput = {
@@ -28193,6 +29699,7 @@ export namespace Prisma {
     stripeEventId?: StringFilter<"Order"> | string
     trackingNumber?: StringNullableFilter<"Order"> | string | null
     cancellationReason?: StringNullableFilter<"Order"> | string | null
+    cancelledBy?: EnumCancelledByNullableFilter<"Order"> | $Enums.CancelledBy | null
     paidOut?: BoolFilter<"Order"> | boolean
     deletedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
@@ -28568,6 +30075,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -28575,6 +30083,7 @@ export namespace Prisma {
     buyer: UserCreateNestedOneWithoutBuyerOrdersInput
     artisan: UserCreateNestedOneWithoutArtisanOrdersInput
     disputes?: DisputeCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutProductInput = {
@@ -28591,11 +30100,13 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     disputes?: DisputeUncheckedCreateNestedManyWithoutOrderInput
+    statusUpdates?: OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutProductInput = {
@@ -29064,6 +30575,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrderStatusUpdateCreateWithoutOrderInput = {
+    id?: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusUpdateUncheckedCreateWithoutOrderInput = {
+    id?: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+  }
+
+  export type OrderStatusUpdateCreateOrConnectWithoutOrderInput = {
+    where: OrderStatusUpdateWhereUniqueInput
+    create: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderStatusUpdateCreateManyOrderInputEnvelope = {
+    data: OrderStatusUpdateCreateManyOrderInput | OrderStatusUpdateCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutBuyerOrdersInput = {
     update: XOR<UserUpdateWithoutBuyerOrdersInput, UserUncheckedUpdateWithoutBuyerOrdersInput>
     create: XOR<UserCreateWithoutBuyerOrdersInput, UserUncheckedCreateWithoutBuyerOrdersInput>
@@ -29315,6 +30850,141 @@ export namespace Prisma {
   export type DisputeUpdateManyWithWhereWithoutOrderInput = {
     where: DisputeScalarWhereInput
     data: XOR<DisputeUpdateManyMutationInput, DisputeUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type OrderStatusUpdateUpsertWithWhereUniqueWithoutOrderInput = {
+    where: OrderStatusUpdateWhereUniqueInput
+    update: XOR<OrderStatusUpdateUpdateWithoutOrderInput, OrderStatusUpdateUncheckedUpdateWithoutOrderInput>
+    create: XOR<OrderStatusUpdateCreateWithoutOrderInput, OrderStatusUpdateUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrderStatusUpdateUpdateWithWhereUniqueWithoutOrderInput = {
+    where: OrderStatusUpdateWhereUniqueInput
+    data: XOR<OrderStatusUpdateUpdateWithoutOrderInput, OrderStatusUpdateUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type OrderStatusUpdateUpdateManyWithWhereWithoutOrderInput = {
+    where: OrderStatusUpdateScalarWhereInput
+    data: XOR<OrderStatusUpdateUpdateManyMutationInput, OrderStatusUpdateUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type OrderStatusUpdateScalarWhereInput = {
+    AND?: OrderStatusUpdateScalarWhereInput | OrderStatusUpdateScalarWhereInput[]
+    OR?: OrderStatusUpdateScalarWhereInput[]
+    NOT?: OrderStatusUpdateScalarWhereInput | OrderStatusUpdateScalarWhereInput[]
+    id?: StringFilter<"OrderStatusUpdate"> | string
+    orderId?: StringFilter<"OrderStatusUpdate"> | string
+    status?: EnumOrderStatusFilter<"OrderStatusUpdate"> | $Enums.OrderStatus
+    message?: StringNullableFilter<"OrderStatusUpdate"> | string | null
+    createdAt?: DateTimeFilter<"OrderStatusUpdate"> | Date | string
+  }
+
+  export type OrderCreateWithoutStatusUpdatesInput = {
+    id?: string
+    status?: $Enums.OrderStatus
+    shippingMethod: $Enums.ShippingMethod
+    priceInCents: number
+    platformFeeInCents: number
+    stripeFeeInCents: number
+    totalInCents: number
+    stripePaymentIntentId: string
+    stripeEventId: string
+    trackingNumber?: string | null
+    cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
+    paidOut?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    buyer: UserCreateNestedOneWithoutBuyerOrdersInput
+    artisan: UserCreateNestedOneWithoutArtisanOrdersInput
+    product: ProductCreateNestedOneWithoutOrdersInput
+    disputes?: DisputeCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutStatusUpdatesInput = {
+    id?: string
+    buyerId: string
+    artisanId: string
+    productId: string
+    status?: $Enums.OrderStatus
+    shippingMethod: $Enums.ShippingMethod
+    priceInCents: number
+    platformFeeInCents: number
+    stripeFeeInCents: number
+    totalInCents: number
+    stripePaymentIntentId: string
+    stripeEventId: string
+    trackingNumber?: string | null
+    cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
+    paidOut?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    disputes?: DisputeUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutStatusUpdatesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutStatusUpdatesInput, OrderUncheckedCreateWithoutStatusUpdatesInput>
+  }
+
+  export type OrderUpsertWithoutStatusUpdatesInput = {
+    update: XOR<OrderUpdateWithoutStatusUpdatesInput, OrderUncheckedUpdateWithoutStatusUpdatesInput>
+    create: XOR<OrderCreateWithoutStatusUpdatesInput, OrderUncheckedCreateWithoutStatusUpdatesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutStatusUpdatesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutStatusUpdatesInput, OrderUncheckedUpdateWithoutStatusUpdatesInput>
+  }
+
+  export type OrderUpdateWithoutStatusUpdatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethod?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    priceInCents?: IntFieldUpdateOperationsInput | number
+    platformFeeInCents?: IntFieldUpdateOperationsInput | number
+    stripeFeeInCents?: IntFieldUpdateOperationsInput | number
+    totalInCents?: IntFieldUpdateOperationsInput | number
+    stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
+    stripeEventId?: StringFieldUpdateOperationsInput | string
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
+    paidOut?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    buyer?: UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
+    artisan?: UserUpdateOneRequiredWithoutArtisanOrdersNestedInput
+    product?: ProductUpdateOneRequiredWithoutOrdersNestedInput
+    disputes?: DisputeUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutStatusUpdatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    buyerId?: StringFieldUpdateOperationsInput | string
+    artisanId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    shippingMethod?: EnumShippingMethodFieldUpdateOperationsInput | $Enums.ShippingMethod
+    priceInCents?: IntFieldUpdateOperationsInput | number
+    platformFeeInCents?: IntFieldUpdateOperationsInput | number
+    stripeFeeInCents?: IntFieldUpdateOperationsInput | number
+    totalInCents?: IntFieldUpdateOperationsInput | number
+    stripePaymentIntentId?: StringFieldUpdateOperationsInput | string
+    stripeEventId?: StringFieldUpdateOperationsInput | string
+    trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
+    paidOut?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    disputes?: DisputeUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserCreateWithoutCustomOrdersAsBuyerInput = {
@@ -30329,6 +31999,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -30336,6 +32007,7 @@ export namespace Prisma {
     buyer: UserCreateNestedOneWithoutBuyerOrdersInput
     artisan: UserCreateNestedOneWithoutArtisanOrdersInput
     product: ProductCreateNestedOneWithoutOrdersInput
+    statusUpdates?: OrderStatusUpdateCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutDisputesInput = {
@@ -30353,10 +32025,12 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    statusUpdates?: OrderStatusUpdateUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutDisputesInput = {
@@ -30474,6 +32148,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30481,6 +32156,7 @@ export namespace Prisma {
     buyer?: UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
     artisan?: UserUpdateOneRequiredWithoutArtisanOrdersNestedInput
     product?: ProductUpdateOneRequiredWithoutOrdersNestedInput
+    statusUpdates?: OrderStatusUpdateUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutDisputesInput = {
@@ -30498,10 +32174,12 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    statusUpdates?: OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserUpsertWithoutDisputesInput = {
@@ -31761,6 +33439,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -31781,6 +33460,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32010,6 +33690,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32017,6 +33698,7 @@ export namespace Prisma {
     artisan?: UserUpdateOneRequiredWithoutArtisanOrdersNestedInput
     product?: ProductUpdateOneRequiredWithoutOrdersNestedInput
     disputes?: DisputeUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutBuyerInput = {
@@ -32033,11 +33715,13 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disputes?: DisputeUncheckedUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutBuyerInput = {
@@ -32054,6 +33738,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32072,6 +33757,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32079,6 +33765,7 @@ export namespace Prisma {
     buyer?: UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
     product?: ProductUpdateOneRequiredWithoutOrdersNestedInput
     disputes?: DisputeUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutArtisanInput = {
@@ -32095,11 +33782,13 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disputes?: DisputeUncheckedUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutArtisanInput = {
@@ -32116,6 +33805,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32413,6 +34103,7 @@ export namespace Prisma {
     stripeEventId: string
     trackingNumber?: string | null
     cancellationReason?: string | null
+    cancelledBy?: $Enums.CancelledBy | null
     paidOut?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32449,6 +34140,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32456,6 +34148,7 @@ export namespace Prisma {
     buyer?: UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
     artisan?: UserUpdateOneRequiredWithoutArtisanOrdersNestedInput
     disputes?: DisputeUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutProductInput = {
@@ -32472,11 +34165,13 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     disputes?: DisputeUncheckedUpdateManyWithoutOrderNestedInput
+    statusUpdates?: OrderStatusUpdateUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutProductInput = {
@@ -32493,6 +34188,7 @@ export namespace Prisma {
     stripeEventId?: StringFieldUpdateOperationsInput | string
     trackingNumber?: NullableStringFieldUpdateOperationsInput | string | null
     cancellationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelledBy?: NullableEnumCancelledByFieldUpdateOperationsInput | $Enums.CancelledBy | null
     paidOut?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32563,6 +34259,13 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type OrderStatusUpdateCreateManyOrderInput = {
+    id?: string
+    status: $Enums.OrderStatus
+    message?: string | null
+    createdAt?: Date | string
+  }
+
   export type DisputeUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     reason?: StringFieldUpdateOperationsInput | string
@@ -32591,6 +34294,27 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderStatusUpdateUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    message?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageCreateManyConversationInput = {

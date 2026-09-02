@@ -76,7 +76,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const [product, session] = await Promise.all([
     db.product.findFirst({
-      where: { id, deletedAt: null, status: "ACTIVE" },
+      where: { id, deletedAt: null },
       include: {
         artisan: {
           select: { id: true, name: true, image: true, locality: true },
@@ -91,9 +91,22 @@ export default async function ProductDetailPage({ params }: Props) {
 
   if (!product) notFound();
 
+  //Un producto no activo (vendido/no disponible) solo puede verlo la compradora que lo adquirió,
+  //accediendo desde el enlace de su pedido — para cualquier otra persona, es como si no existiera.
+  if (product.status !== "ACTIVE") {
+    const ownsPurchase =
+      session?.user?.role === "BUYER" &&
+      (await db.order.findFirst({
+        where: { productId: id, buyerId: session.user.id, deletedAt: null },
+        select: { id: true },
+      })) !== null;
+    if (!ownsPurchase) notFound();
+  }
+
   const isAuthenticated = !!session?.user;
   const isArtisan = session?.user?.role === "ARTISAN";
   const isOwner = isArtisan && session?.user?.id === product.artisan.id;
+  const isPurchasable = product.status === "ACTIVE";
   const badge = getProductBadge(product.status, product.expiresAt);
   const typeBadge = TYPE_BADGE[product.type] ?? null;
   const nextParam = `/product/${id}`;
@@ -179,25 +192,29 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="mt-6 flex gap-3">
             {isAuthenticated ? ( //Si no se rol artesana y es un usuario autenticado, se muestra el botón para comprar el producto.
               <>
-                <Link
-                  href={`/checkout?productId=${product.id}`}
-                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-                  aria-label="Comprar producto"
-                >
-                  Comprar
-                </Link>
+                {isPurchasable && (
+                  <Link
+                    href={`/checkout?productId=${product.id}`}
+                    className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                    aria-label="Comprar producto"
+                  >
+                    Comprar
+                  </Link>
+                )}
 
                 <SendMessageButton artisanId={product.artisan.id} />
               </>
             ) : (
               //Sino se tiene el rol de artesana y no es un usuario autenticado, se muestra un botón de comprar que apunta hacia la página de registro pasando por GET el parámetro next con la dirección de la paágina del producto para que una vez que el usuario se registre o inicie sesión, pueda retorna a la página del producto para finalizar la compra.
               <>
-                <Link
-                  href={`/register?next=${encodeURIComponent(nextParam)}`}
-                  className="flex-1 rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
-                >
-                  Comprar
-                </Link>
+                {isPurchasable && (
+                  <Link
+                    href={`/register?next=${encodeURIComponent(nextParam)}`}
+                    className="flex-1 rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                  >
+                    Comprar
+                  </Link>
+                )}
                 <Link
                   href={`/register?next=${encodeURIComponent(nextParam)}`}
                   className="flex-1 rounded-full border border-[#3d5a4f] py-3 text-center text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"

@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { logoutUser } from "~/app/(auth)/logout/actions";
 import PaletteAvatar from "~/components/PaletteAvatar";
-import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, Settings, ScrollText, MessageCircle } from "lucide-react";
+import { LogOut, Package, TrendingUp, User, Users, FileText, Shield, Cookie, Mail, ScrollText, MessageCircle, Images } from "lucide-react";
 
 type Props = {
   name: string | null;
@@ -77,21 +77,28 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
               {divider}
             </>
           ) : (
-            <>
-              <Link href={profileHref} onClick={close} className={linkClass}>
-                <User size={14} className={iconClass} />
-                Mi cuenta
+            // En móvil/tablet estas opciones ya están en BuyerBottomNav — solo se repiten aquí
+            // en escritorio (lg+), donde no hay bottom nav.
+            <div className="hidden lg:block">
+              <Link href="/orders" onClick={close} className={linkClass}>
+                <Package size={14} className={iconClass} />
+                Pedidos
+              </Link>
+              {/* TODO: apunta a /feed de forma temporal, ver BuyerBottomNav.tsx */}
+              <Link href="/feed" onClick={close} className={linkClass}>
+                <Images size={14} className={iconClass} />
+                Publicaciones
               </Link>
               <Link href="/messages" onClick={close} className={linkClass}>
                 <MessageCircle size={14} className={iconClass} />
                 Mensajes
               </Link>
-              <Link href="/account/settings" onClick={close} className={linkClass}>
-                <Settings size={14} className={iconClass} />
-                Configuración
+              <Link href={profileHref} onClick={close} className={linkClass}>
+                <User size={14} className={iconClass} />
+                Mi cuenta
               </Link>
               {divider}
-            </>
+            </div>
           )}
 
           {/* Enlaces legales — uno por línea, sección propia */}

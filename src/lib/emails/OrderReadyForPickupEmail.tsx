@@ -12,6 +12,7 @@ interface Props {
   artisanName: string;
   pickupAddress: string;
   pickupSchedule: string | null;
+  personalMessage: string | null;
 }
 
 export default function OrderReadyForPickupEmail({
@@ -22,6 +23,7 @@ export default function OrderReadyForPickupEmail({
   artisanName,
   pickupAddress,
   pickupSchedule,
+  personalMessage,
 }: Props) {
   return (
     <EmailLayout>
@@ -67,7 +69,7 @@ export default function OrderReadyForPickupEmail({
 
           <Column style={{ verticalAlign: "top", paddingLeft: "8px" }}>
             <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 1px 0" }}>
-              Número de pedido
+              Identificador de pedido
             </Text>
             <Text style={{ fontFamily: "monospace", color: textDark, fontSize: "13px", margin: "0 0 10px 0" }}>
               {orderId}
@@ -96,6 +98,19 @@ export default function OrderReadyForPickupEmail({
             </Text>
             <Text style={{ fontFamily: fontBody, color: textDark, fontSize: "13px", margin: 0 }}>
               {pickupSchedule}
+            </Text>
+          </>
+        )}
+
+        {/* Mensaje personal de la artesana (opcional) */}
+        {personalMessage && (
+          <>
+            <div style={{ borderTop: "1px solid #e0dbd0", margin: "16px 0 12px 0" }} />
+            <Text style={{ fontFamily: fontBody, color: muted, fontSize: "13px", margin: "0 0 1px 0" }}>
+              Mensaje
+            </Text>
+            <Text style={{ fontFamily: fontDisplay, color: textDark, fontSize: "13px", fontWeight: "600", margin: 0 }}>
+              {personalMessage}
             </Text>
           </>
         )}

@@ -120,7 +120,7 @@ export async function POST(
   await db.$transaction([
     db.order.update({
       where: { id: orderId },
-      data: { status: "CANCELLED", cancellationReason: reason },
+      data: { status: "CANCELLED", cancellationReason: reason, cancelledBy: "BUYER" },
     }),
     ...(canReactivateProduct(order.product)
       ? [

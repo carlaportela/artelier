@@ -85,6 +85,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
                 <SendMessageButton
                   artisanId={artisan.id}
                   className="px-4 py-1.5"
+                  variant="primary"
                 />
               )}
             </div>
