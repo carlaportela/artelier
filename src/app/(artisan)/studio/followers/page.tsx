@@ -52,7 +52,7 @@ export default async function FollowersPage() {
                   src={follower.image}
                   name={follower.name}
                   className="h-11 w-11 shrink-0"
-                  fillColor="#c4956a"
+                  fillColor="var(--brand-accent)"
                 />
                 <p className="text-sm font-medium text-foreground">
                   {follower.name} {follower.lastName}

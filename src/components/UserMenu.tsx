@@ -57,7 +57,7 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
           src={image}
           name={name}
           className="h-8 w-8"
-          fillColor={role === "ARTISAN" ? "#4a9e8c" : "#c4956a"}
+          fillColor={role === "ARTISAN" ? "var(--teal)" : "var(--brand-accent)"}
         />
       </button>
 

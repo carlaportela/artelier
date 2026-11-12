@@ -24,7 +24,7 @@ type Product = {
   status: "ACTIVE" | "SOLD" | "EXPIRED";
   imageUrls: string[];
   expiresAt: Date | null;
-  seals: { seal: { id: string; name: string } }[];
+  seals: { seal: { id: string; name: string; type: string } }[];
 };
 
 const fmt = (cents: number) =>

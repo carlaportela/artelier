@@ -135,7 +135,7 @@ export default async function OrderDetailPage({ params }: Props) {
               src={order.buyer.image}
               name={order.buyer.name}
               className="h-9 w-9 shrink-0"
-              fillColor="#c4956a"
+              fillColor="var(--brand-accent)"
             />
             <div>
               <p className="text-sm font-medium text-foreground">

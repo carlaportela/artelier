@@ -142,7 +142,7 @@ export default function AccountForm({ user }: AccountFormProps) {
             src={imageUrl || null}
             name={user.name}
             className="h-40 w-40"
-            fillColor="#c4956a"
+            fillColor="var(--brand-accent)"
           />
 
           {imageUrl ? (

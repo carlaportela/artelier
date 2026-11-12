@@ -9,15 +9,7 @@ import FollowButton from "~/components/artisan/FollowButton";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import DefaultBanner from "~/components/artisan/DefaultBanner";
 import SendMessageButton from "~/components/SendMessageButton";
-
-//Clases de estilo para los diferentes tipos de sellos de perfil.
-const SEAL_CLASS: Record<string, string> = {
-  mano:      "seal-mano",
-  eco:       "seal-eco",
-  reciclado: "seal-reciclado",
-  galicia:   "seal-galicia",
-  km0:       "seal-km0",
-};
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 
 //Argumentos que recibe la función del componente.
 interface ArtisanHeaderProps {
@@ -107,7 +99,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
               {sealRequests.map((sr) => (
                 <span
                   key={sr.id}
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-card text-muted-foreground"}`}
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? SEAL_FALLBACK_CLASS}`}
                 >
                   {sr.seal.name}
                 </span>

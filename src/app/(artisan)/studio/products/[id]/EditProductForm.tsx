@@ -21,7 +21,7 @@ import { SortableContext, useSortable, rectSortingStrategy } from "@dnd-kit/sort
 import { CSS } from "@dnd-kit/utilities";
 
 import CropModal from "~/components/CropModal";
-import { SealBadge } from "~/components/artisan/SealBadge";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "~/components/ui/dialog";
@@ -80,6 +80,7 @@ interface ProductData {
 interface SealData {
   id: string;
   name: string;
+  type: string;
 }
 
 //Argumentos que recibe el método editProductForm.
@@ -721,7 +722,12 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
               <p className="text-sm font-medium text-foreground">Sellos verificados</p>
               <div className="flex flex-wrap gap-2">
                 {seals.map((seal) => (
-                  <SealBadge key={seal.id} name={seal.name} />
+                  <span
+                    key={seal.id}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[seal.type] ?? SEAL_FALLBACK_CLASS}`}
+                  >
+                    {seal.name}
+                  </span>
                 ))}
               </div>
               <p className="text-xs text-muted-foreground">

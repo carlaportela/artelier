@@ -73,7 +73,7 @@ export default async function MensajesPage() {
                     src={conv.otherUser.image}
                     name={conv.otherUser.name}
                     className="h-11 w-11 shrink-0"
-                    fillColor="#c4956a"
+                    fillColor="var(--brand-accent)"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">

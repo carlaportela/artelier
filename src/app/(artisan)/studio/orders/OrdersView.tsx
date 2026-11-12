@@ -83,7 +83,7 @@ function OrderCard({
             src={order.buyer.image}
             name={order.buyer.name}
             className="h-8 w-8 shrink-0"
-            fillColor="#c4956a"
+            fillColor="var(--brand-accent)"
           />
           <div>
             <p className="text-sm font-medium text-foreground">{order.buyer.name ?? "Compradora"}</p>

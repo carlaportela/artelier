@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { SealBadge } from "~/components/artisan/SealBadge";
 import { getProductBadge } from "~/lib/product-badges";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 import { deleteProduct } from "./[id]/actions";
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
@@ -24,7 +24,7 @@ interface ProductCardProps {
     status: "ACTIVE" | "SOLD" | "EXPIRED";
     imageUrls: string[];
     expiresAt: Date | null;
-    seals: { seal: { id: string; name: string } }[];
+    seals: { seal: { id: string; name: string; type: string } }[];
   };
 }
 
@@ -84,7 +84,12 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Sellos + badge de estado — todos en el mismo contenedor bottom-left */}
           <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
             {product.seals.map((ps) => (
-              <SealBadge key={ps.seal.id} name={ps.seal.name} />
+              <span
+                key={ps.seal.id}
+                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[ps.seal.type] ?? SEAL_FALLBACK_CLASS}`}
+              >
+                {ps.seal.name}
+              </span>
             ))}
             {(() => {
               const badge = getProductBadge(product.status, product.expiresAt);

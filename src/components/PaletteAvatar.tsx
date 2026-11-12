@@ -35,7 +35,7 @@ export default function PaletteAvatar({
   src,
   name,
   className = "h-20 w-20",
-  fillColor = "#4a9e8c",
+  fillColor = "var(--teal)",
   plain = true,
 }: Props) {
   const uid    = useId().replace(/:/g, "");
@@ -45,7 +45,7 @@ export default function PaletteAvatar({
   return (
     <svg
       viewBox="0 0 24 24"
-      className={className}
+      className={`palette-avatar ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-label={name ?? "Avatar"}
@@ -62,9 +62,9 @@ export default function PaletteAvatar({
       {/* Anillo en el color de fondo de la app para separar el avatar del banner */}
       {!plain && (
         <>
-          <circle cx="12" cy="12" r={RING_R} fill="#f4f0e8" />
+          <circle cx="12" cy="12" r={RING_R} fill="var(--background)" />
           {BUMPS.map((b, i) => (
-            <circle key={i} cx={b.cx} cy={b.cy} r={RING_BUMP_R} fill="#f4f0e8" />
+            <circle key={i} cx={b.cx} cy={b.cy} r={RING_BUMP_R} fill="var(--background)" />
           ))}
         </>
       )}

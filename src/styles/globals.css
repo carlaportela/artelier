@@ -180,14 +180,6 @@
       linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
   }
-
-  /* Banner por defecto: textura lino — tramado cruzado sobre fondo crema cálido */
-  .banner-lino {
-    background-color: #e8ddd0;
-    background-image:
-      repeating-linear-gradient(0deg,   transparent, transparent 3px, rgba(160,140,110,0.13) 3px, rgba(160,140,110,0.13) 4px),
-      repeating-linear-gradient(90deg,  transparent, transparent 3px, rgba(160,140,110,0.13) 3px, rgba(160,140,110,0.13) 4px);
-  }
 }
 
 /* ─── Scrollbar personalizada ─────────────────────────────────────────────── */

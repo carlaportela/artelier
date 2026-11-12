@@ -60,12 +60,12 @@ export default async function ConversationPage({ params }: Props) {
         <div className="flex md:flex-1 md:justify-center">
           {otherProfileHref ? (
             <Link href={otherProfileHref} className="flex items-center gap-2">
-              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#4a9e8c" />
+              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="var(--teal)" />
               <span className="font-display mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Artesana"}</span>
             </Link>
           ) : (
             <div className="flex items-center gap-2">
-              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#c4956a" />
+              <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="var(--brand-accent)" />
               <span className="font-display mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Compradora"}</span>
             </div>
           )}

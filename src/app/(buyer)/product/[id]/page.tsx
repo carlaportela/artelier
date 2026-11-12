@@ -12,8 +12,8 @@ import SendMessageButton from "~/components/SendMessageButton";
 import { db } from "~/server/db";
 import { getServerSession } from "~/server/auth/session";
 import PaletteAvatar from "~/components/PaletteAvatar";
-import { SealBadge } from "~/components/artisan/SealBadge";
 import { getProductBadge } from "~/lib/product-badges";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 import ImageCarousel from "./ImageCarousel";
 import { TypeBadge } from "./TypeBadge";
 
@@ -168,7 +168,12 @@ export default async function ProductDetailPage({ params }: Props) {
           {product.seals.length > 0 && (
             <div className="flex flex-wrap gap-1.5 pt-1">
               {product.seals.map((ps) => (
-                <SealBadge key={ps.seal.name} name={ps.seal.name} />
+                <span
+                  key={ps.seal.name}
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[ps.seal.type] ?? SEAL_FALLBACK_CLASS}`}
+                >
+                  {ps.seal.name}
+                </span>
               ))}
             </div>
           )}

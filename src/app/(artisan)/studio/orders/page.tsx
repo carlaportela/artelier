@@ -101,7 +101,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                     src={order.buyer.image}
                     name={order.buyer.name}
                     className="h-11 w-11 shrink-0"
-                    fillColor="#c4956a"
+                    fillColor="var(--brand-accent)"
                   />
                   <p className="text-xs text-muted-foreground">
                     {order.buyer.name} {order.buyer.lastName} ·{" "}

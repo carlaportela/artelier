@@ -11,14 +11,8 @@ import { Pencil, Plus, Loader2, MapPin, ScanSearch, Camera, Trash2 } from "lucid
 import { saveProfile } from "./actions";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import CropModal from "~/components/CropModal";
-
-const SEAL_CLASS: Record<string, string> = {
-  mano:      "seal-mano",
-  eco:       "seal-eco",
-  reciclado: "seal-reciclado",
-  galicia:   "seal-galicia",
-  km0:       "seal-km0",
-};
+import DefaultBanner from "~/components/artisan/DefaultBanner";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 
 interface Props {
   user: {
@@ -130,7 +124,7 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
         {bannerUrl ? (
           <Image src={bannerUrl} alt="" fill className="object-cover" priority />
         ) : (
-          <div className="banner-lino h-full w-full" />
+          <DefaultBanner />
         )}
 
         <div className="absolute right-4 top-3">
@@ -244,7 +238,7 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
           {sealRequests.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {sealRequests.map((sr) => (
-                <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-card text-muted-foreground"}`}>
+                <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? SEAL_FALLBACK_CLASS}`}>
                   {sr.seal.name}
                 </span>
               ))}

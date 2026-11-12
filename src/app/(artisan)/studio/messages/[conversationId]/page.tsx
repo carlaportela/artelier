@@ -43,7 +43,7 @@ export default async function MensajeConversacionPage({ params }: Props) {
             src={otherUser.image}
             name={otherUser.name}
             className="h-9 w-9 shrink-0"
-            fillColor="#c4956a"
+            fillColor="var(--brand-accent)"
           />
           <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Compradora"}</span>
         </div>

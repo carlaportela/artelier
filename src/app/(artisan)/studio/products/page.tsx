@@ -27,7 +27,7 @@ export default async function StudioProductsPage() {
       expiresAt: true,
       seals: {
         select: {
-          seal: { select: { id: true, name: true } },
+          seal: { select: { id: true, name: true, type: true } },
         },
       },
     },
