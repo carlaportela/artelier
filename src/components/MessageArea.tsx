@@ -368,7 +368,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
               placeholder="Escribe un mensaje..."
               rows={1}
               disabled={sending || uploadingImage}
-              className="h-full w-full resize-none overflow-hidden rounded-2xl border border-border bg-card py-2.5 pl-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-60"
+              className="h-full w-full resize-none overflow-hidden rounded-2xl border border-border bg-card py-2.5 pl-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
             />
             <button
               type="button"
