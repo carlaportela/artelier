@@ -50,13 +50,13 @@ function formatDate(date: Date) {
 function StatusBadge({ status }: { status: CustomOrder["status"] }) {
   if (status === "ACCEPTED") {
     return (
-      <span className="rounded px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-50">
+      <span className="rounded px-2 py-0.5 text-xs font-medium text-primary bg-muted">
         Aceptado
       </span>
     );
   }
   return (
-    <span className="rounded px-2 py-0.5 text-xs font-medium text-gray-500 bg-gray-100">
+    <span className="rounded px-2 py-0.5 text-xs font-medium text-muted-foreground bg-muted">
       Rechazado
     </span>
   );
@@ -76,28 +76,28 @@ function OrderCard({
   const budget = formatBudget(order.budgetInCents);
 
   return (
-    <div className="rounded-xl border border-[#ccc8bc]/60 bg-white p-4">
+    <div className="rounded-xl border border-border/60 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <PaletteAvatar
             src={order.buyer.image}
             name={order.buyer.name}
             className="h-8 w-8 shrink-0"
-            fillColor="#c4956a"
+            fillColor="var(--brand-accent)"
           />
           <div>
-            <p className="text-sm font-medium text-[--text]">{order.buyer.name ?? "Compradora"}</p>
-            <p className="text-xs text-[--text-muted]">{formatDate(order.createdAt)}</p>
+            <p className="text-sm font-medium text-foreground">{order.buyer.name ?? "Compradora"}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)}</p>
           </div>
         </div>
         {order.status !== "PENDING" && <StatusBadge status={order.status} />}
       </div>
 
-      <p className="mt-3 text-sm text-[--text]">{order.description}</p>
+      <p className="mt-3 text-sm text-foreground">{order.description}</p>
 
       {budget && (
-        <p className="mt-2 text-xs text-[--text-muted]">
-          Presupuesto sugerido: <span className="font-medium text-[--text]">{budget}</span>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Presupuesto sugerido: <span className="font-medium text-foreground">{budget}</span>
         </p>
       )}
 
@@ -106,7 +106,7 @@ function OrderCard({
           <button
             onClick={onAccept}
             disabled={isLoading}
-            className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+            className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
           >
             Aceptar
           </button>
@@ -155,14 +155,14 @@ export default function PedidosView({ pending, processed }: Props) {
   if (pending.length === 0 && processed.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3d5a4f]/10">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
           <span className="text-2xl">📦</span>
         </div>
         <div>
-          <p className="font-display text-base font-bold text-[--text]">
+          <p className="font-display text-base font-bold text-foreground">
             Aún no has recibido encargos personalizados
           </p>
-          <p className="mt-1 max-w-xs text-sm text-[--text-muted]">
+          <p className="mt-1 max-w-xs text-sm text-muted-foreground">
             Cuando una compradora solicite un encargo desde tu perfil público, aparecerá aquí.
           </p>
         </div>
@@ -175,7 +175,7 @@ export default function PedidosView({ pending, processed }: Props) {
       {/* Solicitudes pendientes */}
       {pending.length > 0 && (
         <section>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[--text-muted]">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Pendientes ({pending.length})
           </h2>
           <div className="flex flex-col gap-3">
@@ -195,7 +195,7 @@ export default function PedidosView({ pending, processed }: Props) {
       {/* Histórico */}
       {processed.length > 0 && (
         <section>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-[--text-muted]">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Histórico
           </h2>
           <div className="flex flex-col gap-3">
@@ -218,13 +218,13 @@ export default function PedidosView({ pending, processed }: Props) {
           <DialogFooter>
             <button
               onClick={() => setConfirmAccept(null)}
-              className="rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] hover:bg-[#ccc8bc]/30"
+              className="rounded-full border border-border px-4 py-2 text-sm text-foreground hover:bg-border"
             >
               Cancelar
             </button>
             <button
               onClick={() => confirmAccept && handleAccept(confirmAccept)}
-              className="rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a6b5e]"
+              className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
             >
               Aceptar encargo
             </button>
@@ -244,7 +244,7 @@ export default function PedidosView({ pending, processed }: Props) {
           <DialogFooter>
             <button
               onClick={() => setConfirmReject(null)}
-              className="rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] hover:bg-[#ccc8bc]/30"
+              className="rounded-full border border-border px-4 py-2 text-sm text-foreground hover:bg-border"
             >
               Cancelar
             </button>

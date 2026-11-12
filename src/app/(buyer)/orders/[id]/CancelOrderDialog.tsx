@@ -77,7 +77,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
           <div className="space-y-2">
             <label
               htmlFor="cancel-reason"
-              className="text-sm font-medium text-[--text]"
+              className="text-sm font-medium text-foreground"
             >
               Motivo de la cancelación
             </label>
@@ -87,7 +87,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
               onChange={(e) => setReason(e.target.value)}
               placeholder="Explica el motivo de tu cancelación (mínimo 10 caracteres)"
               rows={3}
-              className="w-full resize-none rounded-xl border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-2 focus:ring-[#3d5a4f]/30"
+              className="w-full resize-none rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             {reason.trim().length > 0 && reason.trim().length < 10 && (
               <p className="text-xs text-red-500">
@@ -100,7 +100,7 @@ export default function CancelOrderDialog({ orderId }: Props) {
             <button
               onClick={() => setOpen(false)}
               disabled={loading}
-              className="rounded-full border border-[--border] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[--surface-2] disabled:opacity-50"
+              className="rounded-full border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-muted disabled:opacity-50"
             >
               Volver
             </button>

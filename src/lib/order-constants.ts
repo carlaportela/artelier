@@ -14,13 +14,13 @@ export const SHIPPING_METHOD_LABELS: Record<string, string> = {
 
 //Color del punto indicador según el estado del pedido: mostaza = en curso, verde = completado, gris = cerrado, rojo = requiere atención.
 export const ORDER_STATUS_DOT: Record<string, string> = {
-  CONFIRMED: "bg-[#c4956a]",
-  IN_PREPARATION: "bg-[#c4956a]",
-  READY: "bg-[#c4956a]",
-  SHIPPED: "bg-[#c4956a]",
-  DELIVERED: "bg-[#3d5a4f]",
-  ACCEPTED: "bg-[#3d5a4f]",
-  CANCELLED: "bg-[#94a49e]",
-  REFUNDED: "bg-[#94a49e]",
+  CONFIRMED: "bg-brand",
+  IN_PREPARATION: "bg-brand",
+  READY: "bg-brand",
+  SHIPPED: "bg-brand",
+  DELIVERED: "bg-primary",
+  ACCEPTED: "bg-primary",
+  CANCELLED: "bg-neutral",
+  REFUNDED: "bg-neutral",
   IN_DISPUTE: "bg-red-600",
 };

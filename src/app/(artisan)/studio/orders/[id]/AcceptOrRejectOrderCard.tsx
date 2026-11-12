@@ -115,11 +115,11 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
   }
 
   return (
-    <div className="space-y-3 rounded-xl border border-[--border] bg-[--surface] p-4">
-      <p className="text-sm font-medium text-[--text]">
+    <div className="space-y-3 rounded-xl border border-border bg-card p-4">
+      <p className="text-sm font-medium text-foreground">
         Tienes un pedido nuevo — decide si lo aceptas
       </p>
-      <p className="text-xs text-[--text-muted]">
+      <p className="text-xs text-muted-foreground">
         {expired
           ? "El plazo para decidir ha expirado. El pedido se cancelará automáticamente."
           : `Quedan ${formatRemaining(remaining)} para decidir. Si no respondes a tiempo, el pedido se cancelará automáticamente.`}
@@ -129,7 +129,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
         <button
           onClick={handleAccept}
           disabled={loading || expired}
-          className="flex-1 rounded-full bg-[#3d5a4f] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+          className="flex-1 rounded-full bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
         >
           Aceptar pedido
         </button>
@@ -152,7 +152,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
           </DialogHeader>
 
           <div className="space-y-2">
-            <label htmlFor="reject-reason" className="text-sm font-medium text-[--text]">
+            <label htmlFor="reject-reason" className="text-sm font-medium text-foreground">
               Motivo del rechazo
             </label>
             <textarea
@@ -161,7 +161,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
               onChange={(e) => setReason(e.target.value)}
               placeholder="Explica el motivo (mínimo 10 caracteres)"
               rows={3}
-              className="w-full resize-none rounded-xl border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-2 focus:ring-[#3d5a4f]/30"
+              className="w-full resize-none rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             {reason.trim().length > 0 && reason.trim().length < 10 && (
               <p className="text-xs text-red-500">
@@ -174,7 +174,7 @@ export default function AcceptOrRejectOrderCard({ orderId, createdAt }: Props) {
             <button
               onClick={() => setRejectOpen(false)}
               disabled={loading}
-              className="rounded-full border border-[--border] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[--surface-2] disabled:opacity-50"
+              className="rounded-full border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-muted disabled:opacity-50"
             >
               Volver
             </button>

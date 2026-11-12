@@ -48,16 +48,16 @@ export default async function MensajesPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-[--bg]">
+    <main className="min-h-screen bg-background">
       <div className="px-4 py-6">
-        <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Mensajes</h1>
+        <h1 className="mb-6 font-display text-xl font-bold text-foreground">Mensajes</h1>
 
         {convList.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3d5a4f]/10">
-              <MessageCircle size={24} className="text-[#3d5a4f]" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <MessageCircle size={24} className="text-primary" />
             </div>
-            <p className="text-sm text-[--text-muted]">
+            <p className="text-sm text-muted-foreground">
               Tus conversaciones con compradoras aparecerán aquí
             </p>
           </div>
@@ -73,25 +73,25 @@ export default async function MensajesPage() {
                     src={conv.otherUser.image}
                     name={conv.otherUser.name}
                     className="h-11 w-11 shrink-0"
-                    fillColor="#c4956a"
+                    fillColor="var(--brand-accent)"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-display truncate text-base font-bold text-[--text]">
+                      <span className="font-display truncate text-base font-bold text-foreground">
                         {conv.otherUser.name ?? "Compradora"}
                       </span>
                       {conv.lastMessage && (
-                        <span className="shrink-0 text-xs text-[--text-muted]">
+                        <span className="shrink-0 text-xs text-muted-foreground">
                           {timeAgo(new Date(conv.lastMessage.createdAt))}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <p className="line-clamp-1 flex-1 text-xs text-[--text-muted]">
+                      <p className="line-clamp-1 flex-1 text-xs text-muted-foreground">
                         {conv.lastMessage?.content ?? "Sin mensajes aún"}
                       </p>
                       {conv.unreadCount > 0 && (
-                        <span className="h-2 w-2 shrink-0 rounded-full bg-[#3d5a4f]" />
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-primary" />
                       )}
                     </div>
                   </div>

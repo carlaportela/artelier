@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import { SealBadge } from "~/components/artisan/SealBadge";
 import { getProductBadge } from "~/lib/product-badges";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 import { deleteProduct } from "./[id]/actions";
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
@@ -24,7 +24,7 @@ interface ProductCardProps {
     status: "ACTIVE" | "SOLD" | "EXPIRED";
     imageUrls: string[];
     expiresAt: Date | null;
-    seals: { seal: { id: string; name: string } }[];
+    seals: { seal: { id: string; name: string; type: string } }[];
   };
 }
 
@@ -57,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className={`group relative overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-colors ${product.status !== "EXPIRED" ? "hover:border-[#c4956a]/40" : "opacity-75"}`}>
+      <div className={`group relative overflow-hidden rounded-xl border border-border bg-card transition-colors ${product.status !== "EXPIRED" ? "hover:border-brand/40" : "opacity-75"}`}>
         {/* Imagen — Link que navega a editar al hacer clic en cualquier punto de la foto */}
         <Link href={`/studio/products/${product.id}`} className="relative block aspect-square" aria-label={`Editar ${product.name}`}>
           {product.imageUrls[0] ? (
@@ -69,8 +69,8 @@ export function ProductCard({ product }: ProductCardProps) {
               sizes="(max-width: 512px) 50vw, 256px"
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-[--surface-2]">
-              <span className="text-xs text-[--text-muted]">Sin imagen</span>
+            <div className="flex h-full items-center justify-center bg-muted">
+              <span className="text-xs text-muted-foreground">Sin imagen</span>
             </div>
           )}
 
@@ -84,7 +84,12 @@ export function ProductCard({ product }: ProductCardProps) {
           {/* Sellos + badge de estado — todos en el mismo contenedor bottom-left */}
           <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
             {product.seals.map((ps) => (
-              <SealBadge key={ps.seal.id} name={ps.seal.name} />
+              <span
+                key={ps.seal.id}
+                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[ps.seal.type] ?? SEAL_FALLBACK_CLASS}`}
+              >
+                {ps.seal.name}
+              </span>
             ))}
             {(() => {
               const badge = getProductBadge(product.status, product.expiresAt);
@@ -119,9 +124,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Info (clickable → editar producto) */}
         <Link href={`/studio/products/${product.id}`} className="block p-3">
-          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
+          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-muted-foreground" : "text-foreground"}`}>{product.name}</p>
           <div className="mt-1">
-            <p className="text-xs text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
+            <p className="text-xs text-primary">{fmt(product.priceInCents)}</p>
           </div>
         </Link>
       </div>
@@ -130,10 +135,10 @@ export function ProductCard({ product }: ProductCardProps) {
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
           <div className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="mb-2 font-display text-base font-semibold text-[--text]">
+            <h2 className="mb-2 font-display text-base font-semibold text-foreground">
               ¿Eliminar este producto?
             </h2>
-            <p className="mb-5 text-sm text-[--text-muted]">
+            <p className="mb-5 text-sm text-muted-foreground">
               El producto desaparecerá de tu catálogo. Esta acción no se puede deshacer.
             </p>
             <div className="flex gap-3">
@@ -148,7 +153,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+                className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm text-foreground transition-colors hover:bg-border"
               >
                 Cancelar
               </button>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
-const CLASSES = "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[--border] px-3 py-1.5 text-sm text-[--text-muted] transition-colors hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]";
+const CLASSES = "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary";
 
 interface BackButtonProps {
   href?: string;

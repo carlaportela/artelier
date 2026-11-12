@@ -181,8 +181,8 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className={`w-full ${aspectRatio >= 2 ? "max-w-md" : "max-w-sm"} rounded-2xl bg-[#f4f0e8] p-6 shadow-2xl`}>
-        <h2 className="mb-4 font-display text-lg font-bold text-[--text]">
+      <div className={`w-full ${aspectRatio >= 2 ? "max-w-md" : "max-w-sm"} rounded-2xl bg-background p-6 shadow-2xl`}>
+        <h2 className="mb-4 font-display text-lg font-bold text-foreground">
           Ajusta {label}
         </h2>
 
@@ -250,7 +250,7 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               setScale(newScale);
               setOffset((prev) => clamp(prev.x, prev.y, newScale));
             }}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#ccc8bc] text-lg font-bold text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-40"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-lg font-bold text-foreground transition-colors hover:bg-border disabled:opacity-40"
             disabled={scale <= minScale() + 0.001}
           >
             −
@@ -264,13 +264,13 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
               setScale(newScale);
               setOffset((prev) => clamp(prev.x, prev.y, newScale));
             }}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#ccc8bc] text-lg font-bold text-[--text] transition-colors hover:bg-[#ccc8bc]"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-lg font-bold text-foreground transition-colors hover:bg-border"
           >
             +
           </button>
         </div>
 
-        <p className="mt-1.5 text-center text-xs text-[--text-muted]">
+        <p className="mt-1.5 text-center text-xs text-muted-foreground">
           Puedes arrastrar o hacer zoom
         </p>
 
@@ -288,14 +288,14 @@ export default function CropModal({ file, aspectRatio, shape, label, onConfirm, 
             <button
               type="button"
               onClick={handleConfirm}
-              className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+              className="cursor-pointer rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
             >
               Aplicar
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+              className="cursor-pointer rounded-full border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-border"
             >
               Cancelar
             </button>

@@ -142,7 +142,7 @@ export default function AccountForm({ user }: AccountFormProps) {
             src={imageUrl || null}
             name={user.name}
             className="h-40 w-40"
-            fillColor="#c4956a"
+            fillColor="var(--brand-accent)"
           />
 
           {imageUrl ? (
@@ -151,14 +151,14 @@ export default function AccountForm({ user }: AccountFormProps) {
               aria-label="Editar foto de perfil"
               onClick={() => setShowPhotoMenu((v) => !v)}
               disabled={uploading}
-              className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-60"
+              className="absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-colors hover:bg-primary-hover disabled:opacity-60"
             >
               <Pencil size={13} />
             </button>
           ) : (
             <label
               htmlFor="avatar-upload"
-              className={`absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
+              className={`absolute bottom-3 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-colors hover:bg-primary-hover ${uploading ? "cursor-not-allowed opacity-60" : ""}`}
             >
               <Plus size={15} />
             </label>
@@ -167,11 +167,11 @@ export default function AccountForm({ user }: AccountFormProps) {
           {showPhotoMenu && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowPhotoMenu(false)} />
-              <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+              <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-border bg-card py-1 shadow-lg">
                 <button
                   type="button"
                   onClick={handleReajustar}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary"
                 >
                   <ScanSearch size={14} className="shrink-0" />
                   Reajustar
@@ -179,7 +179,7 @@ export default function AccountForm({ user }: AccountFormProps) {
                 <button
                   type="button"
                   onClick={() => { fileInputRef.current?.click(); setShowPhotoMenu(false); }}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]"
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary"
                 >
                   <Camera size={14} className="shrink-0" />
                   Cambiar
@@ -210,7 +210,7 @@ export default function AccountForm({ user }: AccountFormProps) {
             if (file) { e.target.value = ""; setShowPhotoMenu(false); setCropFile(file); }
           }}
         />
-        {uploading && <p className="text-xs text-[--text-muted]">Subiendo...</p>}
+        {uploading && <p className="text-xs text-muted-foreground">Subiendo...</p>}
         {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
       </div>
 
@@ -220,68 +220,68 @@ export default function AccountForm({ user }: AccountFormProps) {
 
           {/* Datos personales */}
           <div className="space-y-3">
-            <h2 className="font-display text-lg text-[--text]">Datos personales</h2>
+            <h2 className="font-display text-lg text-foreground">Datos personales</h2>
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
-              <p className="text-sm text-[--text]">{user.name ?? <span className="italic text-[--text-muted]">Sin nombre</span>}</p>
+              <label className="text-sm font-medium leading-none text-muted-foreground">{t("name")}</label>
+              <p className="text-sm text-foreground">{user.name ?? <span className="italic text-muted-foreground">Sin nombre</span>}</p>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Apellidos</label>
-              <p className="text-sm text-[--text]">{user.lastName ?? ""}</p>
+              <label className="text-sm font-medium leading-none text-muted-foreground">Apellidos</label>
+              <p className="text-sm text-foreground">{user.lastName ?? ""}</p>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
-              <p className="text-sm text-[--text]">{user.locality ?? <span className="italic text-[--text-muted]">Sin localidad</span>}</p>
+              <label className="text-sm font-medium leading-none text-muted-foreground">{t("locality")}</label>
+              <p className="text-sm text-foreground">{user.locality ?? <span className="italic text-muted-foreground">Sin localidad</span>}</p>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
-              <p className="text-sm text-[--text-muted]">{email}</p>
+              <label className="text-sm font-medium leading-none text-muted-foreground">Correo electrónico</label>
+              <p className="text-sm text-muted-foreground">{email}</p>
             </div>
           </div>
 
-          <div className="border-t border-[--border]" />
+          <div className="border-t border-border" />
 
           {/* Dirección de envío */}
           <div className="space-y-3">
-            <h2 className="font-display text-lg text-[--text]">Dirección de envío</h2>
+            <h2 className="font-display text-lg text-foreground">Dirección de envío</h2>
             {hasAddress ? (
               <div className="space-y-3">
                 {user.street && (
                   <div className="space-y-1">
-                    <label className="text-sm font-medium leading-none text-[--text-muted]">Calle y número</label>
-                    <p className="text-sm text-[--text]">{user.street}</p>
+                    <label className="text-sm font-medium leading-none text-muted-foreground">Calle y número</label>
+                    <p className="text-sm text-foreground">{user.street}</p>
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-3">
                   {user.postalCode && (
                     <div className="space-y-1">
-                      <label className="text-sm font-medium leading-none text-[--text-muted]">Código postal</label>
-                      <p className="text-sm text-[--text]">{user.postalCode}</p>
+                      <label className="text-sm font-medium leading-none text-muted-foreground">Código postal</label>
+                      <p className="text-sm text-foreground">{user.postalCode}</p>
                     </div>
                   )}
                   {user.city && (
                     <div className="space-y-1">
-                      <label className="text-sm font-medium leading-none text-[--text-muted]">Ciudad</label>
-                      <p className="text-sm text-[--text]">{user.city}</p>
+                      <label className="text-sm font-medium leading-none text-muted-foreground">Ciudad</label>
+                      <p className="text-sm text-foreground">{user.city}</p>
                     </div>
                   )}
                 </div>
                 {user.province && (
                   <div className="space-y-1">
-                    <label className="text-sm font-medium leading-none text-[--text-muted]">Provincia</label>
-                    <p className="text-sm text-[--text]">{user.province}</p>
+                    <label className="text-sm font-medium leading-none text-muted-foreground">Provincia</label>
+                    <p className="text-sm text-foreground">{user.province}</p>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-sm text-[--text-muted]">Aún no se ha guardado ninguna dirección</p>
+              <p className="text-sm text-muted-foreground">Aún no se ha guardado ninguna dirección</p>
             )}
           </div>
 
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+            className="w-full cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
           >
             Editar perfil
           </button>
@@ -289,13 +289,13 @@ export default function AccountForm({ user }: AccountFormProps) {
       ) : (
         /* ── Modo edición ── */
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <h2 className="font-display text-lg text-[--text]">Datos personales</h2>
+          <h2 className="font-display text-lg text-foreground">Datos personales</h2>
           <div className="space-y-1">
-            <label htmlFor="name" className="text-sm font-medium leading-none text-[--text-muted]">{t("name")}</label>
+            <label htmlFor="name" className="text-sm font-medium leading-none text-muted-foreground">{t("name")}</label>
             <input
               id="name"
               {...form.register("name")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
             />
             {form.formState.errors.name && (
               <p className="text-xs text-red-600">{form.formState.errors.name.message}</p>
@@ -303,21 +303,21 @@ export default function AccountForm({ user }: AccountFormProps) {
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="lastName" className="text-sm font-medium leading-none text-[--text-muted]">Apellidos</label>
+            <label htmlFor="lastName" className="text-sm font-medium leading-none text-muted-foreground">Apellidos</label>
             <input
               id="lastName"
               {...form.register("lastName")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
             />
           </div>
 
           <div className="space-y-1">
-            <label htmlFor="locality" className="text-sm font-medium leading-none text-[--text-muted]">{t("locality")}</label>
+            <label htmlFor="locality" className="text-sm font-medium leading-none text-muted-foreground">{t("locality")}</label>
             <input
               id="locality"
               placeholder="Ej: Santiago de Compostela"
               {...form.register("locality")}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
             />
             {form.formState.errors.locality && (
               <p className="text-xs text-red-600">{form.formState.errors.locality.message}</p>
@@ -326,56 +326,56 @@ export default function AccountForm({ user }: AccountFormProps) {
 
           {email && (
             <div className="space-y-1">
-              <label className="text-sm font-medium leading-none text-[--text-muted]">Correo electrónico</label>
-              <div className="w-full rounded-md border border-[--border] bg-black/[0.04] px-3 py-2 text-sm text-[--text-muted]">
+              <label className="text-sm font-medium leading-none text-muted-foreground">Correo electrónico</label>
+              <div className="w-full rounded-md border border-border bg-black/[0.04] px-3 py-2 text-sm text-muted-foreground">
                 {email}
               </div>
-              <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-                <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-                <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse.</p>
+              <div className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2">
+                <Info size={13} className="mt-0.5 shrink-0 text-primary/60" />
+                <p className="text-xs text-muted-foreground">El correo electrónico no puede modificarse.</p>
               </div>
             </div>
           )}
 
-          <div className="border-t border-[--border] pt-2">
-            <h2 className="mb-3 font-display text-lg text-[--text]">Dirección de envío</h2>
+          <div className="border-t border-border pt-2">
+            <h2 className="mb-3 font-display text-lg text-foreground">Dirección de envío</h2>
             <div className="space-y-3">
               <div className="space-y-1">
-                <label htmlFor="street" className="text-sm font-medium leading-none text-[--text-muted]">Calle y número</label>
+                <label htmlFor="street" className="text-sm font-medium leading-none text-muted-foreground">Calle y número</label>
                 <input
                   id="street"
                   placeholder="Calle Artesanía 123 - 1ºA"
                   {...form.register("street")}
-                  className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label htmlFor="postalCode" className="text-sm font-medium leading-none text-[--text-muted]">Código postal</label>
+                  <label htmlFor="postalCode" className="text-sm font-medium leading-none text-muted-foreground">Código postal</label>
                   <input
                     id="postalCode"
                     placeholder="15001"
                     {...form.register("postalCode")}
-                    className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label htmlFor="city" className="text-sm font-medium leading-none text-[--text-muted]">Ciudad</label>
+                  <label htmlFor="city" className="text-sm font-medium leading-none text-muted-foreground">Ciudad</label>
                   <input
                     id="city"
                     placeholder="Santiago de Compostela"
                     {...form.register("city")}
-                    className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+                    className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                   />
                 </div>
               </div>
               <div className="space-y-1">
-                <label htmlFor="province" className="text-sm font-medium leading-none text-[--text-muted]">Provincia</label>
+                <label htmlFor="province" className="text-sm font-medium leading-none text-muted-foreground">Provincia</label>
                 <input
                   id="province"
                   placeholder="A Coruña"
                   {...form.register("province")}
-                  className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-[#3d5a4f]"
+                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -385,14 +385,14 @@ export default function AccountForm({ user }: AccountFormProps) {
             <button
               type="submit"
               disabled={isPending || uploading}
-              className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex-1 cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isPending ? "Guardando..." : t("saveChanges")}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 cursor-pointer rounded-full border border-[--border] py-2 text-sm font-medium text-[--text-muted] transition-colors hover:bg-[--surface-2]"
+              className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted"
             >
               Cancelar
             </button>

@@ -40,9 +40,9 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
   const close = () => setOpen(false);
 
   const linkClass =
-    "flex cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]";
-  const iconClass = "shrink-0 text-[--text-muted]";
-  const divider = <div className="mx-3 my-1 border-t border-[--border]" />;
+    "flex cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary";
+  const iconClass = "shrink-0 text-muted-foreground";
+  const divider = <div className="mx-3 my-1 border-t border-border" />;
 
   return (
     <div ref={ref} className="relative">
@@ -57,13 +57,13 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
           src={image}
           name={name}
           className="h-8 w-8"
-          fillColor={role === "ARTISAN" ? "#4a9e8c" : "#c4956a"}
+          fillColor={role === "ARTISAN" ? "var(--teal)" : "var(--brand-accent)"}
         />
       </button>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-4 w-52 rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+        <div className="absolute right-0 top-full z-50 mt-4 w-52 rounded-xl border border-border bg-card py-1 shadow-lg">
           {role === "ARTISAN" ? (
             <>
               <Link href="/studio/statistics" onClick={close} className={linkClass}>
@@ -107,7 +107,7 @@ export default function UserMenu({ name, image, role, profileHref }: Props) {
               key={href}
               href={href}
               onClick={close}
-              className="flex cursor-pointer items-center gap-2.5 px-4 py-2 text-sm text-[--text-muted] transition-colors hover:text-[#c4956a]"
+              className="flex cursor-pointer items-center gap-2.5 px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-brand"
             >
               <Icon size={14} className="shrink-0" />
               {label}

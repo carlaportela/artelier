@@ -84,13 +84,13 @@ export default async function ArtisanPublicPage({ params }: Props) {
     : null;
 
   return (
-    <main className="min-h-screen bg-[--bg]">
+    <main className="min-h-screen bg-background">
       {isOwnProfile ? (
         <div className="flex items-center justify-between px-4 pt-8 pb-4">
-          <h1 className="font-display text-xl font-bold text-[--text]">Mi puesto de artesanía</h1>
+          <h1 className="font-display text-xl font-bold text-foreground">Mi puesto de artesanía</h1>
           <Link
             href="/studio/profile"
-            className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+            className="cursor-pointer rounded-full border border-border px-4 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-border"
           >
             Volver a mi perfil
           </Link>

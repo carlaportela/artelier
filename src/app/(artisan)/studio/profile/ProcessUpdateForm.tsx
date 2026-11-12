@@ -56,10 +56,10 @@ export default function ProcessUpdateForm() {
           rows={3}
           maxLength={500}
           placeholder={t("processUpdatePlaceholder")}
-          className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-0"
           {...form.register("content")}
         />
-        <p className="text-right text-xs text-[--text-muted]">
+        <p className="text-right text-xs text-muted-foreground">
           {form.watch("content")?.length ?? 0}/500
         </p>
         {form.formState.errors.content && (
@@ -103,7 +103,7 @@ export default function ProcessUpdateForm() {
         />
         <label
           htmlFor="process-image"
-          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploading ? "cursor-not-allowed opacity-50" : ""}`}
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-muted ${uploading ? "cursor-not-allowed opacity-50" : ""}`}
         >
           <Upload size={13} />
           {uploading ? "Subiendo..." : imageUrl ? "Cambiar imagen" : "Adjuntar imagen"}
@@ -111,7 +111,7 @@ export default function ProcessUpdateForm() {
         {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
       </div>
 
-      <Button type="submit" disabled={isPending || uploading} className="w-full cursor-pointer hover:bg-[#4a6b5e]">
+      <Button type="submit" disabled={isPending || uploading} className="w-full cursor-pointer hover:bg-primary-hover">
         {isPending ? t("publishing") : t("addProcessUpdate")}
       </Button>
     </form>

@@ -21,21 +21,21 @@ export default async function FollowersPage() {
   });
 
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       <div className="mx-auto max-w-lg px-4 py-8">
-        <h1 className="font-display mb-6 text-xl font-bold text-[--text]">
+        <h1 className="font-display mb-6 text-xl font-bold text-foreground">
           Mis seguidores
         </h1>
         {follows.length === 0 ? ( //Si no existen seguidoras muestra el mensaje correspondiente.
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3d5a4f]/10">
-              <Heart className="h-7 w-7 text-[#3d5a4f]" strokeWidth={1.5} />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Heart className="h-7 w-7 text-primary" strokeWidth={1.5} />
             </div>
             <div>
-              <p className="font-display text-base font-bold text-[--text]">
+              <p className="font-display text-base font-bold text-foreground">
                 Aún no tienes seguidoras.
               </p>
-              <p className="mt-2 max-w-xs text-sm text-[--text-muted]">
+              <p className="mt-2 max-w-xs text-sm text-muted-foreground">
                 Cuando alguien empiece a seguirte, aparecerá aquí.
               </p>
             </div>
@@ -46,18 +46,18 @@ export default async function FollowersPage() {
             {follows.map(({ id, follower }) => (
               <div
                 key={id}
-                className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4"
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-4"
               >
                 <PaletteAvatar
                   src={follower.image}
                   name={follower.name}
                   className="h-11 w-11 shrink-0"
-                  fillColor="#c4956a"
+                  fillColor="var(--brand-accent)"
                 />
-                <p className="text-sm font-medium text-[--text]">
+                <p className="text-sm font-medium text-foreground">
                   {follower.name} {follower.lastName}
                   {(follower.locality ?? follower.province) && (
-                    <span className="font-normal text-[--text-muted]">
+                    <span className="font-normal text-muted-foreground">
                       {" "}
                       · {[follower.locality, follower.province].filter(Boolean).join(", ")}
                     </span>

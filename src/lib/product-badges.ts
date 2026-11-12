@@ -26,7 +26,7 @@ export function getProductBadge(
   if (status === "ACTIVE" && expiresAt) {
     return {
       label: "Por tiempo limitado",
-      className: variant === "overlay" ? "bg-[#c4956a]/90 text-white" : "bg-[#c4956a] text-white",
+      className: variant === "overlay" ? "bg-brand/90 text-white" : "bg-brand text-white",
     };
   }
   if (status === "ACTIVE") return null;

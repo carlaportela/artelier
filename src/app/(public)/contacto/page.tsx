@@ -32,19 +32,19 @@ const CONTACTOS = [
 export default function ContactoPage() {
   return (
     <main className="px-4 py-12">
-      <h1 className="font-display text-3xl font-bold text-[--text]">Contacto</h1>
-      <p className="mt-2 mb-10 text-sm text-[--text-muted]">
+      <h1 className="font-display text-3xl font-bold text-foreground">Contacto</h1>
+      <p className="mt-2 mb-10 text-sm text-muted-foreground">
         Estamos aquí para ayudarte. Escríbenos y te respondemos en menos de 48 horas.
       </p>
 
-      <section className="space-y-8 text-sm leading-relaxed text-[--text]">
+      <section className="space-y-8 text-sm leading-relaxed text-foreground">
         {CONTACTOS.map(({ titulo, descripcion, email }) => (
           <div key={email}>
-            <h2 className="mb-3 text-base font-semibold text-[--text]">{titulo}</h2>
-            <p className="text-[--text-muted]">{descripcion}</p>
+            <h2 className="mb-3 text-base font-semibold text-foreground">{titulo}</h2>
+            <p className="text-muted-foreground">{descripcion}</p>
             <a
               href={`mailto:${email}`}
-              className="mt-2 inline-block font-medium text-[#3d5a4f] hover:text-[#3d5a4f]/70 transition-colors"
+              className="mt-2 inline-block font-medium text-primary hover:text-primary/70 transition-colors"
             >
               {email}
             </a>

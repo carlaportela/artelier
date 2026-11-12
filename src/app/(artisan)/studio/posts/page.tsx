@@ -15,9 +15,9 @@ export default async function PublicacionesPage() {
   });
 
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       <div className="space-y-6 px-4 py-8">
-        <h1 className="font-display text-xl font-bold text-[--text]">Mis novedades</h1>
+        <h1 className="font-display text-xl font-bold text-foreground">Mis novedades</h1>
         <PublicacionesView posts={posts} />
       </div>
     </main>

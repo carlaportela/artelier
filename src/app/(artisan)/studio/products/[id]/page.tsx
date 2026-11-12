@@ -21,7 +21,7 @@ export default async function EditProductPage({ params }: PageProps) {
     where: { id, deletedAt: null },
     include: {
       seals: {
-        include: { seal: { select: { id: true, name: true } } },
+        include: { seal: { select: { id: true, name: true, type: true } } },
       },
       orders: {
         where: {

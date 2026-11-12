@@ -49,14 +49,14 @@ function ProductRow({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.id}`}
-      className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2.5 transition-all hover:-translate-y-0.5 hover:shadow-md"
+      className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5 transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[--surface-2]">
+      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted">
         {product.imageUrls[0] ? (
           <Image src={product.imageUrls[0]} alt={product.name} fill className="object-cover" sizes="64px" />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="text-[10px] text-[--text-muted]">Sin foto</span>
+            <span className="text-[10px] text-muted-foreground">Sin foto</span>
           </div>
         )}
       </div>
@@ -64,11 +64,11 @@ function ProductRow({ product }: { product: Product }) {
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-1.5">
             <PaletteAvatar src={product.artisan.image} name={product.artisan.name} className="h-5 w-5 shrink-0" />
-            <p className="truncate text-sm text-[--text-muted]">{product.artisan.name ?? "Artesana"}</p>
+            <p className="truncate text-sm text-muted-foreground">{product.artisan.name ?? "Artesana"}</p>
           </div>
-          <p className="shrink-0 text-sm font-medium text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
+          <p className="shrink-0 text-sm font-medium text-primary">{fmt(product.priceInCents)}</p>
         </div>
-        <p className="mt-1 truncate font-display text-base font-bold text-[--text]">{product.name}</p>
+        <p className="mt-1 truncate font-display text-base font-bold text-foreground">{product.name}</p>
       </div>
     </Link>
   );
@@ -114,8 +114,8 @@ export default function HomeGrid({ products }: { products: Product[] }) {
             aria-label={label}
             className={`${btnClass} h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors ${
               activeBtn === v
-                ? "bg-[--surface-2] text-[#3d5a4f]"
-                : "text-[--text-muted] hover:bg-[#ccc8bc]/50 hover:text-[--text]"
+                ? "bg-muted text-primary"
+                : "text-muted-foreground hover:bg-border/50 hover:text-foreground"
             }`}
           >
             {icon}

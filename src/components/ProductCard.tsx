@@ -37,16 +37,16 @@ export default function ProductCard({ product }: PublicProductCardProps) {
     <article>
       <Link
         href={`/product/${product.id}`}
-        className="group block overflow-hidden rounded-xl border border-[--border] bg-[--surface] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+        className="group block overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
       >
         {/* Strip artesana */}
-        <div className="flex items-center gap-2 bg-[#dedad2] px-2.5 py-2 md:px-3 md:py-2.5">
+        <div className="flex items-center gap-2 bg-muted px-2.5 py-2 md:px-3 md:py-2.5">
           <PaletteAvatar
             src={product.artisan.image}
             name={product.artisan.name}
             className="h-9 w-9 shrink-0 md:h-10 md:w-10"
           />
-          <p className="truncate font-display text-base font-bold text-[--text] md:text-lg">
+          <p className="truncate font-display text-base font-bold text-foreground md:text-lg">
             {product.artisan.name ?? "Artesana"}
           </p>
         </div>
@@ -62,8 +62,8 @@ export default function ProductCard({ product }: PublicProductCardProps) {
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-[#dedad2]">
-              <span className="text-xs text-[--text-muted]">Sin imagen</span>
+            <div className="flex h-full w-full items-center justify-center bg-muted">
+              <span className="text-xs text-muted-foreground">Sin imagen</span>
             </div>
           )}
 
@@ -77,8 +77,8 @@ export default function ProductCard({ product }: PublicProductCardProps) {
 
         {/* Info */}
         <div className="p-2.5">
-          <p className="truncate font-display text-base font-bold text-[--text]">{product.name}</p>
-          <p className="mt-0.5 text-xs font-medium text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
+          <p className="truncate font-display text-base font-bold text-foreground">{product.name}</p>
+          <p className="mt-0.5 text-xs font-medium text-primary">{fmt(product.priceInCents)}</p>
         </div>
       </Link>
     </article>

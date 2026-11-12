@@ -30,7 +30,7 @@ interface Props {
 
 //Clase por defecto para el input.
 const DEFAULT_INPUT_CLASS =
-  "w-full rounded-lg border border-[--border] bg-white px-3 py-1.5 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f]";
+  "w-full rounded-lg border border-border bg-white px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus-visible:border-primary";
 
 //Función principal que maneja la lógica del componente. Permite escribir una localidad y mostrar sugerencias basadas en la lista de localidades.
 export default function LocalidadSelect({
@@ -188,7 +188,7 @@ export default function LocalidadSelect({
           id={listboxId}
           role="listbox"
           aria-label="Sugerencias de ubicación"
-          className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-[#f4f0e8] shadow-lg"
+          className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-border bg-background shadow-lg"
         >
           {sugerencias.map((item, i) => {
             const isActive = i === activo;
@@ -207,12 +207,12 @@ export default function LocalidadSelect({
                 onMouseEnter={() => setActivo(i)}
                 className={`flex cursor-pointer items-baseline gap-1.5 px-3 py-2 transition-colors ${
                   isActive
-                    ? "bg-[#ccc8bc] text-[--text]"
-                    : "text-[--text] hover:bg-[#ccc8bc]"
+                    ? "bg-border text-foreground"
+                    : "text-foreground hover:bg-border"
                 }`}
               >
                 <span className="text-sm font-medium">{item.municipio},</span>
-                <span className="text-xs text-[--text-muted]">{item.provincia}</span>
+                <span className="text-xs text-muted-foreground">{item.provincia}</span>
               </li>
             );
           })}

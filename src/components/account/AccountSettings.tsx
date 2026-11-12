@@ -13,7 +13,7 @@ type Section = "password" | "export" | "delete" | null;
 // ── Estilos compartidos ──────────────────────────────────────────────────────
 
 const btnOutline =
-  "cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]";
+  "cursor-pointer rounded-full border border-border px-4 py-2 text-sm text-foreground transition-colors hover:bg-border";
 
 const btnDanger =
   "cursor-pointer rounded-full bg-red-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none";
@@ -61,7 +61,7 @@ export function PasswordSection({ onClose }: { onClose: () => void }) {
     <form onSubmit={handleSubmit} className="space-y-4 pt-2">
       {(["currentPassword", "newPassword", "confirmPassword"] as const).map((field) => (
         <div key={field} className="space-y-1">
-          <Label htmlFor={field} className="font-normal text-[--text-muted]">
+          <Label htmlFor={field} className="font-normal text-muted-foreground">
             {t(field)}
           </Label>
           <Input
@@ -70,13 +70,13 @@ export function PasswordSection({ onClose }: { onClose: () => void }) {
             value={fields[field]}
             onChange={(e) => setFields((prev) => ({ ...prev, [field]: e.target.value }))}
             required
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
         </div>
       ))}
       {passwordsMismatch && <p className="text-sm text-red-600">Las contraseñas no coinciden</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {success && <p className="text-sm text-[#3d5a4f]">{t("passwordChanged")}</p>}
+      {success && <p className="text-sm text-primary">{t("passwordChanged")}</p>}
       <div className="flex gap-2 pt-1">
         <button
           type="submit"
@@ -87,7 +87,7 @@ export function PasswordSection({ onClose }: { onClose: () => void }) {
             !fields.confirmPassword ||
             passwordsMismatch
           }
-          className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#a3b1ab] disabled:opacity-50 disabled:pointer-events-none"
+          className="cursor-pointer rounded-full bg-neutral px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-hover disabled:opacity-50 disabled:pointer-events-none"
         >
           {isPending ? "Guardando..." : "Guardar nueva contraseña"}
         </button>
@@ -114,12 +114,12 @@ export function ExportSection({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="space-y-3 pt-2">
-      <p className="text-sm text-[--text-muted]">
+      <p className="text-sm text-muted-foreground">
         Puedes solicitar una copia de todos tus datos personales almacenados en Artelier.
         Recibirás un correo electrónico con el archivo en un plazo de 48 horas.
       </p>
       {status === "done" && (
-        <p className="text-sm text-[#3d5a4f]">{t("exportRequested")}</p>
+        <p className="text-sm text-primary">{t("exportRequested")}</p>
       )}
       {status === "error" && (
         <p className="text-sm text-red-600">{tErrors("generic")}</p>
@@ -130,7 +130,7 @@ export function ExportSection({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={handleExport}
             disabled={status === "pending"}
-            className="cursor-pointer rounded-full bg-[#94a49e] px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-80 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="cursor-pointer rounded-full bg-neutral px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-hover disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {status === "pending" ? "Enviando..." : "Solicitar exportación"}
           </button>
@@ -165,13 +165,13 @@ export function DeleteSection({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="space-y-3 pt-2">
-      <p className="text-sm text-[--text-muted]">
+      <p className="text-sm text-muted-foreground">
         ¡Nos da mucha pena que te vayas! Esta acción es{" "}
-        <strong className="text-[--text]">permanente e irreversible</strong>:{" "}
+        <strong className="text-foreground">permanente e irreversible</strong>:{" "}
         se eliminarán tu perfil, productos y todos tus datos de Artelier.
       </p>
       <div className="space-y-1">
-        <Label htmlFor="delete-password" className="font-normal text-[--text-muted]">
+        <Label htmlFor="delete-password" className="font-normal text-muted-foreground">
           Contraseña actual
         </Label>
         <Input
@@ -219,8 +219,8 @@ export default function AccountSettings() {
           onClick={() => toggle("password")}
           className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             active === "password"
-              ? "cursor-default bg-[#3d5a4f] opacity-75 shadow-inner"
-              : "cursor-pointer bg-[#3d5a4f] hover:bg-[#4a6b5e] transition-colors"
+              ? "cursor-default bg-primary opacity-75 shadow-inner"
+              : "cursor-pointer bg-primary hover:bg-primary-hover transition-colors"
           }`}
         >
           Cambiar contraseña
@@ -230,8 +230,8 @@ export default function AccountSettings() {
           onClick={() => toggle("export")}
           className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             active === "export"
-              ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
-              : "cursor-pointer bg-[#94a49e] hover:opacity-80"
+              ? "cursor-default bg-neutral opacity-60 shadow-inner"
+              : "cursor-pointer bg-neutral hover:bg-neutral-hover"
           }`}
         >
           Exportar datos

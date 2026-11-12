@@ -21,7 +21,7 @@ import { SortableContext, useSortable, rectSortingStrategy } from "@dnd-kit/sort
 import { CSS } from "@dnd-kit/utilities";
 
 import CropModal from "~/components/CropModal";
-import { SealBadge } from "~/components/artisan/SealBadge";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "~/components/ui/dialog";
@@ -80,6 +80,7 @@ interface ProductData {
 interface SealData {
   id: string;
   name: string;
+  type: string;
 }
 
 //Argumentos que recibe el método editProductForm.
@@ -147,7 +148,7 @@ function SelectField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-[--text]">
+        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-foreground">
           {label}
         </label>
       )}
@@ -157,18 +158,18 @@ function SelectField({
           id={uid}
           disabled={disabled}
           onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
-          className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
+          className={`flex w-full items-center justify-between rounded-lg border border-border bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-primary ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-muted-foreground" : "text-foreground"}`}
         >
           <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
-          <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`shrink-0 text-muted-foreground transition-transform${open ? " rotate-180" : ""}`} />
         </button>
         {open && (
-          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
+          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-border bg-white shadow-lg">
             {options.map((opt) => (
               <li
                 key={opt.value}
                 onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
-                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
+                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-border text-foreground" : "text-foreground hover:bg-border"}`}
               >
                 {opt.label}
               </li>
@@ -262,12 +263,12 @@ function DatePickerField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-[--text]">
+        <label htmlFor={uid} className="block pl-1 text-sm font-medium text-foreground">
           {label}
         </label>
       )}
       <div ref={ref} className="relative">
-      <div className={`flex items-center overflow-hidden rounded-lg border border-[--border] bg-white transition-colors focus-within:border-[#3d5a4f] ${disabled ? "opacity-60" : ""}`}>
+      <div className={`flex items-center overflow-hidden rounded-lg border border-border bg-white transition-colors focus-within:border-primary ${disabled ? "opacity-60" : ""}`}>
         <input
           id={uid}
           type="text"
@@ -276,27 +277,27 @@ function DatePickerField({
           onChange={handleTextChange}
           placeholder="dd/mm/aaaa"
           disabled={disabled}
-          className="flex-1 bg-transparent px-3 py-1.5 text-sm text-[--text] outline-none placeholder:text-[--text-muted] disabled:cursor-not-allowed"
+          className="flex-1 bg-transparent px-3 py-1.5 text-sm text-foreground outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed"
         />
         <button
           type="button"
           onClick={() => !disabled && setOpen((prev) => !prev)}
           disabled={disabled}
           aria-label={open ? "Cerrar calendario" : "Abrir calendario"}
-          className="cursor-pointer px-3 py-1.5 text-[--text-muted] transition-colors hover:text-[--text] disabled:cursor-not-allowed"
+          className="cursor-pointer px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed"
         >
           <CalendarDays size={14} />
         </button>
       </div>
       {open && !disabled && (
-        <div className="absolute left-0 right-0 z-50 mt-1 rounded-xl border border-[--border] bg-white p-3 shadow-lg">
+        <div className="absolute left-0 right-0 z-50 mt-1 rounded-xl border border-border bg-white p-3 shadow-lg">
           <div className="mb-3 flex items-center justify-between">
-            <button type="button" aria-label="Mes anterior" onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); } else setViewMonth((m) => m - 1); }} className="cursor-pointer rounded-full p-1 text-[--text-muted] hover:bg-[#f4f0e8]"><ChevronLeft size={16} /></button>
-            <span className="text-sm font-medium text-[--text]">{MONTHS_ES[viewMonth]} {viewYear}</span>
-            <button type="button" aria-label="Mes siguiente" onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); } else setViewMonth((m) => m + 1); }} className="cursor-pointer rounded-full p-1 text-[--text-muted] hover:bg-[#f4f0e8]"><ChevronRight size={16} /></button>
+            <button type="button" aria-label="Mes anterior" onClick={() => { if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); } else setViewMonth((m) => m - 1); }} className="cursor-pointer rounded-full p-1 text-muted-foreground hover:bg-background"><ChevronLeft size={16} /></button>
+            <span className="text-sm font-medium text-foreground">{MONTHS_ES[viewMonth]} {viewYear}</span>
+            <button type="button" aria-label="Mes siguiente" onClick={() => { if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); } else setViewMonth((m) => m + 1); }} className="cursor-pointer rounded-full p-1 text-muted-foreground hover:bg-background"><ChevronRight size={16} /></button>
           </div>
           <div className="mb-1 grid grid-cols-7 text-center">
-            {DAYS_ES.map((d) => <span key={d} className="py-0.5 text-[10px] font-medium text-[--text-muted]">{d}</span>)}
+            {DAYS_ES.map((d) => <span key={d} className="py-0.5 text-[10px] font-medium text-muted-foreground">{d}</span>)}
           </div>
           <div className="grid grid-cols-7 gap-y-0.5 text-center">
             {cells.map((day, idx) => {
@@ -306,15 +307,15 @@ function DatePickerField({
               const tod = isToday(day);
               return (
                 <button key={day} type="button" disabled={dis} onClick={() => selectDay(day)}
-                  className={["mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs transition-colors", sel ? "bg-[#3d5a4f] font-medium text-white" : tod ? "cursor-pointer border border-[#3d5a4f] font-medium text-[#3d5a4f] hover:bg-[#f4f0e8]" : dis ? "cursor-not-allowed text-[--text-muted] opacity-40" : "cursor-pointer text-[--text] hover:bg-[#f4f0e8]"].join(" ")}>
+                  className={["mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs transition-colors", sel ? "bg-primary font-medium text-white" : tod ? "cursor-pointer border border-primary font-medium text-primary hover:bg-background" : dis ? "cursor-not-allowed text-muted-foreground opacity-40" : "cursor-pointer text-foreground hover:bg-background"].join(" ")}>
                   {day}
                 </button>
               );
             })}
           </div>
           {value && (
-            <div className="mt-2 border-t border-[--border] pt-2 text-right">
-              <button type="button" onClick={() => { onChange(""); setInputText(""); setOpen(false); }} className="cursor-pointer text-xs text-[--text-muted] hover:text-[--text]">
+            <div className="mt-2 border-t border-border pt-2 text-right">
+              <button type="button" onClick={() => { onChange(""); setInputText(""); setOpen(false); }} className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
                 Borrar selección
               </button>
             </div>
@@ -342,7 +343,7 @@ function SortablePhoto({
       style={{ transform: CSS.Transform.toString(transform), transition, zIndex: isDragging ? 10 : undefined }}
       {...attributes}
       {...listeners}
-      className={`group relative aspect-square ${disabled ? "cursor-not-allowed opacity-60" : "cursor-grab"} overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-2 row-span-2" : ""}${isDragging ? " opacity-70 ring-2 ring-[#3d5a4f]" : ""}`}
+      className={`group relative aspect-square ${disabled ? "cursor-not-allowed opacity-60" : "cursor-grab"} overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-2 row-span-2" : ""}${isDragging ? " opacity-70 ring-2 ring-primary" : ""}`}
     >
       <Image src={url} alt={isHero ? "Imagen de portada" : `Imagen ${index + 1}`} fill className="object-cover"
         sizes={isHero ? "(max-width: 640px) 67vw, 340px" : "33vw"} />
@@ -543,12 +544,12 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
   }
 
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       <div className="px-4 py-8">
 
         {/* Cabecera */}
         <div className="mb-6">
-          <h1 className="font-display text-xl font-bold text-[--text]">Editar producto</h1>
+          <h1 className="font-display text-xl font-bold text-foreground">Editar producto</h1>
         </div>
 
         {/* Aviso pedidos activos */}
@@ -565,7 +566,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Fotos ─────────────────────────────────────────────────── */}
           <div className="space-y-2">
-            <p className="text-sm font-medium text-[--text]">Imágenes del producto</p>
+            <p className="text-sm font-medium text-foreground">Imágenes del producto</p>
             {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
 
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -596,7 +597,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
                     return (
                       <label
                         key={`empty-${i}`}
-                        className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] text-[--text-muted] transition-colors${isHero ? " col-span-2 row-span-2" : ""}${isDisabled ? " pointer-events-none opacity-50" : " cursor-pointer hover:border-[#c4956a]/40 hover:text-[#c4956a]"}`}
+                        className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border bg-card text-muted-foreground transition-colors${isHero ? " col-span-2 row-span-2" : ""}${isDisabled ? " pointer-events-none opacity-50" : " cursor-pointer hover:border-brand/40 hover:text-brand"}`}
                       >
                         <span className={`select-none font-extralight leading-none ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
                         <span className={`${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
@@ -617,11 +618,11 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Nombre ────────────────────────────────────────────────── */}
           <div className="space-y-2">
-            <label htmlFor="name" className="block pl-1 text-sm font-medium text-[--text]">Nombre</label>
+            <label htmlFor="name" className="block pl-1 text-sm font-medium text-foreground">Nombre</label>
             <input
               id="name" type="text" value={name} disabled={isDisabled}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-lg border border-[--border] bg-white px-3 py-1.5 text-sm text-[--text] outline-none placeholder:text-[--text-muted] focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg border border-border bg-white px-3 py-1.5 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
             />
             {fieldErrors.name && <p className="text-xs text-red-600">{fieldErrors.name}</p>}
           </div>
@@ -629,15 +630,15 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           {/* ── Descripción ───────────────────────────────────────────── */}
           <div>
             <div className="space-y-2">
-              <label htmlFor="description" className="block pl-1 text-sm font-medium text-[--text]">Descripción</label>
+              <label htmlFor="description" className="block pl-1 text-sm font-medium text-foreground">Descripción</label>
               <textarea
                 id="description" rows={3} maxLength={280} value={description}
                 disabled={isDisabled}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
               />
             </div>
-            <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+            <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-muted-foreground"}`}>
               {280 - description.length} restantes
             </p>
             {fieldErrors.description && <p className="text-xs text-red-600">{fieldErrors.description}</p>}
@@ -645,12 +646,12 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
 
           {/* ── Precio ────────────────────────────────────────────────── */}
           <div className="!mt-0 space-y-2">
-            <label htmlFor="price" className="block pl-1 text-sm font-medium text-[--text]">Precio (€)</label>
+            <label htmlFor="price" className="block pl-1 text-sm font-medium text-foreground">Precio (€)</label>
             <input
               id="price" type="number" min="0.01" step="0.01" value={priceEuros}
               disabled={isDisabled}
               onChange={(e) => setPriceEuros(e.target.value)}
-              className="w-full rounded-lg border border-[--border] bg-white px-3 py-1.5 text-sm text-[--text] outline-none focus:border-[#3d5a4f] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-lg border border-border bg-white px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-60"
             />
             {fieldErrors.priceInCents && <p className="text-xs text-red-600">{fieldErrors.priceInCents}</p>}
           </div>
@@ -677,11 +678,11 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
               disabled={isDisabled || typeIsForced}
             />
             {typeIsForced && (
-              <p className="text-xs text-[--text-muted]">
+              <p className="text-xs text-muted-foreground">
                 La categoría seleccionada requiere el tipo Perecedero.
               </p>
             )}
-            <p className="text-xs text-[--text-muted]">{TYPE_DESCRIPTIONS[type]}</p>
+            <p className="text-xs text-muted-foreground">{TYPE_DESCRIPTIONS[type]}</p>
             {fieldErrors.type && <p className="text-xs text-red-600">{fieldErrors.type}</p>}
           </div>
 
@@ -694,7 +695,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
               disabled={isDisabled}
               className="mt-0.5"
             />
-            <span className="text-sm text-[--text-muted]">
+            <span className="text-sm text-muted-foreground">
               Este producto se hace a medida o se personaliza para cada
               pedido (grabados, tallas, medidas...). No lo marques solo
               porque sea una pieza única.
@@ -718,13 +719,18 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
           {/* ── Sellos verificados (read-only) ────────────────────────── */}
           {seals.length > 0 && (
             <div className="space-y-2">
-              <p className="text-sm font-medium text-[--text]">Sellos verificados</p>
+              <p className="text-sm font-medium text-foreground">Sellos verificados</p>
               <div className="flex flex-wrap gap-2">
                 {seals.map((seal) => (
-                  <SealBadge key={seal.id} name={seal.name} />
+                  <span
+                    key={seal.id}
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[seal.type] ?? SEAL_FALLBACK_CLASS}`}
+                  >
+                    {seal.name}
+                  </span>
                 ))}
               </div>
-              <p className="text-xs text-[--text-muted]">
+              <p className="text-xs text-muted-foreground">
                 Los sellos son asignados automáticamente por el sistema según los criterios de verificación.
               </p>
             </div>
@@ -736,7 +742,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
               type="button"
               onClick={handleSave}
               disabled={isDisabled}
-              className="w-full cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full cursor-pointer rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isPendingSave ? "Guardando..." : "Guardar cambios"}
             </button>
@@ -745,7 +751,7 @@ export default function EditProductForm({ product, seals, hasActiveOrders }: Edi
                 type="button"
                 onClick={() => router.push("/studio/products")}
                 disabled={isPendingSave || isPendingDelete}
-                className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] px-5 py-2.5 text-sm font-medium text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex-1 cursor-pointer rounded-full border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-border disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Cancelar
               </button>

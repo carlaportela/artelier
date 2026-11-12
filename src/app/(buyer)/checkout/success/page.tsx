@@ -25,9 +25,9 @@ export default async function CheckoutSuccessPage({
     return (
       <main className="flex min-h-screen flex-col items-center gap-6 px-4 pt-24 text-center md:pt-32">
         <div className="flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3d5a4f]/10">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <svg
-              className="h-8 w-8 text-[#3d5a4f]"
+              className="h-8 w-8 text-primary"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -40,10 +40,10 @@ export default async function CheckoutSuccessPage({
               />
             </svg>
           </div>
-          <h1 className="font-display text-2xl font-bold text-[--text]">
+          <h1 className="font-display text-2xl font-bold text-foreground">
             ¡Pago realizado!
           </h1>
-          <p className="max-w-sm text-sm text-[--text-muted]">
+          <p className="max-w-sm text-sm text-muted-foreground">
             Tu pedido está siendo procesado.
             <br />
             La artesana recibirá una notificación y comenzará a prepararlo.
@@ -52,7 +52,7 @@ export default async function CheckoutSuccessPage({
 
         <Link
           href="/orders"
-          className="rounded-full bg-[#3d5a4f] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+          className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Ver mis pedidos
         </Link>
@@ -62,9 +62,9 @@ export default async function CheckoutSuccessPage({
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-4 text-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#3d5a4f]/10">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <svg
-              className="h-8 w-8 text-[#3d5a4f]"
+              className="h-8 w-8 text-primary"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -77,17 +77,17 @@ export default async function CheckoutSuccessPage({
               />
             </svg>
           </div>
-          <h1 className="font-display text-2xl font-bold text-[--text]">
+          <h1 className="font-display text-2xl font-bold text-foreground">
             Pago no realizado
           </h1>
-          <p className="max-w-sm text-sm text-[--text-muted]">
+          <p className="max-w-sm text-sm text-muted-foreground">
             Vuelve a la página de finalizar compra para completar el pago.
           </p>
         </div>
 
         <Link
           href="/checkout"
-          className="rounded-full bg-[#3d5a4f] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+          className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Volver a finalizar compra
         </Link>

@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 
 import CookieBanner from "~/components/CookieBanner";
+import { Toaster } from "~/components/ui/sonner";
 
 
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
           <CookieBanner />
+          <Toaster position="bottom-center" />
         </NextIntlClientProvider>
 
       </body>

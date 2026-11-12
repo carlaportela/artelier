@@ -3,7 +3,7 @@ import AppFooter from "~/components/AppFooter";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-[--bg]">
+    <div className="flex min-h-screen flex-col bg-background">
       <AppHeader />
       <div className="mx-auto w-full flex-1 max-w-lg md:max-w-2xl lg:max-w-4xl">
         {children}

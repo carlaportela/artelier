@@ -25,10 +25,10 @@ export default async function FeedPage() {
         return (
         <main className="px-4 py-8">
             <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <p className="text-[--text]">Todavía no sigues a ninguna artesana o artesano</p>
+            <p className="text-foreground">Todavía no sigues a ninguna artesana o artesano</p>
             <Link
                 href="/search"
-                className="rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
             >
                 Descubrir cerca de mí
             </Link>
@@ -70,7 +70,7 @@ export default async function FeedPage() {
     if (initialProducts.length === 0) {
         return (
         <main className="px-4 py-8">
-            <p className="py-20 text-center text-sm text-[--text-muted]">
+            <p className="py-20 text-center text-sm text-muted-foreground">
             Las artesanas y artesanos que sigues aún no tienen productos publicados
             </p>
         </main>
@@ -79,10 +79,10 @@ export default async function FeedPage() {
 
     return (
         <main className="px-4 py-8">
-            <h1 className="font-display text-center text-3xl font-bold text-[--text]">
+            <h1 className="font-display text-center text-3xl font-bold text-foreground">
                 ¿Qué es lo último?
             </h1>
-            <p className="mt-1 text-sm text-[--text-muted] text-center mb-6">
+            <p className="mt-1 text-sm text-muted-foreground text-center mb-6">
                 Novedades de las artesanas y artesanos que te gustan
             </p>
         <FeedClient

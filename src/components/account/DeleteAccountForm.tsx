@@ -34,7 +34,7 @@ export default function DeleteAccountForm() {
 
   return (
     <div className="space-y-3">
-      <h2 className="font-display text-lg text-[--text]">{t("deleteAccount")}</h2>
+      <h2 className="font-display text-lg text-foreground">{t("deleteAccount")}</h2>
 
       {!open ? (
         <button
@@ -46,13 +46,13 @@ export default function DeleteAccountForm() {
         </button>
       ) : (
         <div className="space-y-4">
-          <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] py-2 pr-3">
-            <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-            <p className="text-xs text-[--text-muted]">Esta acción es irreversible. Tus datos se borrarán de forma permanente.</p>
+          <div className="flex items-start gap-2 rounded-lg bg-muted py-2 pr-3">
+            <Info size={13} className="mt-0.5 shrink-0 text-primary/60" />
+            <p className="text-xs text-muted-foreground">Esta acción es irreversible. Tus datos se borrarán de forma permanente.</p>
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="delete-password" className="text-sm font-medium leading-none text-[--text-muted]">
+            <label htmlFor="delete-password" className="text-sm font-medium leading-none text-muted-foreground">
               Contraseña
             </label>
             <input
@@ -60,7 +60,7 @@ export default function DeleteAccountForm() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] outline-none focus:border-red-400"
+              className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-red-400"
             />
           </div>
 
@@ -78,7 +78,7 @@ export default function DeleteAccountForm() {
             <button
               type="button"
               onClick={handleCancel}
-              className="cursor-pointer rounded-full border border-[--border] px-5 py-2 text-sm font-medium text-[--text-muted] transition-colors hover:bg-black/[0.06]"
+              className="cursor-pointer rounded-full border border-border px-5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-black/[0.06]"
             >
               {t("cancel")}
             </button>

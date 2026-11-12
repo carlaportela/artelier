@@ -11,14 +11,8 @@ import { Pencil, Plus, Loader2, MapPin, ScanSearch, Camera, Trash2 } from "lucid
 import { saveProfile } from "./actions";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import CropModal from "~/components/CropModal";
-
-const SEAL_CLASS: Record<string, string> = {
-  mano:      "seal-mano",
-  eco:       "seal-eco",
-  reciclado: "seal-reciclado",
-  galicia:   "seal-galicia",
-  km0:       "seal-km0",
-};
+import DefaultBanner from "~/components/artisan/DefaultBanner";
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 
 interface Props {
   user: {
@@ -130,7 +124,7 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
         {bannerUrl ? (
           <Image src={bannerUrl} alt="" fill className="object-cover" priority />
         ) : (
-          <div className="banner-lino h-full w-full" />
+          <DefaultBanner />
         )}
 
         <div className="absolute right-4 top-3">
@@ -139,7 +133,7 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
             onClick={() => bannerUrl ? setShowBannerMenu(v => !v) : bannerRef.current?.click()}
             disabled={uploadingBanner}
             aria-label="Editar portada"
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-colors hover:bg-primary-hover disabled:opacity-50"
           >
             {uploadingBanner ? <Loader2 size={14} className="animate-spin" /> : bannerUrl ? <Pencil size={14} /> : <Plus size={14} />}
           </button>
@@ -147,13 +141,13 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
           {showBannerMenu && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowBannerMenu(false)} />
-              <div className="absolute right-0 top-full z-20 mt-2 w-40 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+              <div className="absolute right-0 top-full z-20 mt-2 w-40 overflow-hidden rounded-xl border border-border bg-card py-1 shadow-lg">
                 <button type="button" onClick={() => void handleReajustar("banner")}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary">
                   <ScanSearch size={14} className="shrink-0" /> Reajustar
                 </button>
                 <button type="button" onClick={() => { bannerRef.current?.click(); setShowBannerMenu(false); }}
-                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                  className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary">
                   <Camera size={14} className="shrink-0" /> Cambiar
                 </button>
                 <button type="button" onClick={() => { void handleDelete("banner"); setShowBannerMenu(false); }}
@@ -185,7 +179,7 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
               onClick={() => avatarUrl ? setShowAvatarMenu(v => !v) : avatarRef.current?.click()}
               disabled={uploadingAvatar}
               aria-label="Editar imagen de perfil"
-              className="absolute bottom-5 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white shadow-md transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+              className="absolute bottom-5 right-3 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-colors hover:bg-primary-hover disabled:opacity-50"
             >
               {uploadingAvatar ? <Loader2 size={14} className="animate-spin" /> : avatarUrl ? <Pencil size={14} /> : <Plus size={14} />}
             </button>
@@ -193,13 +187,13 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
             {showAvatarMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setShowAvatarMenu(false)} />
-                <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-[--border] bg-[#eae5da] py-1 shadow-lg">
+                <div className="absolute left-full top-1/2 z-20 ml-3 w-40 -translate-y-1/2 overflow-hidden rounded-xl border border-border bg-card py-1 shadow-lg">
                   <button type="button" onClick={() => void handleReajustar("avatar")}
-                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary">
                     <ScanSearch size={14} className="shrink-0" /> Reajustar
                   </button>
                   <button type="button" onClick={() => { avatarRef.current?.click(); setShowAvatarMenu(false); }}
-                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-[--text] transition-colors hover:text-[#3d5a4f]">
+                    className="flex w-full cursor-pointer items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:text-primary">
                     <Camera size={14} className="shrink-0" /> Cambiar
                   </button>
                   <button type="button" onClick={() => { void handleDelete("avatar"); setShowAvatarMenu(false); }}
@@ -225,18 +219,18 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
           {uploadError && (
             <p className="text-xs text-red-600">⚠ {uploadError}</p>
           )}
-          <h2 className="font-display text-xl font-bold text-[--text]">
-            {user.name ?? <span className="text-[--text-muted]">Sin nombre</span>}
+          <h2 className="font-display text-xl font-bold text-foreground">
+            {user.name ?? <span className="text-muted-foreground">Sin nombre</span>}
           </h2>
-          <p className="flex flex-wrap items-center gap-1 text-sm font-medium text-[#3d5a4f]">
+          <p className="flex flex-wrap items-center gap-1 text-sm font-medium text-primary">
             {user.locality && (
               <>
                 <MapPin size={12} />
                 {user.locality}
-                <span className="text-[--text-muted]">·</span>
+                <span className="text-muted-foreground">·</span>
               </>
             )}
-            <Link href="/studio/followers" className="transition-colors hover:text-[#4a6b5e]">
+            <Link href="/studio/followers" className="transition-colors hover:text-primary-hover">
               <strong>{followersCount}</strong>{" "}
               {followersCount === 1 ? "seguidor" : "seguidores"}
             </Link>
@@ -244,13 +238,13 @@ export default function StudioProfileEditor({ user, sealRequests, followersCount
           {sealRequests.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {sealRequests.map((sr) => (
-                <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-[--surface] text-[--text-muted]"}`}>
+                <span key={sr.id} className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? SEAL_FALLBACK_CLASS}`}>
                   {sr.seal.name}
                 </span>
               ))}
             </div>
           )}
-          {user.bio && <p className="line-clamp-3 text-sm text-[--text-muted]">{user.bio}</p>}
+          {user.bio && <p className="line-clamp-3 text-sm text-muted-foreground">{user.bio}</p>}
         </div>
       </div>
     </div>

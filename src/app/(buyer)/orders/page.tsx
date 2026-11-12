@@ -35,12 +35,12 @@ export default async function OrdersPage() {
   });
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
+    <main className="min-h-screen bg-background px-4 py-8 md:px-6 md:py-10">
       <div className="space-y-6">
-        <h1 className="font-display text-xl font-bold text-[--text] md:text-2xl">{t("myOrders")}</h1>
+        <h1 className="font-display text-xl font-bold text-foreground md:text-2xl">{t("myOrders")}</h1>
 
         {orders.length === 0 ? (
-          <p className="py-12 text-center text-sm text-[--text-muted]">
+          <p className="py-12 text-center text-sm text-muted-foreground">
             {t("noOrders")}
           </p>
         ) : (
@@ -48,9 +48,9 @@ export default async function OrdersPage() {
             {orders.map((order) => (
               <div
                 key={order.id}
-                className="flex items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5"
+                className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 sm:p-5"
               >
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-[--surface-2] sm:h-20 sm:w-20">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-muted sm:h-20 sm:w-20">
                   {order.product.imageUrls[0] ? (
                     <Image
                       src={order.product.imageUrls[0]}
@@ -61,18 +61,18 @@ export default async function OrdersPage() {
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center">
-                      <span className="text-[10px] text-[--text-muted]">Sin foto</span>
+                      <span className="text-[10px] text-muted-foreground">Sin foto</span>
                     </div>
                   )}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="mb-1 text-xs text-[--text-muted] sm:text-sm">
+                  <p className="mb-1 text-xs text-muted-foreground sm:text-sm">
                     {dateFormatter.format(new Date(order.createdAt))}
                   </p>
-                  <span className="flex items-center gap-1.5 text-xs font-semibold text-[--text] sm:text-sm">
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground sm:text-sm">
                     <span
-                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${ORDER_STATUS_DOT[order.status] ?? "bg-[#94a49e]"}`}
+                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${ORDER_STATUS_DOT[order.status] ?? "bg-neutral"}`}
                     />
                     {t(`orderStatus.${order.status}`)}
                   </span>
@@ -81,7 +81,7 @@ export default async function OrdersPage() {
                 <div className="flex shrink-0 items-center">
                   <Link
                     href={`/orders/${order.id}`}
-                    className="rounded-full bg-[#3d5a4f] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#4a6b5e] sm:px-4 sm:text-sm"
+                    className="rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-hover sm:px-4 sm:text-sm"
                   >
                     Ver pedido
                   </Link>

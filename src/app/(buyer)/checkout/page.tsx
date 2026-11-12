@@ -40,10 +40,10 @@ export default async function CheckoutPage({
   if (product === null) {
     return (
       <main className="flex flex-col items-center gap-4 px-4 py-16 text-center">
-        <p className="text-lg font-medium text-[--text]">
+        <p className="text-lg font-medium text-foreground">
           Este producto no está disponible
         </p>
-        <Link href="/feed" className="text-sm text-[--text-muted] underline">
+        <Link href="/feed" className="text-sm text-muted-foreground underline">
           Volver al catálogo
         </Link>
       </main>
@@ -55,13 +55,13 @@ export default async function CheckoutPage({
   if (product.artisan.stripeAccountId === null) {
     return (
       <main className="flex flex-col items-center gap-4 px-4 py-16 text-center">
-        <p className="text-lg font-medium text-[--text]">
+        <p className="text-lg font-medium text-foreground">
           Esta artesana todavía no puede recibir pagos
         </p>
-        <p className="text-sm text-[--text-muted]">
+        <p className="text-sm text-muted-foreground">
           Inténtalo de nuevo más tarde.
         </p>
-        <Link href="/feed" className="text-sm text-[--text-muted] underline">
+        <Link href="/feed" className="text-sm text-muted-foreground underline">
           Volver al catálogo
         </Link>
       </main>

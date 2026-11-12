@@ -9,15 +9,7 @@ import FollowButton from "~/components/artisan/FollowButton";
 import PaletteAvatar from "~/components/PaletteAvatar";
 import DefaultBanner from "~/components/artisan/DefaultBanner";
 import SendMessageButton from "~/components/SendMessageButton";
-
-//Clases de estilo para los diferentes tipos de sellos de perfil.
-const SEAL_CLASS: Record<string, string> = {
-  mano:      "seal-mano",
-  eco:       "seal-eco",
-  reciclado: "seal-reciclado",
-  galicia:   "seal-galicia",
-  km0:       "seal-km0",
-};
+import { SEAL_CLASS, SEAL_FALLBACK_CLASS } from "~/lib/seal-styles";
 
 //Argumentos que recibe la función del componente.
 interface ArtisanHeaderProps {
@@ -46,7 +38,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
   return (
     <div className="relative">
       {/* ── Banner ── */}
-      <div className="relative h-[155px] w-full overflow-hidden bg-[--surface] md:h-[175px]">
+      <div className="relative h-[155px] w-full overflow-hidden bg-card md:h-[175px]">
         {artisan.bannerImage && (
           <Image
             src={artisan.bannerImage}
@@ -93,11 +85,11 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
 
         {/* ── Info ── */}
         <div className="mt-4 w-full space-y-2 pl-3">
-          <h1 className="font-display text-xl font-bold text-[--text]">
+          <h1 className="font-display text-xl font-bold text-foreground">
             {artisan.name ?? "Artesana"}
           </h1>
           {artisan.locality && (
-            <p className="flex items-center gap-1 text-sm font-medium text-[#3d5a4f]">
+            <p className="flex items-center gap-1 text-sm font-medium text-primary">
               <MapPin size={12} />
               {artisan.locality}
             </p>
@@ -107,7 +99,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
               {sealRequests.map((sr) => (
                 <span
                   key={sr.id}
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? "bg-[--surface] text-[--text-muted]"}`}
+                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${SEAL_CLASS[sr.seal.type] ?? SEAL_FALLBACK_CLASS}`}
                 >
                   {sr.seal.name}
                 </span>
@@ -115,7 +107,7 @@ export default function ArtisanHeader({ artisan, isOwnProfile, isAuthenticated: 
             </div>
           )}
           {artisan.bio && (
-            <p className="line-clamp-3 text-sm text-[--text-muted]">{artisan.bio}</p>
+            <p className="line-clamp-3 text-sm text-muted-foreground">{artisan.bio}</p>
           )}
         </div>
       </div>

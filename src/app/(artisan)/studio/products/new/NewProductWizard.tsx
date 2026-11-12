@@ -68,7 +68,7 @@ function SelectField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+        <label htmlFor={uid} className="block text-sm font-normal text-muted-foreground">
           {label}
         </label>
       )}
@@ -78,18 +78,18 @@ function SelectField({
           id={uid}
           disabled={disabled}
           onClick={() => { if (!disabled) setOpen((prev) => !prev); }}
-          className={`flex w-full items-center justify-between rounded-lg border border-[--border] bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-[#3d5a4f] ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-[--text-muted]" : "text-[--text]"}`}
+          className={`flex w-full items-center justify-between rounded-lg border border-border bg-white px-3 py-1.5 text-left text-sm outline-none transition-colors focus-visible:border-primary ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${!value ? "text-muted-foreground" : "text-foreground"}`}
         >
           <span>{selected?.label ?? placeholder ?? "Selecciona..."}</span>
-          <ChevronDown size={14} className={`shrink-0 text-[--text-muted] transition-transform${open ? " rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`shrink-0 text-muted-foreground transition-transform${open ? " rotate-180" : ""}`} />
         </button>
 
         {open && (
-          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-[--border] bg-white shadow-lg">
+          <ul className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-lg border border-border bg-white shadow-lg">
             {placeholder && (
               <li
                 onMouseDown={(e) => { e.preventDefault(); onChange(""); setOpen(false); }}
-                className="cursor-pointer px-3 py-2 text-sm text-[--text-muted] transition-colors hover:bg-[#ccc8bc]"
+                className="cursor-pointer px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-border"
               >
                 {placeholder}
               </li>
@@ -98,7 +98,7 @@ function SelectField({
               <li
                 key={opt.value}
                 onMouseDown={(e) => { e.preventDefault(); onChange(opt.value); setOpen(false); }}
-                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-[#ccc8bc] text-[--text]" : "text-[--text] hover:bg-[#ccc8bc]"}`}
+                className={`cursor-pointer px-3 py-2 text-sm transition-colors ${value === opt.value ? "bg-border text-foreground" : "text-foreground hover:bg-border"}`}
               >
                 {opt.label}
               </li>
@@ -125,7 +125,7 @@ function SortablePhoto({
       style={{ transform: CSS.Transform.toString(transform), transition, zIndex: isDragging ? 10 : undefined }}
       {...attributes}
       {...listeners}
-      className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-2 row-span-2" : ""}${isDragging ? " opacity-70 ring-2 ring-[#3d5a4f]" : ""}`}
+      className={`group relative aspect-square cursor-grab overflow-hidden rounded-xl active:cursor-grabbing${isHero ? " col-span-2 row-span-2" : ""}${isDragging ? " opacity-70 ring-2 ring-primary" : ""}`}
     >
       <Image
         src={url}
@@ -291,13 +291,13 @@ function DatePickerField({
   return (
     <>
       {label && (
-        <label htmlFor={uid} className="block text-sm font-normal text-[--text-muted]">
+        <label htmlFor={uid} className="block text-sm font-normal text-muted-foreground">
           {label}
         </label>
       )}
       <div ref={ref} className="relative">
       {/* Trigger: input de texto + botón icono calendario */}
-      <div className="flex items-center overflow-hidden rounded-lg border border-[--border] bg-white transition-colors focus-within:border-[#3d5a4f]">
+      <div className="flex items-center overflow-hidden rounded-lg border border-border bg-white transition-colors focus-within:border-primary">
         <input
           id={uid}
           type="text"
@@ -305,13 +305,13 @@ function DatePickerField({
           value={inputText}
           onChange={handleTextChange}
           placeholder="dd/mm/aaaa"
-          className="flex-1 bg-transparent px-3 py-1.5 text-sm text-[--text] outline-none placeholder:text-[--text-muted]"
+          className="flex-1 bg-transparent px-3 py-1.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
         />
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
           aria-label={open ? "Cerrar calendario" : "Abrir calendario"}
-          className="cursor-pointer px-3 py-1.5 text-[--text-muted] transition-colors hover:text-[--text]"
+          className="cursor-pointer px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
         >
           <CalendarDays size={14} />
         </button>
@@ -319,25 +319,25 @@ function DatePickerField({
 
       {/* Popup del calendario */}
       {open && (
-        <div className="absolute left-0 right-0 z-50 mt-1 rounded-xl border border-[--border] bg-white p-3 shadow-lg">
+        <div className="absolute left-0 right-0 z-50 mt-1 rounded-xl border border-border bg-white p-3 shadow-lg">
           {/* Navegación de mes */}
           <div className="mb-3 flex items-center justify-between">
             <button
               type="button"
               aria-label="Mes anterior"
               onClick={prevMonth}
-              className="cursor-pointer rounded-full p-1 text-[--text-muted] transition-colors hover:bg-[#f4f0e8]"
+              className="cursor-pointer rounded-full p-1 text-muted-foreground transition-colors hover:bg-background"
             >
               <ChevronLeft size={16} />
             </button>
-            <span className="text-sm font-medium text-[--text]">
+            <span className="text-sm font-medium text-foreground">
               {MONTHS_ES[viewMonth]} {viewYear}
             </span>
             <button
               type="button"
               aria-label="Mes siguiente"
               onClick={nextMonth}
-              className="cursor-pointer rounded-full p-1 text-[--text-muted] transition-colors hover:bg-[#f4f0e8]"
+              className="cursor-pointer rounded-full p-1 text-muted-foreground transition-colors hover:bg-background"
             >
               <ChevronRight size={16} />
             </button>
@@ -346,7 +346,7 @@ function DatePickerField({
           {/* Cabecera días de la semana */}
           <div className="mb-1 grid grid-cols-7 text-center">
             {DAYS_ES.map((d) => (
-              <span key={d} className="py-0.5 text-[10px] font-medium text-[--text-muted]">{d}</span>
+              <span key={d} className="py-0.5 text-[10px] font-medium text-muted-foreground">{d}</span>
             ))}
           </div>
 
@@ -366,12 +366,12 @@ function DatePickerField({
                   className={[
                     "mx-auto flex h-7 w-7 items-center justify-center rounded-full text-xs transition-colors",
                     selected
-                      ? "bg-[#3d5a4f] font-medium text-white"
+                      ? "bg-primary font-medium text-white"
                       : today
-                      ? "cursor-pointer border border-[#3d5a4f] font-medium text-[#3d5a4f] hover:bg-[#f4f0e8]"
+                      ? "cursor-pointer border border-primary font-medium text-primary hover:bg-background"
                       : disabled
-                      ? "cursor-not-allowed text-[--text-muted] opacity-40"
-                      : "cursor-pointer text-[--text] hover:bg-[#f4f0e8]",
+                      ? "cursor-not-allowed text-muted-foreground opacity-40"
+                      : "cursor-pointer text-foreground hover:bg-background",
                   ].join(" ")}
                 >
                   {day}
@@ -382,11 +382,11 @@ function DatePickerField({
 
           {/* Borrar selección */}
           {value && (
-            <div className="mt-2 border-t border-[--border] pt-2 text-right">
+            <div className="mt-2 border-t border-border pt-2 text-right">
               <button
                 type="button"
                 onClick={() => { onChange(""); setOpen(false); }}
-                className="cursor-pointer text-xs text-[--text-muted] transition-colors hover:text-[--text]"
+                className="cursor-pointer text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
                 Borrar selección
               </button>
@@ -581,8 +581,8 @@ export default function NewProductWizard() {
     if (result?.success) {
       if (result.isFirstProduct) {
         toast.custom(() => (
-          <div className="rounded-xl border border-[--border] bg-[--surface] px-4 py-3 shadow-md">
-            <p className="font-display text-lg text-[#3d5a4f]">
+          <div className="rounded-xl border border-border bg-card px-4 py-3 shadow-md">
+            <p className="font-display text-lg text-primary">
               ¡Tu primera pieza ya está en Artelier!
             </p>
           </div>
@@ -597,10 +597,10 @@ export default function NewProductWizard() {
   // ─── Paso 1: fotos ────────────────────────────────────────────────────────
   if (step === 1) {
     return (
-      <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-        <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
+      <div className="bg-background"><div className="space-y-6 px-4 py-8">
+        <h1 className="font-display text-xl font-bold text-foreground">Añadir producto</h1>
 
-        <p className="text-sm text-[--text-muted]">Paso 1 de 2 — Añade las imágenes del producto</p>
+        <p className="text-sm text-muted-foreground">Paso 1 de 2 — Añade las imágenes del producto</p>
 
         {/* Grid de 3 huecos con drag & drop — siempre visible:
               - DndContext es el contenedor que habilita el drag & drop.
@@ -637,10 +637,10 @@ export default function NewProductWizard() {
                 return (
                   <label
                     key={`empty-${i}`}
-                    className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] transition-colors hover:border-[#3d5a4f]/50 hover:bg-[--surface-2]${isHero ? " col-span-2 row-span-2" : ""}`}
+                    className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border bg-card transition-colors hover:border-primary/50 hover:bg-muted${isHero ? " col-span-2 row-span-2" : ""}`}
                   >
-                    <span className={`select-none font-extralight leading-none text-[#3d5a4f]/50 ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
-                    <span className={`text-[--text-muted] ${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
+                    <span className={`select-none font-extralight leading-none text-primary/50 ${isHero ? "text-5xl" : "text-3xl"}`}>+</span>
+                    <span className={`text-muted-foreground ${isHero ? "text-sm font-medium" : "text-[10px]"}`}>
                       {isHero ? "Portada" : `Imagen ${i + 1}`}
                     </span>
                     <input
@@ -659,14 +659,14 @@ export default function NewProductWizard() {
         </DndContext>
         
         
-        <p className="text-center text-xs text-[--text-muted]">
+        <p className="text-center text-xs text-muted-foreground">
           {images.length === 0
             ? "Puedes subir hasta 6 imágenes en formato JPEG, PNG o WebP"
             : `${images.length}/${MAX_IMAGES} imagen${images.length > 1 ? "es" : ""} añadida${images.length > 1 ? "s" : ""} · Arrastra para reordenar`}
         </p>
 
         {isUploading && (
-          <p className="text-center text-sm text-[--text-muted]">Subiendo imagen...</p>
+          <p className="text-center text-sm text-muted-foreground">Subiendo imagen...</p>
         )}
         {uploadError && <p className="text-center text-sm text-red-600">{uploadError}</p>}
         {stepOneError && <p className="text-center text-sm text-red-600">{stepOneError}</p>}
@@ -683,14 +683,14 @@ export default function NewProductWizard() {
               setStep(2);
             }}
             disabled={isUploading}
-            className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex-1 cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             Siguiente
           </button>
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+            className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm text-foreground transition-colors hover:bg-border"
           >
             Cancelar
           </button>
@@ -713,14 +713,14 @@ export default function NewProductWizard() {
 
   // ─── Paso 2: datos ────────────────────────────────────────────────────────
   return (
-    <div className="bg-[--bg]"><div className="space-y-6 px-4 py-8">
-      <h1 className="font-display text-xl font-bold text-[--text]">Añadir producto</h1>
+    <div className="bg-background"><div className="space-y-6 px-4 py-8">
+      <h1 className="font-display text-xl font-bold text-foreground">Añadir producto</h1>
 
-      <p className="text-sm text-[--text-muted]">Paso 2 de 2 — Completa los detalles</p>
+      <p className="text-sm text-muted-foreground">Paso 2 de 2 — Completa los detalles</p>
 
       <div className="flex gap-2">
         {images.map(({ url }, i) => (
-          <div key={url} className="relative h-14 w-14 overflow-hidden rounded-lg border border-[--border]">
+          <div key={url} className="relative h-14 w-14 overflow-hidden rounded-lg border border-border">
             <Image src={url} alt={`Imagen ${i + 1}`} fill className="object-cover" sizes="56px" />
             {i === 0 ? (
               <span className="absolute bottom-1 left-1 rounded bg-black/50 px-1 py-0.5 text-[8px] font-medium leading-none text-white">
@@ -737,7 +737,7 @@ export default function NewProductWizard() {
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="block pl-1 font-normal text-[--text-muted]">
+          <Label htmlFor="name" className="block pl-1 font-normal text-muted-foreground">
             Nombre del producto
           </Label>
           <Input
@@ -745,13 +745,13 @@ export default function NewProductWizard() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Ej: Bol de cerámica raku"
-            className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="bg-white focus-visible:border-primary focus-visible:ring-0"
           />
           {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="price" className="block pl-1 font-normal text-[--text-muted]">
+          <Label htmlFor="price" className="block pl-1 font-normal text-muted-foreground">
             Precio (€)
           </Label>
           <Input
@@ -762,14 +762,14 @@ export default function NewProductWizard() {
             value={priceEuros}
             onChange={(e) => setPriceEuros(e.target.value)}
             placeholder="Ej: 45.00"
-            className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="bg-white focus-visible:border-primary focus-visible:ring-0"
           />
           {errors.priceInCents && <p className="text-xs text-red-600">{errors.priceInCents}</p>}
         </div>
 
         <div>
           <div className="space-y-2">
-            <Label htmlFor="description" className="block pl-1 font-normal text-[--text-muted]">
+            <Label htmlFor="description" className="block pl-1 font-normal text-muted-foreground">
               Descripción breve
             </Label>
             <textarea
@@ -779,10 +779,10 @@ export default function NewProductWizard() {
               maxLength={280}
               rows={3}
               placeholder="Cuéntanos sobre esta pieza..."
-              className="w-full resize-none rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+              className="w-full resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground outline-none transition-colors focus-visible:border-primary"
             />
           </div>
-          <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-[--text-muted]"}`}>
+          <p className={`mt-1 text-right text-xs ${description.length > 260 ? "text-red-500" : "text-muted-foreground"}`}>
             {280 - description.length} restantes
           </p>
           {errors.description && <p className="text-xs text-red-600">{errors.description}</p>}
@@ -807,9 +807,9 @@ export default function NewProductWizard() {
             disabled={typeIsForced}
             options={PRODUCT_TYPES}
           />
-          <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-            <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-            <p className="text-xs text-[--text-muted]">{TYPE_DESCRIPTIONS[type]}</p>
+          <div className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2">
+            <Info size={13} className="mt-0.5 shrink-0 text-primary/60" />
+            <p className="text-xs text-muted-foreground">{TYPE_DESCRIPTIONS[type]}</p>
           </div>
         </div>
 
@@ -820,7 +820,7 @@ export default function NewProductWizard() {
             onChange={(e) => setIsPersonalized(e.target.checked)}
             className="mt-0.5"
           />
-          <span className="text-sm text-[--text-muted]">
+          <span className="text-sm text-muted-foreground">
             Este producto se hace a medida o se personaliza para cada pedido
             (grabados, tallas, medidas...). No lo marques solo porque sea una
             pieza única.
@@ -835,9 +835,9 @@ export default function NewProductWizard() {
               onChange={setExpiresAt}
               min={(() => { const n = new Date(); return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`; })()}
             />
-            <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-              <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-              <p className="text-xs text-[--text-muted]">Después de esta fecha el producto se eliminará automáticamente de tu catálogo.</p>
+            <div className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2">
+              <Info size={13} className="mt-0.5 shrink-0 text-primary/60" />
+              <p className="text-xs text-muted-foreground">Después de esta fecha el producto se eliminará automáticamente de tu catálogo.</p>
             </div>
             {errors.expiresAt && <p className="text-xs text-red-600">{errors.expiresAt}</p>}
           </div>
@@ -849,14 +849,14 @@ export default function NewProductWizard() {
           type="button"
           onClick={handlePublish}
           disabled={isPending}
-          className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex-1 cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Publicando..." : "Publicar"}
         </button>
         <button
           type="button"
           onClick={() => router.push("/studio/products")}
-          className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+          className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm text-foreground transition-colors hover:bg-border"
         >
           Cancelar
         </button>

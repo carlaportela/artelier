@@ -87,7 +87,7 @@ function PublicacionForm({
             type="button"
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
-            className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[--border] bg-[--surface] text-[--text-muted] transition-colors hover:border-[#3d5a4f] hover:text-[#3d5a4f] disabled:opacity-50"
+            className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-card text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
           >
             <Upload size={28} strokeWidth={1.5} />
             <span className="text-sm">{uploading ? "Subiendo..." : "Añadir imagen"}</span>
@@ -120,9 +120,9 @@ function PublicacionForm({
           placeholder="Describe esta publicación..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-0"
         />
-        <p className="mt-1 text-right text-xs text-[--text-muted]">{content.length}/500</p>
+        <p className="mt-1 text-right text-xs text-muted-foreground">{content.length}/500</p>
       </div>
 
       {/* Actions */}
@@ -130,14 +130,14 @@ function PublicacionForm({
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+          className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm text-foreground transition-colors hover:bg-border"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isPending || uploading || !imageUrl}
-          className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex-1 cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Guardando..." : initial ? "Guardar" : "Publicar"}
         </button>
@@ -163,16 +163,16 @@ function Sheet({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm max-h-[90dvh] overflow-y-auto rounded-t-2xl bg-[--bg] p-6 sm:rounded-2xl"
+        className="w-full max-w-sm max-h-[90dvh] overflow-y-auto rounded-t-2xl bg-background p-6 sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-display text-lg text-[--text]">{title}</h2>
+          <h2 className="font-display text-lg text-foreground">{title}</h2>
           <button
             type="button"
             aria-label="Cerrar"
             onClick={onClose}
-            className="cursor-pointer text-[--text-muted] transition-colors hover:text-[--text]"
+            className="cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
           >
             <X size={18} />
           </button>
@@ -241,8 +241,8 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
               aria-label={label}
               className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors ${
                 view === v
-                  ? "bg-[--surface-2] text-[#3d5a4f]"
-                  : "text-[--text-muted] hover:bg-[#ccc8bc]/50 hover:text-[--text]"
+                  ? "bg-muted text-primary"
+                  : "text-muted-foreground hover:bg-border/50 hover:text-foreground"
               }`}
             >
               {icon}
@@ -251,7 +251,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
         </div>
         <button
           onClick={() => setShowNew(true)}
-          className="flex cursor-pointer items-center gap-1.5 rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+          className="flex cursor-pointer items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Añadir novedad
         </button>
@@ -260,10 +260,10 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
       {/* ── Empty state ── */}
       {posts.length === 0 && (
         <div className="flex flex-col items-center gap-3 py-20 text-center">
-          <p className="text-sm text-[--text-muted]">Aún no tienes publicaciones.</p>
+          <p className="text-sm text-muted-foreground">Aún no tienes publicaciones.</p>
           <button
             onClick={() => setShowNew(true)}
-            className="cursor-pointer text-sm font-medium text-[#3d5a4f] underline underline-offset-2"
+            className="cursor-pointer text-sm font-medium text-primary underline underline-offset-2"
           >
             Añade tu primera publicación
           </button>
@@ -285,7 +285,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
             <button
               key={post.id}
               onClick={() => setViewPost(post)}
-              className="relative aspect-square cursor-pointer overflow-hidden bg-[--surface]"
+              className="relative aspect-square cursor-pointer overflow-hidden bg-card"
             >
               {post.imageUrl && (
                 <Image
@@ -306,7 +306,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
           {posts.map((post) => (
             <article
               key={post.id}
-              className="overflow-hidden rounded-xl border border-[--border] bg-[--surface]"
+              className="overflow-hidden rounded-xl border border-border bg-card"
             >
               {post.imageUrl && (
                 <div className="relative aspect-square w-full">
@@ -314,19 +314,19 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                 </div>
               )}
               <div className="space-y-2 p-4">
-                <p className="text-xs text-[--text-muted]">{fmt(post.createdAt)}</p>
-                <p className="text-sm text-[--text]">{post.content}</p>
+                <p className="text-xs text-muted-foreground">{fmt(post.createdAt)}</p>
+                <p className="text-sm text-foreground">{post.content}</p>
                 <div className="flex gap-4 pt-1">
                   <button
                     onClick={() => openEdit(post)}
-                    className="flex cursor-pointer items-center gap-1 text-xs text-[--text-muted] transition-colors hover:text-[#3d5a4f]"
+                    className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-primary"
                   >
                     <Pencil size={12} />
                     Editar
                   </button>
                   {confirmDeleteId === post.id ? (
                     <span className="flex items-center gap-2 text-xs">
-                      <span className="text-[--text-muted]">¿Seguro?</span>
+                      <span className="text-muted-foreground">¿Seguro?</span>
                       <button
                         onClick={() => handleDelete(post.id)}
                         className="cursor-pointer font-medium text-red-600 hover:underline"
@@ -335,7 +335,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                       </button>
                       <button
                         onClick={() => setConfirmDeleteId(null)}
-                        className="cursor-pointer text-[--text-muted] hover:underline"
+                        className="cursor-pointer text-muted-foreground hover:underline"
                       >
                         No
                       </button>
@@ -343,7 +343,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                   ) : (
                     <button
                       onClick={() => setConfirmDeleteId(post.id)}
-                      className="flex cursor-pointer items-center gap-1 text-xs text-[--text-muted] transition-colors hover:text-red-600"
+                      className="flex cursor-pointer items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-red-600"
                     >
                       <Trash2 size={12} />
                       Eliminar
@@ -363,7 +363,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
           onClick={() => { setViewPost(null); setConfirmDeleteId(null); }}
         >
           <div
-            className="w-full max-w-sm overflow-hidden rounded-2xl bg-[--bg]"
+            className="w-full max-w-sm overflow-hidden rounded-2xl bg-background"
             onClick={(e) => e.stopPropagation()}
           >
             {viewPost.imageUrl ? (
@@ -385,26 +385,26 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                   type="button"
                   aria-label="Cerrar"
                   onClick={() => { setViewPost(null); setConfirmDeleteId(null); }}
-                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-[--text-muted] transition-colors hover:bg-[--surface]"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-card"
                 >
                   <X size={16} />
                 </button>
               </div>
             )}
             <div className="space-y-2 p-4">
-              <p className="text-xs text-[--text-muted]">{fmt(viewPost.createdAt)}</p>
-              <p className="text-sm text-[--text]">{viewPost.content}</p>
+              <p className="text-xs text-muted-foreground">{fmt(viewPost.createdAt)}</p>
+              <p className="text-sm text-foreground">{viewPost.content}</p>
               <div className="flex gap-4 pt-1">
                 <button
                   onClick={() => openEdit(viewPost)}
-                  className="flex cursor-pointer items-center gap-1.5 text-sm text-[--text-muted] transition-colors hover:text-[#3d5a4f]"
+                  className="flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   <Pencil size={14} />
                   Editar
                 </button>
                 {confirmDeleteId === viewPost.id ? (
                   <span className="flex items-center gap-2 text-sm">
-                    <span className="text-[--text-muted]">¿Seguro?</span>
+                    <span className="text-muted-foreground">¿Seguro?</span>
                     <button
                       onClick={() => handleDelete(viewPost.id)}
                       className="cursor-pointer font-medium text-red-600 hover:underline"
@@ -413,7 +413,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                     </button>
                     <button
                       onClick={() => setConfirmDeleteId(null)}
-                      className="cursor-pointer text-[--text-muted] hover:underline"
+                      className="cursor-pointer text-muted-foreground hover:underline"
                     >
                       No
                     </button>
@@ -421,7 +421,7 @@ export default function PublicacionesView({ posts }: { posts: ProcessUpdate[] })
                 ) : (
                   <button
                     onClick={() => setConfirmDeleteId(viewPost.id)}
-                    className="flex cursor-pointer items-center gap-1.5 text-sm text-[--text-muted] transition-colors hover:text-red-600"
+                    className="flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-red-600"
                   >
                     <Trash2 size={14} />
                     Eliminar

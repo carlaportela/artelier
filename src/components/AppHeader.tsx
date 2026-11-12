@@ -27,24 +27,24 @@ export default async function AppHeader() {
     : "/";
 
   return (
-    <header className="sticky top-0 shrink-0 z-40 border-b border-[--border] bg-[#f4f0e8]">
+    <header className="sticky top-0 shrink-0 z-40 border-b border-border bg-background">
       <div className="mx-auto flex h-14 w-full max-w-lg md:max-w-2xl lg:max-w-4xl items-center justify-between px-4">
 
         {/* Izquierda — nombre de marca + logo, juntos */}
         <Link
           href={homeHref}
           aria-label="Artelier — inicio"
-          className="flex items-center gap-3 transition-colors hover:text-[#4a6b5e]"
+          className="flex items-center gap-3 transition-colors hover:text-primary-hover"
         >
           <ArtelierLogo width={56} height={32} className="-translate-y-1" />
-          <span className="font-display text-2xl font-bold text-[#3d5a4f]">Artelier</span>
+          <span className="font-display text-2xl font-bold text-primary">Artelier</span>
         </Link>
 
         {/* Derecha — saludo + avatar con menú o botón Entrar */}
         <div className="flex items-center justify-end gap-3">
           {user ? (
             <>
-              <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-[--text]">
+              <span className="font-display text-xl font-bold leading-none translate-y-0.5 text-foreground">
                 {user.name ? `¡Hola ${user.name.split(" ")[0]}!` : "¡Hola!"}
               </span>
               <UserMenu
@@ -60,13 +60,13 @@ export default async function AppHeader() {
                   La página de login tiene enlace a registro para nuevas usuarias. */}
               <Link
                 href="/login"
-                className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
               >
                 Entrar
               </Link>
               <Link
                 href="/register"
-                className="hidden md:block rounded-full border border-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+                className="hidden md:block rounded-full border border-primary px-4 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
               >
                 Registrarme
               </Link>

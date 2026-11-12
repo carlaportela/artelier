@@ -19,9 +19,9 @@ export default function OrderStatusInfo({ status, statusLabel, explanation }: Pr
   return (
     <div>
       <span className="flex items-center gap-1.5">
-        <span className="flex items-center gap-1.5 font-semibold text-[--text]">
+        <span className="flex items-center gap-1.5 font-semibold text-foreground">
           <span
-            className={`h-1.5 w-1.5 shrink-0 rounded-full ${ORDER_STATUS_DOT[status] ?? "bg-[#94a49e]"}`}
+            className={`h-1.5 w-1.5 shrink-0 rounded-full ${ORDER_STATUS_DOT[status] ?? "bg-neutral"}`}
           />
           {statusLabel}
         </span>
@@ -30,14 +30,14 @@ export default function OrderStatusInfo({ status, statusLabel, explanation }: Pr
             type="button"
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? "Ocultar información del estado" : "Ver información del estado"}
-            className="cursor-pointer text-[--text-muted]/35 transition-colors hover:text-[#3d5a4f]"
+            className="cursor-pointer text-muted-foreground/35 transition-colors hover:text-primary"
           >
             <Info size={13} />
           </button>
         )}
       </span>
       {open && explanation && (
-        <p className="mt-1 rounded-lg bg-[--surface-2] px-3 py-2 text-xs text-[--text-muted]/55">
+        <p className="mt-1 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground/55">
           {explanation}
         </p>
       )}
