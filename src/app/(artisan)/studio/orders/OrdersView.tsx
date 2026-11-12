@@ -50,13 +50,13 @@ function formatDate(date: Date) {
 function StatusBadge({ status }: { status: CustomOrder["status"] }) {
   if (status === "ACCEPTED") {
     return (
-      <span className="rounded px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-50">
+      <span className="rounded px-2 py-0.5 text-xs font-medium text-primary bg-muted">
         Aceptado
       </span>
     );
   }
   return (
-    <span className="rounded px-2 py-0.5 text-xs font-medium text-gray-500 bg-gray-100">
+    <span className="rounded px-2 py-0.5 text-xs font-medium text-muted-foreground bg-muted">
       Rechazado
     </span>
   );
