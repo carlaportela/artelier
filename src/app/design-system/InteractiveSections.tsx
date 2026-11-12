@@ -115,9 +115,16 @@ export function InteractiveSection() {
                 >
                   Cancelar
                 </DialogClose>
-                <button type="button" className={BOTON.peligroSolido}>
+                <DialogClose
+                  onClick={() =>
+                    toast.success("Producto eliminado (demostración)")
+                  }
+                  render={
+                    <button type="button" className={BOTON.peligroSolido} />
+                  }
+                >
                   Sí, eliminar
-                </button>
+                </DialogClose>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -163,7 +170,13 @@ export function InteractiveSection() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => toast.loading("Subiendo fotos…")}
+            onClick={() => {
+              //Un toast.loading() que nadie resuelve se queda pegado en pantalla para
+              //siempre. La forma real de usarlo: guardar el id y resolverlo con el mismo
+              //id cuando la operación termina — aquí, una espera de mentira de 1,5s.
+              const id = toast.loading("Subiendo fotos…");
+              setTimeout(() => toast.success("Fotos subidas", { id }), 1500);
+            }}
           >
             loading
           </Button>

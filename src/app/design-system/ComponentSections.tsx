@@ -25,6 +25,7 @@ import { Separator } from "~/components/ui/separator";
 import { getProductBadge } from "~/lib/product-badges";
 
 import { BOTON } from "./botones";
+import { NoNavigate } from "./NoNavigate";
 import { Grid, Group, Note, Section, Specimen } from "./parts";
 
 // ─── Botones ─────────────────────────────────────────────────────────────────
@@ -106,7 +107,7 @@ export function ButtonSection() {
             label="Volver — componente BackButton"
             code='<BackButton href="/" label="Volver" />'
           >
-            <BackButton href="/design-system" label="Volver" />
+            <BackButton href="/" label="Volver" />
           </Specimen>
         </Grid>
 
@@ -218,11 +219,12 @@ export function BadgeSection() {
           ))}
         </Specimen>
         <Note>
-          <code>SealBadge</code> (mostaza sólido, en{" "}
-          <code>~/components/artisan/SealBadge.tsx</code>) es el patrón antiguo
-          — todavía vive en las tarjetas de producto del studio y en la página
-          de producto. Al tocar esas pantallas, migra a las clases{" "}
-          <code>.seal-*</code>.
+          <code>SealBadge</code> (mostaza sólido, un color para los cinco
+          sellos) es el patrón antiguo. El PR de corrección de inconsistencias
+          que acompaña a esta hoja lo sustituye por las clases{" "}
+          <code>.seal-*</code> en sus tres sitios de uso y borra el componente —
+          si sigue existiendo en el repo es solo porque ese PR todavía no se ha
+          mergeado.
         </Note>
       </Group>
 
@@ -418,25 +420,40 @@ export function CardSection() {
         hint="Anatomía: franja de artesana con su avatar, imagen cuadrada con badge de estado, nombre y precio. Aquí sin foto, para ver el estado vacío."
       >
         <Specimen
-          label="ProductCard en sus tres estados"
+          label="ProductCard — las cuatro variantes de estado"
           code="<ProductCard product={...} />"
           surface="bg"
         >
-          <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-3">
-            <ProductCard
-              product={{ ...PRODUCTO_DEMO, status: "ACTIVE", expiresAt: null }}
-            />
-            <ProductCard
-              product={{
-                ...PRODUCTO_DEMO,
-                status: "ACTIVE",
-                expiresAt: new Date("2030-01-01"),
-              }}
-            />
-            <ProductCard
-              product={{ ...PRODUCTO_DEMO, status: "SOLD", expiresAt: null }}
-            />
-          </div>
+          {/* NoNavigate: el producto de la demo no existe en la base de datos — sin esto,
+              clicar la ficha llevaría a un 404 real en vez de solo mostrar el diseño. */}
+          <NoNavigate>
+            <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
+              <ProductCard
+                product={{
+                  ...PRODUCTO_DEMO,
+                  status: "ACTIVE",
+                  expiresAt: null,
+                }}
+              />
+              <ProductCard
+                product={{
+                  ...PRODUCTO_DEMO,
+                  status: "ACTIVE",
+                  expiresAt: new Date("2030-01-01"),
+                }}
+              />
+              <ProductCard
+                product={{ ...PRODUCTO_DEMO, status: "SOLD", expiresAt: null }}
+              />
+              <ProductCard
+                product={{
+                  ...PRODUCTO_DEMO,
+                  status: "EXPIRED",
+                  expiresAt: null,
+                }}
+              />
+            </div>
+          </NoNavigate>
         </Specimen>
       </Group>
     </Section>
@@ -511,10 +528,13 @@ export function BrandSection() {
           </div>
         </Specimen>
         <Note>
-          La clase <code>.banner-lino</code> (textura de lino) es el patrón
-          antiguo, todavía en el editor del studio — la artesana ve ahí un fondo
-          distinto al que luego ve el público. Al tocar esa pantalla,
-          sustitúyela por <code>&lt;DefaultBanner /&gt;</code>.
+          La clase <code>.banner-lino</code> (textura de lino, en el editor del
+          studio) es el patrón antiguo — con ella la artesana veía un fondo
+          distinto al que luego ve el público. El PR de corrección de
+          inconsistencias que acompaña a esta hoja la sustituye por{" "}
+          <code>&lt;DefaultBanner /&gt;</code> y la borra de{" "}
+          <code>globals.css</code> — si sigue existiendo es solo porque ese PR
+          todavía no se ha mergeado.
         </Note>
       </Group>
     </Section>

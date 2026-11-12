@@ -10,8 +10,8 @@
 //Si una pieza existente tiene dos formas distintas de escribirse en la app, esta hoja documenta
 //una sola — la oficial — para que no se vuelva a escribir la otra.
 //
-//NO SE PUBLICA: la ruta devuelve 404 en producción (ver la comprobación de VERCEL_ENV más
-//abajo) y lleva noindex. Se ve en local con `npm run dev` y en los despliegues de preview.
+//NO SE PUBLICA: la ruta devuelve 404 en producción (ver isProductionDeploy más abajo,
+//que funciona dentro y fuera de Vercel) y lleva noindex. Se ve en local y en preview.
 
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -51,10 +51,17 @@ const INDICE = [
   { id: "interaccion", label: "Interacción" },
 ];
 
+//Página interna: no debe existir en el sitio público.
+//En Vercel, VERCEL_ENV distingue production de preview/development — ahí basta con él.
+//Fuera de Vercel (p. ej. `next build && next start` en otro host) esa variable no existe,
+//y entonces NODE_ENV === "production" es la única señal fiable: si no sabemos que es un
+//preview, lo tratamos como producción y se bloquea. Así nunca queda expuesta por accidente.
+const isProductionDeploy = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV === "production"
+  : process.env.NODE_ENV === "production";
+
 export default function DesignSystemPage() {
-  //Página interna: no debe existir en el sitio público. En local y en los preview de Vercel
-  //VERCEL_ENV no es "production", así que sí se puede ver.
-  if (process.env.VERCEL_ENV === "production") notFound();
+  if (isProductionDeploy) notFound();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 lg:px-6">
