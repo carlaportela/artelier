@@ -220,11 +220,9 @@ export function BadgeSection() {
         </Specimen>
         <Note>
           <code>SealBadge</code> (mostaza sólido, un color para los cinco
-          sellos) es el patrón antiguo. El PR de corrección de inconsistencias
-          que acompaña a esta hoja lo sustituye por las clases{" "}
-          <code>.seal-*</code> en sus tres sitios de uso y borra el componente —
-          si sigue existiendo en el repo es solo porque ese PR todavía no se ha
-          mergeado.
+          sellos) fue el patrón anterior — vivía en las tarjetas de producto del
+          studio y en la página de producto. Ya está migrado a estas clases{" "}
+          <code>.seal-*</code> en los tres sitios y el componente se borró.
         </Note>
       </Group>
 
@@ -528,13 +526,11 @@ export function BrandSection() {
           </div>
         </Specimen>
         <Note>
-          La clase <code>.banner-lino</code> (textura de lino, en el editor del
-          studio) es el patrón antiguo — con ella la artesana veía un fondo
-          distinto al que luego ve el público. El PR de corrección de
-          inconsistencias que acompaña a esta hoja la sustituye por{" "}
-          <code>&lt;DefaultBanner /&gt;</code> y la borra de{" "}
-          <code>globals.css</code> — si sigue existiendo es solo porque ese PR
-          todavía no se ha mergeado.
+          La clase <code>.banner-lino</code> (textura de lino) fue el patrón
+          anterior en el editor del studio — con ella la artesana veía un fondo
+          distinto al que luego ve el público. Ya está migrado a{" "}
+          <code>&lt;DefaultBanner /&gt;</code> y la clase se borró de{" "}
+          <code>globals.css</code>.
         </Note>
       </Group>
     </Section>
