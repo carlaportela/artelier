@@ -1,46 +1,40 @@
 //Tokens: color, tipografía, radios, sombras y espaciado.
-//Fuente de verdad: src/styles/globals.css. Si cambias algo allí, esta hoja lo refleja sola
-//(los cuadrados se pintan con var(--token)); lo único que hay que actualizar a mano
-//es el valor escrito al lado, que es documentación.
+//Fuente de verdad: src/styles/globals.css. Esta hoja lo refleja sola — tanto el cuadrado
+//de color (pintado con var(--token) en el navegador) como el hex de al lado (leído del
+//propio fichero en el servidor vía read-tokens). No hay ningún valor escrito a mano: si
+//lo hubiera, sería la misma clase de desfase que esta página existe para evitar.
 
 import { ORDER_STATUS_DOT } from "~/lib/order-constants";
 
+import { getRootTokens } from "./read-tokens";
 import { Grid, Group, Note, Section, Specimen, Swatch } from "./parts";
 
 // ─── Color ───────────────────────────────────────────────────────────────────
 
 const SUPERFICIES = [
-  { token: "--bg", declared: "#f4f0e8", note: "Fondo de página" },
-  { token: "--surface", declared: "#eae5da", note: "Tarjetas, paneles" },
-  {
-    token: "--surface-2",
-    declared: "#ddd7c8",
-    note: "Superficie elevada / hover",
-  },
-  { token: "--brand-accent", declared: "#c4956a", note: "Mostaza de marca" },
+  { token: "--bg", note: "Fondo de página" },
+  { token: "--surface", note: "Tarjetas, paneles" },
+  { token: "--surface-2", note: "Superficie elevada / hover" },
+  { token: "--brand-accent", note: "Mostaza de marca" },
 ];
 
 const TEXTO = [
-  { token: "--text", declared: "#1a1a18", note: "Texto principal" },
-  { token: "--text-muted", declared: "#5a5648", note: "Secundario, metadatos" },
-  { token: "--text-light", declared: "#8a8478", note: "Terciario, pistas" },
+  { token: "--text", note: "Texto principal" },
+  { token: "--text-muted", note: "Secundario, metadatos" },
+  { token: "--text-light", note: "Terciario, pistas" },
 ];
 
 const SHADCN = [
-  { token: "--primary", declared: "#3d5a4f", note: "Verde Artelier" },
-  { token: "--primary-foreground", declared: "#f4f0e8" },
-  { token: "--secondary", declared: "#ddd7c8" },
-  { token: "--muted", declared: "#ddd7c8" },
-  { token: "--muted-foreground", declared: "#5a5648" },
-  { token: "--card", declared: "#eae5da" },
-  { token: "--border", declared: "#ccc8bc" },
-  { token: "--input", declared: "#ccc8bc" },
-  { token: "--ring", declared: "#3d5a4f", note: "Anillo de foco" },
-  {
-    token: "--destructive",
-    declared: "oklch(0.577 0.245 27.325)",
-    note: "Rojo de shadcn",
-  },
+  { token: "--primary", note: "Verde Artelier" },
+  { token: "--primary-foreground" },
+  { token: "--secondary" },
+  { token: "--muted" },
+  { token: "--muted-foreground" },
+  { token: "--card" },
+  { token: "--border" },
+  { token: "--input" },
+  { token: "--ring", note: "Anillo de foco" },
+  { token: "--destructive", note: "Rojo de shadcn" },
 ];
 
 const SELLOS = [
@@ -52,6 +46,9 @@ const SELLOS = [
 ];
 
 export function ColorSection() {
+  //Leído de globals.css en cada render — el valor mostrado nunca puede quedarse atrás.
+  const tokens = getRootTokens();
+
   return (
     <Section
       id="color"
@@ -64,7 +61,7 @@ export function ColorSection() {
       >
         <Grid cols={3}>
           {SUPERFICIES.map((c) => (
-            <Swatch key={c.token} {...c} />
+            <Swatch key={c.token} {...c} declared={tokens[c.token] ?? "—"} />
           ))}
         </Grid>
       </Group>
@@ -72,7 +69,7 @@ export function ColorSection() {
       <Group title="Texto" hint="Tres niveles de jerarquía. No hay un cuarto.">
         <Grid cols={3}>
           {TEXTO.map((c) => (
-            <Swatch key={c.token} {...c} />
+            <Swatch key={c.token} {...c} declared={tokens[c.token] ?? "—"} />
           ))}
         </Grid>
       </Group>
@@ -83,7 +80,7 @@ export function ColorSection() {
       >
         <Grid cols={3}>
           {SHADCN.map((c) => (
-            <Swatch key={c.token} {...c} />
+            <Swatch key={c.token} {...c} declared={tokens[c.token] ?? "—"} />
           ))}
         </Grid>
       </Group>
