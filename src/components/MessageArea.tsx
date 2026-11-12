@@ -272,7 +272,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
               type="button"
               onClick={() => void loadMore()}
               disabled={loadingMore}
-              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-[--border] bg-[--bg] px-3 py-1.5 text-xs text-[--text-muted] transition-colors hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex cursor-pointer items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loadingMore ? <Loader2 size={12} className="animate-spin" /> : null}
               {loadingMore ? "Cargando..." : "Cargar mensajes anteriores"}
@@ -281,7 +281,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
         )}
 
         {messages.length === 0 && (
-          <p className="text-center text-xs text-[--text-muted]">
+          <p className="text-center text-xs text-muted-foreground">
             Escribe el primer mensaje para iniciar la conversación
           </p>
         )}
@@ -317,8 +317,8 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
                     <div
                       className={`max-w-[75vw] rounded-2xl px-4 py-2 text-sm md:max-w-sm ${
                         isOwn
-                          ? "rounded-br-sm bg-[#3d5a4f] text-white"
-                          : "rounded-bl-sm bg-[#3d5a4f]/55 text-white"
+                          ? "rounded-br-sm bg-primary text-white"
+                          : "rounded-bl-sm bg-primary/55 text-white"
                       } ${msg.status === "sending" ? "opacity-60" : ""}`}
                     >
                       {/* Imagen del mensaje — clicable para abrir en tamaño completo */}
@@ -336,7 +336,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
                   )}
                   <time
                     dateTime={new Date(msg.createdAt).toISOString()}
-                    className="text-[10px] text-[--text-muted]"
+                    className="text-[10px] text-muted-foreground"
                   >
                     {formatTime(msg.createdAt)}
                   </time>
@@ -349,7 +349,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
       </div>
 
       {/* Input de envío */}
-      <div className="shrink-0 border-t border-[--border] bg-[--bg] px-4 py-3">
+      <div className="shrink-0 border-t border-border bg-background px-4 py-3">
         {/* Input de archivo oculto para adjuntar imágenes */}
         <input
           ref={fileInputRef}
@@ -368,13 +368,13 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
               placeholder="Escribe un mensaje..."
               rows={1}
               disabled={sending || uploadingImage}
-              className="h-full w-full resize-none overflow-hidden rounded-2xl border border-[--border] bg-[--surface] py-2.5 pl-4 pr-10 text-sm text-[--text] placeholder:text-[--text-muted] focus:outline-none focus:ring-1 focus:ring-[#3d5a4f] disabled:opacity-60"
+              className="h-full w-full resize-none overflow-hidden rounded-2xl border border-border bg-card py-2.5 pl-4 pr-10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary disabled:opacity-60"
             />
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingImage || sending}
-              className="absolute inset-y-0 right-2 my-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text] disabled:cursor-not-allowed disabled:opacity-40"
+              className="absolute inset-y-0 right-2 my-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-black/10 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Adjuntar imagen"
             >
               {uploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Paperclip size={14} />}
@@ -383,7 +383,7 @@ export default function MessageArea({ conversationId, userId, currentUser, initi
           <button
             type="submit"
             disabled={!input.trim() || sending || uploadingImage}
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#3d5a4f] text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
             aria-label="Enviar mensaje"
           >
             <Send size={16} />

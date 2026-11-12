@@ -30,12 +30,12 @@ export default async function MensajeConversacionPage({ params }: Props) {
   const currentUser = conversation.artisan;
 
   return (
-    <main className="flex h-[calc(100vh-3.5rem-6rem)] flex-col bg-[--bg]">
+    <main className="flex h-[calc(100vh-3.5rem-6rem)] flex-col bg-background">
       <ConversationReadMarker conversationId={conversationId} />
 
       {/* Encabezado */}
-      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
-        <Link href="/studio/messages" className="inline-flex items-center justify-center rounded-full p-1 text-[--text-muted] transition-colors hover:bg-black/10 hover:text-[--text]">
+      <div className="sticky top-0 z-10 flex items-center gap-3 border-b border-border bg-background px-4 py-3">
+        <Link href="/studio/messages" className="inline-flex items-center justify-center rounded-full p-1 text-muted-foreground transition-colors hover:bg-black/10 hover:text-foreground">
           <ChevronLeft size={22} />
         </Link>
         <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ export default async function MensajeConversacionPage({ params }: Props) {
             className="h-9 w-9 shrink-0"
             fillColor="#c4956a"
           />
-          <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
+          <span className="font-display ml-1 mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Compradora"}</span>
         </div>
       </div>
 

@@ -44,13 +44,13 @@ export default async function StudioProfilePage({ searchParams }: Props) {
   if (!user) redirect("/login");
 
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       {/* ── Título de sección ── */}
       <div className="flex items-center justify-between px-4 pt-8 pb-4">
-        <h1 className="font-display text-xl font-bold text-[--text]">Mi perfil</h1>
+        <h1 className="font-display text-xl font-bold text-foreground">Mi perfil</h1>
         <Link
           href={`/artisan/${user.id}`}
-          className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#ccc8bc]/40"
+          className="cursor-pointer rounded-full border border-border px-4 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-border"
         >
           Ver tu perfil público
         </Link>

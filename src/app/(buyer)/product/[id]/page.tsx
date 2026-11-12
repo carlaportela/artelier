@@ -29,13 +29,13 @@ const TYPE_BADGE: Record<
 > = {
   UNIQUE: {
     label: "Pieza única",
-    className: "bg-[#4a9e8c]/15 text-[#4a9e8c]",
+    className: "bg-teal/15 text-teal",
     tooltip:
       "Solo existe una unidad de este producto. Una vez vendido, no estará disponible.",
   },
   PERISHABLE: {
     label: "Por tiempo limitado",
-    className: "bg-[#c4956a]/15 text-[#c4956a]",
+    className: "bg-brand/15 text-brand",
     tooltip: "Este producto solo está disponible durante un período limitado.",
   },
   STANDARD: null,
@@ -99,7 +99,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const nextParam = `/product/${id}`;
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-6 md:py-10">
+    <main className="min-h-screen bg-background px-4 py-6 md:py-10">
       <div className="mx-auto max-w-lg md:max-w-2xl">
         {/* ── Flecha volver ── */}
         <div className="mb-2">
@@ -107,18 +107,18 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
 
         {/* ── Artesana (arriba del carrusel) ── */}
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-3">
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-border bg-card p-3">
           <PaletteAvatar
             src={product.artisan.image}
             name={product.artisan.name}
             className="h-12 w-12 shrink-0"
           />
           <div className="min-w-0 flex-1">
-            <p className="font-display text-base font-semibold text-[--text]">
+            <p className="font-display text-base font-semibold text-foreground">
               {product.artisan.name ?? "Artesana"}
             </p>
             {product.artisan.locality && (
-              <p className="flex items-center gap-1 text-xs text-[--text-muted]">
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <MapPin size={10} />
                 {product.artisan.locality}
               </p>
@@ -126,7 +126,7 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
           <Link
             href={`/artisan/${product.artisan.id}`}
-            className="shrink-0 rounded-full bg-[#c4956a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#d4a87a]"
+            className="shrink-0 rounded-full bg-brand px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-hover"
           >
             {isOwner ? "Ver tu perfil público" : "Ver perfil"}
           </Link>
@@ -142,10 +142,10 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* ── Info del producto ── */}
         <div className="mt-5 space-y-3">
           <div className="flex items-start justify-between gap-2">
-            <h1 className="font-display text-2xl font-bold text-[--text]">
+            <h1 className="font-display text-2xl font-bold text-foreground">
               {product.name}
             </h1>
-            <p className="shrink-0 text-xl font-bold text-[#3d5a4f]">
+            <p className="shrink-0 text-xl font-bold text-primary">
               {fmt(product.priceInCents)}
             </p>
           </div>
@@ -160,7 +160,7 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
 
           {/* Descripción */}
-          <p className="text-sm leading-relaxed whitespace-pre-line text-[--text-muted]">
+          <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
             {product.description}
           </p>
 
@@ -181,7 +181,7 @@ export default async function ProductDetailPage({ params }: Props) {
               <>
                 <Link
                   href={`/checkout?productId=${product.id}`}
-                  className="flex-1 cursor-pointer rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                  className="flex-1 cursor-pointer rounded-full bg-primary py-3 text-center text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                   aria-label="Comprar producto"
                 >
                   Comprar
@@ -194,13 +194,13 @@ export default async function ProductDetailPage({ params }: Props) {
               <>
                 <Link
                   href={`/register?next=${encodeURIComponent(nextParam)}`}
-                  className="flex-1 rounded-full bg-[#3d5a4f] py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                  className="flex-1 rounded-full bg-primary py-3 text-center text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                   Comprar
                 </Link>
                 <Link
                   href={`/register?next=${encodeURIComponent(nextParam)}`}
-                  className="flex-1 rounded-full border border-[#3d5a4f] py-3 text-center text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10"
+                  className="flex-1 rounded-full border border-primary py-3 text-center text-sm font-medium text-primary transition-colors hover:bg-primary/10"
                 >
                   Enviar mensaje
                 </Link>

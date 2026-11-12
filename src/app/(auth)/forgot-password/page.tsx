@@ -37,13 +37,13 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <div className="space-y-4 text-center">
-        <h1 className="font-display text-xl sm:text-2xl text-[--text]">Recupera tu contraseña</h1>
-        <p className="text-sm sm:text-base text-[--text-muted]">
+        <h1 className="font-display text-xl sm:text-2xl text-foreground">Recupera tu contraseña</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Si existe una cuenta con ese email, recibirás las instrucciones en breve.
         </p>
         <Link
           href="/login"
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
         >
           <ArrowLeft size={14} />
           Volver al inicio de sesión
@@ -57,15 +57,15 @@ export default function ForgotPasswordPage() {
       {/* Volver — solo envuelve el texto */}
       <Link
         href="/login"
-        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
       >
         <ArrowLeft size={14} />
         Volver al inicio de sesión
       </Link>
 
       <div>
-        <h1 className="font-display text-xl sm:text-2xl text-[--text]">Recupera tu contraseña</h1>
-        <p className="mt-1 text-sm text-[--text-muted]">
+        <h1 className="font-display text-xl sm:text-2xl text-foreground">Recupera tu contraseña</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Introduce tu correo electrónico y te enviaremos el enlace de recuperación.
         </p>
       </div>
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
             type="email"
             autoComplete="email"
             {...form.register("email")}
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-600">
@@ -90,7 +90,7 @@ export default function ForgotPasswordPage() {
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 sm:py-2.5 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full cursor-pointer rounded-full bg-primary py-2 sm:py-2.5 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Enviando..." : "Recuperar contraseña"}
         </Button>

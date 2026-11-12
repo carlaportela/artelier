@@ -9,7 +9,7 @@ interface SealBadgeProps {
 export function SealBadge({ name, className }: SealBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-[#c4956a] px-2 py-0.5 font-display text-[10px] font-medium text-white ${className ?? ""}`}
+      className={`inline-flex items-center rounded-full bg-brand px-2 py-0.5 font-display text-[10px] font-medium text-white ${className ?? ""}`}
     >
       {name}
     </span>

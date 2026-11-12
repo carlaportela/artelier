@@ -98,7 +98,7 @@ export default function FeedClient({
                 type="button"
                 onClick={loadMore}
                 disabled={isLoading}
-                className="cursor-pointer rounded-full bg-[#3d5a4f]/55 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3d5a4f]/40 disabled:cursor-not-allowed disabled:opacity-50"
+                className="cursor-pointer rounded-full bg-primary/55 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 {isLoading ? "Cargando..." : "Cargar más"}
             </button>

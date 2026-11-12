@@ -48,12 +48,12 @@ export default async function ConversationPage({ params }: Props) {
       : undefined;
 
   return (
-    <main className="fixed inset-x-0 bottom-0 top-14 flex flex-col bg-[--bg]">
+    <main className="fixed inset-x-0 bottom-0 top-14 flex flex-col bg-background">
       <div className="mx-auto flex h-full w-full min-h-0 max-w-lg flex-col md:max-w-2xl lg:max-w-4xl">
       <ConversationReadMarker conversationId={conversationId} />
 
       {/* Encabezado: en móvil fila simple a la izquierda; en md+ tres columnas con el perfil centrado */}
-      <div className="flex shrink-0 items-center gap-3 border-b border-[--border] bg-[--bg] px-4 py-3">
+      <div className="flex shrink-0 items-center gap-3 border-b border-border bg-background px-4 py-3">
         <div className="md:flex-1">
           <BackButton href="/messages" label="Volver a mensajes" />
         </div>
@@ -61,12 +61,12 @@ export default async function ConversationPage({ params }: Props) {
           {otherProfileHref ? (
             <Link href={otherProfileHref} className="flex items-center gap-2">
               <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#4a9e8c" />
-              <span className="font-display mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Artesana"}</span>
+              <span className="font-display mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Artesana"}</span>
             </Link>
           ) : (
             <div className="flex items-center gap-2">
               <PaletteAvatar src={otherUser.image} name={otherUser.name} className="h-9 w-9 shrink-0" fillColor="#c4956a" />
-              <span className="font-display mt-1 text-lg font-bold leading-none text-[--text]">{otherUser.name ?? "Compradora"}</span>
+              <span className="font-display mt-1 text-lg font-bold leading-none text-foreground">{otherUser.name ?? "Compradora"}</span>
             </div>
           )}
         </div>

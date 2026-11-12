@@ -44,23 +44,23 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-[--bg]">
+    <div className="flex min-h-screen flex-col bg-background">
       <AppHeader />
       <main className="flex-1 px-4 py-8">
         <div className="mx-auto max-w-lg md:max-w-2xl lg:max-w-4xl">
 
           {/* ── Bienvenida ── */}
           <div className="mb-8 text-center">
-            <h1 className="font-display text-3xl font-bold text-[--text] sm:text-4xl">
+            <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
               Tu mercado de artesanía local
             </h1>
-            <p className="mt-2 text-sm text-[--text-muted]">
+            <p className="mt-2 text-sm text-muted-foreground">
               Descubre productos únicos de artesanía cerca de ti
             </p>
           </div>
 
           {products.length === 0 ? (
-            <p className="py-20 text-center text-sm text-[--text-muted]">
+            <p className="py-20 text-center text-sm text-muted-foreground">
               Pronto habrá artesanas aquí.
             </p>
           ) : (

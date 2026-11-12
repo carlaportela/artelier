@@ -26,8 +26,8 @@ function NavItem({
       onClick={active ? (e) => e.preventDefault() : undefined}
       className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center transition-colors ${
         active
-          ? "cursor-default text-[#c4956a]"
-          : "cursor-pointer text-[--text-muted] hover:text-[#c4956a]"
+          ? "cursor-default text-brand"
+          : "cursor-pointer text-muted-foreground hover:text-brand"
       }`}
     >
       <Icon size={24} strokeWidth={active ? 2 : 1.5} />
@@ -40,7 +40,7 @@ export default function ArtisanBottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-[--border] bg-[#f4f0e8]">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background">
       <div className="mx-auto flex h-16 w-full max-w-lg md:max-w-2xl lg:max-w-4xl items-center justify-around px-2">
         <NavItem
           href="/studio/products"
@@ -61,8 +61,8 @@ export default function ArtisanBottomNav() {
           onClick={pathname.startsWith("/studio/products/new") ? (e) => e.preventDefault() : undefined}
           className={`-mt-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white shadow-md transition ${
             pathname.startsWith("/studio/products/new")
-              ? "cursor-default bg-[#c4956a]"
-              : "cursor-pointer bg-[#3d5a4f] hover:scale-110 hover:bg-[#c4956a] active:scale-95"
+              ? "cursor-default bg-brand"
+              : "cursor-pointer bg-primary hover:scale-110 hover:bg-brand active:scale-95"
           }`}
         >
           <Plus size={24} />

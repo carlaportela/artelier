@@ -84,17 +84,17 @@ export default async function OrderDetailPage({ params }: Props) {
       : undefined;
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-8 md:px-6 md:py-10">
+    <main className="min-h-screen bg-background px-4 py-8 md:px-6 md:py-10">
       <div className="space-y-6">
-        <h1 className="font-display flex flex-wrap items-baseline gap-2 text-xl font-bold text-[--text] md:text-2xl">
+        <h1 className="font-display flex flex-wrap items-baseline gap-2 text-xl font-bold text-foreground md:text-2xl">
           {t("orderDetail")}
-          <span className="text-[#3d5a4f]">{order.id}</span>
+          <span className="text-primary">{order.id}</span>
         </h1>
 
         <div className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
         {/* Tarjeta del pedido */}
-        <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Lo que has comprado</p>
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+          <p className="font-display mb-4 text-base font-bold text-foreground md:text-lg">Lo que has comprado</p>
           <div className="flex gap-4">
             {productImage ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -104,9 +104,9 @@ export default async function OrderDetailPage({ params }: Props) {
                 className="h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
               />
             ) : (
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-[--surface-2] sm:h-24 sm:w-24">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-muted sm:h-24 sm:w-24">
                 <Package
-                  className="h-7 w-7 text-[--text-muted]"
+                  className="h-7 w-7 text-muted-foreground"
                   strokeWidth={1.5}
                 />
               </div>
@@ -114,55 +114,55 @@ export default async function OrderDetailPage({ params }: Props) {
 
             <div className="min-w-0 flex-1 space-y-1.5 text-sm">
               <p>
-                <span className="text-[--text-muted]">Producto: </span>
-                <span className="font-medium text-[--text]">{order.product.name}</span>
+                <span className="text-muted-foreground">Producto: </span>
+                <span className="font-medium text-foreground">{order.product.name}</span>
               </p>
               <p>
-                <span className="text-[--text-muted]">Artesano: </span>
+                <span className="text-muted-foreground">Artesano: </span>
                 <Link
                   href={`/artisan/${order.artisan.id}`}
-                  className="text-[--text] transition-colors hover:text-[#3d5a4f]"
+                  className="text-foreground transition-colors hover:text-primary"
                 >
                   {order.artisan.name}
                 </Link>
               </p>
               <p>
-                <span className="text-[--text-muted]">Fecha: </span>
-                <span className="text-[--text]">{formattedDate}</span>
+                <span className="text-muted-foreground">Fecha: </span>
+                <span className="text-foreground">{formattedDate}</span>
               </p>
               <p>
-                <span className="text-[--text-muted]">Método de envío: </span>
-                <span className="text-[--text]">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
+                <span className="text-muted-foreground">Método de envío: </span>
+                <span className="text-foreground">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
               </p>
             </div>
           </div>
         </div>
 
         {/* Desglose de costes */}
-        <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">Lo que has pagado</p>
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+          <p className="font-display mb-4 text-base font-bold text-foreground md:text-lg">Lo que has pagado</p>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-[--text-muted]">Precio</span>
-              <span className="text-[--text]">
+              <span className="text-muted-foreground">Precio</span>
+              <span className="text-foreground">
                 {formatCents(order.priceInCents)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-[--text-muted]">Envío</span>
-              <span className="text-[--text]">
+              <span className="text-muted-foreground">Envío</span>
+              <span className="text-foreground">
                 {formatCents(shippingCostInCents)}
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-[--text-muted]">Comisiones</span>
-              <span className="text-[--text]">
+              <span className="text-muted-foreground">Comisiones</span>
+              <span className="text-foreground">
                 {formatCents(commissionsInCents)}
               </span>
             </div>
-            <div className="flex justify-between border-t border-[--border] pt-2 text-sm font-semibold">
-              <span className="text-[--text]">Total</span>
-              <span className="text-[--text]">
+            <div className="flex justify-between border-t border-border pt-2 text-sm font-semibold">
+              <span className="text-foreground">Total</span>
+              <span className="text-foreground">
                 {formatCents(order.totalInCents)}
               </span>
             </div>
@@ -171,8 +171,8 @@ export default async function OrderDetailPage({ params }: Props) {
         </div>
 
         {/* Estado */}
-        <div className="rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
-          <p className="font-display mb-4 text-base font-bold text-[--text] md:text-lg">El estado en el que se encuentra</p>
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+          <p className="font-display mb-4 text-base font-bold text-foreground md:text-lg">El estado en el que se encuentra</p>
           <OrderStatusInfo
             status={order.status}
             statusLabel={t(`orderStatus.${order.status}`)}
@@ -182,16 +182,16 @@ export default async function OrderDetailPage({ params }: Props) {
 
         {/* Número de seguimiento */}
         {order.trackingNumber && (
-          <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5">
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 sm:p-5">
             <Truck
-              className="h-5 w-5 shrink-0 text-[#3d5a4f]"
+              className="h-5 w-5 shrink-0 text-primary"
               strokeWidth={1.5}
             />
             <div>
-              <p className="text-xs font-medium text-[--text-muted]">
+              <p className="text-xs font-medium text-muted-foreground">
                 {t("trackingNumber")}
               </p>
-              <p className="font-mono text-sm font-medium text-[--text]">
+              <p className="font-mono text-sm font-medium text-foreground">
                 {order.trackingNumber}
               </p>
             </div>
@@ -214,7 +214,7 @@ export default async function OrderDetailPage({ params }: Props) {
           {/* Volver a mis pedidos */}
           <Link
             href="/orders"
-            className="block w-full rounded-full bg-[#3d5a4f] py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] sm:flex-1"
+            className="block w-full rounded-full bg-primary py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-primary-hover sm:flex-1"
           >
             Volver a mis pedidos
           </Link>

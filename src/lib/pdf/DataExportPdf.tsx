@@ -9,7 +9,7 @@ const GREEN = "#3d5a4f";
 const MUSTARD = "#c4956a";
 const MUTED = "#888888";
 const BORDER = "#e0dbd0";
-const BG_LIGHT = "#f5f0e8";
+const BG_LIGHT = "#f4f0e8";
 const TEXT = "#2c2c2c";
 
 const s = StyleSheet.create({

@@ -15,7 +15,7 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
   return (
     <div className="space-y-2">
       {/* Imagen principal */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[--surface]">
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-card">
         {imageUrls[selected] ? (
           <Image
             src={imageUrls[selected] ?? ""}
@@ -27,7 +27,7 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <span className="text-sm text-[--text-muted]">Sin imagen</span>
+            <span className="text-sm text-muted-foreground">Sin imagen</span>
           </div>
         )}
         {badge && (
@@ -45,9 +45,9 @@ export default function ImageCarousel({ imageUrls, name, badge }: ImageCarouselP
               key={i}
               type="button"
               onClick={() => setSelected(i)}
-              className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[--surface] transition-all duration-200 ${
+              className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-card transition-all duration-200 ${
                 i === selected
-                  ? "cursor-default ring-2 ring-[#3d5a4f] ring-offset-1"
+                  ? "cursor-default ring-2 ring-primary ring-offset-1"
                   : "cursor-pointer opacity-60 hover:opacity-100"
               }`}
               aria-label={`Ver foto ${i + 1}`}

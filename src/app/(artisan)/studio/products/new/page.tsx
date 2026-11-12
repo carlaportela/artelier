@@ -21,7 +21,7 @@ export default async function NewProductPage() {
 
   //Si ya existe la cuenta de Stripe muestra el formulario para añadir un nuevo producto.
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       <NewProductWizard />
     </main>
   );

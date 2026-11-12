@@ -56,10 +56,10 @@ export default function ConfirmShipmentForm({
             value={trackingNumber}
             onChange={(e) => setTrackingNumber(e.target.value)}
             placeholder="Número de seguimiento"
-            className="w-full rounded-xl border border-[--border] bg-[--surface] px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] focus:ring-2 focus:ring-[#3d5a4f]/30 focus:outline-none"
+            className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary/30 focus:outline-none"
           />
           {trackingNumber.trim().length === 0 && (
-            <p className="text-xs text-[--text-muted]">
+            <p className="text-xs text-muted-foreground">
               Introduce un número de seguimiento para confirmar el envío.
             </p>
           )}
@@ -68,7 +68,7 @@ export default function ConfirmShipmentForm({
       <button
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className="w-full rounded-full bg-[#3d5a4f] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:opacity-50"
+        className="w-full rounded-full bg-primary py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:opacity-50"
       >
         {loading //Si es recogida en persona, en el botón de confirmar el envío se muestra el texto de "Marcar listo para recogida", sino "Confirmar envío"
           ? "Confirmando..."

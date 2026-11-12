@@ -104,7 +104,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       {/* Banner */}
       <div className="space-y-2">
         <Label htmlFor="banner-upload">{t("uploadBanner")}</Label>
-        <div className="relative h-[100px] w-full overflow-hidden rounded-lg bg-[--surface]">
+        <div className="relative h-[100px] w-full overflow-hidden rounded-lg bg-card">
           {bannerUrl && (
             <Image src={bannerUrl} alt="Banner" fill className="object-cover" />
           )}
@@ -128,7 +128,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         />
         <label
           htmlFor="banner-upload"
-          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploadingBanner ? "cursor-not-allowed opacity-50" : ""}`}
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-muted ${uploadingBanner ? "cursor-not-allowed opacity-50" : ""}`}
         >
           <Upload size={13} />
           {uploadingBanner ? "Subiendo..." : bannerUrl ? "Cambiar portada" : "Subir portada"}
@@ -139,7 +139,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       {/* Avatar */}
       <div className="space-y-2">
         <Label htmlFor="avatar-upload">{t("uploadAvatar")}</Label>
-        <div className="relative h-16 w-16 overflow-hidden rounded-full bg-[--surface]">
+        <div className="relative h-16 w-16 overflow-hidden rounded-full bg-card">
           {avatarUrl && (
             <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
           )}
@@ -163,7 +163,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         />
         <label
           htmlFor="avatar-upload"
-          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[--border] bg-white px-3 py-1.5 text-xs text-[--text] transition-colors hover:bg-[--surface-2] ${uploadingAvatar ? "cursor-not-allowed opacity-50" : ""}`}
+          className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs text-foreground transition-colors hover:bg-muted ${uploadingAvatar ? "cursor-not-allowed opacity-50" : ""}`}
         >
           <Upload size={13} />
           {uploadingAvatar ? "Subiendo..." : avatarUrl ? "Cambiar imagen" : "Subir imagen de perfil"}
@@ -174,7 +174,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       {/* Nombre */}
       <div className="space-y-1">
         <Label htmlFor="name">Nombre</Label>
-        <Input id="name" className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0" {...form.register("name")} />
+        <Input id="name" className="bg-white focus-visible:border-primary focus-visible:ring-0" {...form.register("name")} />
         {form.formState.errors.name && (
           <p className="text-sm text-red-600">{form.formState.errors.name.message}</p>
         )}
@@ -188,10 +188,10 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           rows={3}
           maxLength={150}
           placeholder={t("bioPlaceholder")}
-          className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-colors focus-visible:border-primary focus-visible:ring-0"
           {...form.register("bio")}
         />
-        <p className="text-right text-xs text-[--text-muted]">
+        <p className="text-right text-xs text-muted-foreground">
           {form.watch("bio")?.length ?? 0}/150
         </p>
         {form.formState.errors.bio && (
@@ -202,13 +202,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       {/* Localidad */}
       <div className="space-y-1">
         <Label htmlFor="locality">Localidad</Label>
-        <Input id="locality" className="bg-white focus-visible:border-[#3d5a4f] focus-visible:ring-0" {...form.register("locality")} />
+        <Input id="locality" className="bg-white focus-visible:border-primary focus-visible:ring-0" {...form.register("locality")} />
         {form.formState.errors.locality && (
           <p className="text-sm text-red-600">{form.formState.errors.locality.message}</p>
         )}
       </div>
 
-      <Button type="submit" className="w-full cursor-pointer hover:bg-[#4a6b5e]" disabled={isPending || uploadingAvatar || uploadingBanner}>
+      <Button type="submit" className="w-full cursor-pointer hover:bg-primary-hover" disabled={isPending || uploadingAvatar || uploadingBanner}>
         {isPending ? "Guardando..." : saved ? t("profileSaved") : t("saveChanges")}
       </Button>
     </form>

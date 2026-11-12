@@ -26,13 +26,13 @@ export default function ArtisanProfileTabs({
   return (
     <div>
       {/* Tabs */}
-      <div className="flex border-b border-[--border]">
+      <div className="flex border-b border-border">
         <button
           onClick={() => setActiveTab("shop")}
           className={`-mb-px cursor-pointer border-b-[3px] px-4 pb-3 text-sm font-medium transition-colors ${
             activeTab === "shop"
-              ? "border-[#3d5a4f] text-[#3d5a4f] font-semibold"
-              : "border-transparent text-[--text-muted] hover:text-[#3d5a4f]/70"
+              ? "border-primary text-primary font-semibold"
+              : "border-transparent text-muted-foreground hover:text-primary/70"
           }`}
         >
           {t("products")}
@@ -41,8 +41,8 @@ export default function ArtisanProfileTabs({
           onClick={() => setActiveTab("process")}
           className={`-mb-px cursor-pointer border-b-[3px] px-4 pb-3 text-sm font-medium transition-colors ${
             activeTab === "process"
-              ? "border-[#3d5a4f] text-[#3d5a4f] font-semibold"
-              : "border-transparent text-[--text-muted] hover:text-[#3d5a4f]/70"
+              ? "border-primary text-primary font-semibold"
+              : "border-transparent text-muted-foreground hover:text-primary/70"
           }`}
         >
           {t("process")}
@@ -53,7 +53,7 @@ export default function ArtisanProfileTabs({
       {activeTab === "shop" && (
         <div className="mt-4 pb-8">
           {products.length === 0 ? (
-            <p className="py-12 text-center text-sm text-[--text-muted]">
+            <p className="py-12 text-center text-sm text-muted-foreground">
               {t("noProducts")}
             </p>
           ) : (
@@ -61,7 +61,7 @@ export default function ArtisanProfileTabs({
               {products.map((product) => {
                 const isActive = product.status === "ACTIVE";
                 const badge = getProductBadge(product.status, product.expiresAt);
-                const cardClass = `group overflow-hidden rounded-lg border border-[--border] bg-[--surface] transition-all duration-200 ${
+                const cardClass = `group overflow-hidden rounded-lg border border-border bg-card transition-all duration-200 ${
                   isActive ? "cursor-pointer hover:shadow-md hover:-translate-y-0.5" : ""
                 }`;
                 const inner = (
@@ -77,7 +77,7 @@ export default function ArtisanProfileTabs({
                           }`}
                         />
                       ) : (
-                        <div className="h-full w-full bg-[--border]" />
+                        <div className="h-full w-full bg-border" />
                       )}
                       {/* Overlay oscuro permanente para no-activos */}
                       {!isActive && (
@@ -91,10 +91,10 @@ export default function ArtisanProfileTabs({
                       )}
                     </div>
                     <div className="p-2">
-                      <p className={`truncate font-display text-base font-bold ${!isActive ? "text-[--text-muted]" : "text-[--text]"}`}>
+                      <p className={`truncate font-display text-base font-bold ${!isActive ? "text-muted-foreground" : "text-foreground"}`}>
                         {product.name}
                       </p>
-                      <p className="text-xs text-[#3d5a4f]">
+                      <p className="text-xs text-primary">
                         {(product.priceInCents / 100).toLocaleString("es-ES", {
                           style: "currency",
                           currency: "EUR",
@@ -123,17 +123,17 @@ export default function ArtisanProfileTabs({
       {activeTab === "process" && (
         <div className="mt-4 space-y-4">
           {processUpdates.length === 0 ? (
-            <p className="py-12 text-center text-sm text-[--text-muted]">
+            <p className="py-12 text-center text-sm text-muted-foreground">
               {t("noProcessUpdates")}
             </p>
           ) : (
             processUpdates.map((update) => (
               <div key={update.id} className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className="font-display text-sm font-semibold text-[--text]">
+                  <span className="font-display text-sm font-semibold text-foreground">
                     {artisanName ?? "Artesana"}
                   </span>
-                  <span className="text-xs text-[--text-muted]">
+                  <span className="text-xs text-muted-foreground">
                     {new Intl.DateTimeFormat("es-ES", {
                       day: "numeric",
                       month: "long",
@@ -141,7 +141,7 @@ export default function ArtisanProfileTabs({
                     }).format(new Date(update.createdAt))}
                   </span>
                 </div>
-                <blockquote className="rounded-lg bg-[--surface] px-4 py-3 font-display text-sm text-[--text]">
+                <blockquote className="rounded-lg bg-card px-4 py-3 font-display text-sm text-foreground">
                   {update.content}
                 </blockquote>
                 {update.imageUrl && (

@@ -70,11 +70,11 @@ function ProductListRow({ product }: { product: Product }) {
 
   return (
     <>
-      <div className={`flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-2 transition-colors ${product.status !== "EXPIRED" ? "hover:border-[#c4956a]/40" : "opacity-60"}`}>
+      <div className={`flex items-center gap-3 rounded-xl border border-border bg-card p-2 transition-colors ${product.status !== "EXPIRED" ? "hover:border-brand/40" : "opacity-60"}`}>
         {/* Miniatura */}
         <Link
           href={`/studio/products/${product.id}`}
-          className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[--surface-2]"
+          className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-muted"
           aria-label={`Editar ${product.name}`}
         >
           {product.imageUrls[0] ? (
@@ -87,16 +87,16 @@ function ProductListRow({ product }: { product: Product }) {
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <span className="text-[10px] text-[--text-muted]">Sin foto</span>
+              <span className="text-[10px] text-muted-foreground">Sin foto</span>
             </div>
           )}
         </Link>
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-[--text-muted]" : "text-[--text]"}`}>{product.name}</p>
+          <p className={`truncate font-display text-base ${product.status === "EXPIRED" ? "text-muted-foreground" : "text-foreground"}`}>{product.name}</p>
           <div className="mt-0.5 flex items-center gap-2">
-            <p className="text-xs text-[#3d5a4f]">{fmt(product.priceInCents)}</p>
+            <p className="text-xs text-primary">{fmt(product.priceInCents)}</p>
             <StatusPill status={product.status} expiresAt={product.expiresAt} />
           </div>
         </div>
@@ -105,7 +105,7 @@ function ProductListRow({ product }: { product: Product }) {
         <div className="flex shrink-0 gap-1.5">
           <Link
             href={`/studio/products/${product.id}`}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[--border] text-[--text-muted] transition-colors hover:border-[#3d5a4f] hover:text-[#3d5a4f]"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             aria-label="Editar producto"
           >
             <Pencil size={14} />
@@ -114,7 +114,7 @@ function ProductListRow({ product }: { product: Product }) {
             type="button"
             onClick={() => setShowConfirm(true)}
             disabled={isPending}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[--border] text-[--text-muted] transition-colors hover:border-red-300 hover:text-red-500 disabled:opacity-50"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-red-300 hover:text-red-500 disabled:opacity-50"
             aria-label="Eliminar producto"
           >
             <Trash2 size={14} />
@@ -126,10 +126,10 @@ function ProductListRow({ product }: { product: Product }) {
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
           <div className="w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl">
-            <h2 className="mb-2 font-display text-base font-semibold text-[--text]">
+            <h2 className="mb-2 font-display text-base font-semibold text-foreground">
               ¿Eliminar este producto?
             </h2>
-            <p className="mb-5 text-sm text-[--text-muted]">
+            <p className="mb-5 text-sm text-muted-foreground">
               El producto desaparecerá de tu catálogo. Esta acción no se puede deshacer.
             </p>
             <div className="flex gap-3">
@@ -144,7 +144,7 @@ function ProductListRow({ product }: { product: Product }) {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 cursor-pointer rounded-full border border-[#ccc8bc] py-2 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+                className="flex-1 cursor-pointer rounded-full border border-border py-2 text-sm text-foreground transition-colors hover:bg-border"
               >
                 Cancelar
               </button>
@@ -194,8 +194,8 @@ export default function CatalogoView({ products }: { products: Product[] }) {
               aria-label={label}
               className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors ${
                 view === v
-                  ? "bg-[--surface-2] text-[#3d5a4f]"
-                  : "text-[--text-muted] hover:bg-[#ccc8bc]/50 hover:text-[--text]"
+                  ? "bg-muted text-primary"
+                  : "text-muted-foreground hover:bg-border/50 hover:text-foreground"
               }`}
             >
               {icon}
@@ -204,7 +204,7 @@ export default function CatalogoView({ products }: { products: Product[] }) {
         </div>
         <Link
           href="/studio/products/new"
-          className="rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+          className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
         >
           Añadir producto
         </Link>

@@ -58,7 +58,7 @@ export default function StripeConnectButton({ className, label, returnTo }: Prop
       disabled={loading}
       className={
         className ??
-        "mt-3 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+        "mt-3 cursor-pointer rounded-full bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
       }
     >
       {loading ? "Cargando..." : (label ?? "Conectar cuenta bancaria")}

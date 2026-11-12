@@ -48,7 +48,7 @@ export default function ProfilePageClient({ user, sealRequests, followersCount, 
 
       {/* ── Sección de cuenta ── */}
       <section className="mt-8 space-y-6 px-5 pb-8">
-        <hr className="border-[#ccc8bc]" />
+        <hr className="border-border" />
 
         {/* ── 3 botones principales ── */}
         <div className="flex flex-wrap gap-2">
@@ -57,8 +57,8 @@ export default function ProfilePageClient({ user, sealRequests, followersCount, 
             onClick={() => toggle("profile")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
               activeSection === "profile"
-                ? "cursor-default bg-[#3d5a4f] opacity-75 shadow-inner"
-                : "cursor-pointer bg-[#3d5a4f] hover:bg-[#4a6b5e]"
+                ? "cursor-default bg-primary opacity-75 shadow-inner"
+                : "cursor-pointer bg-primary hover:bg-primary-hover"
             }`}
           >
             Editar perfil
@@ -69,8 +69,8 @@ export default function ProfilePageClient({ user, sealRequests, followersCount, 
             onClick={() => toggle("account")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
               activeSection === "account"
-                ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
-                : "cursor-pointer bg-[#94a49e] hover:bg-[#a3b1ab]"
+                ? "cursor-default bg-neutral opacity-60 shadow-inner"
+                : "cursor-pointer bg-neutral hover:bg-neutral-hover"
             }`}
           >
             Gestionar cuenta
@@ -81,8 +81,8 @@ export default function ProfilePageClient({ user, sealRequests, followersCount, 
             onClick={() => toggle("export")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
               activeSection === "export"
-                ? "cursor-default bg-[#c4956a] opacity-75 shadow-inner"
-                : "cursor-pointer bg-[#c4956a] hover:bg-[#d4a57a]"
+                ? "cursor-default bg-brand opacity-75 shadow-inner"
+                : "cursor-pointer bg-brand hover:bg-brand-hover"
             }`}
           >
             Exportar datos
@@ -154,34 +154,34 @@ function ProfileEditSection({
       {errors.general && <p className="text-sm text-red-600">{errors.general}</p>}
 
       <div className="space-y-2">
-        <label className="block pl-1 text-sm font-medium text-[--text]">Nombre</label>
+        <label className="block pl-1 text-sm font-medium text-foreground">Nombre</label>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Tu nombre"
-          className="w-full rounded-lg border border-[#ccc8bc] bg-white px-3 py-1.5 text-sm text-[--text] outline-none transition-colors focus-visible:border-[#3d5a4f]"
+          className="w-full rounded-lg border border-border bg-white px-3 py-1.5 text-sm text-foreground outline-none transition-colors focus-visible:border-primary"
         />
         {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
       </div>
 
       <div className="space-y-2">
-        <label className="block pl-1 text-sm font-medium text-[--text]">Localidad</label>
+        <label className="block pl-1 text-sm font-medium text-foreground">Localidad</label>
         <LocalidadSelect value={locality} onChange={setLocality} error={errors.locality} />
       </div>
 
       <div>
         <div className="space-y-2">
-          <label className="block pl-1 text-sm font-medium text-[--text]">Biografía</label>
+          <label className="block pl-1 text-sm font-medium text-foreground">Biografía</label>
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={3}
             maxLength={150}
             placeholder="Cuéntanos algo sobre ti..."
-            className="w-full resize-none rounded-lg border border-[#ccc8bc] bg-white px-3 py-2 text-sm text-[--text] outline-none placeholder:text-[--text-muted] transition-colors focus-visible:border-[#3d5a4f]"
+            className="w-full resize-none rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground outline-none placeholder:text-muted-foreground transition-colors focus-visible:border-primary"
           />
         </div>
-        <p className={`mt-1 text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-[--text-muted]"}`}>
+        <p className={`mt-1 text-right text-xs ${bio.length > 130 ? "text-red-500" : "text-muted-foreground"}`}>
           {150 - bio.length} restantes
         </p>
       </div>
@@ -191,7 +191,7 @@ function ProfileEditSection({
           type="button"
           onClick={handleSave}
           disabled={isPending}
-          className="cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="cursor-pointer rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Guardando..." : "Guardar cambios"}
         </button>
@@ -199,7 +199,7 @@ function ProfileEditSection({
           type="button"
           onClick={onClose}
           disabled={isPending}
-          className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc] disabled:opacity-60"
+          className="cursor-pointer rounded-full border border-border px-4 py-1.5 text-sm text-foreground transition-colors hover:bg-border disabled:opacity-60"
         >
           Cancelar
         </button>
@@ -221,12 +221,12 @@ function ExportDataSection({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="space-y-4 pt-2">
-      <p className="text-sm text-[--text-muted]">
+      <p className="text-sm text-muted-foreground">
         Recibirás un correo electrónico en la dirección de tu cuenta con el archivo adjunto en pdf en un plazo de 48 horas.
       </p>
 
       {status === "done" && (
-        <p className="text-sm text-[#3d5a4f]">✓ Solicitud enviada. Revisa tu correo en las próximas 48 horas.</p>
+        <p className="text-sm text-primary">✓ Solicitud enviada. Revisa tu correo en las próximas 48 horas.</p>
       )}
       {status === "error" && (
         <p className="text-sm text-red-600">No se pudo enviar la solicitud. Inténtalo de nuevo.</p>
@@ -238,7 +238,7 @@ function ExportDataSection({ onClose }: { onClose: () => void }) {
             type="button"
             onClick={() => { void handleExport(); }}
             disabled={status === "pending"}
-            className="cursor-pointer rounded-full bg-[#c4956a] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#d4a57a] disabled:cursor-not-allowed disabled:opacity-60"
+            className="cursor-pointer rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {status === "pending" ? "Enviando..." : "Confirmar exportación"}
           </button>
@@ -246,7 +246,7 @@ function ExportDataSection({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           onClick={onClose}
-          className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+          className="cursor-pointer rounded-full border border-border px-4 py-1.5 text-sm text-foreground transition-colors hover:bg-border"
         >
           {status === "done" ? "Cerrar" : "Cancelar"}
         </button>
@@ -277,7 +277,7 @@ function AccountSection({
     <div className="space-y-4 pt-2">
       {/* Email — solo lectura */}
       <div className="space-y-2">
-        <label htmlFor="account-email" className="block pl-1 text-sm font-medium text-[--text]">
+        <label htmlFor="account-email" className="block pl-1 text-sm font-medium text-foreground">
           Correo electrónico
         </label>
         <input
@@ -285,33 +285,33 @@ function AccountSection({
           type="email"
           value={user.email ?? ""}
           readOnly
-          className="w-full cursor-default rounded-lg border border-[#ccc8bc] bg-[--surface] px-3 py-1.5 text-sm text-[--text-muted] outline-none"
+          className="w-full cursor-default rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-muted-foreground outline-none"
         />
-        <div className="flex items-start gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-          <Info size={13} className="mt-0.5 shrink-0 text-[#3d5a4f]/60" />
-          <p className="text-xs text-[--text-muted]">El correo electrónico no puede modificarse desde la aplicación.</p>
+        <div className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2">
+          <Info size={13} className="mt-0.5 shrink-0 text-primary/60" />
+          <p className="text-xs text-muted-foreground">El correo electrónico no puede modificarse desde la aplicación.</p>
         </div>
       </div>
 
       {/* Cuentas vinculadas (Stripe Connect) — siempre visible, no hace falta desplegarla */}
       <div className="space-y-2">
-        <label className="block pl-1 text-sm font-medium text-[--text]">Recepción de pagos</label>
+        <label className="block pl-1 text-sm font-medium text-foreground">Recepción de pagos</label>
         {user.stripeAccountId ? (
-          <p className="rounded-lg bg-[--surface-2] px-3 py-2 text-sm text-[#3d5a4f]">
+          <p className="rounded-lg bg-muted px-3 py-2 text-sm text-primary">
             {justConnectedStripe
               ? "✓ Tu cuenta bancaria se ha conectado con éxito."
               : "✓ Tu cuenta bancaria está conectada."}
           </p>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg bg-[--surface-2] px-3 py-2">
-            <Info size={13} className="shrink-0 text-[#3d5a4f]/60" />
-            <p className="flex-1 text-xs text-[--text-muted]">
+          <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
+            <Info size={13} className="shrink-0 text-primary/60" />
+            <p className="flex-1 text-xs text-muted-foreground">
               Debes conectar una cuenta bancaria para poder recibir los pagos.
             </p>
             <StripeConnectButton
               label="Conectar"
               returnTo="/studio/profile"
-              className="shrink-0 cursor-pointer rounded-full bg-[#3d5a4f] px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+              className="shrink-0 cursor-pointer rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
         )}
@@ -324,8 +324,8 @@ function AccountSection({
           onClick={() => toggleSub("password")}
           className={`rounded-full px-4 py-1.5 text-sm font-medium text-white transition-all ${
             subSection === "password"
-              ? "cursor-default bg-[#94a49e] opacity-60 shadow-inner"
-              : "cursor-pointer bg-[#94a49e] hover:bg-[#a3b1ab]"
+              ? "cursor-default bg-neutral opacity-60 shadow-inner"
+              : "cursor-pointer bg-neutral hover:bg-neutral-hover"
           }`}
         >
           Cambiar contraseña
@@ -344,7 +344,7 @@ function AccountSection({
         <button
           type="button"
           onClick={onClose}
-          className="cursor-pointer rounded-full border border-[#ccc8bc] px-4 py-1.5 text-sm text-[--text] transition-colors hover:bg-[#ccc8bc]"
+          className="cursor-pointer rounded-full border border-border px-4 py-1.5 text-sm text-foreground transition-colors hover:bg-border"
         >
           Cancelar
         </button>

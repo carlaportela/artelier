@@ -48,8 +48,8 @@ export default function FollowButton({ artisanId, initialIsFollowing, redirectTo
       disabled={isPending}
       className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-60 ${
         !redirectTo && isFollowing
-          ? "border border-[#c4956a] bg-transparent text-[#c4956a] hover:bg-[#c4956a]/10"
-          : "bg-[#c4956a] text-white hover:bg-[#d4a87a] active:scale-95"
+          ? "border border-brand bg-transparent text-brand hover:bg-brand/10"
+          : "bg-brand text-white hover:bg-brand-hover active:scale-95"
       }`}
     >
       {label}

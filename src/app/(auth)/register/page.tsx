@@ -26,7 +26,7 @@ function RoleSelector({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h1 className="font-display text-2xl font-bold text-[--text]">
+        <h1 className="font-display text-2xl font-bold text-foreground">
           {t("chooseRole")}
         </h1>
       </div>
@@ -34,16 +34,16 @@ function RoleSelector({
         <button
           type="button"
           onClick={() => onSelect("ARTISAN")}
-          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-[--primary] hover:shadow-md active:scale-[0.99]"
+          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-primary hover:shadow-md active:scale-[0.99]"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[--primary]/10 text-[--primary] transition-colors duration-200 group-hover:bg-[--primary]/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary/20">
             <Palette size={24} strokeWidth={1.5} />
           </div>
           <div>
-            <p className="font-display text-sm font-semibold text-[--text]">
+            <p className="font-display text-sm font-semibold text-foreground">
               {t("artisan")}
             </p>
-            <p className="mt-0.5 text-xs text-[--text-muted]">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {t("artisanDescription")}
             </p>
           </div>
@@ -51,24 +51,24 @@ function RoleSelector({
         <button
           type="button"
           onClick={() => onSelect("BUYER")}
-          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-[--primary] hover:shadow-md active:scale-[0.99]"
+          className="group flex cursor-pointer items-center gap-4 rounded-xl border border-border bg-card p-5 text-left transition-all duration-200 hover:scale-[1.02] hover:border-primary hover:shadow-md active:scale-[0.99]"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[--primary]/10 text-[--primary] transition-colors duration-200 group-hover:bg-[--primary]/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors duration-200 group-hover:bg-primary/20">
             <ShoppingBag size={24} strokeWidth={1.5} />
           </div>
           <div>
-            <p className="font-display text-sm font-semibold text-[--text]">
+            <p className="font-display text-sm font-semibold text-foreground">
               {t("buyer")}
             </p>
-            <p className="mt-0.5 text-xs text-[--text-muted]">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {t("buyerDescription")}
             </p>
           </div>
         </button>
       </div>
-      <p className="text-center text-sm text-[--text-muted]">
+      <p className="text-center text-sm text-muted-foreground">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-[#4a9e8c]">
+        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-teal">
           {t("signIn")}
         </Link>
       </p>
@@ -127,7 +127,7 @@ function RegisterContent() {
       <button
         type="button"
         onClick={() => setRole(null)}
-        className="flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all duration-200 hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+        className="flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary"
       >
         <ArrowLeft size={14} />
         {role === "ARTISAN" ? t("artisan") : t("buyer")}
@@ -141,7 +141,7 @@ function RegisterContent() {
             type="email"
             autoComplete="email"
             {...form.register("email")}
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-600">
@@ -157,7 +157,7 @@ function RegisterContent() {
             type="password"
             autoComplete="new-password"
             {...form.register("password")}
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
           {form.formState.errors.password && (
             <p className="text-sm text-red-600">
@@ -172,18 +172,18 @@ function RegisterContent() {
             value={form.watch("locality")}
             onChange={(val) => form.setValue("locality", val, { shouldValidate: true })}
             error={form.formState.errors.locality?.message}
-            inputClassName="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none transition-colors focus-visible:border-[#3d5a4f] focus-visible:ring-0 md:text-sm"
+            inputClassName="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-base outline-none transition-colors focus-visible:border-primary focus-visible:ring-0 md:text-sm"
           />
         </div>
 
-        <Button type="submit" disabled={isPending} className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60">
+        <Button type="submit" disabled={isPending} className="w-full cursor-pointer rounded-full bg-primary py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60">
           {isPending ? "Creando cuenta..." : t("createAccount")}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-[--text-muted]">
+      <p className="text-center text-sm text-muted-foreground">
         {t("alreadyHaveAccount")}{" "}
-        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-[#4a9e8c]">
+        <Link href="/login" className="cursor-pointer font-medium underline underline-offset-2 transition-colors duration-200 hover:text-teal">
           {t("signIn")}
         </Link>
       </p>

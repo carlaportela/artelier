@@ -43,7 +43,7 @@ export default function SendMessageButton({
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className={`cursor-pointer rounded-full border border-[#3d5a4f] text-sm font-medium text-[#3d5a4f] transition-colors hover:bg-[#3d5a4f]/10 disabled:opacity-50 ${className}`}
+      className={`cursor-pointer rounded-full border border-primary text-sm font-medium text-primary transition-colors hover:bg-primary/10 disabled:opacity-50 ${className}`}
       aria-label="Enviar mensaje a la artesana"
     >
       {loading ? "Abriendo..." : "Enviar mensaje"}

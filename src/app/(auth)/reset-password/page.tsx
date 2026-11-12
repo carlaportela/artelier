@@ -61,8 +61,8 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="space-y-4 text-center">
-        <p className="text-[--text-muted]">{t("invalidToken")}</p>
-        <Link href="/forgot-password" className="text-sm text-[--primary] underline">
+        <p className="text-muted-foreground">{t("invalidToken")}</p>
+        <Link href="/forgot-password" className="text-sm text-primary underline">
           {t("forgotPasswordTitle")}
         </Link>
       </div>
@@ -72,7 +72,7 @@ function ResetPasswordForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl text-[--text]">{t("resetPasswordTitle")}</h1>
+        <h1 className="font-display text-2xl text-foreground">{t("resetPasswordTitle")}</h1>
       </div>
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

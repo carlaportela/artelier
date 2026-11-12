@@ -150,31 +150,31 @@ export default function SearchClient({
             {(currentQ ?? currentArtisanQ ?? currentCategory ?? currentLocality ?? currentSealId) && ( //Si hay algún filtro activo, se muestra el botón de "Limpiar filtros" y los chips de los filtros activos para que la usuaria pueda ver qué filtros tiene aplicados y quitarlos fácilmente si lo desea.
                 <div className="flex flex-wrap gap-2">
                     {currentQ && ( 
-                        <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
+                        <span className="flex items-center gap-1.5 rounded-full bg-primary/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-primary/40">
                             {currentQ}
                             <button type="button" onClick={() => applyFilter("q", null)} className="cursor-pointer leading-none">×</button>
                         </span>
                     )}
                     {currentArtisanQ && (
-                        <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
+                        <span className="flex items-center gap-1.5 rounded-full bg-primary/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-primary/40">
                             {currentArtisanQ}
                             <button type="button" onClick={() => applyFilter("artisanQ", null)} className="cursor-pointer leading-none">×</button>
                         </span>
                     )}
                     {currentCategory && (
-                        <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
+                        <span className="flex items-center gap-1.5 rounded-full bg-primary/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-primary/40">
                             {currentCategory}
                             <button type="button" onClick={() => applyFilter("category", null)} className="cursor-pointer leading-none">×</button>
                         </span>
                     )}
                     {currentLocality && (
-                        <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
+                        <span className="flex items-center gap-1.5 rounded-full bg-primary/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-primary/40">
                             {currentLocality}
                             <button type="button" onClick={() => applyFilter("locality", null)} className="cursor-pointer leading-none">×</button>
                         </span>
                     )}
                     {currentSealId && (
-                        <span className="flex items-center gap-1.5 rounded-full bg-[#3d5a4f]/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#3d5a4f]/40">
+                        <span className="flex items-center gap-1.5 rounded-full bg-primary/55 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-primary/40">
                             {seals.find((s) => s.id === currentSealId)?.name ?? "Sello"}
                             <button type="button" onClick={() => applyFilter("sealId", null)} className="cursor-pointer leading-none">×</button>
                         </span>
@@ -184,7 +184,7 @@ export default function SearchClient({
 
             {/* Pestañas de filtros */}
             <div>
-                <div className="flex border-b border-[--border]">
+                <div className="flex border-b border-border">
                     {(Object.keys(TAB_LABELS) as Tab[]).map((tab) => (
                         <button
                             key={tab}
@@ -192,8 +192,8 @@ export default function SearchClient({
                             onClick={() => setActiveTab(tab)}
                             className={`-mb-px flex-1 cursor-pointer border-b-[3px] pb-3 text-center text-sm font-medium transition-colors ${
                                 activeTab === tab
-                                    ? "border-[#3d5a4f] text-[#3d5a4f] font-semibold"
-                                    : "border-transparent text-[--text-muted] hover:text-[#3d5a4f]/70"
+                                    ? "border-primary text-primary font-semibold"
+                                    : "border-transparent text-muted-foreground hover:text-primary/70"
                             }`}
                         >
                             {TAB_LABELS[tab]}
@@ -208,7 +208,7 @@ export default function SearchClient({
                             value={inputQ}
                             onChange={(e) => setInputQ(e.target.value)}
                             placeholder="Buscar por nombre de producto..."
-                            className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none focus-visible:border-[#3d5a4f]"
+                            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:border-primary"
                         />
                     )}
 
@@ -218,7 +218,7 @@ export default function SearchClient({
                             value={inputArtisanQ}
                             onChange={(e) => setInputArtisanQ(e.target.value)}
                             placeholder="Buscar por nombre de artesana/o..."
-                            className="w-full rounded-lg border border-[--border] bg-white px-3 py-2 text-sm text-[--text] placeholder:text-[--text-muted] outline-none focus-visible:border-[#3d5a4f]"
+                            className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:border-primary"
                         />
                     )}
 
@@ -232,8 +232,8 @@ export default function SearchClient({
                                     disabled={currentCategory === cat}
                                     className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                                         currentCategory === cat
-                                            ? "cursor-not-allowed border border-[--border] bg-[#ccc8bc]/50 text-[--text]"
-                                            : "cursor-pointer border border-[--border] text-[--text] hover:bg-[#ccc8bc]/50"
+                                            ? "cursor-not-allowed border border-border bg-border/50 text-foreground"
+                                            : "cursor-pointer border border-border text-foreground hover:bg-border/50"
                                     }`}
                                 >
                                     {cat}
@@ -253,7 +253,7 @@ export default function SearchClient({
                     {activeTab === "sello" && (
                         <div className="flex flex-wrap gap-2">
                             {seals.length === 0 ? (
-                                <p className="text-sm text-[--text-muted]">No hay sellos disponibles aún</p>
+                                <p className="text-sm text-muted-foreground">No hay sellos disponibles aún</p>
                             ) : (
                                 seals.map((seal) => (
                                     <button
@@ -262,8 +262,8 @@ export default function SearchClient({
                                         onClick={() => applyFilter("sealId", currentSealId === seal.id ? null : seal.id)}
                                         className={`cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                                             currentSealId === seal.id
-                                                ? "bg-[#3d5a4f]/55 text-white hover:bg-[#3d5a4f]/40"
-                                                : "border border-[--border] text-[--text] hover:bg-[#ccc8bc]/50"
+                                                ? "bg-primary/55 text-white hover:bg-primary/40"
+                                                : "border border-border text-foreground hover:bg-border/50"
                                         }`}
                                     >
                                         {seal.name}
@@ -278,12 +278,12 @@ export default function SearchClient({
             {/* Resultados */}
             {products.length === 0 ? (
                 <div className="flex flex-col items-center gap-4 py-20 text-center">
-                    <p className="text-sm text-[--text-muted]">No existen productos con estos términos de búsqueda</p>
+                    <p className="text-sm text-muted-foreground">No existen productos con estos términos de búsqueda</p>
                     {(currentQ ?? currentArtisanQ ?? currentCategory ?? currentLocality ?? currentSealId) && (
                         <button
                             type="button"
                             onClick={() => router.push("/search")}
-                            className="cursor-pointer rounded-full bg-[#3d5a4f] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+                            className="cursor-pointer rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                         >
                             Limpiar filtros
                         </button>
@@ -303,7 +303,7 @@ export default function SearchClient({
                                 type="button"
                                 onClick={loadMore}
                                 disabled={isLoading}
-                                className="cursor-pointer rounded-full bg-[#3d5a4f]/55 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#3d5a4f]/40 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="cursor-pointer rounded-full bg-primary/55 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {isLoading ? "Cargando..." : "Cargar más"}
                             </button>

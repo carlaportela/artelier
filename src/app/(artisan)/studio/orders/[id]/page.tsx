@@ -65,23 +65,23 @@ export default async function OrderDetailPage({ params }: Props) {
   const productImage = order.product.imageUrls[0] ?? null;
 
   return (
-    <main className="min-h-screen bg-[--bg] px-4 py-8">
+    <main className="min-h-screen bg-background px-4 py-8">
       <div className="mx-auto max-w-lg space-y-6">
         {/* Volver */}
         <Link
           href="/studio/orders"
-          className="inline-flex items-center gap-1 text-sm text-[--text-muted] transition-colors hover:text-[--text]"
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ChevronLeft className="h-4 w-4" />
           {t("myOrders")}
         </Link>
 
-        <h1 className="font-display text-2xl font-bold text-[--text]">
+        <h1 className="font-display text-2xl font-bold text-foreground">
           {t("orderDetail")}
         </h1>
 
         {/* Tarjeta del producto */}
-        <div className="flex items-center gap-4 rounded-xl border border-[--border] bg-[--surface] p-4">
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
           {productImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -90,44 +90,44 @@ export default async function OrderDetailPage({ params }: Props) {
               className="h-16 w-16 shrink-0 rounded-lg object-cover"
             />
           ) : (
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-[--surface-2]">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-muted">
               <Package
-                className="h-7 w-7 text-[--text-muted]"
+                className="h-7 w-7 text-muted-foreground"
                 strokeWidth={1.5}
               />
             </div>
           )}
           <div className="min-w-0">
-            <p className="font-display font-bold text-[--text]">
+            <p className="font-display font-bold text-foreground">
               {order.product.name}
             </p>
-            <p className="mt-1 text-xs text-[--text-muted]">{formattedDate}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{formattedDate}</p>
           </div>
-          <span className="ml-auto shrink-0 rounded-full bg-[--surface-2] px-2.5 py-1 text-xs text-[--text-muted]">
+          <span className="ml-auto shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
             {t(`orderStatus.${order.status}`)}
           </span>
         </div>
 
         {/* Número de seguimiento */}
         {order.trackingNumber && (
-          <div className="flex items-center gap-3 rounded-xl border border-[--border] bg-[--surface] p-4">
+          <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
             <Truck
-              className="h-5 w-5 shrink-0 text-[#3d5a4f]"
+              className="h-5 w-5 shrink-0 text-primary"
               strokeWidth={1.5}
             />
             <div>
-              <p className="text-xs font-medium text-[--text-muted]">
+              <p className="text-xs font-medium text-muted-foreground">
                 {t("trackingNumber")}
               </p>
-              <p className="font-mono text-sm font-medium text-[--text]">
+              <p className="font-mono text-sm font-medium text-foreground">
                 {order.trackingNumber}
               </p>
             </div>
           </div>
         )}
         {/* Comprador */}
-        <div className="rounded-xl border border-[--border] bg-[--surface] p-4">
-          <p className="mb-3 text-xs font-medium text-[--text-muted]">
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="mb-3 text-xs font-medium text-muted-foreground">
             Datos del comprador
           </p>
           <div className="flex items-center gap-3">
@@ -138,10 +138,10 @@ export default async function OrderDetailPage({ params }: Props) {
               fillColor="#c4956a"
             />
             <div>
-              <p className="text-sm font-medium text-[--text]">
+              <p className="text-sm font-medium text-foreground">
                 {order.buyer.name} {order.buyer.lastName}
               </p>
-              <p className="text-xs text-[--text-muted]">
+              <p className="text-xs text-muted-foreground">
                 {order.buyer.street}, {order.buyer.postalCode}{" "}
                 {order.buyer.city}, {order.buyer.province}
               </p>
@@ -150,28 +150,28 @@ export default async function OrderDetailPage({ params }: Props) {
         </div>
 
         {/* Desglose de costes */}
-        <div className="space-y-2 rounded-xl border border-[--border] bg-[--surface] p-4">
+        <div className="space-y-2 rounded-xl border border-border bg-card p-4">
           <div className="flex justify-between text-sm">
-            <span className="text-[--text-muted]">Producto</span>
-            <span className="text-[--text]">
+            <span className="text-muted-foreground">Producto</span>
+            <span className="text-foreground">
               {formatCents(order.priceInCents)}
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-[--text-muted]">Método de envío</span>
-            <span className="text-[--text]">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
+            <span className="text-muted-foreground">Método de envío</span>
+            <span className="text-foreground">{SHIPPING_METHOD_LABELS[order.shippingMethod]}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-[--text-muted]">
+            <span className="text-muted-foreground">
               Gastos de envío y comisión
             </span>
-            <span className="text-[--text]">
+            <span className="text-foreground">
               {formatCents(order.totalInCents - order.priceInCents)}
             </span>
           </div>
-          <div className="flex justify-between border-t border-[--border] pt-2 text-sm font-semibold">
-            <span className="text-[--text]">Total</span>
-            <span className="text-[--text]">
+          <div className="flex justify-between border-t border-border pt-2 text-sm font-semibold">
+            <span className="text-foreground">Total</span>
+            <span className="text-foreground">
               {formatCents(order.totalInCents)}
             </span>
           </div>

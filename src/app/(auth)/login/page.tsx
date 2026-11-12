@@ -50,7 +50,7 @@ export default function LoginPage() {
       {/* Volver al catálogo — arriba a la izquierda, solo envuelve el texto */}
       <Link
         href="/"
-        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-[--text-muted] transition-all hover:bg-[#3d5a4f]/10 hover:text-[#3d5a4f]"
+        className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
       >
         <ArrowLeft size={14} />
         Volver al catálogo
@@ -70,7 +70,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             {...form.register("email")}
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
           {form.formState.errors.email && (
             <p className="text-sm text-red-600">
@@ -84,7 +84,7 @@ export default function LoginPage() {
             <Label htmlFor="password">{t("password")}</Label>
             <Link
               href="/forgot-password"
-              className="text-xs text-[--text-muted] hover:text-[--text] underline"
+              className="text-xs text-muted-foreground hover:text-foreground underline"
             >
               {t("forgotPassword")}
             </Link>
@@ -94,7 +94,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             {...form.register("password")}
-            className="focus-visible:border-[#3d5a4f] focus-visible:ring-0"
+            className="focus-visible:border-primary focus-visible:ring-0"
           />
           {form.formState.errors.password && (
             <p className="text-sm text-red-600">
@@ -106,17 +106,17 @@ export default function LoginPage() {
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full cursor-pointer rounded-full bg-[#3d5a4f] py-2 sm:py-2.5 text-sm font-medium text-white hover:bg-[#4a6b5e] disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full cursor-pointer rounded-full bg-primary py-2 sm:py-2.5 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "Iniciando sesión..." : t("login")}
         </Button>
       </form>
 
-      <p className="text-center text-sm text-[--text-muted]">
+      <p className="text-center text-sm text-muted-foreground">
         ¿No tienes cuenta?{" "}
         <Link
           href="/register"
-          className="font-medium underline underline-offset-2 transition-colors hover:text-[#c4956a]"
+          className="font-medium underline underline-offset-2 transition-colors hover:text-brand"
         >
           Regístrate aquí
         </Link>

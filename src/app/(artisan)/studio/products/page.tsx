@@ -34,16 +34,16 @@ export default async function StudioProductsPage() {
   });
 
   return (
-    <main className="bg-[--bg]">
+    <main className="bg-background">
       <div className="px-4 py-8">
-        <h1 className="mb-6 font-display text-xl font-bold text-[--text]">Mi catálogo</h1>
+        <h1 className="mb-6 font-display text-xl font-bold text-foreground">Mi catálogo</h1>
 
         {products.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-            <p className="text-[--text-muted]">Aún no has publicado ningún producto.</p>
+            <p className="text-muted-foreground">Aún no has publicado ningún producto.</p>
             <Link
               href="/studio/products/new"
-              className="rounded-full bg-[#3d5a4f] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#4a6b5e]"
+              className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
             >
               Publica tu primer producto
             </Link>
