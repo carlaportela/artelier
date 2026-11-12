@@ -81,6 +81,20 @@ Artelier opera bajo el principio del **slow commerce**: el tiempo de espera, la 
 
 ---
 
+## Sistema de diseño
+
+Toda la interfaz comparte una sola paleta — **Tinta y Lino**: verde de bosque, mostaza cálida y cremas de lino, pensada para transmitir cercanía y oficio artesanal en vez del aspecto genérico de un e-commerce.
+
+En vez de documentarla en un Figma que se desactualiza en una semana, Artelier tiene un **sticker sheet vivo**: una ruta interna que importa los componentes *reales* de la app y lee los colores directamente de `globals.css` — la fuente de verdad real sigue siendo ese fichero, la hoja solo lo refleja sin copiarlo a mano. Ahí se documentan tokens de color, tipografía, espaciado y convenciones de componentes (botones, sellos verificados, tarjetas, formularios...), con el código exacto con el que se escribe cada pieza.
+
+<p align="center">
+  <img src="./docs/design-system.png" alt="Sticker sheet de Artelier — tokens de color y tipografía" width="640" />
+</p>
+
+<p align="center"><sub>Disponible en local y en despliegues de preview — <code>/design-system</code></sub></p>
+
+---
+
 ## Desarrollo local
 
 ```bash
