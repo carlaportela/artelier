@@ -8,7 +8,6 @@ import ProductCard from "~/components/ProductCard";
 import ScallopDivider from "~/components/ScallopDivider";
 import ArtelierLogo from "~/components/ArtelierLogo";
 import DefaultBanner from "~/components/artisan/DefaultBanner";
-import { SealBadge } from "~/components/artisan/SealBadge";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -45,7 +44,7 @@ export function ButtonSection() {
     <Section
       id="botones"
       title="Botones"
-      description="Hay dos sistemas en marcha: el Button de ui/ (basado en tokens) y la convención escrita a mano con hex. El objetivo a medio plazo es que la convención viva dentro de Button como variantes."
+      description="Dos familias, cada una para su sitio: la convención Artelier para los botones de acción de una pantalla (confirmar, cancelar, seguir…) y el Button de ui/ para los controles de interfaz de los componentes de shadcn (diálogos, formularios)."
     >
       <Group
         title="Convención Artelier"
@@ -111,13 +110,10 @@ export function ButtonSection() {
           </Specimen>
         </Grid>
 
-        <Note tone="warn">
-          Esta convención hoy no existe como código: se reescribe a mano en cada
-          pantalla. Por eso hay cuatro opacidades distintas de hover gris (
-          <code>hover:bg-[#ccc8bc]</code>, <code>/30</code>, <code>/40</code>) y
-          dos mostazas de hover casi idénticas (<code>#d4a57a</code> y{" "}
-          <code>#d4a87a</code>). La solución es llevarlas a{" "}
-          <code>buttonVariants</code>.
+        <Note>
+          Copia estas clases exactamente — no improvises una opacidad de gris
+          distinta ni un tono de mostaza distinto. El hover siempre es un paso
+          más claro, nunca una opacidad del mismo color sólido.
         </Note>
       </Group>
 
@@ -162,6 +158,15 @@ const BADGE_VARIANTS = [
   "ghost",
 ] as const;
 
+//Las clases de sello declaradas en globals.css. Lista completa también en la sección Color.
+const SELLOS_DEMO = [
+  { clase: "seal-mano", etiqueta: "Hecho a mano" },
+  { clase: "seal-eco", etiqueta: "Ecológico" },
+  { clase: "seal-reciclado", etiqueta: "Reciclado" },
+  { clase: "seal-galicia", etiqueta: "Hecho en Galicia" },
+  { clase: "seal-km0", etiqueta: "Km 0" },
+];
+
 const PRODUCTOS_DEMO = [
   {
     status: "ACTIVE" as const,
@@ -196,19 +201,28 @@ export function BadgeSection() {
       </Group>
 
       <Group
-        title="SealBadge — sellos de artesana"
-        hint="Mostaza sólida con tipografía display. Se usa en tarjetas de producto, perfil y edición."
+        title="Sellos verificados"
+        hint="Un color por tipo de sello (ver la paleta en Color). Úsalas siempre, estén sobre un producto o sobre un perfil — nunca el mismo color para los cinco."
       >
-        <Specimen label="SealBadge" code={`<SealBadge name="Hecho a mano" />`}>
-          <SealBadge name="Hecho a mano" />
-          <SealBadge name="Km 0" />
-          <SealBadge name="Ecológico" />
+        <Specimen
+          label="Clases .seal-*"
+          code={`<span className="seal-eco rounded-full px-2.5 py-1 text-xs font-medium">Ecológico</span>`}
+        >
+          {SELLOS_DEMO.map((s) => (
+            <span
+              key={s.clase}
+              className={`${s.clase} rounded-full px-2.5 py-1 text-xs font-medium`}
+            >
+              {s.etiqueta}
+            </span>
+          ))}
         </Specimen>
-        <Note tone="warn">
-          Ojo: <code>SealBadge</code> (mostaza, display) y las clases{" "}
-          <code>.seal-*</code> de la sección de color (pastel, sans) son dos
-          lenguajes visuales distintos para el mismo concepto de sello. Hay que
-          unificarlos.
+        <Note>
+          <code>SealBadge</code> (mostaza sólido, en{" "}
+          <code>~/components/artisan/SealBadge.tsx</code>) es el patrón antiguo
+          — todavía vive en las tarjetas de producto del studio y en la página
+          de producto. Al tocar esas pantallas, migra a las clases{" "}
+          <code>.seal-*</code>.
         </Note>
       </Group>
 
@@ -333,10 +347,9 @@ export function FormSection() {
         </Specimen>
       </Grid>
 
-      <Note tone="warn">
-        No hay componente de <code>textarea</code> en <code>ui/</code>, así que
-        cada pantalla reescribe sus clases. Es un buen candidato a componente
-        propio.
+      <Note>
+        No hay componente de <code>textarea</code> en <code>ui/</code>: para un
+        área de texto, copia las mismas clases que el campo de arriba.
       </Note>
     </Section>
   );
@@ -425,10 +438,6 @@ export function CardSection() {
             />
           </div>
         </Specimen>
-        <Note tone="warn">
-          La franja de artesana usa <code>bg-[#dedad2]</code>, un gris cálido
-          que no está en globals.css. Debería ser un token.
-        </Note>
       </Group>
     </Section>
   );
@@ -493,25 +502,19 @@ export function BrandSection() {
       </Group>
 
       <Group
-        title="Fondos de portada"
-        hint="Dos opciones para una artesana sin foto de portada."
+        title="Fondo de portada por defecto"
+        hint="Para una artesana sin foto de portada, siempre DefaultBanner — en el perfil público y también en el editor del studio."
       >
-        <Grid>
-          <Specimen
-            label="DefaultBanner — confetti SVG"
-            code="<DefaultBanner />"
-          >
-            <div className="h-28 w-full overflow-hidden rounded-xl">
-              <DefaultBanner />
-            </div>
-          </Specimen>
-          <Specimen label="Textura lino" code={`className="banner-lino"`}>
-            <div className="banner-lino h-28 w-full rounded-xl" />
-          </Specimen>
-        </Grid>
-        <Note tone="warn">
-          Dos portadas por defecto distintas conviviendo. Hay que decidir cuál
-          es la oficial.
+        <Specimen label="DefaultBanner — confetti SVG" code="<DefaultBanner />">
+          <div className="h-28 w-full overflow-hidden rounded-xl">
+            <DefaultBanner />
+          </div>
+        </Specimen>
+        <Note>
+          La clase <code>.banner-lino</code> (textura de lino) es el patrón
+          antiguo, todavía en el editor del studio — la artesana ve ahí un fondo
+          distinto al que luego ve el público. Al tocar esa pantalla,
+          sustitúyela por <code>&lt;DefaultBanner /&gt;</code>.
         </Note>
       </Group>
     </Section>

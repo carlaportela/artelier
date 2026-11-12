@@ -30,8 +30,8 @@ export function InteractiveSection() {
       title="Navegación e interacción"
       description="Pruébalas: estas piezas solo se evalúan bien tocándolas."
     >
-      {/* El Toaster no está montado en el layout de la app, así que lo montamos aquí
-          para poder demostrar los avisos. Ver la sección de auditoría. */}
+      {/* Montamos el Toaster aquí mismo para poder demostrar los avisos —
+          es justo lo que hay que hacer una vez en el layout real antes de usar toast(). */}
       <Toaster position="bottom-center" />
 
       <Group
@@ -168,11 +168,10 @@ export function InteractiveSection() {
             loading
           </Button>
         </Specimen>
-        <Note tone="bad">
-          Estos avisos funcionan aquí porque esta página monta{" "}
-          <code>&lt;Toaster /&gt;</code>. En la app no está montado en ningún
-          layout, así que los <code>toast()</code> de las vistas de pedidos no
-          se ven. Está detallado en la auditoría.
+        <Note>
+          Para que <code>toast()</code> funcione en una pantalla, tiene que
+          existir un <code>&lt;Toaster /&gt;</code> montado en algún layout por
+          encima — solo hace falta uno para toda la app.
         </Note>
       </Group>
 

@@ -126,10 +126,10 @@ export function ColorSection() {
             ))}
           </div>
         </Specimen>
-        <Note tone="warn">
-          IN_DISPUTE usa <code>bg-red-600</code> (paleta de Tailwind) mientras
-          el resto usa hex de Artelier. Mezclar las dos paletas de rojo es una
-          de las inconsistencias a cerrar.
+        <Note>
+          El rojo de atención/destructivo es siempre <code>red-600</code> /{" "}
+          <code>red-700</code> de Tailwind — nunca un hex de Artelier a mano. Es
+          la misma regla que en <a href="#botones">Botones</a>.
         </Note>
       </Group>
     </Section>
@@ -288,26 +288,20 @@ export function ShapeSection() {
 
       <Group
         title="Separación de superficie"
-        hint="Hoy conviven dos técnicas para exactamente lo mismo."
+        hint="Para separar una tarjeta o un panel del fondo, usa siempre un borde — no un anillo."
       >
-        <Grid>
-          <Specimen
-            label="Card de ui/ — anillo interior"
-            code={`className="ring-1 ring-foreground/10"`}
-          >
-            <span className="bg-card ring-foreground/10 h-14 w-32 rounded-xl ring-1" />
-          </Specimen>
-          <Specimen
-            label="Tarjetas escritas a mano — borde"
-            code={`className="border border-border"`}
-          >
-            <span className="border-border bg-card h-14 w-32 rounded-xl border" />
-          </Specimen>
-        </Grid>
-        <Note tone="warn">
-          Hay que elegir una de las dos y aplicarla en todas partes. No son
-          equivalentes: el anillo no ocupa espacio en el layout y el borde sí,
-          así que mezclarlas descuadra alineaciones.
+        <Specimen
+          label="La forma correcta — borde"
+          code={`className="border border-border rounded-xl"`}
+        >
+          <span className="border-border bg-card h-14 w-32 rounded-xl border" />
+        </Specimen>
+        <Note>
+          Si alguna vez usas el componente <code>Card</code> de <code>ui/</code>
+          , viene con su propio anillo interior (<code>ring-1</code>) en vez de
+          borde — no le añadas además un <code>border</code>: el anillo no ocupa
+          espacio en el layout y el borde sí, y mezclar los dos descuadra la
+          alineación.
         </Note>
       </Group>
 

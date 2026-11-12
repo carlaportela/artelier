@@ -7,6 +7,8 @@
 //
 //CÓMO MANTENERLA: cada vez que crees un componente reutilizable, añádelo a la sección que le
 //toque. Si no sabes en qué sección va, probablemente el componente esté haciendo dos cosas.
+//Si una pieza existente tiene dos formas distintas de escribirse en la app, esta hoja documenta
+//una sola — la oficial — para que no se vuelva a escribir la otra.
 //
 //NO SE PUBLICA: la ruta devuelve 404 en producción (ver la comprobación de VERCEL_ENV más
 //abajo) y lleva noindex. Se ve en local con `npm run dev` y en los despliegues de preview.
@@ -14,7 +16,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { AuditSection } from "./AuditSection";
 import {
   BadgeSection,
   BrandSection,
@@ -48,7 +49,6 @@ const INDICE = [
   { id: "tarjetas", label: "Tarjetas" },
   { id: "marca", label: "Marca" },
   { id: "interaccion", label: "Interacción" },
-  { id: "auditoria", label: "Auditoría" },
 ];
 
 export default function DesignSystemPage() {
@@ -68,8 +68,9 @@ export default function DesignSystemPage() {
         </h1>
         <p className="text-muted-foreground mt-3 max-w-2xl text-sm leading-relaxed">
           Todas las piezas de la interfaz de Artelier en una sola página, con el
-          código con el que se escriben. Sirve para dos cosas: copiar de aquí en
-          vez de improvisar, y ver de un golpe lo que no cuadra.
+          código con el que se escriben. Para cada una, la forma correcta de
+          aplicarla y la que hay que evitar, para que la identidad de marca se
+          vea igual en cualquier pantalla.
         </p>
         <p className="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed">
           Los componentes son los reales, importados de{" "}
@@ -96,22 +97,9 @@ export default function DesignSystemPage() {
         <p className="text-foreground text-xs leading-relaxed">
           <strong className="font-semibold">Cómo usarla.</strong> Cada ficha
           muestra la pieza arriba y, debajo, cómo se escribe. Antes de maquetar
-          una pantalla nueva, busca aquí la pieza que necesitas y cópiala. Si no
-          existe, créala como componente y añádela a esta hoja — no la
-          improvises dentro de la pantalla.
-        </p>
-      </div>
-
-      <div className="mt-3 rounded-xl border-l-4 border-l-red-600 bg-red-50 px-4 py-3">
-        <p className="text-foreground text-xs leading-relaxed">
-          <strong className="font-semibold">Empieza por la auditoría.</strong>{" "}
-          El inventario destapó que 773 clases de token de la app no aplican
-          ningún estilo: están escritas con la sintaxis de Tailwind v3 en un
-          proyecto que usa v4. Está explicado, con la prueba visual al lado, en{" "}
-          <a href="#auditoria" className="font-medium underline">
-            Auditoría de inconsistencias
-          </a>
-          .
+          una pantalla nueva, busca aquí la pieza que necesitas y cópiala tal
+          cual. Si no existe, créala como componente y añádela a esta hoja — no
+          la improvises dentro de la pantalla.
         </p>
       </div>
 
@@ -127,7 +115,6 @@ export default function DesignSystemPage() {
         <CardSection />
         <BrandSection />
         <InteractiveSection />
-        <AuditSection />
       </main>
 
       <footer className="border-border mt-12 border-t pt-6 text-xs text-[var(--text-light)]">
